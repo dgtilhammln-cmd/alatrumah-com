@@ -8,98 +8,86 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Services table indexes
         Schema::table('services', function (Blueprint $table) {
-            if (!$this->hasIndex('services', 'services_slug_index')) {
+            if (Schema::hasColumn('services', 'slug') && !$this->hasIndex('services', 'services_slug_index'))
                 $table->index('slug');
-            }
-            if (!$this->hasIndex('services', 'services_is_active_order_index')) {
+            if (Schema::hasColumn('services', 'is_active') && !$this->hasIndex('services', 'services_is_active_order_index'))
                 $table->index(['is_active', 'order']);
-            }
         });
 
-        // Articles table indexes
         Schema::table('articles', function (Blueprint $table) {
-            if (!$this->hasIndex('articles', 'articles_slug_index')) {
+            if (Schema::hasColumn('articles', 'slug') && !$this->hasIndex('articles', 'articles_slug_index'))
                 $table->index('slug');
-            }
-            if (!$this->hasIndex('articles', 'articles_is_published_created_at_index')) {
+            if (Schema::hasColumn('articles', 'is_published') && !$this->hasIndex('articles', 'articles_is_published_created_at_index'))
                 $table->index(['is_published', 'created_at']);
-            }
         });
 
-        // Gallery projects table indexes
         Schema::table('gallery_projects', function (Blueprint $table) {
-            if (!$this->hasIndex('gallery_projects', 'gallery_projects_slug_index')) {
+            if (Schema::hasColumn('gallery_projects', 'slug') && !$this->hasIndex('gallery_projects', 'gallery_projects_slug_index'))
                 $table->index('slug');
-            }
-            if (!$this->hasIndex('gallery_projects', 'gallery_projects_is_active_order_index')) {
+            if (Schema::hasColumn('gallery_projects', 'is_active') && !$this->hasIndex('gallery_projects', 'gallery_projects_is_active_order_index'))
                 $table->index(['is_active', 'order']);
-            }
         });
 
-        // Clients table indexes
         Schema::table('clients', function (Blueprint $table) {
-            if (!$this->hasIndex('clients', 'clients_is_active_order_index')) {
+            if (Schema::hasColumn('clients', 'is_active') && !$this->hasIndex('clients', 'clients_is_active_order_index'))
                 $table->index(['is_active', 'order']);
-            }
         });
 
-        // Testimonials table indexes
         Schema::table('testimonials', function (Blueprint $table) {
-            if (!$this->hasIndex('testimonials', 'testimonials_is_active_order_index')) {
+            if (Schema::hasColumn('testimonials', 'is_active') && !$this->hasIndex('testimonials', 'testimonials_is_active_order_index'))
                 $table->index(['is_active', 'order']);
-            }
         });
 
-        // Hero slides table indexes
         Schema::table('hero_slides', function (Blueprint $table) {
-            if (!$this->hasIndex('hero_slides', 'hero_slides_is_active_order_index')) {
+            if (Schema::hasColumn('hero_slides', 'is_active') && !$this->hasIndex('hero_slides', 'hero_slides_is_active_order_index'))
                 $table->index(['is_active', 'order']);
-            }
         });
 
-        // Settings table index on key (most queried column)
         Schema::table('settings', function (Blueprint $table) {
-            if (!$this->hasIndex('settings', 'settings_key_index')) {
+            if (Schema::hasColumn('settings', 'key') && !$this->hasIndex('settings', 'settings_key_index'))
                 $table->index('key');
-            }
         });
     }
 
     public function down(): void
     {
         Schema::table('services', function (Blueprint $table) {
-            $table->dropIndex(['slug']);
-            $table->dropIndex(['is_active', 'order']);
+            $table->dropIndexIfExists('services_slug_index');
+            $table->dropIndexIfExists('services_is_active_order_index');
         });
         Schema::table('articles', function (Blueprint $table) {
-            $table->dropIndex(['slug']);
-            $table->dropIndex(['is_published', 'created_at']);
+            $table->dropIndexIfExists('articles_slug_index');
+            $table->dropIndexIfExists('articles_is_published_created_at_index');
         });
         Schema::table('gallery_projects', function (Blueprint $table) {
-            $table->dropIndex(['slug']);
-            $table->dropIndex(['is_active', 'order']);
+            $table->dropIndexIfExists('gallery_projects_slug_index');
+            $table->dropIndexIfExists('gallery_projects_is_active_order_index');
         });
         Schema::table('clients', function (Blueprint $table) {
-            $table->dropIndex(['is_active', 'order']);
+            $table->dropIndexIfExists('clients_is_active_order_index');
         });
         Schema::table('testimonials', function (Blueprint $table) {
-            $table->dropIndex(['is_active', 'order']);
+            $table->dropIndexIfExists('testimonials_is_active_order_index');
         });
         Schema::table('hero_slides', function (Blueprint $table) {
-            $table->dropIndex(['is_active', 'order']);
+            $table->dropIndexIfExists('hero_slides_is_active_order_index');
         });
         Schema::table('settings', function (Blueprint $table) {
-            $table->dropIndex(['key']);
+            $table->dropIndexIfExists('settings_key_index');
         });
     }
 
     private function hasIndex(string $table, string $indexName): bool
     {
         try {
-            $indexes = \Illuminate\Support\Facades\DB::select("SELECT name FROM sqlite_master WHERE type='index' AND tbl_name=? AND name=?", [$table, $indexName]);
-            return count($indexes) > 0;
+            $result = \Illuminate\Support\Facades\DB::select(
+                "SELECT INDEX_NAME FROM information_schema.STATISTICS 
+                 WHERE TABLE_SCHEMA = DATABASE() 
+                 AND TABLE_NAME = ? AND INDEX_NAME = ?",
+                [$table, $indexName]
+            );
+            return count($result) > 0;
         } catch (\Exception $e) {
             return false;
         }
