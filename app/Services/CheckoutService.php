@@ -135,7 +135,17 @@ class CheckoutService
                 ]);
             }
 
-            // 3. Catat Pemakaian Kupon
+            // 3. Buat Pengiriman (Shipment)
+            if ($summary['has_physical_product'] && !empty($data['courier_name'])) {
+                Shipment::create([
+                    'order_id'        => $order->id,
+                    'courier_name'    => $data['courier_name'],
+                    'courier_service' => $data['courier_service'] ?? null,
+                    'status'          => \App\Enums\ShipmentStatus::Pending,
+                ]);
+            }
+
+            // 4. Catat Pemakaian Kupon
             if ($coupon && $discount > 0) {
                 CouponUsage::create([
                     'coupon_id'       => $coupon->id,
@@ -146,7 +156,7 @@ class CheckoutService
                 $coupon->increment('used_count');
             }
 
-            // 4. Kosongkan Cart
+            // 5. Kosongkan Cart
             $this->cartService->emptyCart();
 
             // 5. Minta Snap Token dari Midtrans

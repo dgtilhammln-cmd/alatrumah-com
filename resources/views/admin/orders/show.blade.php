@@ -269,8 +269,12 @@
                 <form action="{{ route('admin.orders.tracking', $order) }}" method="POST">
                     @csrf
                     <div class="od-form-group">
-                        <label class="od-label">Jasa Ekspedisi</label>
-                        <input type="text" name="courier_name" class="od-input" value="{{ $order->shipment->courier_name ?? 'Reguler (Cashless)' }}">
+                        <label class="od-label">Jasa Ekspedisi (Kurir)</label>
+                        <input type="text" name="courier_name" class="od-input" value="{{ $order->shipment->courier_name ?? '' }}">
+                    </div>
+                    <div class="od-form-group">
+                        <label class="od-label">Layanan Ekspedisi (REG, YES, dll)</label>
+                        <input type="text" name="courier_service" class="od-input" value="{{ $order->shipment->courier_service ?? '' }}">
                     </div>
                     <div class="od-form-group">
                         <label class="od-label">Nomor Resi / Pelacakan</label>

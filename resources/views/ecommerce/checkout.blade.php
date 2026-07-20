@@ -216,21 +216,22 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                     </div>
                     <div class="form-group mb-0">
                         <label class="form-label">Kurir Ekspedisi</label>
-                        <select name="shipping_method" class="form-input" required>
+                        <select name="courier_name" id="courier_name_select" class="form-input" required>
                             <option value="">Pilih kurir pengiriman...</option>
                             @forelse($couriers ?? [] as $courier)
                                 <option value="{{ $courier->code }}">{{ $courier->name }}</option>
                             @empty
-                                <option value="custom">Kurir Toko / Antar Sendiri</option>
+                                <option value="jne">JNE</option>
+                                <option value="pos">POS Indonesia</option>
+                                <option value="tiki">TIKI</option>
                             @endforelse
                         </select>
-                        <div style="font-size:0.75rem;color:var(--c-muted);margin-top:0.5rem;">
-                            *Biaya pengiriman aktual akan dikalkulasi dan diinformasikan oleh admin saat pesanan diproses.
-                        </div>
+                        <select name="courier_service" id="courier_service_select" class="form-input mt-2" required>
+                            <option value="">Pilih Kota & Kurir Dulu</option>
+                        </select>
                     </div>
                 </div>
                 @endif
-
                 
                 {{-- CATATAN --}}
                 <div class="co-section">
@@ -267,7 +268,6 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                         @endforeach
                     </div>
 
-                    {{-- shipping_cost: 0 by default, admin will adjust later --}}
                     <input type="hidden" name="shipping_cost" value="0" id="shipping_cost_input">
 
                     <div class="summary-row">
@@ -278,7 +278,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                     @if($summary['has_physical_product'])
                     <div class="summary-row" id="ongkir-row">
                         <span>Ongkos Kirim</span>
-                        <span style="color:#0EA5E9; font-weight:600; font-size:0.8rem;">Dikalkulasi Admin</span>
+                        <span id="ongkir-row-val" style="color:#0EA5E9; font-weight:600; font-size:0.8rem;">Pilih Lokasi & Kurir</span>
                     </div>
                     @endif
 
@@ -289,15 +289,8 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
 
                     <div class="summary-total">
                         <span>Total Belanja</span>
-                        <span>Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
+                        <span id="total-row-val">Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
                     </div>
-
-                    @if($summary['has_physical_product'])
-                    <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:0.75rem 1rem;margin-top:0.75rem;font-size:0.8rem;color:#92400E;display:flex;gap:0.5rem;align-items:flex-start;">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        <span>Ongkos kirim akan dikalkulasi oleh admin berdasarkan lokasi Anda dan dikonfirmasi via <strong>WhatsApp</strong> sebelum pesanan diproses.</span>
-                    </div>
-                    @endif
 
                     <button type="submit" class="btn-pay" onclick="prepareSubmit(event)">Pilih Pembayaran</button>
                     
@@ -314,10 +307,12 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-    const apiBase = 'https://www.emsifa.com/api-wilayah-indonesia/api';
-
+    const subtotal = {{ $summary['subtotal'] }};
+    const totalWeight = {{ $summary['total_weight'] > 0 ? $summary['total_weight'] : 1000 }}; // Default 1kg
+    
     let map = null;
     let marker = null;
+    let selectedCost = 0;
 
     document.addEventListener('DOMContentLoaded', function() {
         toggleNewAddress();
@@ -329,12 +324,13 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
         if(!provSelect) return;
         provSelect.innerHTML = '<option value="">Loading Provinsi...</option>';
         
-        fetch(`${apiBase}/provinces.json`)
+        fetch(`{{ route('api.rajaongkir.provinces') }}`)
             .then(res => res.json())
             .then(data => {
+                if (data.error) throw new Error(data.error);
                 provSelect.innerHTML = '<option value="">Pilih Provinsi</option>';
                 data.forEach(prov => {
-                    provSelect.add(new Option(prov.name, prov.id));
+                    provSelect.add(new Option(prov.province, prov.province_id));
                 });
             })
             .catch(err => {
@@ -347,6 +343,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
         const text = this.options[this.selectedIndex].text;
         document.getElementById('province_name').value = this.value ? text : '';
         loadCities(this.value);
+        resetShipping();
     });
 
     function loadCities(provId) {
@@ -357,20 +354,120 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
             return;
         }
         citySelect.innerHTML = '<option value="">Loading Kota/Kabupaten...</option>';
-        fetch(`${apiBase}/regencies/${provId}.json`)
+        fetch(`{{ url('/api/rajaongkir/cities') }}/${provId}`)
             .then(res => res.json())
             .then(data => {
+                if (data.error) throw new Error(data.error);
                 citySelect.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
                 data.forEach(city => {
-                    citySelect.add(new Option(city.name, city.id));
+                    const type = city.type === 'Kabupaten' ? 'Kab.' : 'Kota';
+                    citySelect.add(new Option(`${type} ${city.city_name}`, city.city_id));
                 });
+            })
+            .catch(err => {
+                citySelect.innerHTML = '<option value="">Gagal memuat kota</option>';
             });
     }
 
     document.getElementById('city_select')?.addEventListener('change', function() {
         const text = this.options[this.selectedIndex].text;
         document.getElementById('city_name').value = this.value ? text : '';
+        resetShipping();
+        if(this.value && document.getElementById('courier_name_select').value) {
+            checkCost();
+        }
     });
+
+    document.getElementById('courier_name_select')?.addEventListener('change', function() {
+        const city = document.getElementById('city_select')?.value;
+        if (city && this.value) {
+            checkCost();
+        } else {
+            resetShipping();
+        }
+    });
+
+    function resetShipping() {
+        const serviceSelect = document.getElementById('courier_service_select');
+        if (serviceSelect) {
+            serviceSelect.innerHTML = '<option value="">Pilih Kota & Kurir Dulu</option>';
+        }
+        selectedCost = 0;
+        updateTotal();
+    }
+
+    function checkCost() {
+        const cityId = document.getElementById('city_select').value;
+        const courier = document.getElementById('courier_name_select').value;
+        const serviceSelect = document.getElementById('courier_service_select');
+
+        if (!cityId || !courier) return;
+
+        serviceSelect.innerHTML = '<option value="">Menghitung ongkir...</option>';
+        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+        fetch(`{{ route('api.rajaongkir.cost') }}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken || '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                destination: cityId,
+                weight: totalWeight,
+                courier: courier
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) throw new Error(data.error);
+            serviceSelect.innerHTML = '<option value="">Pilih Layanan Pengiriman</option>';
+            data.forEach(service => {
+                const cost = service.cost[0].value;
+                const etd = service.cost[0].etd ? ` (${service.cost[0].etd} hari)` : '';
+                const formatCost = new Intl.NumberFormat('id-ID').format(cost);
+                
+                const option = document.createElement('option');
+                option.value = service.service;
+                option.dataset.cost = cost;
+                option.text = `${service.service} - Rp ${formatCost}${etd}`;
+                serviceSelect.appendChild(option);
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            serviceSelect.innerHTML = '<option value="">Gagal menghitung ongkir/Kurir tidak tersedia</option>';
+            Swal.fire('Gagal', err.message || 'Gagal menghitung ongkir. Coba kurir lain.', 'error');
+        });
+    }
+
+    document.getElementById('courier_service_select')?.addEventListener('change', function() {
+        if (!this.value) {
+            selectedCost = 0;
+            updateTotal();
+            return;
+        }
+        const option = this.options[this.selectedIndex];
+        selectedCost = parseInt(option.dataset.cost) || 0;
+        updateTotal();
+    });
+
+    function updateTotal() {
+        document.getElementById('shipping_cost_input').value = selectedCost;
+        
+        const ongkirRowVal = document.getElementById('ongkir-row-val');
+        if (ongkirRowVal) {
+            ongkirRowVal.innerText = selectedCost > 0 ? `Rp ${new Intl.NumberFormat('id-ID').format(selectedCost)}` : 'Dikalkulasi Admin';
+            ongkirRowVal.style.color = selectedCost > 0 ? '#1E293B' : '#0EA5E9';
+        }
+
+        const totalRowVal = document.getElementById('total-row-val');
+        if (totalRowVal) {
+            const finalTotal = subtotal + selectedCost;
+            totalRowVal.innerText = `Rp ${new Intl.NumberFormat('id-ID').format(finalTotal)}`;
+        }
+    }
 
     // Geolocation logic
     function getLocation() {
@@ -407,7 +504,6 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
         const mapContainer = document.getElementById('map_container');
         mapContainer.style.display = 'block';
         
-
         if (!map) {
             map = L.map('map', { zoomControl: true }).setView([lat, lon], 17);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -429,7 +525,6 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
             marker.setLatLng([lat, lon]);
         }
         
-        // Paksa Leaflet render ulang setelah display berubah
         requestAnimationFrame(() => {
             if(map) map.invalidateSize(true);
             setTimeout(() => { if(map) map.invalidateSize(true); }, 200);
@@ -453,83 +548,26 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                         document.getElementById('district_name').value = data.address.village || data.address.suburb || data.address.town;
                     }
 
-                    // Auto-select Provinsi & Kota dari GPS
-                    const rawState = data.address.state || data.address.region || '';
-                    const rawCity  = data.address.city || data.address.county || data.address.town || '';
-
-                    if(rawState) {
-                        let stateStr = rawState.toLowerCase()
-                            .replace('daerah khusus ibukota', 'dki')
-                            .replace('daerah istimewa', 'di')
-                            .trim();
-                        
-                        let provSelect = document.getElementById('province_select');
-                        let provFound  = false;
-
-                        if(provSelect && provSelect.options.length > 1) {
-                            for(let i = 0; i < provSelect.options.length; i++) {
-                                let optText = provSelect.options[i].text.toLowerCase();
-                                if(optText.includes(stateStr) || stateStr.includes(optText)) {
-                                    provSelect.selectedIndex = i;
-                                    // Update hidden province_name
-                                    document.getElementById('province_name').value = provSelect.options[i].text;
-                                    // Load cities for this province
-                                    loadCities(provSelect.value);
-                                    provFound = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        // Auto-select Kota/Kabupaten (tunggu cities load)
-                        if(provFound && rawCity) {
-                            let cityStr = rawCity.toLowerCase()
-                                .replace('kota ', '').replace('kabupaten ', '').trim();
-
-                            setTimeout(() => {
-                                let citySelect = document.getElementById('city_select');
-                                if(!citySelect) return;
-                                for(let j = 0; j < citySelect.options.length; j++) {
-                                    let optCityText = citySelect.options[j].text.toLowerCase();
-                                    if(optCityText.includes(cityStr) || cityStr.includes(optCityText)) {
-                                        citySelect.selectedIndex = j;
-                                        // Update hidden city_name
-                                        document.getElementById('city_name').value = citySelect.options[j].text;
-                                        break;
-                                    }
-                                }
-                            }, 1500);
-                        }
-                    }
+                    // Auto-select is not perfect with RajaOngkir, so we skip auto-selecting dropdowns.
+                    // The user must manually select Province and City to guarantee accurate shipping cost.
 
                     if(showSwal) {
                         Swal.fire({
                             icon: 'success',
                             title: '<span style="font-weight:800; color:#1E293B;">Lokasi Ditemukan!</span>',
-                            html: '<div style="font-size:0.95rem; color:#475569; line-height:1.6; margin-top:0.5rem;">Peta berhasil dimuat ke layar.<br><br>Silakan <b>geser Pin Merah</b> pada peta jika titik dirasa kurang akurat dengan lokasi Anda.<br><br><span style="font-size:0.8rem; color:#64748B; background:#F1F5F9; padding:6px 12px; border-radius:20px; display:inline-block;">Provinsi & Kota otomatis disesuaikan</span></div>',
-                            confirmButtonText: 'Oke, Saya Mengerti',
-                            confirmButtonColor: '#3B82F6',
-                            background: '#ffffff',
-                            backdrop: 'rgba(15,23,42,0.75)',
-                            padding: '2em',
-                            width: window.innerWidth < 600 ? '90%' : '32em',
-                            customClass: {
-                                popup: 'swal2-border-radius'
-                            }
+                            html: '<div style="font-size:0.95rem; color:#475569; line-height:1.6; margin-top:0.5rem;">Peta berhasil dimuat ke layar.<br><br>Silakan <b>geser Pin Merah</b> jika tidak akurat.<br><br><span style="font-size:0.8rem; color:#EF4444; font-weight:700;">MOHON TETAP PILIH PROVINSI & KOTA ANDA DARI DROPDOWN UNTUK ONGKIR</span></div>',
+                            confirmButtonColor: '#3B82F6'
                         });
                         
-                        // Scroll to map automatically
                         setTimeout(() => {
                             document.getElementById('map_container').scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }, 500);
                     }
-                } else {
-                    throw new Error('Alamat tidak ditemukan');
                 }
             })
             .catch(err => {
                 status.style.color = '#EF4444';
-                status.innerText = 'Gagal menterjemahkan titik koordinat ke alamat tertulis.';
+                status.innerText = 'Gagal menterjemahkan titik koordinat.';
             });
     }
 
@@ -538,10 +576,10 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
         status.style.color = '#EF4444';
         switch(error.code) {
             case error.PERMISSION_DENIED:
-                status.innerText = "Anda menolak permintaan akses GPS. Pastikan izin lokasi (location) diaktifkan di pengaturan HP/Browser Anda.";
+                status.innerText = "Anda menolak permintaan akses GPS.";
                 break;
             case error.POSITION_UNAVAILABLE:
-                status.innerText = "Informasi lokasi GPS tidak tersedia atau belum mendapat sinyal.";
+                status.innerText = "Informasi lokasi GPS tidak tersedia.";
                 break;
             case error.TIMEOUT:
                 status.innerText = "Waktu tunggu GPS habis (Timeout).";
@@ -562,7 +600,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
         
         // Toggle required attributes
         const reqEls = ['new_addr_receiver','new_addr_phone','new_addr_postal','new_addr_full'];
-        const selectEls = ['province_select', 'city_select', 'district_select'];
+        const selectEls = ['province_select', 'city_select', 'district_name'];
 
         if(isNew) {
             reqEls.forEach(id => {
@@ -573,8 +611,6 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                 const el = document.getElementById(id);
                 if(el) el.setAttribute('required', 'required');
             });
-            const dName = document.getElementById('district_name');
-            if(dName) dName.setAttribute('required', 'required');
         } else {
             reqEls.forEach(id => {
                 const el = document.getElementById(id);
@@ -584,8 +620,6 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                 const el = document.getElementById(id);
                 if(el) el.removeAttribute('required');
             });
-            const dName = document.getElementById('district_name');
-            if(dName) dName.removeAttribute('required');
         }
     }
 
@@ -599,11 +633,26 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                 Swal.fire({
                     icon: 'warning',
                     title: 'Data Belum Lengkap',
-                    text: 'Mohon lengkapi pilihan Provinsi, Kota, dan Kecamatan dari dropdown yang tersedia.',
+                    text: 'Mohon lengkapi pilihan Provinsi, Kota, dan Kecamatan.',
                     confirmButtonColor: '#0F172A',
                     confirmButtonText: 'Baiklah'
                 });
                 e.preventDefault();
+                return;
+            }
+        }
+
+        if (document.getElementById('courier_name_select')) {
+            const service = document.getElementById('courier_service_select').value;
+            if (!service) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Pilih Layanan Pengiriman',
+                    text: 'Anda belum memilih layanan pengiriman (cth: REG/YES).',
+                    confirmButtonColor: '#0F172A'
+                });
+                e.preventDefault();
+                return;
             }
         }
     }

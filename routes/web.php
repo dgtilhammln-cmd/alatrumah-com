@@ -85,8 +85,14 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::post('/checkout',               [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/checkout/selesai/{order}',[CheckoutController::class, 'finish'])->name('checkout.finish');
 
+    // API RajaOngkir untuk Checkout
+    Route::get('/api/rajaongkir/provinces', [\App\Http\Controllers\CheckoutApiController::class, 'provinces'])->name('api.rajaongkir.provinces');
+    Route::get('/api/rajaongkir/cities/{province}', [\App\Http\Controllers\CheckoutApiController::class, 'cities'])->name('api.rajaongkir.cities');
+    Route::post('/api/rajaongkir/cost', [\App\Http\Controllers\CheckoutApiController::class, 'cost'])->name('api.rajaongkir.cost');
+
     // Cek Resi
     Route::get('/cek-resi', [\App\Http\Controllers\ResiController::class, 'index'])->name('cek-resi');
+    Route::post('/cek-ongkir', [App\Http\Controllers\ResiController::class, 'cekOngkir'])->name('cek.ongkir');
     Route::post('/cek-resi', [\App\Http\Controllers\ResiController::class, 'track'])->name('cek-resi.track');
 
     Route::middleware(['auth'])->group(function () {

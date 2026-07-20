@@ -45,7 +45,9 @@ class CheckoutRequest extends FormRequest
                 $rules['new_address_lat']      = 'nullable|numeric';
                 $rules['new_address_lng']      = 'nullable|numeric';
             }
-            $rules['shipping_cost'] = 'nullable|numeric|min:0'; 
+            $rules['shipping_cost'] = 'nullable|numeric|min:0';
+            $rules['courier_name']  = 'nullable|string|max:100';
+            $rules['courier_service'] = 'nullable|string|max:100';
         }
 
         if ($summary['has_service']) {

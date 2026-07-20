@@ -103,12 +103,22 @@ class AdminOrderController extends Controller
 
     public function updateTracking(Request $request, Order $order)
     {
-        $request->validate(['tracking_number' => 'nullable|string|max:100']);
+        $request->validate([
+            'tracking_number' => 'nullable|string|max:100',
+            'courier_name'    => 'nullable|string|max:100',
+            'courier_service' => 'nullable|string|max:100',
+        ]);
+        
         if ($order->shipment) {
-            $order->shipment->update(['tracking_number' => $request->tracking_number]);
+            $order->shipment->update([
+                'tracking_number' => $request->tracking_number,
+                'courier_name'    => $request->courier_name ?? $order->shipment->courier_name,
+                'courier_service' => $request->courier_service ?? $order->shipment->courier_service,
+            ]);
         } else {
             $order->shipment()->create([
                 'courier_name'    => $request->courier_name ?? '—',
+                'courier_service' => $request->courier_service ?? null,
                 'tracking_number' => $request->tracking_number,
                 'status'          => 'shipped',
             ]);

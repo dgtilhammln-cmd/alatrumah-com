@@ -75,7 +75,7 @@
                 <div style="margin-bottom: 1rem; display: flex; justify-content: space-between;">
                     <div>
                         <div style="font-size: 0.8rem; color: var(--c-muted);">Kurir</div>
-                        <div style="font-weight: 700; color: var(--c-text);">{{ strtoupper($order->shipment->courier_name) }}</div>
+                        <div style="font-weight: 700; color: var(--c-text);">{{ strtoupper($order->shipment->courier_name) }} {{ strtoupper($order->shipment->courier_service ?? '') }}</div>
                     </div>
                     @if($order->shipment->tracking_number)
                     <div style="text-align: right;">
