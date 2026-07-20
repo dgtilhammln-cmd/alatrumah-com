@@ -173,8 +173,9 @@ body { background-color: #F8FAFC !important; }
 
         @if($isPending && $order->payment && $order->payment->midtrans_token)
             {{-- Midtrans Pay Button --}}
-            <button id="pay-button" class="btn-pay" onclick="launchSnapPay()">
-                💳 &nbsp;Bayar Sekarang
+            <button id="pay-button" class="btn-pay" onclick="launchSnapPay()" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                Bayar Sekarang
             </button>
 
             <script src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
@@ -196,17 +197,17 @@ body { background-color: #F8FAFC !important; }
                         },
                         onPending: function(result) {
                             btn.disabled = false;
-                            btn.innerHTML = '💳 &nbsp;Bayar Sekarang';
+                            btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Bayar Sekarang';
                             alert('Pembayaran menunggu konfirmasi. Cek email Anda untuk instruksi selanjutnya.');
                         },
                         onError: function(result) {
                             btn.disabled = false;
-                            btn.innerHTML = '💳 &nbsp;Coba Lagi';
+                            btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Coba Lagi';
                             alert('Pembayaran gagal. Silakan coba metode pembayaran lain.');
                         },
                         onClose: function() {
                             btn.disabled = false;
-                            btn.innerHTML = '💳 &nbsp;Bayar Sekarang';
+                            btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Bayar Sekarang';
                         }
                     });
                 }
@@ -217,8 +218,9 @@ body { background-color: #F8FAFC !important; }
             </a>
 
         @elseif($isPaid)
-            <a href="{{ route('account.orders') }}" class="btn-pay" style="text-decoration:none;">
-                📦 &nbsp;Lacak Pesanan Saya
+            <a href="{{ route('account.orders') }}" class="btn-pay" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                Lacak Pesanan Saya
             </a>
             <a href="{{ route('products') }}" class="btn-secondary-link">
                 Lanjut Belanja &rarr;

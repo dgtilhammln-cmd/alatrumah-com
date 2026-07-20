@@ -100,7 +100,10 @@
                                 <div class="tl-date">{{ $tl['date'] }}</div>
                                 <div class="tl-desc">{{ $tl['desc'] }}</div>
                                 @if(!empty($tl['city']))
-                                <div class="tl-city">📍 {{ $tl['city'] }}</div>
+                                <div class="tl-city">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:inline-block; vertical-align:middle; margin-right:2px; color:var(--c-accent);"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-8-4.5-8-11a8 8 0 1 1 16 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    {{ $tl['city'] }}
+                                </div>
                                 @endif
                             </div>
                             @endforeach

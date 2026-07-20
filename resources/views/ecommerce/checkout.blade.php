@@ -126,7 +126,10 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                         {{-- City selector for ongkir (shown only when using saved address) --}}
                         <div id="saved_addr_city_wrap" style="margin-top:0;">
                             <div style="background:#FFF9EC;border:1px dashed #F59E0B;border-radius:12px;padding:1rem 1.25rem;">
-                                <p style="font-size:0.82rem;font-weight:700;color:#92400E;margin:0 0 0.75rem;">🚚 Pilih Kota Tujuan untuk Kalkulasi Ongkir</p>
+                                <p style="font-size:0.82rem;font-weight:700;color:#92400E;margin:0 0 0.75rem; display:flex; align-items:center; gap:6px;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 18H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"/><path d="M19 8h-4v6h4l3 3v-5l-3-3z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+                                    Pilih Kota Tujuan untuk Kalkulasi Ongkir
+                                </p>
                                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
                                     <div>
                                         <label class="form-label" style="font-size:0.78rem;">Provinsi</label>
@@ -423,7 +426,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
     // ────────────────────────────────────────────
     // SHARED: Load cities into any select
     // ────────────────────────────────────────────
-    function loadCitiesInto(selectId, provId, preselectedCityId) {
+    function loadCitiesInto(selectId, provId, preselectedCityId, matchCityName = null) {
         const citySelect = document.getElementById(selectId);
         if (!citySelect) return;
         if (!provId) {
@@ -431,7 +434,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
             return;
         }
         citySelect.innerHTML = '<option value="">Memuat kota...</option>';
-        fetch(`{{ url('/api/rajaongkir/cities') }}/${provId}`)
+        return fetch(`{{ url('/api/rajaongkir/cities') }}/${provId}`)
             .then(res => res.json())
             .then(data => {
                 if (data.error) throw new Error(data.error);
@@ -441,14 +444,30 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                     const opt = new Option(`${type} ${city.city_name}`, city.city_id);
                     citySelect.add(opt);
                 });
-                // Auto-select if preselected
+                
+                // Match by text (for saved addresses)
+                if (matchCityName) {
+                    const target = matchCityName.toLowerCase().replace(/^(kota|kabupaten|kab\.)\s+/i, '').trim();
+                    for (let i = 0; i < citySelect.options.length; i++) {
+                        const optText = citySelect.options[i].text.toLowerCase().replace(/^(kota|kabupaten|kab\.)\s+/i, '').trim();
+                        if (optText === target || optText.includes(target)) {
+                            citySelect.value = citySelect.options[i].value;
+                            citySelect.dispatchEvent(new Event('change'));
+                            return true; // Match found
+                        }
+                    }
+                }
+                
+                // Auto-select exact ID
                 if (preselectedCityId) {
                     citySelect.value = preselectedCityId;
                     citySelect.dispatchEvent(new Event('change'));
                 }
+                return false;
             })
             .then(undefined, err => {
                 citySelect.innerHTML = '<option value="">Gagal memuat kota — coba lagi</option>';
+                return false;
             });
     }
 
@@ -769,7 +788,48 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
         const isNew = select.value === 'new';
 
         if (form) form.style.display = isNew ? 'block' : 'none';
-        if (savedWrap) savedWrap.style.display = isNew ? 'none' : 'block';
+        
+        // Reset shipping when switching address
+        resetShipping();
+
+        if (isNew) {
+            if (savedWrap) savedWrap.style.display = 'none';
+        } else {
+            // Auto-match province & city from data attributes
+            const option = select.options[select.selectedIndex];
+            const targetProv = option.dataset.province;
+            const targetCity = option.dataset.city;
+            
+            let matchedProvId = null;
+            const provSelect = document.getElementById('saved_province_select');
+            
+            if (targetProv && provSelect) {
+                const targetP = targetProv.toLowerCase().trim();
+                for (let i = 0; i < provSelect.options.length; i++) {
+                    if (provSelect.options[i].text.toLowerCase().trim() === targetP) {
+                        matchedProvId = provSelect.options[i].value;
+                        provSelect.value = matchedProvId;
+                        break;
+                    }
+                }
+            }
+
+            if (matchedProvId && targetCity) {
+                // We matched province, now load cities and match city
+                if (savedWrap) savedWrap.style.display = 'none'; // hide while loading
+                
+                loadCitiesInto('saved_city_select', matchedProvId, null, targetCity)
+                    .then(matched => {
+                        // If we couldn't match the city automatically, show the manual fallback
+                        if (savedWrap && !matched) {
+                            savedWrap.style.display = 'block';
+                        }
+                    });
+            } else {
+                // Fallback: show manual select if auto-match fails
+                if (savedWrap) savedWrap.style.display = 'block';
+            }
+        }
 
         // Toggle required on new-address fields
         const reqEls    = ['new_addr_receiver','new_addr_phone','new_addr_postal','new_addr_full'];
@@ -780,9 +840,9 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                 isNew ? el.setAttribute('required','required') : el.removeAttribute('required');
             }
         });
-
-        // Reset shipping when switching address
-        resetShipping();
     }
+
+    // Trigger on load
+    toggleNewAddress();
 </script>
 @endsection
