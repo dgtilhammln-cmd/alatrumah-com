@@ -48,7 +48,7 @@
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d M Y') }}</td>
                             <td style="font-weight:700;">Rp {{ number_format($order->grand_total, 0, ',', '.') }}</td>
                             <td>
-                                @php $s = $order->status; @endphp
+                                @php $s = $order->status->value ?? $order->status; @endphp
                                 <span class="order-badge badge-{{ $s }}">
                                     {{ match($s) {
                                         'pending'    => 'Menunggu',
