@@ -59,6 +59,27 @@
         transition: transform 0.3s ease;
     }
     .cv-hero-static-col:hover { transform: scale(1.01); }
+    
+    /* ── SKELETON LOADING ANIMATION ── */
+    @keyframes cvSkeletonShimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+    }
+    .cv-skeleton-bg {
+        background: #e2e8f0;
+        background-image: linear-gradient(90deg, #e2e8f0 0px, #f1f5f9 50%, #e2e8f0 100%);
+        background-size: 1000px 100%;
+        animation: cvSkeletonShimmer 2s infinite linear;
+    }
+    
+    .cv-hero-slider-col, .cv-hero-static-col {
+        /* apply skeleton base so it shows before images load */
+        background: #e2e8f0;
+        background-image: linear-gradient(90deg, #e2e8f0 0px, #f1f5f9 50%, #e2e8f0 100%);
+        background-size: 1000px 100%;
+        animation: cvSkeletonShimmer 2s infinite linear;
+    }
+
     .cv-hero-img-sec {
         width: 100%; height: 100%;
         object-fit: cover;
@@ -1294,10 +1315,14 @@
         position: relative;
         width: 200px;
         flex-shrink: 0;
-        background: linear-gradient(145deg, #1E293B, #0F172A);
         display: flex;
         align-items: center;
         justify-content: center;
+        /* apply skeleton to banner */
+        background: #e2e8f0;
+        background-image: linear-gradient(90deg, #e2e8f0 0px, #f1f5f9 50%, #e2e8f0 100%);
+        background-size: 1000px 100%;
+        animation: cvSkeletonShimmer 2s infinite linear;
     }
     .cv-promo-banner-wrap.mobile-only { display: none; }
     
@@ -1399,7 +1424,11 @@
         aspect-ratio: 1/1;
         object-fit: cover;
         display: block;
-        background: #F8FAFC;
+        /* apply skeleton to product image container */
+        background: #e2e8f0;
+        background-image: linear-gradient(90deg, #e2e8f0 0px, #f1f5f9 50%, #e2e8f0 100%);
+        background-size: 1000px 100%;
+        animation: cvSkeletonShimmer 2s infinite linear;
     }
     .cv-promo-card-img-placeholder {
         width: 100%;
