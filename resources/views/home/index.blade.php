@@ -988,8 +988,7 @@
         <meta itemprop="name" content="AlatRumah.com">
         <meta itemprop="description" content="Toko online alat rumah tangga terlengkap di Surabaya. Temukan berbagai produk berkualitas dengan harga terbaik.">
         <meta itemprop="address" content="Surabaya, Jawa Timur, Indonesia">
-        {{-- Visually hidden H1 for SEO --}}
-        <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;">AlatRumah.com — Toko Alat Rumah Tangga Terlengkap di Surabaya</h1>
+        {{-- Visible H1 moved below Hero Section --}}
         @php
             $initialBgColor = (isset($heroSlides) && $heroSlides->count() > 0 && $heroSlides->first()->bg_color) 
                                 ? $heroSlides->first()->bg_color 
@@ -1069,12 +1068,14 @@
         </div>
     </section>
 
-    {{-- ════ SEO BRAND DESCRIPTION (Visible tapi compact) ════ --}}
-    <div style="background:#F8FAFC; border-bottom:1px solid #F1F5F9; padding:0.75rem 0;" aria-label="Tentang AlatRumah">
-        <div style="max-width:1200px; margin:0 auto; padding:0 1.5rem;">
-            <p style="font-size:0.78rem; color:#64748B; line-height:1.6; margin:0; font-family:'Montserrat',sans-serif;">
-                <strong style="color:#334155;">AlatRumah.com</strong> — Pusat belanja alat rumah tangga, elektronik, furnitur, dan peralatan dapur terlengkap di Surabaya. 
-                Kami menyediakan <strong>ribuan produk berkualitas</strong> dari merek-merek ternama dengan harga terbaik dan pengiriman cepat ke seluruh Indonesia.
+    {{-- ════ VISIBLE H1 & SEO SECTION ════ --}}
+    <div style="background:#FFFFFF; padding:2rem 1.5rem; text-align:center; border-bottom:1px solid #F1F5F9;">
+        <div style="max-width:1000px; margin:0 auto;">
+            <h1 style="font-size:1.6rem; font-weight:800; color:#1E293B; margin:0 0 0.5rem 0; font-family:'Montserrat', sans-serif;">
+                AlatRumah.com — Toko Alat Rumah Tangga Terlengkap di Surabaya
+            </h1>
+            <p style="font-size:0.95rem; color:#64748B; line-height:1.6; margin:0; font-family:'Montserrat', sans-serif;">
+                Temukan ribuan produk berkualitas dari merek-merek ternama dengan harga terbaik dan pengiriman cepat ke seluruh Indonesia.
             </p>
         </div>
     </div>
@@ -1102,9 +1103,11 @@
     {{-- ════ CATEGORY SWIPER ════ --}}
     @if($categoryItems->count())
     <section class="cv-cats-section" aria-label="Kategori Produk">
-        <div class="cv-cats-inner">
-            <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Kategori Produk AlatRumah</h2>
-            <div class="swiper cats-swiper hidden md:block" id="catsSwiperDesktop">
+        <div class="cv-cats-inner" style="flex-direction: column; align-items: flex-start; padding: 1.5rem 1.5rem 0.5rem;">
+            <h2 style="font-size:1.25rem; font-weight:800; color:#1E293B; margin:0 0 0.5rem 0; font-family:'Montserrat', sans-serif;">
+                Kategori Pilihan
+            </h2>
+            <div class="swiper cats-swiper hidden md:block" id="catsSwiperDesktop" style="width: 100%;">
                 <div class="swiper-wrapper">
                     @foreach($categoryItems as $cat)
                         <a href="{{ $cat->url ?? route('products') }}" class="swiper-slide cv-cat-slide">
