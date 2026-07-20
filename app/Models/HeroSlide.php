@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Builder;
 class HeroSlide extends Model
 {
     protected $fillable = [
+        'position',
         'title',
         'description',
         'icon',
         'image',
+        'bg_color',
         'button_text',
         'button_url',
         'order',

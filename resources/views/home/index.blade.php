@@ -19,27 +19,98 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" /></noscript>
     <style>
-    /* ── NEW HERO ────────────────────────────────── */
+    .cv-hero-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 2.3fr 1fr;
+        gap: 1.25rem;
+        align-items: stretch;
+        position: relative;
+        z-index: 1;
+    }
+    .cv-hero-slider-col {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        background: #fff;
+        height: 440px;
+    }
+    .cv-hero-img-main {
+        width: 100%; height: 100%;
+        object-fit: cover;
+    }
+    .hero-swiper { width:100%; height:100%; }
+    .hero-swiper-slide { width:100%; height:100%; display:block; text-decoration:none; }
+
+    /* Right column banners — curved corners matching main banner */
+    .cv-hero-static-col {
+        flex: 1;
+        min-height: 0;
+        height: auto;
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        display: block;
+        text-decoration: none;
+        transition: transform 0.3s ease;
+    }
+    .cv-hero-static-col:hover { transform: scale(1.01); }
+    .cv-hero-img-sec {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    @media (max-width: 1024px) {
+        .cv-hero-grid { grid-template-columns: 1fr; padding: 0 1rem; gap: 0.75rem; }
+        .cv-hero-slider-col { height: auto; aspect-ratio: 2/1; position: relative; border-radius: 12px; overflow: hidden; }
+        .cv-hero-slider-col .swiper,
+        .cv-hero-slider-col .hero-swiper-slide,
+        .cv-hero-slider-col img { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
+        
+        .cv-hero-static-col { display: none; /* Hide static banners on mobile for minimalist look */ }
+    }
+    @media (max-width: 480px) {
+        .cv-hero-slider-col { aspect-ratio: 20/11; border-radius: 12px; }
+    }
     .cv-hero-modern {
-        background-color: #F8FAFC;
-        min-height: 100vh;
+        background-color: #ffffff;
         padding-top: calc(46px + 2.5rem);
-        padding-bottom: 3rem;
-        display: flex;
-        align-items: center;
+        padding-bottom: 2rem;
         position: relative;
         overflow: hidden;
     }
     @media (max-width: 768px) {
         .cv-hero-modern {
-            padding-top: calc(80px + 2.5rem);
-            padding-bottom: 2.5rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.5rem;
             align-items: flex-start;
         }
     }
     @media (max-width: 480px) {
         .cv-hero-modern {
-            padding-top: calc(90px + 2rem);
+            padding-top: 0.5rem;
+        }
+    }
+    .cv-hero-oval-bg {
+        position: absolute;
+        top: -20%;
+        left: -10%;
+        width: 120%;
+        height: 120%;
+        border-radius: 0 0 50% 50% / 0 0 30% 30%;
+        z-index: 0;
+        transition: background 0.5s ease;
+        background: linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%); /* Default */
+    }
+    @media (max-width: 768px) {
+        .cv-hero-oval-bg {
+            height: 100%;
+            border-radius: 0 0 50% 50% / 0 0 15% 15%;
         }
     }
     .cv-hero-bg-layer {
@@ -50,214 +121,31 @@
         background-repeat: no-repeat;
         opacity: 0.18;
         z-index: 0;
-        mix-blend-mode: multiply;
+        mix-blend-mode: overlay;
     }
-    .cv-hero-grid {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-        width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1.4fr 0.9fr;
-        gap: 2rem;
-        align-items: center;
-        position: relative;
-        z-index: 1;
-    }
-    /* Left Column */
-    .cv-hero-left {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .cv-hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        background: #fff;
-        padding: 0.4rem 0.875rem;
-        border-radius: 999px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        color: #0369a1;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-        margin-bottom: 1.25rem;
-        letter-spacing: 0.04em;
-    }
-    .cv-hero-badge::before {
-        content: '';
-        width: 5px; height: 5px;
-        border-radius: 50%;
-        background: #38BDF8;
-    }
-    .cv-hero-title {
-        font-size: clamp(2rem, 3.2vw, 3.25rem);
-        font-weight: 400;
-        color: #1e293b;
-        line-height: 1.12;
-        margin-bottom: 1.25rem;
-        letter-spacing: -0.02em;
-    }
-    .cv-hero-pill-text {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.6rem;
-        background: #E0F2FE;
-        color: #0284C7;
-        padding: 0.2rem 1.25rem 0.2rem 0.4rem;
-        border-radius: 999px;
-        margin: 0.15rem 0;
-        font-weight: 500;
-    }
-    .cv-hero-pill-icon {
-        width: 40px; height: 40px;
-        background: #0EA5E9;
-        border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        color: #fff;
-        flex-shrink: 0;
-    }
-    .cv-hero-icons {
-        display: flex;
-        gap: 0.6rem;
-        margin-bottom: 1.25rem;
-    }
-    .cv-hero-icon-circle {
-        width: 38px; height: 38px;
-        background: #fff;
-        border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        color: #0EA5E9;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-    }
-    .cv-hero-desc {
-        font-size: 0.8125rem;
-        font-weight: 400;
-        color: #64748b;
-        line-height: 1.7;
-        margin-bottom: 1.75rem;
-        max-width: 95%;
-        position: relative;
-        padding-left: 1.25rem;
-    }
-    .cv-hero-desc::before {
-        content: '';
-        position: absolute;
-        left: 0; top: 0; bottom: 0;
-        width: 2px;
-        background: #cbd5e1;
-        border-radius: 2px;
-    }
-    .cv-hero-actions {
-        display: flex;
-        gap: 0.75rem;
-        align-items: center;
-        flex-wrap: wrap;
-    }
-    .cv-btn-solid {
-        background: #0369a1;
-        color: #fff;
-        padding: 0.75rem 1.75rem;
-        border-radius: 999px;
-        font-weight: 600;
-        font-size: 0.85rem;
-        text-decoration: none;
-        transition: all 0.2s;
-        box-shadow: 0 4px 14px rgba(14,165,233,0.25);
-        white-space: nowrap;
-    }
-    .cv-btn-solid:hover { background: #075985; transform: translateY(-2px); }
-    .cv-btn-outline {
-        background: #fff;
-        color: #0EA5E9;
-        padding: 0.75rem 1.75rem;
-        border-radius: 999px;
-        font-weight: 600;
-        font-size: 0.85rem;
-        text-decoration: none;
-        transition: all 0.2s;
-        border: 1.5px solid rgba(14,165,233,0.2);
-        white-space: nowrap;
-    }
-    .cv-btn-outline:hover { background: #F0F9FF; }
-
-    /* Center Column */
-    .cv-hero-center {
-        position: relative;
-        height: 520px;
-        border-radius: 28px;
-        overflow: hidden;
-        box-shadow: 0 16px 40px rgba(0,0,0,0.08);
-    }
+        
+    
+    /* Left Column: Slider */
+    
     .cv-hero-img-main {
         width: 100%; height: 100%;
         object-fit: cover;
     }
     .hero-swiper { width:100%; height:100%; }
-    .hero-swiper-slide { width:100%; height:100%; }
-    .hero-swiper-pagination .swiper-pagination-bullet { background: #fff; opacity: 0.5; }
-    .hero-swiper-pagination .swiper-pagination-bullet-active { background: #38BDF8; opacity: 1; }
-    .cv-glass-badge {
-        position: absolute;
-        background: rgba(255,255,255,0.18);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.35);
-        padding: 0.4rem 0.875rem;
-        border-radius: 999px;
-        color: #fff;
-        font-size: 0.7rem;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-    }
-    .cv-glass-badge::before {
-        content: ''; width: 5px; height: 5px; border-radius: 50%; background: #38BDF8;
-    }
-    .cv-glass-card {
-        position: absolute;
-        bottom: 1.25rem;
-        right: 1.25rem;
-        background: rgba(15,23,42,0.7);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        border: 1px solid rgba(255,255,255,0.08);
-        padding: 1.25rem;
-        border-radius: 18px;
-        color: #fff;
-    }
-    .cv-glass-num { font-size: 2.25rem; font-weight: 300; line-height: 1; margin-bottom: 0.375rem; }
-    .cv-glass-text { font-size: 0.65rem; color: rgba(255,255,255,0.65); max-width: 110px; line-height: 1.4; }
+    .hero-swiper-slide { width:100%; height:100%; display:block; text-decoration:none; }
+    .hero-swiper-pagination { position: absolute; bottom: 20px !important; left: 20px !important; text-align: left; width: auto !important; z-index: 10; display:flex; gap:6px; align-items:center; }
+    .hero-swiper-pagination .swiper-pagination-bullet { background: #fff; opacity: 0.5; width: 10px; height: 10px; transition: all 0.3s; margin:0 !important; }
+    .hero-swiper-pagination .swiper-pagination-bullet-active { background: #fff; opacity: 1; width: 30px; border-radius: 5px; }
 
-    /* Right Column */
-    .cv-hero-right {
-        display: flex;
-        flex-direction: column;
-        gap: 1.25rem;
-    }
-    .cv-hero-r-title {
-        font-size: 1.5rem;
-        font-weight: 400;
-        color: #1e293b;
-        line-height: 1.2;
-    }
-    .cv-hero-r-desc {
-        font-size: 0.78rem;
-        font-weight: 400;
-        color: #64748b;
-        line-height: 1.6;
-    }
-    .cv-hero-r-card {
-        position: relative;
-        height: 260px;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    }
+    /* Right Column: Static Banner */
+    
     .cv-hero-img-sec {
         width: 100%; height: 100%;
         object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    .cv-hero-static-col:hover .cv-hero-img-sec {
+        transform: scale(1.03);
     }
 
     /* ── MARQUEE CLIENTS BAR ──────────── */
@@ -918,1887 +806,1031 @@
 
     /* RESPONSIVE */
     @media (max-width: 1024px) {
-        .cv-hero-grid { grid-template-columns: 1fr 1fr; }
-        .cv-hero-right { display: none; }
-        .cv-hero-center { height: 420px; }
+        
+        
+        
         .cv-explainer-grid { grid-template-columns: 1fr; }
         .cv-gallery-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
         .cv-gallery-grid .gallery-item:first-child { grid-column: 1; grid-row: 1; }
     }
     @media (max-width: 640px) {
-        .cv-hero-modern { padding-top: calc(46px + 1.5rem); }
-        .cv-hero-grid { grid-template-columns: 1fr; }
+        .cv-hero-modern { padding-top: calc(46px + 1.25rem); }
         .cv-hero-center { height: 320px; }
         .cv-gallery-grid { grid-template-columns: 1fr; }
         .cv-products-grid, .cv-adv-grid, .cv-apps-grid { grid-template-columns: 1fr; }
+    }
+    /* ── USP BAR (Premium Style) ── */
+    .cv-usp-bar {
+        background: #ffffff;
+        padding: 1rem 0;
+        position: relative;
+        z-index: 10;
+    }
+    .cv-usp-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+    }
+    .cv-usp-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #334155;
+        transition: transform 0.2s;
+    }
+    .cv-usp-item:hover { transform: translateY(-2px); }
+    .cv-usp-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px; height: 36px;
+        background: #F0F9FF;
+        border-radius: 50%;
+        color: #0EA5E9;
+    }
+    .cv-usp-icon img { width: 20px; height: 20px; }
+    .cv-usp-icon svg { width: 16px; height: 16px; }
+    .cv-usp-label { color: #0f172a; font-weight: 700; }
+    
+    @media (max-width: 768px) {
+        .cv-usp-bar { padding: 0.25rem 0.5rem 0.5rem; border-bottom: none; box-shadow: none; margin-top: 0; }
+        .cv-usp-inner {
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            gap: 0.25rem;
+            overflow-x: auto;
+            scrollbar-width: none; /* Hide scrollbar */
+        }
+        .cv-usp-inner::-webkit-scrollbar { display: none; }
+        .cv-usp-item { gap: 0.35rem; white-space: nowrap; flex: 1; justify-content: center; }
+        .cv-usp-icon { width: 24px; height: 24px; background: transparent; }
+        .cv-usp-icon img { width: 16px; height: 16px; }
+        .cv-usp-label { font-size: 0.65rem; font-weight: 700; }
+    }
+
+    /* ── CATEGORY SWIPER (Premium Style) ── */
+    .cv-cats-section {
+        background: #ffffff;
+        padding: 3rem 0;
+    }
+    .cv-cats-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 4rem;
+        position: relative;
+    }
+    .cats-swiper { overflow: hidden; padding: 1rem 0; margin: -1rem 0; }
+    .cv-cat-slide {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        cursor: pointer;
+        width: 100px !important;
+        transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .cv-cat-slide:hover { transform: translateY(-5px); }
+    .cv-cat-icon-wrap {
+        width: 72px; height: 72px;
+        background: #ffffff;
+        border-radius: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        box-shadow: 0 10px 25px rgba(14,165,233,0.08), 0 4px 10px rgba(14,165,233,0.03);
+        transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .cv-cat-slide:hover .cv-cat-icon-wrap {
+        box-shadow: 0 14px 35px rgba(14,165,233,0.18), 0 6px 15px rgba(14,165,233,0.08);
+        transform: translateY(-3px);
+    }
+    .cv-cat-icon-wrap img {
+        width: 44px; height: 44px; object-fit: contain; transition: transform 0.3s;
+    }
+    .cv-cat-slide:hover .cv-cat-icon-wrap img { transform: scale(1.1); }
+    .cv-cat-badge {
+        position: absolute;
+        top: -8px; right: -8px;
+        font-size: 0.6rem;
+        font-weight: 800;
+        color: #fff;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-family: 'Montserrat', sans-serif;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border: 2px solid #fff;
+    }
+    .cv-cat-name {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #475569;
+        text-align: center;
+        line-height: 1.3;
+        transition: color 0.2s;
+    }
+    .cv-cat-slide:hover .cv-cat-name { color: #0EA5E9; }
+    
+    .cv-cats-nav {
+        position: absolute;
+        top: 50%; transform: translateY(-50%);
+        width: 38px; height: 38px;
+        background: #ffffff;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        color: #475569;
+        transition: all 0.2s;
+        z-index: 10;
+    }
+    .cv-cats-nav:hover { background: #0EA5E9; color: #fff; border-color: #0EA5E9; box-shadow: 0 6px 16px rgba(14,165,233,0.25); }
+    .cv-cats-prev { left: 0; }
+    .cv-cats-next { right: 0; }
+
+    /* Mobile single row category grid */
+    @media (max-width: 768px) {
+        .cv-cats-section { padding: 0.5rem 0 1rem; border-bottom: none; }
+        .cv-cats-inner { padding: 0 0.5rem; }
+        .cv-cat-slide { width: 72px !important; gap: 0.25rem; }
+        .cv-cat-icon-wrap { width: 50px; height: 50px; border-radius: 14px; box-shadow: none; border: 1.5px solid #F1F5F9; }
+        .cv-cat-icon-wrap img { width: 28px; height: 28px; }
+        .cv-cat-icon-wrap svg { width: 22px; height: 22px; }
+        .cv-cat-name { font-size: 0.65rem; font-weight: 600; line-height: 1.2; text-wrap: balance; color: #334155; }
+        .cv-cats-nav { display: none; } /* Hide navigation arrows on mobile */
+        
+        .cats-swiper-mobile-grid {
+            display: flex; /* Single row */
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 0.5rem;
+            padding: 0.25rem 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .cats-swiper-mobile-grid::-webkit-scrollbar { display: none; }
     }
     </style>
 
     {{-- ════ NEW MODERN HERO ════ --}}
     <section class="cv-hero-modern" id="home" itemscope itemtype="https://schema.org/Organization">
-        <meta itemprop="name" content="PT. Airlangga Merapi Nusantara">
-        <meta itemprop="description" content="{{ __('home.meta_desc') }}">
+        <meta itemprop="name" content="AlatRumah.com">
+        <meta itemprop="description" content="Toko online alat rumah tangga terlengkap di Surabaya. Temukan berbagai produk berkualitas dengan harga terbaik.">
         <meta itemprop="address" content="Surabaya, Jawa Timur, Indonesia">
+        {{-- Visually hidden H1 for SEO --}}
+        <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;">AlatRumah.com — Toko Alat Rumah Tangga Terlengkap di Surabaya</h1>
+        @php
+            $initialBgColor = (isset($heroSlides) && $heroSlides->count() > 0 && $heroSlides->first()->bg_color) 
+                                ? $heroSlides->first()->bg_color 
+                                : 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)';
+        @endphp
+        <div class="cv-hero-oval-bg" id="heroOvalBg" style="background: {{ $initialBgColor }};"></div>
+        
         @if(!empty($settings['hero_bg_image']))
             <div class="cv-hero-bg-layer" style="background-image:url('{{ asset('storage/' . $settings['hero_bg_image']) }}')"></div>
-        @else
-            <div class="cv-hero-bg-layer" style="background-image:url('{{ asset('images/amn/hero-main.png') }}')"></div>
         @endif
+        
         <div class="cv-hero-grid">
-            {{-- Left Column --}}
-            <div class="cv-hero-left">
-                <div class="cv-hero-badge">{{ __('home.hero_badge') }}</div>
-                <h1 class="cv-hero-title">
-                    {{ __('home.hero_title_1') }}<br>
-                    <span class="cv-hero-pill-text">
-                        <span class="cv-hero-pill-icon">
-                            {{-- Fire / Charcoal icon --}}
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5z"/></svg>
-                        </span>
-                        {{ __('home.hero_pill') }}
-                    </span><br>
-                    {{ __('home.hero_title_3') }}
-                </h1>
-                <div class="cv-hero-icons">
-                    <div class="cv-hero-icon-circle" title="Export Certified">
-                        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    </div>
-                    <div class="cv-hero-icon-circle" title="FSC Certified">
-                        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    </div>
-                    <div class="cv-hero-icon-circle" title="On-Time Delivery">
-                        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    </div>
-                </div>
-                <div class="cv-hero-desc">
-                    {{ __('home.hero_desc') }}
-                </div>
-                <div class="cv-hero-actions">
-                    <a href="#produk" class="cv-btn-solid">{{ __('home.hero_cta_primary') }}</a>
-                    <a href="{{ route_locale('about') }}" class="cv-btn-outline">{{ __('home.hero_cta_secondary') }}</a>
-                </div>
-            </div>
-
-            {{-- Center Column --}}
-            <div class="cv-hero-center">
+            {{-- Left Column: Slider --}}
+            <div class="cv-hero-slider-col">
                 @if(isset($heroSlides) && $heroSlides->count() > 0)
                     <div class="swiper hero-swiper">
                         <div class="swiper-wrapper">
                             @foreach($heroSlides as $slide)
-                                <div class="swiper-slide hero-swiper-slide">
-                                    <img src="{{ asset('storage/' . $slide->image) }}" alt="{{ $slide->title }}" class="cv-hero-img-main" width="800" height="800" fetchpriority="high">
-                                </div>
+                                <a href="{{ $slide->button_url ?? '#' }}" class="swiper-slide hero-swiper-slide" data-bg-color="{{ $slide->bg_color ?? 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)' }}">
+                                    <img src="{{ asset('storage/' . $slide->image) }}" alt="{{ $slide->title }}" class="cv-hero-img-main" width="800" height="440" fetchpriority="high">
+                                </a>
                             @endforeach
                         </div>
                         <div class="swiper-pagination hero-swiper-pagination"></div>
                     </div>
                 @elseif(!empty($settings['hero_main_image']))
-                    <img src="{{ asset('storage/' . $settings['hero_main_image']) }}" alt="{{ __('home.hero_badge') }}" class="cv-hero-img-main" width="800" height="800" fetchpriority="high">
+                    <img src="{{ asset('storage/' . $settings['hero_main_image']) }}" alt="Promo Utama" class="cv-hero-img-main" width="800" height="440" fetchpriority="high">
                 @else
-                    <img src="{{ asset('images/amn/hero-main.png') }}" alt="Arang Briket Premium PT. Airlangga Merapi Nusantara Surabaya" class="cv-hero-img-main" width="800" height="800" fetchpriority="high">
-                @endif
-                <div class="cv-glass-badge" style="top:1.5rem;left:1.5rem;">{{ __('home.hero_badge_1') }}</div>
-                <div class="cv-glass-badge" style="bottom:7.5rem;left:1.5rem;">{{ __('home.hero_badge_2') }}</div>
-                <div class="cv-glass-card">
-                    <div class="cv-glass-num">{{ $settings['stat_years'] ?? '10' }}+</div>
-                    <div class="cv-glass-text">{{ __('home.hero_stat_label') }}</div>
-                </div>
-            </div>
-
-            {{-- Right Column --}}
-            <div class="cv-hero-right">
-                <h2 class="cv-hero-r-title">{!! nl2br(e(__('home.hero_right_title'))) !!}</h2>
-                <div class="cv-hero-r-desc">{{ __('home.hero_right_desc') }}</div>
-                <div class="cv-hero-r-card">
-                    @if(!empty($settings['hero_secondary_image']))
-                        <img src="{{ asset('storage/' . $settings['hero_secondary_image']) }}" alt="{{ __('home.hero_right_title') }}" class="cv-hero-img-sec" width="600" height="600" loading="lazy">
-                    @else
-                        <img src="{{ asset('images/amn/hero-secondary.png') }}" alt="Ekspor Arang Briket AMN ke seluruh dunia" class="cv-hero-img-sec" width="600" height="600" loading="lazy">
-                    @endif
-                    <div class="cv-glass-card" style="bottom:1rem;right:1rem;padding:1rem;">
-                        <div class="cv-glass-num" style="font-size:1.5rem;">{{ $settings['stat_clients'] ?? '50' }}+</div>
-                        <div class="cv-glass-text">{{ __('home.hero_right_stat_label') }}</div>
+                    <div style="width:100%; height:100%; min-height:300px; border-radius:16px; background:#F1F5F9; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#64748B; border:2px dashed #CBD5E1;">
+                        <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:1rem;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <span style="font-family:'Montserrat',sans-serif; font-weight:600; font-size:1.1rem; color:#475569;">Banner Utama Kosong</span>
+                        <span style="font-size:0.8rem; margin-top:0.25rem; color:#94A3B8;">(Upload di menu Banner Hero)</span>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- ════ PREMIUM CLIENTS BAR ════ --}}
-    @if($clients->count())
-        <section class="cv-clients-section">
-            <div class="cv-clients-header">
-                <span class="cv-clients-label">{{ __('home.clients_label') }}</span>
-            </div>
-
-            <div class="cv-marquee-container">
-                <div class="cv-marquee-track">
-                    {{-- Loop twice to create seamless infinite scroll effect --}}
-                    @foreach([1, 2] as $loopGroup)
-                        @foreach($clients as $client)
-                            @if($client->logo)
-                                <div class="cv-client-logo-card">
-                                    <img
-                                        src="{{ asset('storage/' . $client->logo) }}"
-                                        alt="{{ $client->alt_text ?: $client->name }}"
-                                        class="cv-client-logo-img"
-                                        title="{{ $client->name }}"
-                                        loading="lazy"
-                                    >
-                                </div>
-                            @else
-                                <div class="cv-client-chip-v2">{{ $client->name }}</div>
-                            @endif
-                        @endforeach
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
-
-    {{-- ════ ABOUT SECTION (PREMIUM 4 CARDS) ════ --}}
-    <section class="cv-about-premium section-pad" id="tentang" style="background:#ffffff; color:#0f172a; position:relative; z-index:2;">
-        <div class="container">
-            {{-- Section Header --}}
-            <div style="text-align:center; max-width:800px; margin:0 auto 4rem;">
-                <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:#64748b; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-                    <span style="width:4px; height:4px; background:#0ea5e9; border-radius:50%;"></span>
-                    {{ __('home.about_label') }}
-                </div>
-
-                {{-- Dynamic Heading with Icons --}}
-                <h2 style="font-size:clamp(2rem, 4vw, 3.5rem); font-weight:500; line-height:1.15; letter-spacing:-0.03em; color:#0f172a;" class="about-premium-heading">
-                    {!! __('home.about_heading') !!}
-                </h2>
-            </div>
-
-            {{-- 4 Cards Grid --}}
-            <div class="about-cards-grid">
-
-                {{-- Card 1: Light Gray (Keywords pattern) --}}
-                <div class="ab-card ab-card-gray" data-aos="fade-up" data-aos-delay="0">
-                    <div class="ab-card-bg-pattern">
-                        <span class="ab-chip" style="top:10%;left:5%;">{{ __('home.about_c1_chip1') }}</span>
-                        <span class="ab-chip" style="top:15%;left:45%;">{{ __('home.about_c1_chip2') }}</span>
-                        <span class="ab-chip" style="top:12%;left:80%;">{{ __('home.about_c1_chip3') }}</span>
-                        <span class="ab-chip" style="top:35%;left:15%;">{{ __('home.about_c1_chip4') }}</span>
-                        <span class="ab-chip" style="top:38%;left:50%;">{{ __('home.about_c1_chip5') }}</span>
-                        <span class="ab-chip" style="top:60%;left:5%;">{{ __('home.about_c1_chip6') }}</span>
-                        <span class="ab-chip" style="top:65%;left:40%;">{{ __('home.about_c1_chip7') }}</span>
-                        <span class="ab-chip" style="top:62%;left:75%;">{{ __('home.about_c1_chip8') }}</span>
-                    </div>
-                    <div class="ab-card-content">
-                        <div class="ab-card-label">{{ __('home.about_c1_label') }}</div>
-                        <div class="ab-card-value">{{ __('home.about_c1_value') }}</div>
-                    </div>
-                </div>
-
-                {{-- Card 2: Solid Accent (Blue) --}}
-                <div class="ab-card ab-card-accent" data-aos="fade-up" data-aos-delay="100">
-                    <div class="ab-card-content" style="height: 100%; display: flex; flex-direction: column;">
-                        <div class="ab-card-label" style="color:rgba(255,255,255,0.9);">{{ __('home.about_c2_label') }}</div>
-                        <div class="ab-card-value" style="color:#ffffff;">{{ __('home.about_c2_value') }}</div>
-                        <div class="ab-card-desc" style="margin-top:auto; color:rgba(255,255,255,0.9);">
-                            {{ __('home.about_c2_desc') }}
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Card 3: Image Background --}}
-                <div class="ab-card ab-card-image" data-aos="fade-up" data-aos-delay="200">
-                    @if(!empty($settings['about_c3_image']))
-                        <img src="{{ asset('storage/' . $settings['about_c3_image']) }}" alt="Ekspor Arang Briket" class="ab-card-img" width="400" height="400" loading="lazy">
-                    @else
-                        <img src="{{ asset('images/amn/factory.png') }}" alt="Fasilitas Produksi AMN Surabaya" class="ab-card-img" width="400" height="400" loading="lazy">
-                    @endif
-                    <div class="ab-card-overlay"></div>
-                    <div class="ab-card-content" style="position:relative; z-index:2; height:100%; display:flex; flex-direction:column; justify-content:flex-end;">
-                        <div class="ab-card-value" style="color:#ffffff; margin-bottom:0.5rem;">{{ __('home.about_c3_value') }}</div>
-                        <div class="ab-card-desc" style="color:rgba(255,255,255,0.9);">
-                            {{ __('home.about_c3_desc') }}
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Card 4: Light Gray --}}
-                <div class="ab-card ab-card-gray" data-aos="fade-up" data-aos-delay="300">
-                    <div class="ab-card-content" style="height: 100%; display: flex; flex-direction: column;">
-                        <div class="ab-card-label">{{ __('home.about_c4_label') }}</div>
-                        <div class="ab-card-value">{{ __('home.about_c4_value') }}</div>
-                        <div class="ab-card-desc" style="margin-top:auto;">
-                            {{ __('home.about_c4_desc') }}
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <style>
-    /* CSS FOR PREMIUM ABOUT SECTION */
-    .about-premium-heading {
-        /* Style specifically for the heading */
-    }
-    .about-premium-heading strong {
-        font-weight: 600;
-    }
-    .about-premium-heading .ab-icon-blue,
-    .about-premium-heading .ab-icon-green {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 1em;
-        height: 1em;
-        border-radius: 50%;
-        vertical-align: middle;
-        margin: 0 0.1em;
-        transform: translateY(-0.1em);
-    }
-    .about-premium-heading .ab-icon-blue {
-        background: #0ea5e9; /* blue to match hero */
-        color: #fff;
-        padding: 0.2em;
-    }
-    .about-premium-heading .ab-icon-green {
-        background: #10b981; /* accent color */
-        color: #fff;
-        padding: 0.2em;
-    }
-
-    .about-cards-grid {
-        display: grid;
-        grid-template-columns: repeat(1, 1fr);
-        gap: 1.5rem;
-    }
-    @media (min-width: 768px) {
-        .about-cards-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    @media (min-width: 1024px) {
-        .about-cards-grid {
-            grid-template-columns: repeat(4, 1fr);
-        }
-    }
-
-    .ab-card {
-        border-radius: 24px;
-        padding: 2rem;
-        position: relative;
-        overflow: hidden;
-        min-height: 320px;
-        display: flex;
-        flex-direction: column;
-    }
-    .ab-card-gray {
-        background: #f1f5f9;
-    }
-    .ab-card-accent {
-        background: #0ea5e9; /* matching hero blue */
-    }
-    .ab-card-image {
-        padding: 2rem;
-    }
-    .ab-card-img {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 0;
-    }
-    .ab-card-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 60%);
-        z-index: 1;
-    }
-
-    .ab-card-label {
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: #64748b;
-        margin-bottom: 1rem;
-    }
-    .ab-card-value {
-        font-size: 3rem;
-        font-weight: 400;
-        line-height: 1;
-        color: #0f172a;
-        letter-spacing: -0.05em;
-    }
-    .ab-card-desc {
-        font-size: 0.95rem;
-        line-height: 1.5;
-        color: #475569;
-        font-weight: 400;
-    }
-
-    /* Pattern for Card 1 */
-    .ab-card-bg-pattern {
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-        pointer-events: none;
-        opacity: 0.6;
-    }
-    .ab-chip {
-        position: absolute;
-        background: #ffffff;
-        padding: 0.4rem 0.8rem;
-        border-radius: 999px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        color: #94a3b8;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-        white-space: nowrap;
-    }
-    .ab-card-gray .ab-card-content {
-        position: relative;
-        z-index: 1;
-        margin-top: auto; /* push text to bottom for card 1 */
-    }
-    </style>
-
-    {{-- ════ PRODUCTS (CATALOG STYLE) ════ --}}
-    <style>
-        /* ── PRODUCT CATALOG SECTION ─────────────────── */
-        .cv-catalog-section {
-            background: #F8FAFC;
-            padding: 5rem 0;
-        }
-        .cv-catalog-header {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 2rem;
-            margin-bottom: 2.5rem;
-            flex-wrap: wrap;
-        }
-        .cv-catalog-title {
-            font-size: clamp(1.75rem, 3.5vw, 3rem);
-            font-weight: 500;
-            color: #0F172A;
-            line-height: 1.15;
-            letter-spacing: -0.02em;
-            max-width: 420px;
-        }
-        .cv-catalog-right-info {
-            max-width: 260px;
-            text-align: right;
-        }
-        .cv-catalog-right-info p {
-            font-size: 0.875rem;
-            color: #64748B;
-            line-height: 1.6;
-            margin-bottom: 0.5rem;
-        }
-        .cv-catalog-right-info small {
-            font-size: 0.75rem;
-            color: #94A3B8;
-        }
-
-        /* Horizontal scroll track */
-        .cv-catalog-track-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            position: relative;
-        }
-        .cv-catalog-scroll {
-            display: grid;
-            grid-template-columns: repeat(5, calc(25% - 0.75rem));
-            gap: 1rem;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-        .cv-catalog-scroll::-webkit-scrollbar { display: none; }
-
-        /* Product Card */
-        .cv-cat-card {
-            scroll-snap-align: start;
-            position: relative;
-            border-radius: 18px;
-            overflow: hidden;
-            min-height: 300px;
-            text-decoration: none;
-            display: block;
-            flex-shrink: 0;
-            background: #e2e8f0;
-            cursor: pointer;
-            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s;
-        }
-        .cv-cat-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 50px rgba(14, 165, 233, 0.15);
-        }
-        .cv-cat-card img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            position: absolute;
-            inset: 0;
-            transition: transform 0.5s ease;
-        }
-        .cv-cat-card:hover img { transform: scale(1.06); }
-
-        /* Dark gradient overlay at bottom */
-        .cv-cat-card-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 55%, transparent 100%);
-            z-index: 1;
-        }
-        .cv-cat-card-placeholder {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 0.5rem;
-            color: #94a3b8;
-        }
-        .cv-cat-card-body {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            padding: 1.25rem;
-            z-index: 2;
-        }
-        .cv-cat-card-name {
-            font-size: 0.9375rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 0.25rem;
-            line-height: 1.3;
-        }
-        .cv-cat-card-spec {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.7);
-            margin-bottom: 0;
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-        .cv-cat-card-spec span {
-            background: rgba(14,165,233,0.85);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        /* Bottom Controls: Button left, Nav arrows right */
-        .cv-catalog-footer {
-            max-width: 1200px;
-            margin: 2rem auto 0;
-            padding: 0 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .cv-catalog-btn-all {
-            background: #1E293B;
-            color: #fff;
-            padding: 0.875rem 2rem;
-            border-radius: 999px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
-        }
-        .cv-catalog-btn-all:hover {
-            background: #0EA5E9;
-            transform: translateY(-2px);
-        }
-        .cv-catalog-nav {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .cv-catalog-nav-btn {
-            width: 42px; height: 42px;
-            border-radius: 50%;
-            background: #fff;
-            border: 1.5px solid #E2E8F0;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            color: #334155;
-            transition: all 0.2s;
-        }
-        .cv-catalog-nav-btn:hover {
-            background: #0EA5E9;
-            border-color: #0EA5E9;
-            color: #fff;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .cv-catalog-scroll { grid-template-columns: repeat(5, 280px); }
-        }
-        @media (max-width: 640px) {
-            .cv-catalog-section { padding: 3.5rem 0; }
-            .cv-catalog-header { flex-direction: column; }
-            .cv-catalog-right-info { text-align: left; max-width: 100%; }
-            .cv-catalog-scroll { grid-template-columns: repeat(5, 80vw); }
-            .cv-cat-card { min-height: 260px; }
-        }
-    </style>
-
-    <section class="cv-catalog-section" id="produk">
-
-        {{-- Header: Title left, description right --}}
-        <div class="cv-catalog-header">
-            <h2 class="cv-catalog-title">{!! nl2br(e(__('home.catalog_title'))) !!}</h2>
-            <div class="cv-catalog-right-info">
-                <p>{{ __('home.catalog_desc') }}</p>
-                <small>{{ __('home.catalog_note') }}</small>
-            </div>
-        </div>
-
-        {{-- Cards Track --}}
-        <div class="cv-catalog-track-wrapper">
-            <div class="cv-catalog-scroll" id="cv-catalog-scroll">
-                @php
-                    $productData = [
-                        ['type' => 'CV-45', 'size' => '18"', 'diameter' => '45 cm', 'capacity' => '52,47', 'slug' => 'cv-45-18'],
-                        ['type' => 'CV-60', 'size' => '24"', 'diameter' => '60 cm', 'capacity' => '98,79', 'slug' => 'cv-60-24'],
-                        ['type' => 'CV-75', 'size' => '30"', 'diameter' => '75 cm', 'capacity' => '147,95', 'slug' => 'cv-75-30'],
-                        ['type' => 'CV-90', 'size' => '36"', 'diameter' => '90 cm', 'capacity' => '215,79', 'slug' => 'cv-90-36'],
-                        ['type' => 'CV-105', 'size' => '42"', 'diameter' => '105 cm', 'capacity' => '257,87', 'slug' => 'cv-105-42'],
-                    ];
-                @endphp
-
-                @if($products->count())
-                    @foreach($products as $i => $product)
-                        @php $pd = $productData[$i] ?? ['type' => 'CV', 'size' => '', 'diameter' => '', 'capacity' => '', 'slug' => $product->slug]; @endphp
-                        <a href="{{ route_locale('products.show', $product->slug) }}" class="cv-cat-card">
-                            @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy">
-                            @else
-                                <div class="cv-cat-card-placeholder">
-                                    <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                                    <span style="font-size:.7rem;">Upload di Admin</span>
-                                </div>
-                            @endif
-                            <div class="cv-cat-card-overlay"></div>
-                            <div class="cv-cat-card-body">
-                                <div class="cv-cat-card-name">{{ $product->name }}</div>
-                                <div class="cv-cat-card-spec">
-                                    <span>{{ $pd['type'] }}</span>
-                                    Ø {{ $pd['diameter'] }} — {{ $pd['capacity'] }} m³/mnt
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
-                @else
-                    @foreach($productData as $i => $pd)
-                        <a href="{{ route_locale('products') }}" class="cv-cat-card">
-                            <div class="cv-cat-card-placeholder">
-                                <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                                <span style="font-size:.7rem;">Upload di Admin</span>
-                            </div>
-                            <div class="cv-cat-card-overlay"></div>
-                            <div class="cv-cat-card-body">
-                                <div class="cv-cat-card-name">Turbine Ventilator {{ $pd['type'] }}</div>
-                                <div class="cv-cat-card-spec">
-                                    <span>{{ $pd['type'] }}</span>
-                                    Ø {{ $pd['diameter'] }} — {{ $pd['capacity'] }} m³/mnt
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
                 @endif
             </div>
-        </div>
-
-        {{-- Footer: Button left, Arrows right --}}
-        <div class="cv-catalog-footer">
-            <a href="{{ route_locale('products') }}" class="cv-catalog-btn-all">
-                {{ __('home.catalog_btn_all') }}
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-            </a>
-            <div class="cv-catalog-nav">
-                <button class="cv-catalog-nav-btn" id="cv-scroll-prev" aria-label="Sebelumnya">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-                <button class="cv-catalog-nav-btn" id="cv-scroll-next" aria-label="Berikutnya">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <script>
-    (function() {
-        var track = document.getElementById('cv-catalog-scroll');
-        var prev = document.getElementById('cv-scroll-prev');
-        var next = document.getElementById('cv-scroll-next');
-        if (!track || !prev || !next) return;
-        var scrollAmt = function() {
-            var card = track.querySelector('.cv-cat-card');
-            return card ? card.offsetWidth + 16 : 260;
-        };
-        next.addEventListener('click', function() { track.scrollBy({ left: scrollAmt(), behavior: 'smooth' }); });
-        prev.addEventListener('click', function() { track.scrollBy({ left: -scrollAmt(), behavior: 'smooth' }); });
-    })();
-    </script>
-
-
-    {{-- ════ ADVANTAGES (PREMIUM REDESIGN) ════ --}}
-    <style>
-    /* ── KEUNGGULAN ───────────────────────────── */
-    .cv-adv-premium {
-        background: #ffffff;
-        padding: 5rem 0;
-        position: relative;
-        overflow: hidden;
-    }
-    .cv-adv-premium::before {
-        content: '';
-        position: absolute;
-        top: -200px; right: -200px;
-        width: 600px; height: 600px;
-        background: radial-gradient(circle, rgba(14,165,233,0.04) 0%, transparent 70%);
-        pointer-events: none;
-    }
-    .cv-adv-inner {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-    }
-    /* Header row: label + title left, CTA right */
-    .cv-adv-header {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 2rem;
-        margin-bottom: 3.5rem;
-        flex-wrap: wrap;
-    }
-    .cv-adv-section-label {
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: #64748B;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-    }
-    .cv-adv-section-label::before {
-        content: '';
-        width: 4px; height: 4px;
-        border-radius: 50%;
-        background: #0EA5E9;
-    }
-    .cv-adv-section-title {
-        font-size: clamp(2rem, 3.5vw, 3rem);
-        font-weight: 500;
-        color: #0F172A;
-        line-height: 1.15;
-        letter-spacing: -0.025em;
-    }
-
-    /* Premium 7-card grid — matches about section */
-    .cv-adv-cards {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.25rem;
-    }
-    /* Special first card: full-height accent (like about card-2) */
-    .cv-adv-card-v2 {
-        background: #F1F5F9;
-        border-radius: 22px;
-        padding: 2rem;
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        min-height: 240px;
-        transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s;
-    }
-    .cv-adv-card-v2:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 20px 50px rgba(14,165,233,0.1);
-    }
-    .cv-adv-card-v2.accent {
-        background: #0EA5E9;
-    }
-    .cv-adv-card-v2.accent-dark {
-        background: #0F172A;
-    }
-    .cv-adv-card-icon-wrap {
-        width: 48px; height: 48px;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1.5rem;
-        flex-shrink: 0;
-    }
-    .cv-adv-card-icon-wrap.blue-bg { background: #E0F2FE; color: #0EA5E9; }
-    .cv-adv-card-icon-wrap.white-bg { background: rgba(255,255,255,0.2); color: #fff; }
-    .cv-adv-card-icon-wrap.dark-bg { background: rgba(255,255,255,0.06); color: #38BDF8; }
-    .cv-adv-card-num {
-        font-size: 2.75rem;
-        font-weight: 400;
-        line-height: 1;
-        letter-spacing: -0.04em;
-        color: #0F172A;
-        margin-bottom: 0.5rem;
-    }
-    .cv-adv-card-num.white { color: #fff; }
-    .cv-adv-card-num.blue { color: #38BDF8; }
-    .cv-adv-card-title {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #0F172A;
-        margin-bottom: 0.5rem;
-    }
-    .cv-adv-card-title.white { color: #fff; }
-    .cv-adv-card-title.light { color: rgba(255,255,255,0.9); }
-    .cv-adv-card-desc {
-        font-size: 0.8125rem;
-        line-height: 1.65;
-        color: #64748B;
-        margin-top: auto;
-    }
-    .cv-adv-card-desc.white { color: rgba(255,255,255,0.75); }
-
-    /* Responsive */
-    @media (max-width: 1024px) { .cv-adv-cards { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 768px) {
-        .cv-adv-premium { padding: 3.5rem 0; }
-        .cv-adv-cards { 
-            grid-template-columns: none !important;
-            grid-auto-flow: column;
-            grid-auto-columns: 78vw;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding-bottom: 1.5rem;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            gap: 1rem;
-        }
-        .cv-adv-cards::-webkit-scrollbar { display: none; }
-        .cv-adv-cards > * { scroll-snap-align: start; }
-        .cv-adv-card-v2 { min-height: 180px; }
-        .cv-adv-card-span-2 { 
-            grid-column: auto !important; 
-            flex-direction: column !important; 
-            align-items: flex-start !important; 
-        }
-    }
-
-    /* ── APLIKASI ─────────────────────────────── */
-    .cv-apps-premium {
-        background: #F8FAFC;
-        padding: 5rem 0;
-    }
-    .cv-apps-inner {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-    }
-    .cv-apps-header {
-        max-width: 600px;
-        margin-bottom: 3rem;
-    }
-    /* Horizontal scroll row of app cards */
-    .cv-apps-grid-v2 {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.25rem;
-    }
-    .cv-app-card-v2 {
-        background: #ffffff;
-        border: 1px solid #E2E8F0;
-        border-radius: 20px;
-        display: flex;
-        flex-direction: column;
-        transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
-        overflow: hidden;
-    }
-    .cv-app-img-wrapper-v2 {
-        width: 100%;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        background: #F8FAFC;
-    }
-    .cv-app-img-wrapper-v2 img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s;
-    }
-    .cv-app-card-v2:hover .cv-app-img-wrapper-v2 img { transform: scale(1.05); }
-    .cv-app-card-body-v2 {
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        flex: 1;
-    }
-    .cv-app-card-v2:hover {
-        border-color: #0EA5E9;
-        transform: translateY(-6px);
-        box-shadow: 0 16px 40px rgba(14,165,233,0.1);
-    }
-    .cv-app-icon-circle {
-        width: 50px; height: 50px;
-        background: #F0F9FF;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #0EA5E9;
-        flex-shrink: 0;
-        transition: all 0.3s;
-    }
-    .cv-app-card-v2:hover .cv-app-icon-circle {
-        background: #0EA5E9;
-        color: #fff;
-    }
-    .cv-app-card-title-v2 {
-        font-size: 1.05rem;
-        font-weight: 600;
-        color: #0F172A;
-        margin: 0;
-    }
-    .cv-app-card-desc-v2 {
-        font-size: 0.8125rem;
-        color: #64748B;
-        line-height: 1.65;
-        margin: 0;
-    }
-    
-    @media (max-width: 1024px) { .cv-apps-grid-v2 { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 768px) {
-        .cv-apps-premium { padding: 3.5rem 0; }
-        .cv-apps-grid-v2 { 
-            grid-template-columns: none !important;
-            grid-auto-flow: column;
-            grid-auto-columns: 78vw;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding-bottom: 1.5rem;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            gap: 1rem;
-        }
-        .cv-apps-grid-v2::-webkit-scrollbar { display: none; }
-        .cv-apps-grid-v2 > * { scroll-snap-align: start; }
-    }
-    </style>
-
-    <section class="cv-adv-premium" id="keunggulan">
-        <div class="cv-adv-inner">
-            {{-- Section Header --}}
-            <div class="cv-adv-header">
-                <div>
-                    <div class="cv-adv-section-label">{{ __('home.adv_label') }}</div>
-                    <h2 class="cv-adv-section-title">{!! nl2br(e(__('home.adv_title'))) !!}</h2>
-                </div>
-                <p style="max-width:320px;font-size:0.875rem;color:#64748B;line-height:1.65;text-align:right;">
-                    {{ __('home.adv_subtitle') }}
-                </p>
-            </div>
-
-            {{-- Premium Cards Grid --}}
-            <div class="cv-adv-cards">
-
-                {{-- Card 1: Export Countries — Blue Accent --}}
-                <div class="cv-adv-card-v2 accent" data-aos="fade-up" data-aos-delay="0">
-                    <div class="cv-adv-card-icon-wrap white-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-                    </div>
-                    <div class="cv-adv-card-num white">{{ __('home.adv_c1_num') }}</div>
-                    <div class="cv-adv-card-title white">{{ __('home.adv_c1_title') }}</div>
-                    <div class="cv-adv-card-desc white">{{ __('home.adv_c1_desc') }}</div>
-                </div>
-
-                {{-- Card 2: Premium Grade --}}
-                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="80">
-                    <div class="cv-adv-card-icon-wrap blue-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    </div>
-                    <div class="cv-adv-card-num">{{ __('home.adv_c2_num') }}</div>
-                    <div class="cv-adv-card-title">{{ __('home.adv_c2_title') }}</div>
-                    <div class="cv-adv-card-desc">{{ __('home.adv_c2_desc') }}</div>
-                </div>
-
-                {{-- Card 3: 24/7 Support --}}
-                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="160">
-                    <div class="cv-adv-card-icon-wrap blue-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    </div>
-                    <div class="cv-adv-card-num">{{ __('home.adv_c3_num') }}</div>
-                    <div class="cv-adv-card-title">{{ __('home.adv_c3_title') }}</div>
-                    <div class="cv-adv-card-desc">{{ __('home.adv_c3_desc') }}</div>
-                </div>
-
-                {{-- Card 4: Production Capacity — Dark --}}
-                <div class="cv-adv-card-v2 accent-dark" data-aos="fade-up" data-aos-delay="240">
-                    <div class="cv-adv-card-icon-wrap dark-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                    </div>
-                    <div class="cv-adv-card-num blue">{{ __('home.adv_c4_num') }}</div>
-                    <div class="cv-adv-card-title light">{{ __('home.adv_c4_title') }}</div>
-                    <div class="cv-adv-card-desc white">{{ __('home.adv_c4_desc') }}</div>
-                </div>
-
-                {{-- Card 5: Eco-Friendly --}}
-                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="0">
-                    <div class="cv-adv-card-icon-wrap blue-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12c0-2.76 1.12-5.26 2.93-7.07M12 2v10"/></svg>
-                    </div>
-                    <div class="cv-adv-card-title" style="margin-top:auto;">{{ __('home.adv_c5_title') }}</div>
-                    <div class="cv-adv-card-desc">{{ __('home.adv_c5_desc') }}</div>
-                </div>
-
-                {{-- Card 6: On-Time Delivery --}}
-                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="80">
-                    <div class="cv-adv-card-icon-wrap blue-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    </div>
-                    <div class="cv-adv-card-title" style="margin-top:auto;">{{ __('home.adv_c6_title') }}</div>
-                    <div class="cv-adv-card-desc">{{ __('home.adv_c6_desc') }}</div>
-                </div>
-
-                {{-- Card 7: International Certifications — spans 2 columns --}}
-                <div class="cv-adv-card-v2 cv-adv-card-span-2" data-aos="fade-up" data-aos-delay="160" style="grid-column: span 2; flex-direction: row; gap: 2rem; align-items: center;">
-                    <div class="cv-adv-card-icon-wrap blue-bg" style="flex-shrink:0; width:60px; height:60px;">
-                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    </div>
-                    <div>
-                        <div class="cv-adv-card-title" style="font-size:1.125rem; margin-bottom:0.5rem;">{{ __('home.adv_c7_title') }}</div>
-                        <div class="cv-adv-card-desc">{{ __('home.adv_c7_desc') }}</div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    {{-- ════ APPLICATIONS (PREMIUM REDESIGN) ════ --}}
-    <section class="cv-apps-premium" id="pasar-ekspor">
-        <div class="cv-apps-inner">
-            <div class="cv-apps-header">
-                <div class="cv-adv-section-label">{{ __('home.apps_label') }}</div>
-                <h2 class="cv-adv-section-title" style="margin-top:0.75rem;">{!! nl2br(e(__('home.apps_title'))) !!}</h2>
-                <p style="margin-top:1rem;font-size:0.875rem;color:#64748B;line-height:1.65;">
-                    {{ __('home.apps_desc') }}
-                </p>
-            </div>
-
-            <div class="cv-apps-grid-v2">
-                @php
-                    $apps = [
-                        [
-                            'title' => __('home.app1_title'),
-                            'desc'  => __('home.app1_desc'),
-                            'icon'  => '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
-                            'img'   => !empty($settings['app_img_asia']) ? asset('storage/'.$settings['app_img_asia']) : asset('images/amn/quality-lab.png')
-                        ],
-                        [
-                            'title' => __('home.app2_title'),
-                            'desc'  => __('home.app2_desc'),
-                            'icon'  => '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-                            'img'   => !empty($settings['app_img_middleeast']) ? asset('storage/'.$settings['app_img_middleeast']) : asset('images/amn/hero-secondary.png')
-                        ],
-                        [
-                            'title' => __('home.app3_title'),
-                            'desc'  => __('home.app3_desc'),
-                            'icon'  => '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
-                            'img'   => !empty($settings['app_img_europe']) ? asset('storage/'.$settings['app_img_europe']) : asset('images/amn/factory.png')
-                        ],
-                        [
-                            'title' => __('home.app4_title'),
-                            'desc'  => __('home.app4_desc'),
-                            'icon'  => '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
-                            'img'   => !empty($settings['app_img_america']) ? asset('storage/'.$settings['app_img_america']) : asset('images/amn/product.png')
-                        ],
-                    ];
-                @endphp
-                @foreach($apps as $i => $app)
-                    <div class="cv-app-card-v2" data-aos="fade-up" data-aos-delay="{{ $i * 50 }}">
-                        <div class="cv-app-img-wrapper-v2">
-                            <img src="{{ $app['img'] }}" alt="{{ $app['title'] }} - PT. Airlangga Merapi Nusantara" loading="lazy">
-                        </div>
-                        <div class="cv-app-card-body-v2">
-                            <div style="display:flex; align-items:center; gap:1rem;">
-                                <div class="cv-app-icon-circle">{!! $app['icon'] !!}</div>
-                                <h3 class="cv-app-card-title-v2">{{ $app['title'] }}</h3>
-                            </div>
-                            <p class="cv-app-card-desc-v2">{{ $app['desc'] }}</p>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-
-    {{-- ════ PREMIUM GALLERY & TESTIMONIALS CSS ════ --}}
-    <style>
-    /* ── GALERI ─────────────────────────────── */
-    .cv-gallery-premium {
-        background: #ffffff;
-        padding: 5rem 0;
-    }
-    .cv-gallery-inner {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-    }
-    .cv-gallery-header {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 2rem;
-        margin-bottom: 3.5rem;
-        flex-wrap: wrap;
-    }
-    .cv-gallery-grid-v2 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-    }
-    .cv-gallery-card-v2 {
-        position: relative;
-        border-radius: 20px;
-        overflow: hidden;
-        aspect-ratio: 4/3;
-        display: block;
-        background: #F1F5F9;
-    }
-    .cv-gallery-img-v2 {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.6s cubic-bezier(0.22,1,0.36,1);
-    }
-    .cv-gallery-card-v2:hover .cv-gallery-img-v2 {
-        transform: scale(1.08);
-    }
-    .cv-gallery-overlay-v2 {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0) 60%);
-        display: flex;
-        align-items: flex-end;
-        padding: 1.5rem;
-        transition: background 0.3s;
-    }
-    .cv-gallery-card-v2:hover .cv-gallery-overlay-v2 {
-        background: linear-gradient(to top, rgba(14,165,233,0.9) 0%, rgba(15,23,42,0) 70%);
-    }
-    .cv-gallery-meta-v2 {
-        color: #fff;
-        transform: translateY(10px);
-        transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
-    }
-    .cv-gallery-card-v2:hover .cv-gallery-meta-v2 {
-        transform: translateY(0);
-    }
-    .cv-gallery-title-v2 {
-        font-size: 1.125rem;
-        font-weight: 600;
-        margin-bottom: 0.25rem;
-    }
-    .cv-gallery-client-v2 {
-        font-size: 0.8125rem;
-        color: rgba(255,255,255,0.75);
-    }
-
-    /* ── TESTIMONI ──────────────────────────── */
-    .cv-testi-premium {
-        background: #F8FAFC;
-        padding: 5rem 0;
-        position: relative;
-        overflow: hidden;
-    }
-    .cv-testi-premium::before {
-        content: '';
-        position: absolute;
-        bottom: -200px; left: -200px;
-        width: 600px; height: 600px;
-        background: radial-gradient(circle, rgba(14,165,233,0.04) 0%, transparent 70%);
-        pointer-events: none;
-    }
-    .cv-testi-inner {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-    }
-    .cv-testi-grid-v2 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-    }
-    .cv-testi-card-v2 {
-        background: #ffffff;
-        border: 1.5px solid #E2E8F0;
-        border-radius: 20px;
-        padding: 2.25rem;
-        position: relative;
-        transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
-    }
-    .cv-testi-card-v2:hover {
-        border-color: #0EA5E9;
-        transform: translateY(-6px);
-        box-shadow: 0 16px 40px rgba(14,165,233,0.1);
-    }
-    .cv-testi-quote-icon {
-        position: absolute;
-        top: 1.5rem;
-        right: 1.5rem;
-        color: #F1F5F9;
-        width: 48px;
-        height: 48px;
-        transition: color 0.3s;
-    }
-    .cv-testi-card-v2:hover .cv-testi-quote-icon {
-        color: #E0F2FE;
-    }
-    .cv-testi-stars-v2 {
-        display: flex;
-        gap: 0.25rem;
-        color: #F59E0B;
-        margin-bottom: 1.25rem;
-    }
-    .cv-testi-text-v2 {
-        font-size: 0.9375rem;
-        line-height: 1.7;
-        color: #475569;
-        margin-bottom: 2rem;
-        position: relative;
-        z-index: 1;
-    }
-    .cv-testi-author-row {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        border-top: 1px solid #F1F5F9;
-        padding-top: 1.25rem;
-    }
-    .cv-testi-avatar-v2 {
-        width: 44px; height: 44px;
-        border-radius: 50%;
-        background: #F1F5F9;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.125rem;
-        font-weight: 600;
-        object-fit: cover;
-    }
-    .cv-testi-name-v2 {
-        font-size: 0.9375rem;
-        font-weight: 700;
-        color: #0F172A;
-        margin-bottom: 0.15rem;
-    }
-    .cv-testi-pos-v2 {
-        font-size: 0.75rem;
-        color: #64748B;
-    }
-
-    /* Responsive */
-    @media (max-width: 1024px) {
-        .cv-gallery-grid-v2 { grid-template-columns: repeat(2, 1fr); }
-        .cv-testi-grid-v2 { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 768px) {
-        .cv-gallery-premium, .cv-testi-premium { padding: 3.5rem 0; }
-        .cv-gallery-grid-v2, .cv-testi-grid-v2 { 
-            grid-template-columns: none !important;
-            grid-auto-flow: column;
-            grid-auto-columns: 78vw;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding-bottom: 1.5rem;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            gap: 1rem;
-        }
-        .cv-gallery-grid-v2::-webkit-scrollbar, .cv-testi-grid-v2::-webkit-scrollbar { display: none; }
-        .cv-gallery-grid-v2 > *, .cv-testi-grid-v2 > * { scroll-snap-align: start; }
-    }
-    </style>
-
-    {{-- ════ GALLERY PREVIEW (PREMIUM) ════ --}}
-    @if($gallery->count())
-        <section class="cv-gallery-premium" id="galeri">
-            <div class="cv-gallery-inner">
-                <div class="cv-gallery-header">
-                    <div>
-                        <div class="cv-adv-section-label">{{ __('home.gallery_label') }}</div>
-                        <h2 class="cv-adv-section-title" style="margin-top:0.75rem;">{!! nl2br(e(__('home.gallery_title'))) !!}</h2>
-                    </div>
-                    <a href="{{ route_locale('gallery') }}" class="btn-ghost" style="color:#0F172A; border-color:#E2E8F0; background:#F8FAFC;">
-                        {{ __('home.gallery_link') }}
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            {{-- Right Column: Dynamic Banners (utama + samping) --}}
+            <div class="cv-hero-static-wrapper" style="display:flex; flex-direction:column; gap:0.75rem; height:440px;">
+                <style>
+                    @media (max-width: 1024px) {
+                        .cv-hero-static-wrapper { display: none !important; }
+                    }
+                </style>
+                {{-- Top Banner: utama --}}
+                @if(isset($utamaBanners) && $utamaBanners->count() > 0)
+                    @php $utama = $utamaBanners->first(); @endphp
+                    <a href="{{ $utama->button_url ?? route('products') }}" class="cv-hero-static-col">
+                        <img src="{{ asset('storage/' . $utama->image) }}" alt="{{ $utama->title }}" class="cv-hero-img-sec" loading="eager">
                     </a>
-                </div>
+                @elseif(!empty($settings['hero_secondary_image']))
+                    <a href="{{ route('products') }}" class="cv-hero-static-col">
+                        <img src="{{ asset('storage/' . $settings['hero_secondary_image']) }}" alt="Promo" class="cv-hero-img-sec" loading="eager">
+                    </a>
+                @else
+                    <div style="flex:1; min-height:0; border-radius:16px; background:#F1F5F9; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#64748B; border:2px dashed #CBD5E1;">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:0.5rem;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <span style="font-size:0.75rem; color:#94A3B8; text-align:center; padding:0 0.5rem;">Banner Utama Kosong</span>
+                    </div>
+                @endif
 
-                <div class="cv-gallery-grid-v2">
-                    @foreach($gallery->take(6) as $item)
-                        <a href="{{ asset('storage/' . $item->image) }}" class="cv-gallery-card-v2 glightbox" data-gallery="home-gallery" data-title="{{ $item->title }}" data-description="{{ $item->client }}">
-                            @if($item->image)
-                                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->alt_text ?? $item->title }}" class="cv-gallery-img-v2" loading="lazy">
-                            @else
-                                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#94A3B8;">
-                                    <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                                    <span style="font-size:0.7rem;margin-top:0.5rem;">Upload Foto</span>
-                                </div>
-                            @endif
-                            <div class="cv-gallery-overlay-v2">
-                                <div class="cv-gallery-meta-v2">
-                                    <div class="cv-gallery-title-v2">{{ $item->title }}</div>
-                                    @if($item->client)<div class="cv-gallery-client-v2">{{ $item->client }}</div>@endif
-                                </div>
-                            </div>
+                {{-- Bottom Banner: samping --}}
+                @if(isset($sampingBanners) && $sampingBanners->count() > 0)
+                    @php $samping = $sampingBanners->first(); @endphp
+                    <a href="{{ $samping->button_url ?? route('products') }}" class="cv-hero-static-col">
+                        <img src="{{ asset('storage/' . $samping->image) }}" alt="{{ $samping->title }}" class="cv-hero-img-sec" loading="lazy">
+                    </a>
+                @elseif(!empty($settings['hero_third_image']))
+                    <a href="{{ route('products') }}" class="cv-hero-static-col">
+                        <img src="{{ asset('storage/' . $settings['hero_third_image']) }}" alt="Promo 2" class="cv-hero-img-sec" loading="lazy">
+                    </a>
+                @else
+                    <div style="flex:1; min-height:0; border-radius:16px; background:#F8FAFC; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#64748B; border:2px dashed #CBD5E1;">
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:0.5rem;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <span style="font-size:0.75rem; color:#94A3B8; text-align:center; padding:0 0.5rem;">Banner Samping Kosong</span>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </section>
+
+    {{-- ════ SEO BRAND DESCRIPTION (Visible tapi compact) ════ --}}
+    <div style="background:#F8FAFC; border-bottom:1px solid #F1F5F9; padding:0.75rem 0;" aria-label="Tentang AlatRumah">
+        <div style="max-width:1200px; margin:0 auto; padding:0 1.5rem;">
+            <p style="font-size:0.78rem; color:#64748B; line-height:1.6; margin:0; font-family:'Montserrat',sans-serif;">
+                <strong style="color:#334155;">AlatRumah.com</strong> — Pusat belanja alat rumah tangga, elektronik, furnitur, dan peralatan dapur terlengkap di Surabaya. 
+                Kami menyediakan <strong>ribuan produk berkualitas</strong> dari merek-merek ternama dengan harga terbaik dan pengiriman cepat ke seluruh Indonesia.
+            </p>
+        </div>
+    </div>
+
+    {{-- ════ USP BAR ════ --}}
+    @if($uspItems->count())
+    <section class="cv-usp-bar" aria-label="Keunggulan AlatRumah">
+        <div class="cv-usp-inner">
+            @foreach($uspItems as $usp)
+                <div class="cv-usp-item">
+                    <span class="cv-usp-icon">
+                        @if($usp->icon_type === 'upload' && $usp->icon_value)
+                            <img src="{{ asset('storage/' . $usp->icon_value) }}" alt="{{ $usp->label }}" width="24" height="24" style="object-fit:contain;">
+                        @else
+                            {{ $usp->icon_value }}
+                        @endif
+                    </span>
+                    <span class="cv-usp-label">{{ $usp->label }}</span>
+                </div>
+            @endforeach
+        </div>
+    </section>
+    @endif
+
+    {{-- ════ CATEGORY SWIPER ════ --}}
+    @if($categoryItems->count())
+    <section class="cv-cats-section" aria-label="Kategori Produk">
+        <div class="cv-cats-inner">
+            <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Kategori Produk AlatRumah</h2>
+            <div class="swiper cats-swiper hidden md:block" id="catsSwiperDesktop">
+                <div class="swiper-wrapper">
+                    @foreach($categoryItems as $cat)
+                        <a href="{{ $cat->url ?? route('products') }}" class="swiper-slide cv-cat-slide">
+                            <div class="cv-cat-icon-wrap">
+                                @if($cat->icon_type === 'upload' && $cat->icon_value)
+                                    <img src="{{ asset('storage/' . $cat->icon_value) }}" alt="{{ $cat->name }}">
+                                @else
+                                    @php
+                                        $icons = [
+                                                    'home' => '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+              'box' => '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
+              'tool' => '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+              'truck' => '<rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+              'shopping-cart' => '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>',
+              'shopping-bag' => '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+              'zap' => '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+              'star' => '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+              'monitor' => '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',
+              'smartphone' => '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>',
+              'camera' => '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',
+              'gift' => '<polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>',
+              'heart' => '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',
+              'tag' => '<path d="m15 5 6 6-6 6-6-6 6-6Z"/><path d="M9 5 3 11v6l6 6-6-6V11L9 5Z"/><circle cx="9" cy="15" r="2"/>',
+              'briefcase' => '<rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
+              'award' => '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>',
+              'cpu' => '<rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>',
+              'shield' => '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+              'clock' => '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+              'map-pin' => '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+              'coffee' => '<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>',
+              'trash-2' => '<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
+              'moon' => '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>',
+              'droplet' => '<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>',
+              'sun' => '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>',
+              'wind' => '<path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>',
+              'scissors' => '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/>',
+              'key' => '<path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/>',
+              'bell' => '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+              'calendar' => '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+              'book' => '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+              'headphones' => '<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>',
+              'music' => '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+              'mic' => '<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>',
+              'video' => '<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>',
+              'user' => '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+              'users' => '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+              'smile' => '<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>',
+              'globe' => '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+              'compass' => '<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>',
+              'navigation' => '<polygon points="3 11 22 2 13 21 11 13 3 11"/>',
+              'map' => '<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>',
+              'anchor' => '<circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/>',
+              'airplane' => '<path d="M22 16.92v3l-8.09-3.15L8.74 22 7 22l1.63-7.53L4 12 1 13 1 11l3-1 4.63-2.53L7 2 8.74 2l5.17 5.23L22 10.38v6.54z"/>',
+              'activity' => '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>',
+              'archive' => '<polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>',
+              'server' => '<rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>',
+              'database' => '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>'
+                                    ];
+                                    $svg = $icons[$cat->icon_value] ?? $icons['box'];
+                                @endphp
+                                <svg width="28" height="28" fill="none" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">{!! $svg !!}</svg>
+                                @if($cat->badge)
+                                    <span class="cv-cat-badge" style="background:{{ $cat->badge_color ?? '#ef4444' }}">{{ $cat->badge }}</span>
+                                @endif
+                                @endif
+            				</div>
+                            <span class="cv-cat-name">{{ $cat->name }}</span>
                         </a>
                     @endforeach
                 </div>
             </div>
-        </section>
+            <button class="cv-cats-nav cv-cats-prev" id="catsPrev" aria-label="Prev">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="cv-cats-nav cv-cats-next" id="catsNext" aria-label="Next">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+        </div>
+    </section>
     @endif
 
-    {{-- ════ TESTIMONIALS (PREMIUM) ════ --}}
-    @include('components.testimonials')
-
-    {{-- ════ PREMIUM COVERAGE CSS ════ --}}
+    {{-- ════ PROMO SECTIONS (Dynamic) ════ --}}
+    @if(isset($promoSections) && $promoSections->count())
     <style>
-    .cv-coverage-premium {
-        background: #EAEBED;
-        padding: 6rem 0 0;
-        position: relative;
+    .cv-promo-wrap {
+        background: #F8FAFC;
+        padding: 0.625rem 0 0;
     }
-    .cv-coverage-inner {
+    .cv-promo-section {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 0 1.5rem;
-        position: relative;
-        z-index: 2;
+        padding: 1.875rem 1.5rem;
+        border-bottom: none;
     }
-    .cv-coverage-header-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 2rem;
-        margin-bottom: 3rem;
+    .cv-promo-section:last-child { border-bottom: none; }
+
+    /* Flash Sale Override: gradient only on card-sized container (same width as regular sections) */
+    .cv-promo-section[style*="linear-gradient"] {
+        border-radius: 20px;
+        border-bottom: none;
+        max-width: 1200px; /* SAME as regular sections — not full width */
+        margin: 0 auto 1rem;
+        padding: 1.25rem 1.5rem 1.5rem;
     }
-    .cv-coverage-title-v2 {
-        font-size: clamp(2rem, 4vw, 3rem);
-        font-weight: 600;
-        color: #0F172A;
-        line-height: 1.1;
-        letter-spacing: -0.04em;
-        flex-shrink: 0;
-        min-width: 220px;
+    .cv-promo-section[style*="linear-gradient"] .cv-promo-card {
+        background: #fff;
+        border: none;
+        box-shadow: 0 2px 16px rgba(0,0,0,.12);
     }
-    .cv-coverage-stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-        flex: 1;
+    .cv-promo-section[style*="linear-gradient"] .cv-promo-card-name { color: #1E293B; }
+    .cv-promo-section[style*="linear-gradient"] .cv-promo-banner-wrap {
+        border-radius: 14px;
+        background: rgba(0,0,0,.18);
     }
-    .cv-stat-card-v2 {
-        background: #ffffff;
-        border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.04);
-        display: flex;
-        flex-direction: column;
-        transition: transform 0.3s;
+    .cv-promo-section[style*="linear-gradient"] .cv-promo-nav {
+        background: #fff;
+        color: #EF4444;
+        box-shadow: 0 2px 10px rgba(0,0,0,.2);
     }
-    .cv-stat-card-v2:hover {
-        transform: translateY(-5px);
+
+    /* Timer compact styling */
+    .cv-flash-timer { gap: .25rem; }
+    .cv-flash-timer .timer-box {
+        font-family: 'Montserrat', monospace;
+        font-weight: 800;
+        font-size: .95rem;
+        background: rgba(0,0,0,.5);
+        color: #fff;
+        padding: .15rem .45rem;
+        border-radius: 5px;
+        min-width: 30px;
+        text-align: center;
+        letter-spacing: .03em;
     }
-    .cv-stat-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 1.5rem;
+    .cv-flash-timer .timer-sep {
+        color: rgba(255,255,255,.9);
+        font-weight: 800;
+        font-size: 1rem;
     }
-    .cv-stat-label {
-        font-size: 0.65rem;
-        font-weight: 700;
-        color: #64748B;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-    }
-    .cv-stat-icon {
-        color: #0F172A;
-        opacity: 0.8;
-    }
-    .cv-stat-val {
-        font-size: 4rem;
-        font-weight: 400;
-        color: #0EA5E9;
-        line-height: 1;
-        letter-spacing: -0.05em;
+
+
+    .cv-promo-header {
         display: flex;
         align-items: baseline;
-        gap: 0.1em;
-    }
-    .cv-stat-val span {
-        color: #0EA5E9;
-        font-size: 2rem;
-        font-weight: 600;
-        line-height: 1;
-    }
-
-    /* Abstract Map BG */
-    .cv-coverage-map-bg {
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 120%;
-        min-width: 1000px;
-        opacity: 0.6;
-        z-index: 1;
-        pointer-events: none;
-    }
-
-    /* Glassmorphism Bottom Box */
-    .cv-coverage-glass-box {
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border: 1px solid rgba(255, 255, 255, 0.7);
-        border-radius: 24px;
-        padding: 3rem;
-        margin-top: 8rem;
-    }
-    .cv-glass-box-title {
-        font-size: 2.2rem;
-        font-weight: 500;
-        color: #0F172A;
-        margin-bottom: 2rem;
-        letter-spacing: -0.04em;
-    }
-    .cv-cities-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-    }
-    .cv-city-item {
-        font-size: 0.9rem;
-        color: #1E293B;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    .cv-city-item::before {
-        content: '';
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: transparent;
-        border: 1.5px solid #94A3B8;
-    }
-    .cv-city-item.active::before {
-        background: #0EA5E9;
-        border-color: #0EA5E9;
-    }
-
-    /* Responsive */
-    @media (max-width: 1200px) {
-        .cv-coverage-header-row {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 2rem;
-        }
-    }
-    @media (max-width: 1024px) {
-        .cv-coverage-stats-grid { grid-template-columns: repeat(2, 1fr); }
-        .cv-cities-grid { grid-template-columns: repeat(3, 1fr); }
-        .cv-coverage-glass-box { margin-top: 4rem; }
-    }
-    @media (max-width: 640px) {
-        .cv-coverage-premium { padding: 4rem 0; }
-        .cv-coverage-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-        .cv-stat-card-v2 { padding: 1.25rem; }
-        .cv-stat-val { font-size: 2.5rem; }
-        .cv-stat-val span { font-size: 1.5rem; }
-        .cv-cities-grid { grid-template-columns: repeat(2, 1fr); }
-        .cv-coverage-glass-box { padding: 2rem 1.5rem; margin-top: 3rem; }
-    }
-    .cv-coverage-map-wrapper {
-        position: relative;
-        width: 100%;
-        margin-top: -6rem;
-    }
-    @media (max-width: 1024px) {
-        .cv-coverage-map-wrapper { margin-top: -2rem; }
-    }
-    @media (max-width: 640px) {
-        .cv-coverage-map-wrapper { margin-top: 1rem; }
-    }
-    </style>
-
-    {{-- ════ COVERAGE (PREMIUM REDESIGN) ════ --}}
-    <section class="cv-coverage-premium" id="jangkauan">
-
-
-        <style>
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.6; }
-            50% { transform: scale(1.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 0; }
-        }
-        </style>
-
-        <div class="cv-coverage-inner">
-            <div class="cv-coverage-header-row">
-                <h2 class="cv-coverage-title-v2">{!! nl2br(e(__('home.apps_title'))) !!}</h2>
-
-                <div class="cv-coverage-stats-grid">
-                    {{-- Card 1: Years --}}
-                    <div class="cv-stat-card-v2" data-aos="fade-up" data-aos-delay="0">
-                        <div class="cv-stat-top">
-                            <span class="cv-stat-label">{{ __('home.about_c1_label') }}</span>
-                            <svg class="cv-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22h20M12 2v20M5 22V10l7-8 7 8v12M8 14h8M8 18h8"/></svg>
-                        </div>
-                        <div class="cv-stat-val"><span class="count-up" data-target="10">0</span><span>+</span></div>
-                    </div>
-
-                    {{-- Card 2: Export Countries --}}
-                    <div class="cv-stat-card-v2" data-aos="fade-up" data-aos-delay="100">
-                        <div class="cv-stat-top">
-                            <span class="cv-stat-label">{{ __('home.adv_c1_title') }}</span>
-                            <svg class="cv-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                        </div>
-                        <div class="cv-stat-val"><span class="count-up" data-target="50">0</span><span>+</span></div>
-                    </div>
-
-                    {{-- Card 3: Production Capacity --}}
-                    <div class="cv-stat-card-v2" data-aos="fade-up" data-aos-delay="200">
-                        <div class="cv-stat-top">
-                            <span class="cv-stat-label">{{ __('home.adv_c4_title') }}</span>
-                            <svg class="cv-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                        </div>
-                        <div class="cv-stat-val"><span class="count-up" data-target="1000">0</span><span>+</span></div>
-                    </div>
-
-                    {{-- Card 4: Certifications --}}
-                    <div class="cv-stat-card-v2" data-aos="fade-up" data-aos-delay="300">
-                        <div class="cv-stat-top">
-                            <span class="cv-stat-label">Sertifikasi</span>
-                            <svg class="cv-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                        </div>
-                        <div class="cv-stat-val"><span class="count-up" data-target="8">0</span><span>+</span></div>
-                    </div>
-                </div>
-            </div>
-
-        {{-- MAP: from admin upload --}}
-        @php $coverageMap = \App\Models\Setting::get('coverage_map'); @endphp
-        @if($coverageMap)
-            <div class="cv-coverage-map-wrapper">
-                <img src="{{ asset('storage/'.$coverageMap) }}" alt="Peta Jangkauan Indonesia"
-                     style="display:block; width:100%; height:auto;" loading="lazy">
-            </div>
-        @endif
-
-        </div>{{-- end cv-coverage-inner --}}
-        
-        <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const counters = document.querySelectorAll('.count-up');
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if(entry.isIntersecting) {
-                        const el = entry.target;
-                        if (el.classList.contains('counted')) return;
-                        el.classList.add('counted');
-                        const target = +el.getAttribute('data-target');
-                        const duration = 2000;
-                        const frameRate = 30;
-                        const totalFrames = Math.round((duration / 1000) * frameRate);
-                        let frame = 0;
-                        const counter = setInterval(() => {
-                            frame++;
-                            const progress = frame / totalFrames;
-                            // Ease out quad
-                            const easeOut = progress * (2 - progress);
-                            const current = Math.round(target * easeOut);
-                            el.innerText = current;
-                            if (frame === totalFrames) {
-                                clearInterval(counter);
-                                el.innerText = target;
-                            }
-                        }, 1000 / frameRate);
-                    }
-                });
-            }, { threshold: 0.5 });
-            
-            counters.forEach(c => observer.observe(c));
-        });
-        </script>
-    </section>
-
-    {{-- ════ PREMIUM CTA & ARTICLES CSS ════ --}}
-    <style>
-    /* ── CTA PREMIUM ────────────────────────── */
-    .cv-cta-premium {
-        background: #0F172A;
-        position: relative;
-        overflow: hidden;
-        padding: 6rem 0;
-        color: #ffffff;
-    }
-    .cv-cta-bg-glow {
-        position: absolute;
-        width: 800px;
-        height: 800px;
-        background: radial-gradient(circle, rgba(14,165,233,0.15) 0%, transparent 60%);
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        pointer-events: none;
-    }
-    .cv-cta-inner-v2 {
-        position: relative;
-        z-index: 2;
-        max-width: 800px;
-        margin: 0 auto;
-        text-align: center;
-        padding: 0 1.5rem;
-    }
-    .cv-cta-title-v2 {
-        font-size: clamp(2rem, 4vw, 3.5rem);
-        font-weight: 500;
-        letter-spacing: -0.03em;
-        line-height: 1.15;
-        margin-bottom: 1.5rem;
-        color: #ffffff !important;
-    }
-    .cv-cta-desc-v2 {
-        font-size: 1.125rem;
-        color: rgba(255,255,255,0.7);
-        line-height: 1.6;
-        margin-bottom: 3rem;
-    }
-    .cv-cta-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-    .cv-cta-btn-primary {
-        background: #0EA5E9;
-        color: #ffffff;
-        padding: 1.125rem 2.5rem;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 1rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.75rem;
-        transition: all 0.3s;
-        box-shadow: 0 10px 25px rgba(14,165,233,0.3);
-        text-decoration: none !important;
-    }
-    .cv-cta-btn-primary:hover {
-        background: #0284C7;
-        transform: translateY(-3px);
-        box-shadow: 0 15px 30px rgba(14,165,233,0.4);
-    }
-    .cv-cta-btn-outline {
-        background: transparent;
-        color: #ffffff;
-        border: 1.5px solid rgba(255,255,255,0.3);
-        padding: 1.125rem 2.5rem;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 1rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.75rem;
-        transition: all 0.3s;
-        text-decoration: none !important;
-    }
-    .cv-cta-btn-outline:hover {
-        border-color: #ffffff;
-        background: rgba(255,255,255,0.1);
-        transform: translateY(-3px);
-    }
-    .cv-cta-info {
-        margin-top: 4rem;
-        display: flex;
-        justify-content: center;
-        gap: 3rem;
-        flex-wrap: wrap;
-        border-top: 1px solid rgba(255,255,255,0.1);
-        padding-top: 3rem;
-    }
-    .cv-cta-info-item {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        color: rgba(255,255,255,0.6);
-        font-size: 0.875rem;
-    }
-    .cv-cta-info-icon {
-        color: #0EA5E9;
-    }
-
-    /* ── ARTIKEL PREMIUM ────────────────────── */
-    .cv-articles-premium {
-        background: #ffffff;
-        padding: 6rem 0;
-    }
-    .cv-articles-inner {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-    }
-    .cv-articles-header {
-        display: flex;
-        align-items: flex-end;
         justify-content: space-between;
-        gap: 2rem;
-        margin-bottom: 3.5rem;
-        flex-wrap: wrap;
+        margin-bottom: 1rem;
+        gap: 1rem;
     }
-    .cv-articles-grid-v2 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
+    .cv-promo-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.125rem;
+        font-weight: 800;
+        color: var(--text, #1E293B);
+        letter-spacing: -.02em;
+        line-height: 1.2;
     }
-    .cv-article-card-v2 {
-        background: #F8FAFC;
-        border: 1.5px solid #E2E8F0;
-        border-radius: 24px;
-        overflow: hidden;
+    .cv-promo-subtitle {
+        font-size: .8rem;
+        color: #64748B;
+        margin-top: .15rem;
+    }
+    .cv-promo-view-all {
+        font-size: .825rem;
+        font-weight: 600;
+        color: var(--accent, #0EA5E9);
+        text-decoration: none;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition: opacity .2s;
+    }
+    .cv-promo-view-all:hover { opacity: .7; }
+
+    /* Grid: banner left + swiper right */
+    .cv-promo-grid {
         display: flex;
-        flex-direction: column;
-        transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
-        text-decoration: none !important;
+        gap: 1rem;
+        align-items: stretch;
     }
-    .cv-article-card-v2 * {
-        text-decoration: none !important;
-    }
-    .cv-article-card-v2:hover {
-        border-color: #0EA5E9;
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(14,165,233,0.08);
-    }
-    .cv-article-img-wrap {
-        width: 100%;
-        aspect-ratio: 16/10;
+
+    /* Banner */
+    .cv-promo-banner-wrap {
+        border-radius: 14px;
         overflow: hidden;
         position: relative;
+        width: 200px;
+        flex-shrink: 0;
+        background: linear-gradient(145deg, #1E293B, #0F172A);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    .cv-article-img-v2 {
+    .cv-promo-banner-wrap.mobile-only { display: none; }
+    
+    .cv-promo-banner-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.6s cubic-bezier(0.22,1,0.36,1);
+        display: block;
     }
-    .cv-article-card-v2:hover .cv-article-img-v2 {
-        transform: scale(1.08);
-    }
-    .cv-article-cat-badge {
-        position: absolute;
-        top: 1.25rem; left: 1.25rem;
-        background: rgba(15,23,42,0.85);
-        backdrop-filter: blur(8px);
-        color: #fff;
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 0.4rem 1rem;
-        border-radius: 50px;
-    }
-    .cv-article-content-v2 {
-        padding: 1.75rem;
+    .cv-promo-banner-placeholder {
         display: flex;
         flex-direction: column;
-        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        color: rgba(255,255,255,.5);
+        font-size: .75rem;
+        text-align: center;
+        padding: 1rem;
     }
-    .cv-article-title-v2 {
-        font-size: 1.25rem;
+
+    /* Swiper container */
+    .cv-promo-swiper-container {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+    }
+    .cv-promo-swiper {
+        width: 100%;
+        height: 100%;
+        padding: 16px 8px; /* Added to prevent hover shadow/transform clipping */
+        margin: -16px -8px;
+    }
+    .cv-promo-swiper .swiper-wrapper {
+        align-items: stretch;
+    }
+    .cv-promo-swiper .swiper-slide {
+        height: auto !important;
+        width: 172px !important;
+    }
+    
+    @media (max-width: 768px) {
+        .cv-promo-section { padding: 1.25rem 0 1.25rem 1rem; margin-bottom: 0; border-bottom: 4px solid #F1F5F9; }
+        .cv-promo-section.is-flash-section { 
+            margin-bottom: 0; 
+            border-radius: 0; 
+        }
+        .cv-promo-grid { gap: 0; }
+        .cv-promo-swiper { padding: 4px 8px; margin: -4px -8px; }
+        .cv-promo-banner-wrap.desktop-only { display: none; }
+        .cv-promo-banner-wrap.mobile-only { 
+            display: flex; 
+            width: 155px !important; 
+            margin-right: 0.5rem; 
+            border-radius: 8px; 
+            height: auto;
+        }
+        .cv-promo-swiper .swiper-slide { width: 142px !important; }
+        .cv-promo-swiper .swiper-slide.cv-promo-banner-wrap { width: 155px !important; }
+        .cv-promo-card-body { padding: 0.65rem; }
+        .cv-promo-card-name { font-size: 0.75rem; }
+        .cv-promo-card-price { font-size: 0.85rem; }
+        .cv-promo-nav { display: none !important; }
+        
+        .cv-promo-header { align-items: center; margin-bottom: 0.5rem; padding-right: 1rem; }
+        .cv-promo-title { font-size: 1rem; font-weight: 800; }
+        .cv-promo-title.is-flash { 
+            font-style: italic; 
+            text-transform: uppercase; 
+            font-size: 1.1rem; 
+        }
+        .cv-promo-subtitle { display: none; }
+        .cv-promo-view-all { font-size: 0.75rem; }
+        
+        /* Compact timers for Flash Sale */
+        .cv-flash-timer .timer-box { font-size: 0.75rem; padding: 0.15rem 0.35rem; border-radius: 4px; min-width: 24px; background: #334155; }
+        .cv-flash-timer .timer-sep { font-size: 0.8rem; }
+    }
+
+    /* Product Card */
+    .cv-promo-card {
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border: 1.5px solid #F1F5F9;
+        border-radius: 14px;
+        overflow: hidden;
+        height: 100%;
+        text-decoration: none;
+        transition: border-color .25s, box-shadow .25s, transform .25s;
+    }
+    .cv-promo-card:hover {
+        border-color: var(--accent, #0EA5E9);
+        box-shadow: 0 8px 24px rgba(14,165,233,.1);
+        transform: translateY(-3px);
+    }
+    .cv-promo-card-img {
+        width: 100%;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        display: block;
+        background: #F8FAFC;
+    }
+    .cv-promo-card-img-placeholder {
+        width: 100%;
+        aspect-ratio: 1/1;
+        background: #F1F5F9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cv-promo-card-body {
+        padding: .75rem .875rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: .25rem;
+    }
+    .cv-promo-card-badge {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        font-size: .65rem;
         font-weight: 700;
-        color: #0F172A !important;
-        line-height: 1.4;
-        margin-bottom: 0.75rem;
+        padding: .2rem .5rem;
+        border-radius: 100px;
+        background: rgba(245, 158, 11, 0.1);
+        color: #D97706;
+        margin-bottom: .25rem;
+        line-height: 1;
+        letter-spacing: .02em;
+    }
+    .cv-promo-card-badge.service { background: rgba(59, 130, 246, 0.1); color: #2563EB; }
+    .cv-promo-card-name {
+        font-size: .8125rem;
+        font-weight: 600;
+        color: #1E293B;
+        line-height: 1.35;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-    .cv-article-excerpt-v2 {
-        font-size: 0.9375rem;
-        color: #64748B !important;
-        line-height: 1.6;
-        margin-bottom: 1.5rem;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        flex-grow: 1;
+    .cv-promo-card-price {
+        font-size: .9rem;
+        font-weight: 700;
+        color: #1E293B;
+        margin-top: auto;
     }
-    .cv-article-meta-v2 {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-top: 1px solid #E2E8F0;
-        padding-top: 1.25rem;
-        font-size: 0.8125rem;
-        font-weight: 600;
-    }
-    .cv-article-date-v2 {
+    .cv-promo-card-price-old {
+        font-size: .7rem;
         color: #94A3B8;
+        text-decoration: line-through;
+        font-weight: 400;
     }
-    .cv-article-read-v2 {
-        color: #0EA5E9;
+    .cv-promo-card-discount {
+        display: inline-block;
+        font-size: .65rem;
+        font-weight: 700;
+        color: #DC2626;
+        background: #FEE2E2;
+        padding: .1rem .35rem;
+        border-radius: 4px;
+    }
+    .cv-promo-card-meta {
         display: flex;
         align-items: center;
-        gap: 0.4rem;
+        gap: .3rem;
+        font-size: .7rem;
+        color: #94A3B8;
+        margin-top: .25rem;
     }
-    .cv-article-read-v2 svg {
-        transition: transform 0.3s;
-    }
-    .cv-article-card-v2:hover .cv-article-read-v2 svg {
-        transform: translateX(4px);
-    }
+    .cv-promo-card-star { color: #FBBF24; }
 
-    /* Responsive */
-    @media (max-width: 1024px) {
-        .cv-articles-grid-v2 { grid-template-columns: repeat(2, 1fr); }
+    /* Nav buttons */
+    .cv-promo-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1.5px solid #E2E8F0;
+        box-shadow: 0 2px 8px rgba(0,0,0,.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #1E293B;
+        transition: all .2s;
     }
+    .cv-promo-nav:hover { background: var(--accent, #0EA5E9); border-color: var(--accent, #0EA5E9); color: #fff; }
+    .cv-promo-nav-prev { right: auto; left: -16px; }
+    .cv-promo-nav-next { left: auto; right: -16px; }
+
     @media (max-width: 768px) {
-        .cv-cta-premium, .cv-articles-premium { padding: 4rem 0; }
-        .cv-cta-info { gap: 1.5rem; flex-direction: column; align-items: center; }
-        .cv-articles-grid-v2 { 
-            grid-template-columns: none !important;
-            grid-auto-flow: column;
-            grid-auto-columns: 78vw;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding-bottom: 1.5rem;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            gap: 1rem;
-        }
-        .cv-articles-grid-v2::-webkit-scrollbar { display: none; }
-        .cv-articles-grid-v2 > * { scroll-snap-align: start; }
+        .cv-promo-grid { grid-template-columns: 140px 1fr; }
+        .cv-promo-banner-wrap { min-height: 200px; }
+        .cv-promo-swiper .swiper-slide { width: 140px !important; }
+        .cv-promo-section { padding: 1.25rem 1rem; }
+    }
+    @media (max-width: 480px) {
+        .cv-promo-grid { grid-template-columns: 120px 1fr; }
+        .cv-promo-banner-wrap { min-height: 180px; }
+        .cv-promo-swiper .swiper-slide { width: 130px !important; }
     }
     </style>
 
-    {{-- ════ CTA STRIP (PREMIUM) ════ --}}
-    <section class="cv-cta-premium">
-        <div class="cv-cta-bg-glow"></div>
-        <div class="cv-cta-inner-v2" data-aos="zoom-in">
-            <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:#38BDF8; margin-bottom:1rem; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-                <span style="width:4px; height:4px; background:#38BDF8; border-radius:50%;"></span>
-                {{ __('home.cta_title') }}
-            </div>
-            <h2 class="cv-cta-title-v2" style="margin-top:1rem;">{!! nl2br(e(__('home.cta_title'))) !!}</h2>
-            <p class="cv-cta-desc-v2">{{ __('home.cta_desc') }}</p>
-            
-            <div class="cv-cta-buttons">
-                @if($wa)
-                    <a href="javascript:void(0)" onclick="openOrderModal('Bottom CTA WA')"
-                       class="cv-cta-btn-primary" data-track="Bottom CTA WA">
-                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                        {{ __('home.cta_btn_wa') }}
-                    </a>
-                @endif
-                <a href="{{ route_locale('contact') }}" class="cv-cta-btn-outline">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-                    {{ __('home.cta_btn') }}
-                </a>
-            </div>
-            
-            <div class="cv-cta-info">
-                <div class="cv-cta-info-item">
-                    <svg class="cv-cta-info-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.5 12.05a19.79 19.79 0 01-3.07-8.67A2 2 0 012.41 1.5h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.4a16 16 0 006.69 6.69l1.27-.76a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                    {{ $settings['phone'] ?? '+62 31-XXXX-XXXX' }}
-                </div>
-                <div class="cv-cta-info-item">
-                    <svg class="cv-cta-info-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    {{ $settings['office_hours'] ?? 'Senin–Jumat 08.00–17.00 WIB' }}
-                </div>
-                <div class="cv-cta-info-item">
-                    <svg class="cv-cta-info-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    {{ $settings['address'] ?? 'Surabaya, Jawa Timur, Indonesia' }}
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    {{-- ════ ARTICLES (PREMIUM) ════ --}}
-    @if($articles->count())
-        <section class="cv-articles-premium" id="artikel">
-            <div class="cv-articles-inner">
-                <div class="cv-articles-header">
+    <div class="cv-promo-wrap">
+    @foreach($promoSections as $promo)
+    @if($promo->dynamic_services->count() > 0)
+    @php
+        $promoItems = $promo->dynamic_services;
+        $isFlashSale = !empty($promo->bg_color_1);
+        $bgStyle = "";
+        if ($isFlashSale) {
+            $c1 = $promo->bg_color_1;
+            $c2 = !empty($promo->bg_color_2) ? $promo->bg_color_2 : $c1;
+            /* Remove inline padding/margin/border-radius so it respects CSS classes */
+            $bgStyle = "background: linear-gradient(90deg, {$c1} 0%, {$c2} 100%);";
+        }
+    @endphp
+    <div class="cv-promo-section {{ $isFlashSale ? 'is-flash-section' : '' }}" style="{{ $bgStyle }}">
+        {{-- Header --}}
+        <div class="cv-promo-header" style="align-items:center;">
+            <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+                @if($promo->logo)
+                    <img src="{{ asset('storage/'.$promo->logo) }}" alt="{{ $promo->title }}" style="max-height:30px; object-fit:contain;">
+                @else
                     <div>
-                        <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:#64748b; margin-bottom:1.5rem; display:flex; align-items:center; gap:0.5rem;">
-                            <span style="width:4px; height:4px; background:#0ea5e9; border-radius:50%;"></span>
-                            ARTIKEL &amp; TIPS
-                        </div>
-                        <h2 style="font-size:clamp(2rem, 4vw, 3.5rem); font-weight:500; line-height:1.15; letter-spacing:-0.03em; color:#0f172a !important; margin-top:0; margin-bottom:0;">
-                            Panduan Ventilasi Udara
-                        </h2>
+                        <div class="cv-promo-title" style="{{ $isFlashSale ? 'color:#fff;' : '' }}">{{ $promo->title }}</div>
+                        @if($promo->subtitle)<div class="cv-promo-subtitle" style="{{ $isFlashSale ? 'color:rgba(255,255,255,0.8);' : '' }}">{{ $promo->subtitle }}</div>@endif
                     </div>
-                    <a href="{{ route_locale('articles') }}" class="btn-ghost" style="color:#0F172A !important; border-color:#E2E8F0; background:#F8FAFC; text-decoration:none !important;">
-                        Semua Artikel 
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                    </a>
+                @endif
+                
+                {{-- Timer --}}
+                @if($promo->end_time && $promo->end_time > now())
+                <div class="cv-flash-timer" data-endtime="{{ $promo->end_time->toIso8601String() }}" style="display:flex;gap:.25rem;align-items:center;">
+                    <div class="timer-box">00</div>
+                    <span class="timer-sep">:</span>
+                    <div class="timer-box">00</div>
+                    <span class="timer-sep">:</span>
+                    <div class="timer-box">00</div>
                 </div>
+                @endif
+            </div>
+            @if($promo->view_all_url)
+                <a href="{{ $promo->view_all_url }}" class="cv-promo-view-all" style="{{ $isFlashSale ? 'color:#fff;' : '' }}">Lihat semua →</a>
+            @endif
+        </div>
 
-                <div class="cv-articles-grid-v2">
-                    @foreach($articles as $i => $article)
-                        <a href="{{ route_locale('articles.show', $article->slug) }}" class="cv-article-card-v2" data-aos="fade-up" data-aos-delay="{{ $i * 100 }}">
-                            <div class="cv-article-img-wrap">
-                                @if($article->image)
-                                    <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="cv-article-img-v2" loading="lazy">
+        {{-- Grid --}}
+        <div class="cv-promo-grid">
+            {{-- Banner Left (Desktop Only) --}}
+            <div class="cv-promo-banner-wrap desktop-only">
+                @if($promo->banner)
+                    <img src="{{ asset('storage/'.$promo->banner) }}" alt="{{ $promo->title }}" class="cv-promo-banner-img">
+                @else
+                    <div class="cv-promo-banner-placeholder">
+                        <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                        <span>{{ $promo->title }}</span>
+                    </div>
+                @endif
+            </div>
+
+            {{-- Products Swiper --}}
+            <div class="cv-promo-swiper-container" style="position:relative;">
+                <div class="swiper cv-promo-swiper" id="promoSwiper{{ $promo->id }}">
+                    <div class="swiper-wrapper">
+                        {{-- Banner Mobile (Inside Swiper) --}}
+                        <div class="swiper-slide cv-promo-banner-wrap mobile-only">
+                            @if($promo->banner)
+                                <img src="{{ asset('storage/'.$promo->banner) }}" alt="{{ $promo->title }}" class="cv-promo-banner-img">
+                            @elseif($isFlashSale)
+                                <div class="cv-promo-banner-placeholder" style="background: linear-gradient(135deg, #ef4444, #f97316); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; width:100%; height:100%;">
+                                    <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                    <span style="font-size:1rem; font-weight:800; font-style:italic; margin-top:0.5rem; text-align:center;">FLASH<br>SALE</span>
+                                </div>
+                            @endif
+                        </div>
+
+                        @foreach($promoItems as $svc)
+                        @php
+                            $effPrice = ($svc->sale_price > 0 && $svc->sale_price < $svc->price) ? $svc->sale_price : $svc->price;
+                            $discount = ($svc->sale_price > 0 && $svc->sale_price < $svc->price)
+                                ? round((($svc->price - $svc->sale_price)/$svc->price)*100) : 0;
+                        @endphp
+                        <div class="swiper-slide">
+                            <a href="{{ route('products.show', $svc->slug) }}" class="cv-promo-card">
+                                @if($svc->image)
+                                    <img src="{{ asset('storage/'.$svc->image) }}" alt="{{ $svc->name }}" class="cv-promo-card-img" loading="lazy">
                                 @else
-                                    <div style="width:100%;height:100%;background:#E2E8F0;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#94A3B8;">
-                                        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                                        <span style="font-size:0.75rem;margin-top:0.5rem;font-weight:600;">Artikel AMN</span>
+                                    <div class="cv-promo-card-img-placeholder">
+                                        <svg width="32" height="32" fill="none" stroke="#CBD5E1" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                                     </div>
                                 @endif
-                                <div class="cv-article-cat-badge">{{ $article->category ?? __('home.articles_label') }}</div>
-                            </div>
-                            
-                            <div class="cv-article-content-v2">
-                                <h3 class="cv-article-title-v2">{{ $article->title }}</h3>
-                                <p class="cv-article-excerpt-v2">{{ $article->excerpt }}</p>
-                                
-                                <div class="cv-article-meta-v2">
-                                    <span class="cv-article-date-v2">{{ \Carbon\Carbon::parse($article->published_at)->format('d M Y') }}</span>
-                                    <span class="cv-article-read-v2">
-                                        {{ __('articles.read_more', [], null) ?: 'Baca' }}
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                                <div class="cv-promo-card-body">
+                                    <span class="cv-promo-card-badge {{ $svc->type === 'service' ? 'service' : '' }}">
+                                        {{ $svc->type === 'service' ? 'Jasa' : 'Produk' }}
                                     </span>
+                                    <div class="cv-promo-card-name">{{ $svc->name }}</div>
+                                    @if($svc->price > 0)
+                                    <div>
+                                        @if($discount > 0)
+                                        <div class="cv-promo-card-price-old">Rp{{ number_format($svc->price,0,',','.') }}</div>
+                                        @endif
+                                        <div style="display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;">
+                                            <span class="cv-promo-card-price">Rp{{ number_format($effPrice,0,',','.') }}</span>
+                                            @if($discount > 0)
+                                                <span class="cv-promo-card-discount">{{ $discount }}%</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @endif
+                                    @if($svc->rating > 0 || $svc->sold_count > 0)
+                                    <div class="cv-promo-card-meta">
+                                        @if($svc->rating > 0)
+                                            <span class="cv-promo-card-star">★</span>
+                                            <span>{{ number_format($svc->rating,1) }}</span>
+                                        @endif
+                                        @if($svc->sold_count > 0)
+                                            <span>· {{ $svc->sold_count >= 1000 ? number_format($svc->sold_count/1000,1).'rb' : $svc->sold_count }} {{ $svc->type === 'service' ? 'dipesan' : 'terjual' }}</span>
+                                        @endif
+                                    </div>
+                                    @endif
                                 </div>
-                            </div>
-                        </a>
-                    @endforeach
+                            </a>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
+                @if($promoItems->count() > 5)
+                <button class="cv-promo-nav cv-promo-nav-prev" id="promoPrev{{ $promo->id }}" aria-label="Sebelumnya">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button class="cv-promo-nav cv-promo-nav-next" id="promoNext{{ $promo->id }}" aria-label="Berikutnya">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+                @endif
             </div>
-        </section>
+        </div>
+    </div>
+    @endif
+    @endforeach
+    </div> <!-- close cv-promo-wrap -->
+    @endif
+    
+    {{-- ════ KATALOG SEMUA PRODUK ════ --}}
+    @if(isset($allProducts) && $allProducts->count() > 0)
+    <div style="background: #fff; padding: 2rem 0 3rem;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;" class="cv-rekomendasi-container">
+        <style>
+            @media (max-width: 768px) {
+                .cv-rekomendasi-container { padding: 0 1rem !important; }
+                .cv-rekomendasi-title { font-size: 1rem !important; }
+                .cv-rekomendasi-subtitle { display: none; }
+            }
+        </style>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+            <div>
+                <h2 class="cv-rekomendasi-title" style="font-family:'Montserrat',sans-serif; font-size:1.125rem; font-weight:800; color:#1E293B; letter-spacing:-0.02em; margin:0 0 0.2rem;">Rekomendasi Untukmu</h2>
+                <div class="cv-rekomendasi-subtitle" style="font-size:0.8rem; color:#64748B;">Temukan berbagai produk pilihan terbaik dari AlatRumah</div>
+            </div>
+            <a href="{{ route('products') }}" style="font-size:0.75rem; font-weight:600; color:#0EA5E9; text-decoration:none; white-space:nowrap;">Lihat Semua &rarr;</a>
+        </div>
+        
+        <div class="catalog-grid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.875rem;">
+            @foreach($allProducts->take(30) as $svc)
+            @php
+                $effPrice = ($svc->sale_price > 0 && $svc->sale_price < $svc->price) ? $svc->sale_price : $svc->price;
+                $discount = ($svc->sale_price > 0 && $svc->sale_price < $svc->price)
+                    ? round((($svc->price - $svc->sale_price)/$svc->price)*100) : 0;
+            @endphp
+            <a href="{{ route('products.show', $svc->slug) }}" class="catalog-card">
+                @if($svc->image)
+                    <div class="catalog-card-img-wrap">
+                        <img src="{{ asset('storage/'.$svc->image) }}" alt="{{ $svc->name }}" class="catalog-card-img" loading="lazy">
+                        @if($discount > 0)
+                        <span class="catalog-card-badge-discount">{{ $discount }}%</span>
+                        @endif
+                    </div>
+                @else
+                    <div class="catalog-card-img-wrap catalog-card-no-img">
+                        <svg width="36" height="36" fill="none" stroke="#CBD5E1" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        @if($discount > 0)
+                        <span class="catalog-card-badge-discount">{{ $discount }}%</span>
+                        @endif
+                    </div>
+                @endif
+                <div class="catalog-card-body">
+                    <div class="catalog-card-name">{{ $svc->name }}</div>
+                    @if($svc->price > 0)
+                    <div class="catalog-card-price-wrap">
+                        @if($discount > 0)
+                        <div class="catalog-card-price-old">Rp{{ number_format($svc->price,0,',','.') }}</div>
+                        @endif
+                        <div class="catalog-card-price">Rp{{ number_format($effPrice,0,',','.') }}</div>
+                    </div>
+                    @endif
+                    @if($svc->rating > 0 || $svc->sold_count > 0)
+                    <div class="catalog-card-meta">
+                        @if($svc->rating > 0)
+                            <span style="color:#FBBF24;">★</span>
+                            <span>{{ number_format($svc->rating,1) }}</span>
+                        @endif
+                        @if($svc->sold_count > 0)
+                            <span>· {{ $svc->sold_count >= 1000 ? number_format($svc->sold_count/1000,1).'rb' : $svc->sold_count }} terjual</span>
+                        @endif
+                    </div>
+                    @endif
+                </div>
+            </a>
+            @endforeach
+        </div>
+        
+        <div style="text-align: center; margin-top: 2.5rem;">
+            <a href="{{ route('products') }}" class="catalog-btn-more">
+                Lihat Katalog Lengkap
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="vertical-align:middle;"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+        </div>
+    </div>
+    </div>
+    @endif
+
+    <style>
+        /* ── Catalog Cards ── */
+        .catalog-card {
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1.5px solid #F1F5F9;
+            border-radius: 14px;
+            overflow: hidden;
+            text-decoration: none;
+            transition: border-color .25s, box-shadow .25s, transform .25s;
+        }
+        .catalog-card:hover {
+            border-color: #0EA5E9;
+            box-shadow: 0 8px 24px rgba(14,165,233,.12);
+            transform: translateY(-3px);
+        }
+        .catalog-card-img-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #F8FAFC;
+            overflow: hidden;
+        }
+        .catalog-card-no-img {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .catalog-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        .catalog-card:hover .catalog-card-img { transform: scale(1.04); }
+        .catalog-card-badge-discount {
+            position: absolute;
+            top: 8px; left: 8px;
+            background: #ef4444;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.15rem 0.4rem;
+            border-radius: 5px;
+        }
+        .catalog-card-body {
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            flex: 1;
+        }
+        .catalog-card-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1E293B;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .catalog-card-price-wrap { margin-top: 0.2rem; }
+        .catalog-card-price-old {
+            font-size: 0.68rem;
+            color: #94A3B8;
+            text-decoration: line-through;
+        }
+        .catalog-card-price {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #1E293B;
+        }
+        .catalog-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.68rem;
+            color: #94A3B8;
+            margin-top: 0.2rem;
+        }
+        .catalog-btn-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.75rem 2.5rem;
+            background: linear-gradient(135deg, #0EA5E9, #0369a1);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 999px;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.2s;
+            box-shadow: 0 4px 16px rgba(14,165,233,0.3);
+        }
+        .catalog-btn-more:hover { opacity: 0.9; transform: translateY(-1px); }
+        @media (max-width: 1024px) {
+            .catalog-grid { grid-template-columns: repeat(4, 1fr) !important; }
+        }
+        @media (max-width: 768px) {
+            .catalog-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 0.5rem !important; }
+        }
+    </style>
+
+    @if($clients->count())
+        {{-- Clients section: REMOVED per user request - only keep promo + footer --}}
     @endif
 
 @include('components.lightbox-assets')
@@ -2806,21 +1838,104 @@
 <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // ── Hero Slider with dynamic oval bg color ──
+        var heroOvalBg = document.getElementById('heroOvalBg');
         if(document.querySelector('.hero-swiper')) {
-            new Swiper('.hero-swiper', {
+            var heroSwiper = new Swiper('.hero-swiper', {
                 loop: true,
-                effect: 'fade',
                 autoplay: {
-                    delay: 5000,
+                    delay: 4500,
                     disableOnInteraction: false,
                 },
                 pagination: {
                     el: '.hero-swiper-pagination',
                     clickable: true,
                 },
+                keyboard: { enabled: true },
+                grabCursor: true,
+                on: {
+                    slideChange: function() {
+                        if (!heroOvalBg) return;
+                        var realIndex = this.realIndex;
+                        var slides = document.querySelectorAll('.hero-swiper .swiper-slide:not(.swiper-slide-duplicate)');
+                        if (slides[realIndex]) {
+                            var color = slides[realIndex].getAttribute('data-bg-color');
+                            if (color) heroOvalBg.style.background = color;
+                        }
+                    }
+                }
             });
         }
+
+        // ── Category Swiper (Desktop) ──
+        if(document.querySelector('#catsSwiperDesktop')) {
+            const catsSwiper = new Swiper('#catsSwiperDesktop', {
+                slidesPerView: 'auto',
+                spaceBetween: 12,
+                grabCursor: true,
+                freeMode: true,
+                mousewheel: {
+                    forceToAxis: true,
+                },
+                navigation: {
+                    nextEl: '#catsNext',
+                    prevEl: '#catsPrev',
+                },
+            });
+        }
+
+        // ── Promo Section Swipers ──
+        document.querySelectorAll('.cv-promo-swiper').forEach(function(el) {
+            const id = el.id.replace('promoSwiper', '');
+            new Swiper('#promoSwiper' + id, {
+                slidesPerView: 'auto',
+                spaceBetween: 10,
+                grabCursor: true,
+                freeMode: false,
+                navigation: {
+                    nextEl: '#promoNext' + id,
+                    prevEl: '#promoPrev' + id,
+                },
+            });
+        });
+    });
+    // Flash Sale Timer Logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const timers = document.querySelectorAll('.cv-flash-timer');
+        if(timers.length === 0) return;
+
+        function updateTimers() {
+            const now = new Date().getTime();
+            timers.forEach(timer => {
+                const endTimeStr = timer.getAttribute('data-endtime');
+                if(!endTimeStr) return;
+                const endTime = new Date(endTimeStr).getTime();
+                const distance = endTime - now;
+
+                const boxes = timer.querySelectorAll('.timer-box');
+                if(boxes.length !== 3) return;
+
+                if(distance < 0) {
+                    boxes[0].innerText = '00';
+                    boxes[1].innerText = '00';
+                    boxes[2].innerText = '00';
+                    return;
+                }
+
+                const hours = Math.floor(distance / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                boxes[0].innerText = hours < 10 ? '0' + hours : hours;
+                boxes[1].innerText = minutes < 10 ? '0' + minutes : minutes;
+                boxes[2].innerText = seconds < 10 ? '0' + seconds : seconds;
+            });
+        }
+        
+        updateTimers();
+        setInterval(updateTimers, 1000);
     });
 </script>
 
 @endsection
+

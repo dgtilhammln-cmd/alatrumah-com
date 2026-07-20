@@ -1,5 +1,5 @@
 {{--
-    SEO Component — PT. Airlangga Merapi Nusantara
+    SEO Component — Auto-Generated SEO, AEO (JSON-LD) & GEO
     Variables (semua optional): $seo[], $schema, $breadcrumbs[]
 --}}
 @php
@@ -8,130 +8,176 @@
     $breadcrumbData = $breadcrumbs ?? [];
     $appUrl         = rtrim(config('app.url'), '/');
 
+    // Get Company Profiles from Settings
+    $settings = \App\Models\Setting::getAllAsArray();
+    $siteName = $settings['site_name'] ?? 'Alat Rumah';
+    $tagline  = $settings['tagline']   ?? 'Semua Kebutuhan Rumah, Satu Tempat';
+    $domain   = $settings['domain']    ?? 'alatrumah.com';
+    $shortDesc= $settings['short_desc']?? 'Toko online alat rumah tangga terlengkap.';
+    $address  = $settings['contact.address'] ?? '';
+    $city     = $settings['contact.city'] ?? 'Surabaya';
+    $province = $settings['contact.province'] ?? 'Jawa Timur';
+    $waNumber = $settings['contact.whatsapp'] ?? '';
+    $email    = $settings['contact.email'] ?? 'info@' . $domain;
+    
+    // Auto-Fallback Logic
+    $autoTitle = $seoData['title'] ?? ($siteName . ' - ' . $tagline);
+    $autoDesc  = $seoData['description'] ?? $shortDesc;
+    $autoKeywords = $seoData['keywords'] ?? ($settings['meta_keywords_home'] ?? 'alat rumah tangga, peralatan rumah');
+
     // Canonical — always use app.url, never localhost
     $rawCanonical   = $seoData['canonical'] ?? url()->current();
     $canonical      = preg_replace('#^https?://[^/]+#', $appUrl, $rawCanonical);
 
     // OG Image — make absolute using app.url
-    $defaultOg      = \App\Models\Setting::get('logo') ? $appUrl . '/storage/' . ltrim(\App\Models\Setting::get('logo'), '/') : $appUrl . '/favicon.ico';
+    $defaultOg      = !empty($settings['logo']) ? $appUrl . '/storage/' . ltrim($settings['logo'], '/') : $appUrl . '/favicon.ico';
     $rawOg          = $seoData['og_image'] ?? $defaultOg;
     $ogImage        = preg_match('#^https?://#', $rawOg)
                         ? preg_replace('#^https?://[^/]+#', $appUrl, $rawOg)
                         : $appUrl . '/' . ltrim($rawOg, '/');
 @endphp
-<title>{{ $seoData['title'] ?? __('home.meta_title') }}</title>
-<meta name="description" content="{{ $seoData['description'] ?? __('home.meta_desc') }}">
-@php
-    $robotsDirective = $seoData['robots'] ?? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
-@endphp
-<meta name="robots" content="{{ $robotsDirective }}">
-<meta name="keywords" content="{{ $seoData['keywords'] ?? __('home.meta_keywords') }}">
+
+<title>{{ $autoTitle }}</title>
+<meta name="description" content="{{ $autoDesc }}">
+<meta name="keywords" content="{{ $autoKeywords }}">
+<meta name="robots" content="{{ $seoData['robots'] ?? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' }}">
 <link rel="canonical" href="{{ $canonical }}">
 
-@if(\App\Models\Setting::get('google_search_console'))
-    {!! \App\Models\Setting::get('google_search_console') !!}
+@if(!empty($settings['google_search_console']))
+    {!! $settings['google_search_console'] !!}
 @endif
 
 {{-- Open Graph --}}
 <meta property="og:type"         content="{{ $seoData['og_type'] ?? 'website' }}">
-<meta property="og:title"        content="{{ $seoData['title'] ?? 'PT. Airlangga Merapi Nusantara' }}">
-<meta property="og:description"  content="{{ $seoData['description'] ?? __('home.meta_desc') }}">
+<meta property="og:title"        content="{{ $autoTitle }}">
+<meta property="og:description"  content="{{ $autoDesc }}">
 <meta property="og:image"        content="{{ $ogImage }}">
 <meta property="og:image:width"  content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt"    content="{{ $seoData['title'] ?? 'Cyclevent' }}">
+<meta property="og:image:alt"    content="{{ $autoTitle }}">
 <meta property="og:url"          content="{{ $canonical }}">
-<meta property="og:site_name"    content="PT. Airlangga Merapi Nusantara">
+<meta property="og:site_name"    content="{{ $siteName }}">
 <meta property="og:locale"       content="{{ $seoData['locale_og'] ?? 'id_ID' }}">
 
 {{-- Twitter Card --}}
 <meta name="twitter:card"        content="summary_large_image">
-<meta name="twitter:title"       content="{{ $seoData['title'] ?? 'PT. Airlangga Merapi Nusantara' }}">
-<meta name="twitter:description" content="{{ $seoData['description'] ?? '' }}">
+<meta name="twitter:title"       content="{{ $autoTitle }}">
+<meta name="twitter:description" content="{{ $autoDesc }}">
 <meta name="twitter:image"       content="{{ $ogImage }}">
 
 {{-- Article-specific meta tags --}}
 @if(!empty($seoData['article_published']))
 <meta property="article:published_time" content="{{ $seoData['article_published'] }}">
 <meta property="article:modified_time"  content="{{ $seoData['article_modified'] ?? $seoData['article_published'] }}">
-<meta property="article:author"         content="{{ $seoData['article_author'] ?? 'PT. Airlangga Merapi Nusantara' }}">
+<meta property="article:author"         content="{{ $seoData['article_author'] ?? $siteName }}">
 <meta property="article:section"        content="{{ $seoData['article_section'] ?? 'Artikel' }}">
 @endif
 
-{{-- Hreflang alternate links (multi-language SEO) --}}
+{{-- Hreflang alternate links (if any remains, mostly default to current url now) --}}
 @if(!empty($seoData['hreflangs']))
     @foreach($seoData['hreflangs'] as $hlLocale => $hlUrl)
     <link rel="alternate" hreflang="{{ $hlLocale === 'id' ? 'id' : $hlLocale }}" href="{{ $hlUrl }}">
-    @if($hlLocale === 'ar')
-    <link rel="alternate" hreflang="ar-SA" href="{{ $hlUrl }}">
-    @endif
     @endforeach
     <link rel="alternate" hreflang="x-default" href="{{ $seoData['hreflangs']['en'] ?? ($seoData['hreflangs']['id'] ?? $canonical) }}">
 @endif
 
-{{-- Geo (local SEO — Surabaya) --}}
-<meta name="geo.region"    content="ID-JI">
-<meta name="geo.placename" content="Surabaya, Jawa Timur, Indonesia">
+{{-- Geo (Local SEO & GEO) --}}
+<meta name="geo.region"    content="ID-JT">
+<meta name="geo.placename" content="{{ $city }}, {{ $province }}, Indonesia">
+@if(!empty($settings['contact.lat']) && !empty($settings['contact.lng']))
+<meta name="geo.position"  content="{{ $settings['contact.lat'] }};{{ $settings['contact.lng'] }}">
+<meta name="ICBM"          content="{{ $settings['contact.lat'] }}, {{ $settings['contact.lng'] }}">
+@else
 <meta name="geo.position"  content="-7.2575;112.7521">
 <meta name="ICBM"          content="-7.2575, 112.7521">
+@endif
 
-{{-- Font preload --}}
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{{-- og:locale explicit --}}
+<meta property="og:locale" content="id_ID">
 
-{{-- JSON-LD LocalBusiness — PT. Airlangga Merapi Nusantara --}}
+{{-- JSON-LD LocalBusiness (AEO) --}}
 @php
-$lbSchema = json_encode([
+$formattedWa = $waNumber ? '+62' . ltrim(preg_replace('/[^0-9]/', '', $waNumber), '062') : '';
+
+$lbSchema = [
     '@@context'     => 'https://schema.org',
-    '@@type'        => ['ExportCompany', 'LocalBusiness', 'Organization'],
+    '@@type'        => ['LocalBusiness', 'Organization'],
     '@@id'          => $appUrl . '/#organization',
-    'name'          => 'PT. Airlangga Merapi Nusantara',
-    'alternateName' => ['AMN', 'Airlangga Merapi Nusantara', 'AMN Charcoal'],
-    'description'   => 'PT. Airlangga Merapi Nusantara adalah eksportir arang briket premium berbahan baku kelapa pilihan, berkantor pusat di Surabaya, Jawa Timur, Indonesia. Dipercaya oleh importir di 50+ negara.',
+    'name'          => $siteName,
+    'alternateName' => [$domain],
+    'description'   => $shortDesc,
     'url'           => $appUrl,
-    'telephone'     => \App\Models\Setting::get('wa_number') ? '+62' . ltrim(\App\Models\Setting::get('wa_number'), '0+62') : '+62-31-XXXX-XXXX',
-    'email'         => \App\Models\Setting::get('email') ?? 'info@amncharcoal.com',
     'image'         => $ogImage,
     'logo'          => [
         '@@type' => 'ImageObject',
-        'url'    => \App\Models\Setting::get('logo') ? $appUrl . '/storage/' . \App\Models\Setting::get('logo') : $appUrl . '/images/amn/hero-main.png',
+        'url'    => $defaultOg,
     ],
     'priceRange'    => '$$',
-    'openingHours'  => ['Mo-Fr 08:00-17:00', 'Sa 08:00-14:00'],
-    'currenciesAccepted' => 'USD, EUR, IDR',
-    'paymentAccepted'    => 'Bank Transfer, Letter of Credit',
-    'areaServed'    => [
-        '@@type' => 'GeoCircle',
-        'geoMidpoint' => ['@@type'=>'GeoCoordinates','latitude'=>'-7.2575','longitude'=>'112.7521'],
-        'geoRadius'   => '20000',
-    ],
     'address'       => [
         '@@type'           => 'PostalAddress',
-        'streetAddress'    => \App\Models\Setting::get('address') ?? 'Surabaya',
-        'addressLocality'  => 'Surabaya',
-        'addressRegion'    => 'Jawa Timur',
-        'postalCode'       => '60000',
+        'streetAddress'    => $address ?: $city,
+        'addressLocality'  => $city,
+        'addressRegion'    => $province,
         'addressCountry'   => 'ID',
     ],
-    'geo'           => ['@@type'=>'GeoCoordinates','latitude'=>'-7.2575','longitude'=>'112.7521'],
-    'hasMap'        => 'https://www.google.com/maps?q=Surabaya,+Jawa+Timur,+Indonesia',
+    'hasMap'        => 'https://www.google.com/maps?q=' . urlencode($city . ', ' . $province),
+    'openingHoursSpecification' => [
+        [
+            '@@type'     => 'OpeningHoursSpecification',
+            'dayOfWeek'  => ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+            'opens'      => '08:00',
+            'closes'     => '17:00',
+        ],
+    ],
     'contactPoint'  => [
         '@@type'             => 'ContactPoint',
-        'telephone'          => \App\Models\Setting::get('wa_number') ? '+62' . ltrim(\App\Models\Setting::get('wa_number'), '0+62') : '+62-31-XXXX-XXXX',
-        'contactType'        => 'sales',
-        'areaServed'         => ['ID', 'SA', 'AE', 'KR', 'JP', 'DE', 'US', 'GB'],
-        'availableLanguage'  => ['Indonesian', 'English', 'Arabic', 'Korean'],
+        'contactType'        => 'customer service',
+        'areaServed'         => ['ID'],
+        'availableLanguage'  => ['Indonesian'],
     ],
-    'knowsAbout'    => ['Charcoal Briquette', 'Coconut Shell Charcoal', 'Export Commodity', 'Arang Briket', 'BBQ Charcoal', 'Shisha Charcoal'],
-    'naics'         => '325998',
-    'isicV4'        => '2029',
-    'sameAs'        => [$appUrl],
-    'founder'       => ['@@type'=>'Person','name'=>'Direktur PT. Airlangga Merapi Nusantara'],
-    'foundingLocation' => ['@@type'=>'Place','name'=>'Surabaya, Indonesia'],
-], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
-@endphp
-<script type="application/ld+json">{!! $lbSchema !!}</script>
+];
 
-{{-- Additional schema (Article, FAQ, ImageObject, etc.) — NOT LocalBusiness --}}
+if ($formattedWa) {
+    $lbSchema['telephone'] = $formattedWa;
+    $lbSchema['contactPoint']['telephone'] = $formattedWa;
+}
+if ($email) {
+    $lbSchema['email'] = $email;
+}
+if (!empty($settings['contact.lat']) && !empty($settings['contact.lng'])) {
+    $lbSchema['geo'] = [
+        '@@type' => 'GeoCoordinates',
+        'latitude' => $settings['contact.lat'],
+        'longitude' => $settings['contact.lng']
+    ];
+}
+
+$lbSchemaJson = str_replace('"@@', '"@', json_encode($lbSchema, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
+
+// WebSite Schema with SearchAction
+$websiteSchema = [
+    '@@context' => 'https://schema.org',
+    '@@type'    => 'WebSite',
+    '@@id'      => $appUrl . '/#website',
+    'url'       => $appUrl,
+    'name'      => $siteName,
+    'description' => $shortDesc,
+    'inLanguage' => 'id-ID',
+    'potentialAction' => [
+        '@@type'       => 'SearchAction',
+        'target'       => [
+            '@@type'   => 'EntryPoint',
+            'urlTemplate' => $appUrl . '/produk?q={search_term_string}',
+        ],
+        'query-input'  => 'required name=search_term_string',
+    ],
+];
+$websiteSchemaJson = str_replace('"@@', '"@', json_encode($websiteSchema, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
+@endphp
+<script type="application/ld+json">{!! $lbSchemaJson !!}</script>
+<script type="application/ld+json">{!! $websiteSchemaJson !!}</script>
+
+{{-- Additional schema (Article, FAQ, ImageObject, etc.) --}}
 @if(!empty($schemaData))
 <script type="application/ld+json">{!! $schemaData !!}</script>
 @endif

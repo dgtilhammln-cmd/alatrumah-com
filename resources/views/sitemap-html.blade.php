@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sitemap — Cyclevent Turbine Ventilator</title>
+<title>Sitemap — Alat Rumah</title>
 <meta name="robots" content="noindex, follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -312,8 +312,8 @@
             <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             SITEMAP
         </div>
-        <h1>Peta Situs<br>Cyclevent</h1>
-        <p>Semua halaman, produk, dan artikel yang tersedia di website<br>Cyclevent Turbine Ventilator untuk navigasi dan mesin pencari.</p>
+        <h1>Peta Situs<br>Alat Rumah</h1>
+        <p>Semua halaman, produk, dan artikel yang tersedia di website<br>Alat Rumah untuk navigasi dan mesin pencari.</p>
         <div class="sm-hero-actions">
             <a href="/" class="sm-btn sm-btn-primary">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -379,7 +379,7 @@
             <div class="sm-group-icon green">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
             </div>
-            <div class="sm-group-title">Produk Turbine Ventilator</div>
+            <div class="sm-group-title">Produk Alat Rumah</div>
             <div class="sm-group-count">{{ count($serviceUrls) }} URL</div>
         </div>
         <div class="sm-list">
@@ -471,7 +471,7 @@
 </div>
 
 <div class="sm-footer">
-    <p style="margin-bottom: 0.5rem;">Total <strong>{{ count($urls) }}</strong> URL terdaftar dalam sitemap Cyclevent &bull; Diperbarui otomatis setiap ada konten baru.</p>
+    <p style="margin-bottom: 0.5rem;">Total <strong>{{ count($urls) }}</strong> URL terdaftar dalam sitemap Alat Rumah &bull; Diperbarui otomatis setiap ada konten baru.</p>
     <p>SEO by <a href="https://hvmdigital.com" target="_blank" rel="noopener noreferrer" style="color:var(--text); font-weight:600; text-decoration:none;">HVM Digital</a></p>
 </div>
 

@@ -11,6 +11,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminAnalyticsController;
@@ -23,84 +25,162 @@ use App\Http\Controllers\Admin\AdminWaController;
 use App\Http\Controllers\Admin\AdminTestimonialController;
 use App\Http\Controllers\Admin\AdminLeadController;
 use App\Http\Controllers\Admin\AdminHeroSlideController;
+use App\Http\Controllers\Admin\AdminUspController;
+use App\Http\Controllers\Admin\AdminCategoryItemController;
+use App\Http\Controllers\Admin\AdminCourierController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminApiKeyController;
+use App\Http\Controllers\Admin\AdminPromoSectionController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AccountController;
 
 /*
 |--------------------------------------------------------------------------
-| Root redirect: / → /en/
+| Public Routes — alatrumah.com (Bahasa Indonesia, tanpa prefix locale)
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    // Check cookie preference first, else default to 'en'
-    $preferred = request()->cookie('preferred_locale');
-    $locales   = ['id', 'en', 'ar', 'ko'];
-    $locale    = in_array($preferred, $locales) ? $preferred : 'en';
-    return redirect('/' . $locale . '/', 302); // 302 so browser re-checks cookie each visit
+
+// Region API proxy (avoids CORS and external dependency issues)
+Route::prefix('api/region')->group(function() {
+    Route::get('/provinces', function() {
+        $data = \Illuminate\Support\Facades\Http::timeout(10)->get('https://kanglerian.github.io/api-wilayah-indonesia/api/provinces.json');
+        return response()->json($data->json(), 200, ['Access-Control-Allow-Origin' => '*']);
+    });
+    Route::get('/regencies/{id}', function($id) {
+        $data = \Illuminate\Support\Facades\Http::timeout(10)->get("https://kanglerian.github.io/api-wilayah-indonesia/api/regencies/{$id}.json");
+        return response()->json($data->json(), 200, ['Access-Control-Allow-Origin' => '*']);
+    });
+    Route::get('/districts/{id}', function($id) {
+        $data = \Illuminate\Support\Facades\Http::timeout(10)->get("https://kanglerian.github.io/api-wilayah-indonesia/api/districts/{$id}.json");
+        return response()->json($data->json(), 200, ['Access-Control-Allow-Origin' => '*']);
+    });
 });
 
-// Legacy redirects (old URLs without locale prefix → /en/ equivalents)
-Route::get('/about',                 fn() => redirect('/en/about', 301));
-Route::get('/products',              fn() => redirect('/en/products', 301));
-Route::get('/products/{slug}',       fn($slug) => redirect('/en/products/' . $slug, 301));
-Route::get('/gallery',               fn() => redirect('/en/gallery', 301));
-Route::get('/gallery/{slug}',        fn($slug) => redirect('/en/gallery/' . $slug, 301));
-Route::get('/articles',              fn() => redirect('/en/articles', 301));
-Route::get('/articles/{slug}',       fn($slug) => redirect('/en/articles/' . $slug, 301));
-Route::get('/contact',               fn() => redirect('/en/contact', 301));
+Route::middleware(['track.pageview'])->group(function () {
+    // Legacy redirects for cached locale routes
+    Route::get('/en', function () { return redirect('/', 301); });
+    Route::get('/id', function () { return redirect('/', 301); });
 
-// Legacy /services → /products
-Route::get('/services',              fn() => redirect('/en/products', 301));
-Route::get('/services/{slug}',       fn($slug) => redirect('/en/products/' . $slug, 301));
+    Route::get('/',               [HomeController::class,    'index'])->name('home');
+    Route::get('/tentang-kami',   [AboutController::class,  'index'])->name('about');
+    Route::get('/kontak',         [ContactController::class,'index'])->name('contact');
+    Route::post('/kontak',        [ContactController::class,'send'])->name('contact.send');
+    Route::post('/chat-cs',       [\App\Http\Controllers\ChatController::class, 'store'])->name('chat.store');
+    Route::get('/galeri',         [GalleryController::class,'index'])->name('gallery');
+    Route::get('/galeri/{slug}',  [GalleryController::class,'show'])->name('gallery.show');
+    Route::get('/produk',         [ServiceController::class,'index'])->name('products');
+    Route::get('/produk/{slug}',  [ServiceController::class,'show'])->name('products.show');
+    Route::get('/artikel',        [ArticleController::class,'index'])->name('articles');
+    Route::get('/artikel/{slug}', [ArticleController::class,'show'])->name('articles.show');
+    Route::get('/penulis/{slug}', [AuthorController::class, 'show'])->name('author.show');
 
-/*
-|--------------------------------------------------------------------------
-| Public Locale-Prefixed Routes: /{locale}/...
-|--------------------------------------------------------------------------
-*/
-Route::prefix('{locale}')
-    ->middleware(['set.locale', 'track.pageview'])
-    ->where(['locale' => 'id|en|ar|ko'])
-    ->group(function () {
+    // E-commerce: Cart (boleh tanpa login)
+    Route::get('/keranjang',           [CartController::class, 'index'])->name('cart.index');
+    Route::post('/keranjang/tambah',   [CartController::class, 'add'])->name('cart.add');
+    Route::post('/keranjang/update',   [CartController::class, 'update'])->name('cart.update');
+    Route::post('/keranjang/hapus',    [CartController::class, 'remove'])->name('cart.remove');
 
-        // Homepage: /en/, /id/, /ar/, /ko/
-        Route::get('/',          [HomeController::class,    'index'])->name('home.id');
-        Route::get('/about',     [AboutController::class,  'index'])->name('about.id');
-        Route::get('/contact',   [ContactController::class,'index'])->name('contact.id');
-        Route::post('/contact',  [ContactController::class,'send'])->name('contact.send.id');
-        Route::get('/gallery',   [GalleryController::class,'index'])->name('gallery.id');
-        Route::get('/gallery/{slug}', [GalleryController::class,'show'])->name('gallery.show.id');
-        Route::get('/products',  [ServiceController::class,'index'])->name('products.id');
-        Route::get('/products/{slug}', [ServiceController::class,'show'])->name('products.show.id');
+    // E-commerce: Checkout (bisa guest, auto register)
+    Route::get('/checkout',                [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout',               [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/selesai/{order}',[CheckoutController::class, 'finish'])->name('checkout.finish');
 
-        // Legacy /services inside locale group
-        Route::get('/services',              fn($locale) => redirect('/' . $locale . '/products', 301));
-        Route::get('/services/{slug}',       fn($locale, $slug) => redirect('/' . $locale . '/products/' . $slug, 301));
+    // Cek Resi
+    Route::get('/cek-resi', [\App\Http\Controllers\ResiController::class, 'index'])->name('cek-resi');
+    Route::post('/cek-resi', [\App\Http\Controllers\ResiController::class, 'track'])->name('cek-resi.track');
 
-        Route::get('/articles',       [ArticleController::class,'index'])->name('articles.id');
-        Route::get('/articles/{slug}', [ArticleController::class,'show'])->name('articles.show.id');
-
-        Route::get('/author/{slug}',  [AuthorController::class, 'show'])->name('author.show.id');
+    Route::middleware(['auth'])->group(function () {
     });
+});
 
 /*
 |--------------------------------------------------------------------------
-| Non-locale routes (AJAX, sitemap, etc.)
+| Non-page Routes
 |--------------------------------------------------------------------------
 */
+
 // Lead / Request Order
 Route::post('/request-order', [LeadController::class, 'store'])->name('lead.store');
+
+/*
+|--------------------------------------------------------------------------
+| Buyer Authentication Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['guest'])->group(function () {
+    Route::get('/masuk',    [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/masuk',   [AuthController::class, 'login'])->name('login.submit');
+    Route::get('/daftar',   [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/daftar',  [AuthController::class, 'register'])->name('register.submit');
+
+    // Google OAuth
+    Route::get('/auth/google',          [AuthController::class, 'googleRedirect'])->name('auth.google');
+    Route::get('/auth/google/callback', [AuthController::class, 'googleCallback'])->name('auth.google.callback');
+});
+
+Route::post('/keluar', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+/*
+|--------------------------------------------------------------------------
+| Buyer Account Dashboard Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->prefix('akun')->name('account.')->group(function () {
+    Route::get('/',          [AccountController::class, 'overview'])->name('overview');
+    Route::get('/wishlist',  [AccountController::class, 'wishlist'])->name('wishlist');
+    Route::post('/wishlist/toggle', [AccountController::class, 'toggleWishlist'])->name('wishlist.toggle');
+    Route::get('/pesanan',   [AccountController::class, 'orders'])->name('orders');
+    Route::get('/alamat',    [AccountController::class, 'addresses'])->name('addresses');
+    Route::post('/alamat',   [AccountController::class, 'storeAddress'])->name('addresses.store');
+    Route::delete('/alamat/{address}', [AccountController::class, 'destroyAddress'])->name('addresses.destroy');
+    Route::post('/alamat/{address}/utama', [AccountController::class, 'setDefaultAddress'])->name('addresses.default');
+    Route::get('/profil',    [AccountController::class, 'profile'])->name('profile');
+    Route::post('/profil',   [AccountController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/cart',      [AccountController::class, 'cart'])->name('cart');
+});
+
 
 // Tracking endpoint
 Route::post('/track/{type}', [TrackingController::class, 'track'])->name('track');
 
+// Webhook Midtrans (No CSRF, No Auth)
+Route::post('/payment/callback', [CheckoutController::class, 'callback'])->name('payment.callback');
+
 // Sitemap & robots
-Route::get('/sitemap.xml',                [SitemapController::class, 'index'])->name('sitemap');
-Route::get('/sitemap-{sitemapLocale}.xml', [SitemapController::class, 'localeSitemap'])->name('sitemap.locale');
+Route::get('/sitemap.xml',  [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', function () {
-    $content = "User-agent: *\nAllow: /\n\nSitemap: " . url('/sitemap.xml');
-    return response($content, 200)->header('Content-Type', 'text/plain');
+    $sitemap = url('/sitemap.xml');
+    $lines = [
+        'User-agent: *',
+        'Allow: /',
+        '',
+        '# Halaman transaksional — tidak perlu diindex Google',
+        'Disallow: /admin',
+        'Disallow: /admin/',
+        'Disallow: /akun/',
+        'Disallow: /keranjang',
+        'Disallow: /checkout',
+        'Disallow: /cek-resi',
+        'Disallow: /deploy-hostinger',
+        '',
+        '# Parameter filter/sort menciptakan URL duplikat — biarkan canonical yang handle',
+        'Disallow: /*?q=',
+        'Disallow: /*?sort=',
+        'Disallow: /*?page=',
+        '',
+        '# Disallow common bot traps',
+        'Disallow: /storage/',
+        'Disallow: /*.php$',
+        '',
+        "Sitemap: {$sitemap}",
+    ];
+    return response(implode("\n", $lines), 200)->withHeaders([
+        'Content-Type' => 'text/plain; charset=UTF-8',
+        'Content-Disposition' => 'inline; filename="robots.txt"'
+    ]);
 });
 
-// Deployment Helper Route untuk Hostinger
+// Deployment Helper
 Route::get('/deploy-hostinger', function () {
     try {
         \Illuminate\Support\Facades\Artisan::call('storage:link');
@@ -113,7 +193,7 @@ Route::get('/deploy-hostinger', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Admin Routes (NO locale prefix — always in Indonesian)
+| Admin Routes
 |--------------------------------------------------------------------------
 */
 Route::prefix('admin')->group(function () {
@@ -134,7 +214,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/settings', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
         Route::post('upload-image', [\App\Http\Controllers\Admin\AdminUploadController::class, 'uploadImage'])->name('admin.upload.image');
 
-        // Leads / Inquiries
+        Route::get('/api-keys',  [AdminApiKeyController::class, 'index'])->name('admin.apikeys.index');
+        Route::post('/api-keys', [AdminApiKeyController::class, 'update'])->name('admin.apikeys.update');
+
         Route::get('/leads/export',          [AdminLeadController::class, 'export'])->name('admin.leads.export');
         Route::get('/leads/export-pdf',      [AdminLeadController::class, 'exportPdf'])->name('admin.leads.export_pdf');
         Route::post('/leads/mark-read',      [AdminLeadController::class, 'markAllRead'])->name('admin.leads.mark_read');
@@ -144,7 +226,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/leads/{lead}/notes',   [AdminLeadController::class, 'updateNote'])->name('admin.leads.notes');
         Route::delete('/leads/{lead}',       [AdminLeadController::class, 'destroy'])->name('admin.leads.destroy');
 
-        // Products
+        Route::patch('services/{service}/stock', [AdminServiceController::class, 'updateStock'])->name('admin.services.stock');
         Route::resource('services', AdminServiceController::class)->names([
             'index'   => 'admin.services.index',   'create'  => 'admin.services.create',
             'store'   => 'admin.services.store',    'show'    => 'admin.services.show',
@@ -198,5 +280,45 @@ Route::prefix('admin')->group(function () {
             'edit'    => 'admin.hero_slides.edit',    'update'  => 'admin.hero_slides.update',
             'destroy' => 'admin.hero_slides.destroy',
         ]);
+
+        Route::resource('usp', AdminUspController::class)->names([
+            'index'   => 'admin.usp.index',   'create' => 'admin.usp.create',
+            'store'   => 'admin.usp.store',   'edit'   => 'admin.usp.edit',
+            'update'  => 'admin.usp.update',  'destroy'=> 'admin.usp.destroy',
+        ]);
+
+        Route::resource('category-items', AdminCategoryItemController::class)->names([
+            'index'   => 'admin.category-items.index',   'create' => 'admin.category-items.create',
+            'store'   => 'admin.category-items.store',   'edit'   => 'admin.category-items.edit',
+            'update'  => 'admin.category-items.update',  'destroy'=> 'admin.category-items.destroy',
+        ]);
+
+        Route::resource('promo-sections', AdminPromoSectionController::class)->names([
+            'index'   => 'admin.promo-sections.index',   'create' => 'admin.promo-sections.create',
+            'store'   => 'admin.promo-sections.store',   'show'   => 'admin.promo-sections.show',
+            'edit'    => 'admin.promo-sections.edit',    'update' => 'admin.promo-sections.update',
+            'destroy' => 'admin.promo-sections.destroy',
+        ]);
+
+        // Courier Management
+        Route::get('/couriers',                      [AdminCourierController::class, 'index'])->name('admin.couriers.index');
+        Route::post('/couriers',                     [AdminCourierController::class, 'store'])->name('admin.couriers.store');
+        Route::put('/couriers/{courier}',            [AdminCourierController::class, 'update'])->name('admin.couriers.update');
+        Route::post('/couriers/{courier}/toggle',    [AdminCourierController::class, 'toggleActive'])->name('admin.couriers.toggle');
+        Route::delete('/couriers/{courier}',         [AdminCourierController::class, 'destroy'])->name('admin.couriers.destroy');
+
+        // User Management (Buyers)
+        Route::get('/users',                                    [AdminUserController::class, 'index'])->name('admin.users.index');
+        Route::get('/users/{user}',                             [AdminUserController::class, 'show'])->name('admin.users.show');
+        Route::post('/users/{user}/password',                   [AdminUserController::class, 'updatePassword'])->name('admin.users.password');
+        Route::post('/users/{user}/toggle',                     [AdminUserController::class, 'toggleActive'])->name('admin.users.toggle');
+        Route::delete('/users/{user}/addresses/{address}',      [AdminUserController::class, 'destroyAddress'])->name('admin.users.addresses.destroy');
+
+        // Order Management
+        Route::get('/orders/export',                            [\App\Http\Controllers\Admin\AdminOrderController::class, 'export'])->name('admin.orders.export');
+        Route::get('/orders',                                   [\App\Http\Controllers\Admin\AdminOrderController::class, 'index'])->name('admin.orders.index');
+        Route::get('/orders/{order}',                           [\App\Http\Controllers\Admin\AdminOrderController::class, 'show'])->name('admin.orders.show');
+        Route::post('/orders/{order}/status',                   [\App\Http\Controllers\Admin\AdminOrderController::class, 'updateStatus'])->name('admin.orders.status');
+        Route::post('/orders/{order}/tracking',                 [\App\Http\Controllers\Admin\AdminOrderController::class, 'updateTracking'])->name('admin.orders.tracking');
     });
 });

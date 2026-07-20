@@ -234,6 +234,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       'seo'     => ['SEO', 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'],
       'hero'    => ['Hero & Konten', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'],
       'contact' => ['Kontak', 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'],
+      'api'     => ['Integrasi API', 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4'],
       
     ];
   @endphp
@@ -328,12 +329,12 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
       <div>
         <label class="form-label" for="s-footer_desc">Deskripsi Footer</label>
-        <input type="text" name="footer_desc" id="s-footer_desc" class="form-input" value="{{ $settings['footer_desc'] ?? '' }}" placeholder="Produsen dan Spesialis Turbine Ventilator...">
+        <input type="text" name="footer_desc" id="s-footer_desc" class="form-input" value="{{ $settings['footer_desc'] ?? '' }}" placeholder="Produsen dan Spesialis Alat Rumah...">
         <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Tampil di footer website sebagai deskripsi singkat perusahaan.</p>
       </div>
       <div>
         <label class="form-label" for="s-copyright">Copyright Text</label>
-        <input type="text" name="copyright" id="s-copyright" class="form-input" value="{{ $settings['copyright'] ?? '' }}" placeholder="© 2026 Cyclevent. All rights reserved.">
+        <input type="text" name="copyright" id="s-copyright" class="form-input" value="{{ $settings['copyright'] ?? '' }}" placeholder="© 2026 Alat Rumah. All rights reserved.">
         <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Tampil di bagian bawah footer.</p>
       </div>
       <div>
@@ -386,7 +387,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
           <input type="text" name="meta_title_{{ $page['key'] }}" class="form-input" maxlength="65"
                  value="{{ $settings['meta_title_'.$page['key']] ?? '' }}"
                  oninput="updateCounter(this,'cnt-title-{{ $page['key'] }}')"
-                 placeholder="{{ $page['label'] }} | Cyclevent">
+                 placeholder="{{ $page['label'] }} | Alat Rumah">
           <div style="font-size:.7rem;color:#94A3B8;margin-top:.25rem;">
             <span id="cnt-title-{{ $page['key'] }}">{{ strlen($settings['meta_title_'.$page['key']] ?? '') }}</span>/65 karakter
           </div>
@@ -641,7 +642,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
           </div>
           <div>
             <label class="form-label" style="font-size:.65rem;">Deskripsi Singkat</label>
-            <textarea name="about_c4_desc" class="form-input" rows="2" placeholder="Unit ventilator terpasang di berbagai sektor industri.">{{ $settings['about_c4_desc'] ?? '' }}</textarea>
+            <textarea name="about_c4_desc" class="form-input" rows="2" placeholder="Unit alat rumah terpasang di berbagai sektor industri.">{{ $settings['about_c4_desc'] ?? '' }}</textarea>
           </div>
         </div>
       </div>
@@ -727,9 +728,49 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
           <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Tampil di footer & halaman kontak</p>
         </div>
         <div style="grid-column:span 2;">
+          <label class="form-label" for="s-hours">Jam Operasional</label>
+          <input type="text" name="hours" id="s-hours" class="form-input" value="{{ $settings['hours'] ?? '' }}" placeholder="Senin – Sabtu, 08.00 – 18.00 WIB">
+          <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Tampil di footer</p>
+        </div>
+        <div style="grid-column:span 2;">
           <label class="form-label" for="s-maps_embed">URL Google Maps Embed</label>
           <input type="text" name="maps_embed" id="s-maps_embed" class="form-input" value="{{ $settings['maps_embed'] ?? '' }}" placeholder="https://maps.google.com/maps?q=...&output=embed">
           <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Buka Google Maps → Share → Embed a map → salin URL dari atribut src iframe-nya</p>
+        </div>
+      </div>
+    </div>
+
+    {{-- Footer Logos (Payment & Expedition) --}}
+    <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
+        <svg width="14" height="14" fill="none" stroke="#0EA5E9" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0EA5E9;">Logo Pembayaran & Ekspedisi (Footer)</div>
+      </div>
+      <p style="font-size:.75rem;color:#94A3B8;margin-bottom:1.25rem;line-height:1.6;">Upload gambar berlatar transparan (PNG) untuk ditampilkan di bagian footer bawah.</p>
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+        {{-- Payment Logo --}}
+        <div>
+          <label class="form-label" style="display:block;margin-bottom:.5rem;">Logo Metode Pembayaran</label>
+          @if(!empty($settings['payment_logos']))
+            <div style="margin-bottom:1rem;padding:.75rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;">
+              <img src="{{ asset('storage/'.$settings['payment_logos']) }}" alt="Payment Logos" style="max-height:40px;object-fit:contain;">
+              <div style="font-size:.7rem;color:#94A3B8;margin-top:.25rem;">Logo saat ini</div>
+            </div>
+          @endif
+          <input type="file" name="payment_logos" class="form-input" accept="image/*" style="padding:.5rem;">
+        </div>
+
+        {{-- Expedition Logo --}}
+        <div>
+          <label class="form-label" style="display:block;margin-bottom:.5rem;">Logo Jasa Pengiriman</label>
+          @if(!empty($settings['expedition_logos']))
+            <div style="margin-bottom:1rem;padding:.75rem;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;">
+              <img src="{{ asset('storage/'.$settings['expedition_logos']) }}" alt="Expedition Logos" style="max-height:40px;object-fit:contain;">
+              <div style="font-size:.7rem;color:#94A3B8;margin-top:.25rem;">Logo saat ini</div>
+            </div>
+          @endif
+          <input type="file" name="expedition_logos" class="form-input" accept="image/*" style="padding:.5rem;">
         </div>
       </div>
     </div>
@@ -820,6 +861,69 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data" style="display:none;"></form>
     </div>
   </div>
+</div>
+
+{{-- ======== TAB: API ======== --}}
+<div id="tab-api" class="tab-section" style="display:none;">
+  <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data">
+    @csrf @method('POST')
+    <div style="display:flex;flex-direction:column;gap:1.25rem;">
+      <div style="background:#FFFFFF;border:1px solid #E2E8F0;box-shadow:0 4px 15px rgba(0,0,0,0.03);border-radius:10px;padding:1.5rem;">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;">
+          <svg width="14" height="14" fill="none" stroke="#F59E0B" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#F59E0B;">API Pengiriman & Pembayaran</div>
+        </div>
+        <p style="font-size:.75rem;color:#94A3B8;margin-bottom:1.25rem;line-height:1.6;">Konfigurasi kunci API untuk layanan pihak ketiga (Ongkir & Payment Gateway).</p>
+        
+        <div style="display:grid;grid-template-columns:1fr;gap:1.25rem;">
+          {{-- API RajaOngkir --}}
+          <div style="border-bottom:1px dashed #E2E8F0;padding-bottom:1.25rem;">
+            <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:0.75rem;color:#334155;">API Cek Resi / Ongkir (RajaOngkir)</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div>
+                <label class="form-label">API Key</label>
+                <input type="text" name="rajaongkir_api_key" class="form-input" value="{{ $settings['rajaongkir_api_key'] ?? '' }}" placeholder="Kunci API RajaOngkir">
+              </div>
+              <div>
+                <label class="form-label">Tipe Akun</label>
+                <select name="rajaongkir_type" class="form-input">
+                  <option value="starter" {{ ($settings['rajaongkir_type'] ?? '') == 'starter' ? 'selected' : '' }}>Starter</option>
+                  <option value="basic" {{ ($settings['rajaongkir_type'] ?? '') == 'basic' ? 'selected' : '' }}>Basic</option>
+                  <option value="pro" {{ ($settings['rajaongkir_type'] ?? '') == 'pro' ? 'selected' : '' }}>Pro</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          {{-- API Midtrans --}}
+          <div>
+            <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:0.75rem;color:#334155;">API Payment Gateway (Midtrans)</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div style="grid-column:span 2;">
+                <label class="form-label">Environment</label>
+                <select name="midtrans_is_production" class="form-input">
+                  <option value="0" {{ ($settings['midtrans_is_production'] ?? '0') == '0' ? 'selected' : '' }}>Sandbox (Testing)</option>
+                  <option value="1" {{ ($settings['midtrans_is_production'] ?? '0') == '1' ? 'selected' : '' }}>Production (Live)</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label">Client Key</label>
+                <input type="text" name="midtrans_client_key" class="form-input" value="{{ $settings['midtrans_client_key'] ?? '' }}" placeholder="Midtrans Client Key">
+              </div>
+              <div>
+                <label class="form-label">Server Key</label>
+                <input type="text" name="midtrans_server_key" class="form-input" value="{{ $settings['midtrans_server_key'] ?? '' }}" placeholder="Midtrans Server Key">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;text-align:right;">
+          <button type="submit" style="display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1.25rem;font-size:.875rem;font-weight:700;background:#0EA5E9;color:#ffffff;border:none;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;">Simpan API</button>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
 
 </form>

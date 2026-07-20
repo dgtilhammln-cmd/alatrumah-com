@@ -15,27 +15,28 @@ class AboutController extends Controller
         $clients      = Client::active()->ordered()->get();
         $wa           = \App\Models\WaSetting::primary();
 
+        $siteName = $settings['site_name'] ?? 'Alat Rumah';
+
         $seo = [
-            'title'       => $settings['meta_title_about'] ?? 'Tentang Kami | Cyclevent - Spesialis Turbine Ventilator',
-            'description' => $settings['meta_desc_about'] ?? 'Profil Cyclevent, spesialis Turbine Ventilator Non-Electric berdiri sejak 2013. Melayani ribuan pelanggan industri dan rumah tangga di seluruh Indonesia.',
-            'keywords'    => $settings['meta_keywords_about'] ?? 'profil cyclevent, tentang cyclevent, spesialis turbine ventilator, ventilator atap pabrik',
+            'title'       => $settings['meta_title_about'] ?? 'Tentang Kami | ' . $siteName,
+            'description' => $settings['meta_desc_about'] ?? 'Profil ' . $siteName . ', toko online alat rumah tangga terlengkap. Melayani seluruh Indonesia.',
+            'keywords'    => $settings['meta_keywords_about'] ?? 'tentang alat rumah, profil toko, toko online alat rumah tangga',
             'og_image'    => !empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : (!empty($settings['logo']) ? asset('storage/'.$settings['logo']) : asset('images/og-default.jpg')),
-            'canonical'   => route_locale('about'),
+            'canonical'   => route('about'),
         ];
 
         $keunggulan = [
-            ['icon' => 'star', 'title' => 'Produk Berkualitas', 'desc' => 'Semua produk dari bahan zincalume dan stainless steel anti karat'],
-            ['icon' => 'shield', 'title' => 'Garansi 15 Tahun', 'desc' => 'Layanan purna jual & garansi resmi penggantian parts'],
-            ['icon' => 'tag', 'title' => 'Tanpa Listrik', 'desc' => 'Beroperasi otomatis menggunakan tenaga angin tanpa biaya listrik'],
-            ['icon' => 'map', 'title' => 'Jangkauan Nasional', 'desc' => 'Melayani pengiriman & instalasi ke seluruh Indonesia'],
-            ['icon' => 'clock', 'title' => 'Tepat Waktu', 'desc' => 'Komitmen jadwal pengiriman dan pemasangan sesuai target'],
-            ['icon' => 'hard-hat', 'title' => 'Konstruksi USA', 'desc' => 'Desain mengikuti standar USA tahan cuaca ekstrem'],
+            ['icon' => 'star',     'title' => 'Produk Berkualitas',  'desc' => 'Semua produk dipilih dari merek terpercaya dengan kualitas terjamin'],
+            ['icon' => 'shield',   'title' => 'Bergaransi',          'desc' => 'Layanan purna jual dan garansi resmi untuk setiap produk'],
+            ['icon' => 'tag',      'title' => 'Harga Terjangkau',    'desc' => 'Harga kompetitif tanpa mengorbankan kualitas produk'],
+            ['icon' => 'map',      'title' => 'Jangkauan Nasional',  'desc' => 'Melayani pengiriman ke seluruh wilayah Indonesia'],
+            ['icon' => 'clock',    'title' => 'Pengiriman Tepat Waktu', 'desc' => 'Komitmen pengiriman sesuai estimasi waktu yang diberikan'],
+            ['icon' => 'hard-hat', 'title' => 'Jasa Profesional',    'desc' => 'Tim teknisi berpengalaman untuk layanan pemasangan dan servis'],
         ];
 
         $legalitas = [
-            ['label' => 'Akte Notaris', 'value' => $settings['akte'] ?? 'No. 47/1093/CV/VIII/2013'],
-            ['label' => 'NPWP', 'value' => $settings['npwp'] ?? '31.817.130.3-603.000'],
-            ['label' => 'NIB', 'value' => $settings['nib'] ?? '9120105110524'],
+            ['label' => 'NIB',  'value' => $settings['nib']  ?? '-'],
+            ['label' => 'NPWP', 'value' => $settings['npwp'] ?? '-'],
         ];
 
         return view('about.index', compact('settings', 'testimonials', 'clients', 'seo', 'keunggulan', 'legalitas', 'wa'));

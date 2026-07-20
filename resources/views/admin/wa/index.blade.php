@@ -75,7 +75,7 @@
             </div>
             <div style="margin-bottom:1rem;">
                 <label class="form-label">Template Pesan Default <span style="color:#F5A623;">*</span></label>
-                <textarea name="template_pesan" class="form-input" rows="3" placeholder="Halo Cyclevent, saya ingin konsultasi mengenai [produk]..." required></textarea>
+                <textarea name="template_pesan" class="form-input" rows="3" placeholder="Halo Alat Rumah, saya ingin konsultasi mengenai [produk]..." required></textarea>
             </div>
             <button type="submit" class="btn-primary">+ Tambah Nomor</button>
         </form>

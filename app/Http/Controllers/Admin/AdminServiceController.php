@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
+use App\Models\CategoryItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
@@ -12,16 +13,31 @@ class AdminServiceController extends Controller
 {
     use HandlesImageUpload;
 
-    public function index()
+    public function index(Request $request)
     {
-        $services = Service::ordered()->get();
+        $query = Service::ordered();
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('short_desc', 'like', "%{$search}%");
+            });
+        }
+        $services = $query->get();
         return view('admin.services.index', compact('services'));
     }
 
-    public function create() { return view('admin.services.create'); }
+    public function create() { 
+        $categories = CategoryItem::where('is_active', true)->orderBy('sort_order')->get();
+        return view('admin.services.create', compact('categories')); 
+    }
 
     public function store(Request $request)
     {
+        if ($request->has('rating')) {
+            $request->merge(['rating' => str_replace(',', '.', $request->rating)]);
+        }
+
         $v = $request->validate([
             'name'          => 'required|max:200',
             'slug'          => 'nullable|max:200|regex:/^[a-z0-9\-]*$/',
@@ -45,6 +61,16 @@ class AdminServiceController extends Controller
             'faq_qs.*'      => 'nullable|string|max:500',
             'faq_as'        => 'nullable|array',
             'faq_as.*'      => 'nullable|string|max:2000',
+            // E-commerce fields
+            'price'         => 'nullable|numeric|min:0',
+            'sale_price'    => 'nullable|numeric|min:0',
+            'stock'         => 'nullable|integer|min:0',
+            'min_order'     => 'nullable|integer|min:1',
+            'weight'        => 'nullable|integer|min:0',
+            'sku'           => 'nullable|string|max:100',
+            'rating'        => 'nullable|numeric|min:0|max:5',
+            'sold_count'    => 'nullable|integer|min:0',
+            'product_category_id' => 'nullable|integer|exists:category_items,id',
         ]);
 
         // Slug
@@ -56,8 +82,15 @@ class AdminServiceController extends Controller
         $v['is_active'] = $request->boolean('is_active', true);
         $v['order']     = $v['order'] ?? 0;
 
-        if (empty($v['meta_title'])) $v['meta_title'] = $v['name'].' | Cyclevent';
-        if (empty($v['meta_desc']))  $v['meta_desc']  = Str::limit(strip_tags($v['short_desc'] ?? ''), 155);
+        if (empty($v['meta_title'])) $v['meta_title'] = $v['name'].' | Alatrumah.com';
+        if (empty($v['meta_desc'])) {
+            if (isset($v['price']) && $v['price'] > 0) {
+                $v['meta_desc'] = "Jual {$v['name']} di Indonesia. Distributor, Supplier, Agen, {$v['name']}. Kami Menjual {$v['name']} terlengkap dengan harga termurah di Surabaya, Jawa Timur, Indonesia.";
+            } else {
+                $v['meta_desc'] = "Layanan {$v['name']} profesional dan terpercaya di Surabaya, Jawa Timur. Hubungi kami untuk konsultasi gratis dan dapatkan penawaran terbaik.";
+            }
+            $v['meta_desc'] = Str::limit($v['meta_desc'], 155);
+        }
 
         if ($request->hasFile('image')) {
             $v['image'] = $this->storeWebP($request->file('image'), 'services', 1200, 800);
@@ -109,10 +142,17 @@ class AdminServiceController extends Controller
         return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil ditambahkan.');
     }
 
-    public function edit(Service $service) { return view('admin.services.edit', compact('service')); }
+    public function edit(Service $service) { 
+        $categories = CategoryItem::where('is_active', true)->orderBy('sort_order')->get();
+        return view('admin.services.edit', compact('service', 'categories')); 
+    }
 
     public function update(Request $request, Service $service)
     {
+        if ($request->has('rating')) {
+            $request->merge(['rating' => str_replace(',', '.', $request->rating)]);
+        }
+        
         $v = $request->validate([
             'name'          => 'required|max:200',
             'slug'          => 'nullable|max:200|regex:/^[a-z0-9\-]*$/',
@@ -136,6 +176,16 @@ class AdminServiceController extends Controller
             'faq_qs.*'      => 'nullable|string|max:500',
             'faq_as'        => 'nullable|array',
             'faq_as.*'      => 'nullable|string|max:2000',
+            // E-commerce fields
+            'price'         => 'nullable|numeric|min:0',
+            'sale_price'    => 'nullable|numeric|min:0',
+            'stock'         => 'nullable|integer|min:0',
+            'min_order'     => 'nullable|integer|min:1',
+            'weight'        => 'nullable|integer|min:0',
+            'sku'           => 'nullable|string|max:100',
+            'rating'        => 'nullable|numeric|min:0|max:5',
+            'sold_count'    => 'nullable|integer|min:0',
+            'product_category_id' => 'nullable|integer|exists:category_items,id',
         ]);
 
         // Slug update
@@ -148,6 +198,16 @@ class AdminServiceController extends Controller
 
         $v['is_active'] = $request->boolean('is_active', true);
         $v['order']     = $v['order'] ?? $service->order;
+
+        if (empty($v['meta_title'])) $v['meta_title'] = $v['name'].' | Alatrumah.com';
+        if (empty($v['meta_desc'])) {
+            if (isset($v['price']) && $v['price'] > 0) {
+                $v['meta_desc'] = "Jual {$v['name']} di Indonesia. Distributor, Supplier, Agen, {$v['name']}. Kami Menjual {$v['name']} terlengkap dengan harga termurah di Surabaya, Jawa Timur, Indonesia.";
+            } else {
+                $v['meta_desc'] = "Layanan {$v['name']} profesional dan terpercaya di Surabaya, Jawa Timur. Hubungi kami untuk konsultasi gratis dan dapatkan penawaran terbaik.";
+            }
+            $v['meta_desc'] = Str::limit($v['meta_desc'], 155);
+        }
 
         if ($request->hasFile('image')) {
             $this->deleteStorageFile($service->image);
@@ -226,5 +286,14 @@ class AdminServiceController extends Controller
         Cache::forget('home_page_data');
         Cache::forget('services_page_data');
         return back()->with('success', 'Layanan berhasil dihapus.');
+    }
+
+    public function updateStock(Request $request, Service $service)
+    {
+        $request->validate(['stock' => 'required|integer|min:0']);
+        $service->update(['stock' => $request->stock]);
+        Cache::forget('home_page_data');
+        Cache::forget('services_page_data');
+        return back()->with('success', 'Stok berhasil diperbarui.');
     }
 }

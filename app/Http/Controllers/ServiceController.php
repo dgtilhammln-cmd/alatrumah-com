@@ -11,33 +11,114 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $services = Service::active()->ordered()->get();
-        $settings = Setting::getAllAsArray();
+        $query = Service::active()->ordered();
+        
+        // Keyword search
+        if (request()->filled('q')) {
+            $searchTerm = request('q');
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('description', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('short_desc', 'like', '%' . $searchTerm . '%');
+            });
+        }
 
+        // Category filter (multiple) - support both 'category' and 'kategori' params
+        $categoryParam = request()->filled('category') ? request('category') : request('kategori');
+        if ($categoryParam) {
+            $cats = is_array($categoryParam) ? $categoryParam : explode(',', $categoryParam);
+            $cats = array_filter(array_map('trim', $cats));
+            if (!empty($cats)) {
+                $query->whereHas('category', function($q) use ($cats) {
+                    $q->whereIn('slug', $cats);
+                });
+            }
+        }
+
+        // Price range filter
+        if (request()->filled('price_min')) {
+            $query->where(function($q) {
+                $q->where('price', '>=', (float) request('price_min'))
+                  ->orWhere(function($q2) { $q2->whereNull('price')->orWhere('price', 0); });
+            });
+        }
+        if (request()->filled('price_max') && request('price_max') > 0) {
+            $query->where(function($q) {
+                $q->where('price', '<=', (float) request('price_max'))
+                  ->orWhere(function($q2) { $q2->whereNull('price')->orWhere('price', 0); });
+            });
+        }
+
+        // Type filter: produk / jasa
+        if (request('type') === 'produk') {
+            $query->where('price', '>', 0);
+        } elseif (request('type') === 'jasa') {
+            $query->where(function($q) { $q->whereNull('price')->orWhere('price', 0); });
+        }
+
+        // Sorting
+        switch (request('sort', 'default')) {
+            case 'price_asc':
+                $query->orderByRaw('CASE WHEN price IS NULL OR price = 0 THEN 1 ELSE 0 END, price ASC');
+                break;
+            case 'price_desc':
+                $query->orderByRaw('CASE WHEN price IS NULL OR price = 0 THEN 1 ELSE 0 END, price DESC');
+                break;
+            case 'newest':
+                $query->latest();
+                break;
+            case 'name_az':
+                $query->orderBy('name', 'asc');
+                break;
+            default:
+                $query->ordered();
+                break;
+        }
+        
+        $services   = $query->get();
+        $settings   = Setting::getAllAsArray();
+        $siteName   = $settings['site_name'] ?? 'Alat Rumah';
+        $wa         = WaSetting::primary();
+
+        // Categories with counts
+        $categories = \App\Models\ProductCategory::where('is_active', true)
+            ->orderBy('order')
+            ->withCount(['products' => function($q) { $q->where('is_active', true); }])
+            ->get()
+            ->map(function($cat) {
+                $cat->services_count = $cat->products_count;
+                return $cat;
+            });
+
+        // Price range for slider
+        $maxPrice = Service::active()->where('price', '>', 0)->max('price') ?? 5000000;
+
+        $hasFilters = request()->hasAny(['q', 'category', 'kategori', 'price_min', 'price_max', 'type', 'sort']);
         $seo = [
-            'title'       => $settings['meta_title_services'] ?? 'Daftar Produk Turbine Ventilator Cyclevent | Anti Karat & Bergaransi',
-            'description' => $settings['meta_desc_services'] ?? 'Temukan berbagai pilihan tipe Turbine Ventilator dari Cyclevent. Cocok untuk pabrik, gudang, restoran, dan rumah. Sirkulasi udara 24 jam tanpa listrik.',
-            'keywords'    => $settings['meta_keywords_services'] ?? 'produk cyclevent, harga turbine ventilator, jual ventilator atap, tipe roof ventilator, spesifikasi turbine ventilator',
+            'title'       => $settings['meta_title_services'] ?? 'Produk & Layanan | ' . $siteName,
+            'description' => $settings['meta_desc_services']  ?? 'Temukan berbagai produk alat rumah tangga berkualitas dan layanan jasa profesional di ' . $siteName . '.',
+            'keywords'    => $settings['meta_keywords_services'] ?? 'alat rumah tangga, produk, layanan jasa, pemasangan',
             'og_image'    => !empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : (!empty($settings['logo']) ? asset('storage/'.$settings['logo']) : asset('images/og-default.jpg')),
-            'canonical'   => route_locale('products'),
+            'canonical'   => route('products'),
+            'robots'      => $hasFilters ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
         ];
 
         $schema = json_encode([
             '@context' => 'https://schema.org',
             '@type'    => 'ItemList',
-            'name'     => 'Produk & Layanan Cyclevent',
-            'url'      => route_locale('products'),
+            'name'     => 'Produk & Layanan ' . $siteName,
+            'url'      => route('products'),
             'itemListElement' => $services->map(function($s, $i) {
                 return [
                     '@type'    => 'ListItem',
                     'position' => $i + 1,
                     'name'     => $s->name,
-                    'url'      => route_locale('products.show', ['slug' => $s->slug]),
+                    'url'      => route('products.show', ['slug' => $s->slug]),
                 ];
             })->toArray(),
         ]);
 
-        return view('services.index', compact('services', 'settings', 'seo', 'schema'));
+        return view('services.index', compact('services', 'settings', 'seo', 'schema', 'categories', 'wa', 'maxPrice'));
     }
 
     public function show(string $slug)
@@ -47,16 +128,26 @@ class ServiceController extends Controller
         $wa           = WaSetting::primary();
         $related      = Service::active()->ordered()->where('id', '!=', $service->id)->limit(4)->get();
         $testimonials = Testimonial::active()->ordered()->get()->unique('name');
+        $siteName     = $settings['site_name'] ?? 'Alat Rumah';
 
         $seo = [
-            'title'       => $service->meta_title,
-            'description' => $service->meta_desc,
+            'title'       => $service->meta_title ?: ($service->name . ' | ' . $siteName),
+            'description' => $service->meta_desc  ?: $service->short_desc,
             'keywords'    => $service->meta_keywords,
             'og_image'    => !empty($service->og_image) ? asset('storage/'.$service->og_image) : (!empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : asset('images/og-default.jpg')),
-            'canonical'   => route_locale('products.show', ['slug' => $slug]),
+            'canonical'   => route('products.show', ['slug' => $slug]),
         ];
 
         $faq = is_array($service->faqs) ? $service->faqs : [];
+
+        // Fallback FAQs jika kosong
+        if (empty($faq)) {
+            $faq = [
+                ['q' => 'Bagaimana cara memesan produk ini?', 'a' => 'Anda dapat memesan melalui tombol "Tambah ke Keranjang" atau menghubungi tim kami melalui WhatsApp untuk konsultasi lebih lanjut.'],
+                ['q' => 'Apakah tersedia layanan pengiriman ke seluruh Indonesia?', 'a' => 'Ya, kami melayani pengiriman ke seluruh wilayah Indonesia.'],
+                ['q' => 'Apakah tersedia garansi produk?', 'a' => 'Setiap produk dilengkapi dengan garansi sesuai ketentuan yang berlaku. Hubungi kami untuk informasi lebih lanjut.'],
+            ];
+        }
 
         $serviceImage = !empty($service->og_image)
             ? rtrim(config('app.url'), '/') . '/storage/' . $service->og_image
@@ -64,49 +155,23 @@ class ServiceController extends Controller
                 ? rtrim(config('app.url'), '/') . '/storage/' . $service->image
                 : rtrim(config('app.url'), '/') . '/images/og-default.jpg');
 
-        // Fallback FAQs if empty
-        if (empty($faq)) {
-            $faq = [
-                ['q' => 'Apakah Cyclevent Turbine Ventilator memerlukan listrik?', 'a' => 'Sama sekali tidak. Cyclevent beroperasi 100% menggunakan tenaga angin dan perbedaan tekanan udara, sehingga bebas biaya listrik selamanya.'],
-                ['q' => 'Berapa lama garansi yang diberikan?', 'a' => 'Kami memberikan garansi resmi untuk produk Cyclevent hingga 15 tahun, mencakup cacat material dan performa putaran mesin.'],
-                ['q' => 'Apakah materialnya tahan karat?', 'a' => 'Ya, Cyclevent terbuat dari material Alumunium atau Stainless Steel berkualitas tinggi yang tahan terhadap cuaca ekstrem dan karat.'],
-            ];
-        }
-
         $schema = json_encode([
             [
                 '@context'    => 'https://schema.org',
                 '@type'       => 'Product',
                 'name'        => $service->name,
                 'image'       => [$serviceImage],
-                'description' => strip_tags($service->short_desc ?: $service->name . ' - Cyclevent Turbine Ventilator Berkualitas'),
-                'sku'         => 'CYV-' . str_pad($service->id, 4, '0', STR_PAD_LEFT),
-                'mpn'         => 'CYV-' . strtoupper(substr($service->slug, 0, 8)),
-                'url'         => route_locale('products.show', ['slug' => $slug]),
-                'brand'       => ['@type' => 'Brand', 'name' => 'Cyclevent'],
+                'description' => strip_tags($service->short_desc ?: $service->name),
+                'sku'         => $service->sku ?? 'SKU-' . str_pad($service->id, 4, '0', STR_PAD_LEFT),
+                'url'         => route('products.show', ['slug' => $slug]),
+                'brand'       => ['@type' => 'Brand', 'name' => $siteName],
                 'offers'      => [
-                    '@type'         => 'AggregateOffer',
+                    '@type'         => 'Offer',
                     'priceCurrency' => 'IDR',
-                    'lowPrice'      => '1500000',
-                    'highPrice'     => '5000000',
-                    'offerCount'    => '3',
-                    'availability'  => 'https://schema.org/InStock',
-                    'url'           => route_locale('products.show', ['slug' => $slug]),
+                    'price'         => (string) ($service->final_price ?? 0),
+                    'availability'  => $service->is_available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                    'url'           => route('products.show', ['slug' => $slug]),
                 ],
-                'aggregateRating' => (function() use ($testimonials) {
-                    $count = $testimonials->count();
-                    if ($count === 0) {
-                        return ['@type' => 'AggregateRating', 'ratingValue' => '4.9', 'reviewCount' => '120', 'bestRating' => '5', 'worstRating' => '1'];
-                    }
-                    $avg = round($testimonials->avg('rating') ?? 5, 1);
-                    return ['@type' => 'AggregateRating', 'ratingValue' => (string)$avg, 'reviewCount' => (string)$count, 'bestRating' => '5', 'worstRating' => '1'];
-                })(),
-                'review' => $testimonials->take(5)->map(fn($t) => [
-                    '@type'        => 'Review',
-                    'reviewRating' => ['@type' => 'Rating', 'ratingValue' => (string)($t->rating ?? 5), 'bestRating' => '5'],
-                    'author'       => ['@type' => 'Person', 'name' => $t->name],
-                    'reviewBody'   => $t->content,
-                ])->toArray(),
             ],
             [
                 '@context'   => 'https://schema.org',
@@ -120,9 +185,9 @@ class ServiceController extends Controller
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         $breadcrumbs = [
-            ['name' => 'Beranda',        'url' => route_locale('home')],
-            ['name' => 'Produk & Layanan', 'url' => route_locale('products')],
-            ['name' => $service->name,   'url' => route_locale('products.show', ['slug' => $slug])],
+            ['name' => 'Beranda',          'url' => route('home')],
+            ['name' => 'Produk & Layanan', 'url' => route('products')],
+            ['name' => $service->name,     'url' => route('products.show', ['slug' => $slug])],
         ];
 
         return view('services.show', compact('service', 'settings', 'related', 'wa', 'seo', 'schema', 'faq', 'breadcrumbs', 'testimonials'));

@@ -3,12 +3,12 @@
 @php
     $bio = $author->currentTranslation()?->bio;
     $idBio = $author->translations->firstWhere('locale', 'id')?->bio;
-    $metaDesc = Str::limit(strip_tags($bio ?? $idBio ?? 'Author at Cyclevent'), 150);
+    $metaDesc = Str::limit(strip_tags($bio ?? $idBio ?? 'Author at Alat Rumah'), 150);
 @endphp
 
-@section('seo_title', $author->name . ' - Author Profile | Cyclevent')
+@section('seo_title', $author->name . ' - Author Profile | Alat Rumah')
 @section('seo_desc', $metaDesc)
-@section('og_image', $author->photo ? asset('storage/'.$author->photo) : asset('img/logo-cyclevent.png'))
+@section('og_image', $author->photo ? asset('storage/'.$author->photo) : asset('img/logo.png'))
 
 {{-- Structured Data (AEO/SEO) --}}
 @section('structured_data')
@@ -20,7 +20,7 @@
     "@@type": "Person",
     "name": "{{ $author->name }}",
     "description": "{{ $metaDesc }}",
-    "image": "{{ $author->photo ? asset('storage/'.$author->photo) : asset('img/logo-cyclevent.png') }}"
+    "image": "{{ $author->photo ? asset('storage/'.$author->photo) : asset('img/logo.png') }}"
     @if(!empty($author->social_links))
     ,"sameAs": [
         @foreach(array_filter($author->social_links) as $url)

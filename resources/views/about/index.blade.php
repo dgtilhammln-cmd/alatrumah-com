@@ -215,9 +215,9 @@ body { background: var(--cv-bg); color: var(--cv-text); }
             Sejak {{ \App\Models\Setting::get('founding_year') ?? '2013' }}
         </h1>
         <p class="sv-intro">
-            PT. Hiranatha Makmur Sukses dengan merek dagang "Cyclevent" hadir untuk menjawab
+            PT. Hiranatha Makmur Sukses dengan merek dagang "Alat Rumah" hadir untuk menjawab
             kebutuhan sirkulasi udara bangunan industri dan komersial di seluruh Indonesia
-            dengan teknologi turbine ventilator non-electric terbaik.
+            dengan teknologi alat rumah non-electric terbaik.
         </p>
     </div>
 </section>
@@ -253,7 +253,7 @@ body { background: var(--cv-bg); color: var(--cv-text); }
 
             <div class="cv-card cv-card-image" data-aos="fade-up" data-aos-delay="200">
                 @php $aboutImgFallback = !empty($settings['logo']) ? asset('storage/'.$settings['logo']) : asset('images/logo.png'); @endphp
-                <img src="{{ !empty($settings['about_image']) ? asset('storage/'.$settings['about_image']) : $aboutImgFallback }}" alt="Tim Cyclevent" class="cv-card-img" loading="lazy">
+                <img src="{{ !empty($settings['about_image']) ? asset('storage/'.$settings['about_image']) : $aboutImgFallback }}" alt="Tim Alat Rumah" class="cv-card-img" loading="lazy">
                 <div class="cv-card-overlay"></div>
                 <div class="cv-card-content" style="justify-content: flex-end;">
                     <div class="cv-card-value">120+</div>
@@ -265,7 +265,7 @@ body { background: var(--cv-bg); color: var(--cv-text); }
                 <div class="cv-card-content">
                     <div class="cv-card-label">Data Points</div>
                     <div class="cv-card-value">520k+</div>
-                    <div class="cv-card-desc" style="margin-top:auto;">Unit ventilator aktif bekerja 24 jam non-stop tanpa listrik.</div>
+                    <div class="cv-card-desc" style="margin-top:auto;">Unit alat rumah aktif bekerja 24 jam non-stop tanpa listrik.</div>
                 </div>
             </div>
         </div>
@@ -284,14 +284,14 @@ body { background: var(--cv-bg); color: var(--cv-text); }
                 <div class="cv-card-content">
                     <div class="cv-card-label" style="color:var(--cv-accent); font-weight:700;">Visi Perusahaan</div>
                     <h3 style="font-size:1.5rem; font-weight:600; color:var(--cv-text); margin-bottom:1rem;">Menjadi Pelopor</h3>
-                    <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">{{ str_replace('Cyclevent', 'Cyclevent', $settings['visi'] ?? 'Menjadi pelopor penyedia sirkulasi udara hemat energi yang profesional dan terpercaya di Indonesia.') }}</p>
+                    <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">{{ str_replace('Alat Rumah', 'Alat Rumah', $settings['visi'] ?? 'Menjadi pelopor penyedia sirkulasi udara hemat energi yang profesional dan terpercaya di Indonesia.') }}</p>
                 </div>
             </div>
             <div class="cv-card cv-card-gray" style="min-height:auto;" data-aos="fade-up" data-aos-delay="100">
                 <div class="cv-card-content">
                     <div class="cv-card-label" style="color:var(--cv-accent); font-weight:700;">Misi Perusahaan</div>
                     <h3 style="font-size:1.5rem; font-weight:600; color:var(--cv-text); margin-bottom:1rem;">Solusi Menyeluruh</h3>
-                    <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">{{ str_replace('Cyclevent', 'Cyclevent', $settings['misi'] ?? 'Menciptakan solusi menyeluruh dengan kualitas terbaik dalam pengadaan ventilator atap untuk meningkatkan efisiensi dan kenyamanan pelanggan.') }}</p>
+                    <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">{{ str_replace('Alat Rumah', 'Alat Rumah', $settings['misi'] ?? 'Menciptakan solusi menyeluruh dengan kualitas terbaik dalam pengadaan alat rumah atap untuk meningkatkan efisiensi dan kenyamanan pelanggan.') }}</p>
                 </div>
             </div>
         </div>
@@ -504,7 +504,7 @@ body { background: var(--cv-bg); color: var(--cv-text); }
             <div class="cv-adv-header">
                 <div>
                     <div class="cv-adv-section-label">KEUNGGULAN</div>
-                    <h2 class="cv-adv-section-title">Mengapa Pilih<br>Cyclevent?</h2>
+                    <h2 class="cv-adv-section-title">Mengapa Pilih<br>Alat Rumah?</h2>
                 </div>
                 <p style="max-width:320px;font-size:0.875rem;color:#64748B;line-height:1.65;text-align:right;">
                     Didesain untuk iklim tropis Indonesia, dibuktikan oleh ratusan proyek dari Sabang sampai Merauke.
@@ -551,7 +551,7 @@ body { background: var(--cv-bg); color: var(--cv-text); }
                     </div>
                     <div class="cv-adv-card-num blue">257</div>
                     <div class="cv-adv-card-title light">Kapasitas Hisap Superior</div>
-                    <div class="cv-adv-card-desc white">Hingga 257,87 m³/menit — jauh lebih tinggi dari ventilator tipe stasioner manapun.</div>
+                    <div class="cv-adv-card-desc white">Hingga 257,87 m³/menit — jauh lebih tinggi dari alat rumah tipe stasioner manapun.</div>
                 </div>
 
                 {{-- Card 5: Anti Hujan --}}
@@ -1394,7 +1394,7 @@ body { background: var(--cv-bg); color: var(--cv-text); }
                 SIAP MULAI?
             </div>
             <h2 class="cv-cta-title-v2" style="margin-top:1rem;">Dapatkan Konsultasi Gratis<br>& Penawaran Terbaik</h2>
-            <p class="cv-cta-desc-v2">Tim teknis Cyclevent siap membantu Anda memilih ukuran ventilator yang tepat dan menghitung jumlah yang dibutuhkan untuk bangunan Anda.</p>
+            <p class="cv-cta-desc-v2">Tim teknis Alat Rumah siap membantu Anda memilih ukuran alat rumah yang tepat dan menghitung jumlah yang dibutuhkan untuk bangunan Anda.</p>
             
             <div class="cv-cta-buttons">
                 @if($wa)

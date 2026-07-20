@@ -3,9 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-@php $adminLogo = \App\Models\Setting::get('logo'); @endphp
+@php 
+    $adminLogo = \App\Models\Setting::get('logo'); 
+    $adminFavicon = \App\Models\Setting::get('favicon');
+    
+    // Resolve favicon
+    if (!empty($adminFavicon)) {
+        $favPath = ltrim($adminFavicon, '/');
+        $adminFaviconUrl = asset('storage/' . $favPath);
+        $favExt  = pathinfo($favPath, PATHINFO_EXTENSION);
+        $adminFavType = $favExt === 'png' ? 'image/png' : ($favExt === 'svg' ? 'image/svg+xml' : 'image/x-icon');
+    } else {
+        $adminFaviconUrl = asset('favicon.ico');
+        $adminFavType = 'image/x-icon';
+    }
+@endphp
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>@yield('title','Dashboard') | Cyclevent Admin</title>
+<title>@yield('title','Dashboard') | Alat Rumah Admin</title>
+<link rel="icon" type="{{ $adminFavType }}" href="{{ $adminFaviconUrl }}">
+<link rel="shortcut icon" href="{{ $adminFaviconUrl }}">
+<link rel="apple-touch-icon" href="{{ $adminFaviconUrl }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('css/app.css') }}">
@@ -33,6 +50,9 @@
 }
 body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text1); min-height: 100vh; display: flex; }
 
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #0EA5E9; border-radius: 4px; }
 /* ═══════ SIDEBAR PREMIUM BLUE ═══════ */
 #sidebar{
   width:240px;height:100vh;
@@ -225,7 +245,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
       @endif
     </div>
     <div>
-      <div class="sb-logo-text">Cyclevent</div>
+      <div class="sb-logo-text">Alat Rumah</div>
       <div class="sb-logo-sub">{{ session('admin_name','Administrator') }}</div>
     </div>
   </div>
@@ -250,7 +270,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
     <div class="sb-sec">Konten</div>
     <a href="{{ route('admin.services.index') }}" class="sb-link {{ request()->routeIs('admin.services*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
-      Layanan
+      Produk & Layanan
     </a>
     <a href="{{ route('admin.gallery.index') }}" class="sb-link {{ request()->routeIs('admin.gallery*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -275,8 +295,40 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
     @php $newLeads = \App\Models\Lead::where('status','new')->count(); @endphp
     <a href="{{ route('admin.leads.index') }}" class="sb-link {{ request()->routeIs('admin.leads*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      Leads
+      Laporan Chat
       @if($newLeads > 0)<span class="sb-badge">{{ $newLeads }}</span>@endif
+    </a>
+    <a href="{{ route('admin.hero_slides.index') }}" class="sb-link {{ request()->routeIs('admin.hero_slides*') ? 'active' : '' }}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
+      Banner Hero
+    </a>
+
+    <div class="sb-sec">E-Commerce</div>
+    <a href="{{ route('admin.couriers.index') }}" class="sb-link {{ request()->routeIs('admin.couriers*') ? 'active' : '' }}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      Pengiriman / Kurir
+    </a>
+    <a href="{{ route('admin.orders.index') }}" class="sb-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Pesanan
+    </a>
+    <a href="{{ route('admin.users.index') }}" class="sb-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      Pengguna (Buyer)
+    </a>
+
+    <div class="sb-sec">Tampilan Beranda</div>
+    <a href="{{ route('admin.usp.index') }}" class="sb-link {{ request()->routeIs('admin.usp*') ? 'active' : '' }}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+      USP Bar
+    </a>
+    <a href="{{ route('admin.category-items.index') }}" class="sb-link {{ request()->routeIs('admin.category-items*') ? 'active' : '' }}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Kategori
+    </a>
+    <a href="{{ route('admin.promo-sections.index') }}" class="sb-link {{ request()->routeIs('admin.promo-sections*') ? 'active' : '' }}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      Promo & Deals
     </a>
 
     <div class="sb-sec">Pengaturan</div>
@@ -284,9 +336,13 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
       Pengaturan
     </a>
+    <a href="{{ route('admin.apikeys.index') }}" class="sb-link {{ request()->routeIs('admin.apikeys*') ? 'active' : '' }}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+      API & Integrasi
+    </a>
 
     <div class="sb-sec">Aksi</div>
-    <a href="{{ url('/en/') }}" target="_blank" class="sb-link">
+    <a href="{{ url('/') }}" target="_blank" class="sb-link">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       Lihat Website
     </a>
@@ -302,7 +358,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
   {{-- Bottom card --}}
   <div class="sb-bottom">
     <div class="sb-bottom-card">
-      <strong>Cyclevent</strong>
+      <strong>Alat Rumah</strong>
       <p>Kelola konten & leads bisnis Anda</p>
       <a href="{{ url('/en/') }}" target="_blank" style="display:inline-flex;align-items:center;gap:.375rem;background:#fff;color:#1B6FE8;font-size:.75rem;font-weight:700;padding:.4rem .875rem;border-radius:8px;text-decoration:none;transition:all .2s;">
         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>

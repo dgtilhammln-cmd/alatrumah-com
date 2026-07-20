@@ -81,7 +81,7 @@
                     <input type="text" name="alt_text" id="alt-text-input"
                            value="{{ old('alt_text', $client->alt_text ?? '') }}"
                            class="form-input"
-                           placeholder="Klien Cyclevent | PT. Nama Perusahaan">
+                           placeholder="Klien Alat Rumah | PT. Nama Perusahaan">
                     <p style="font-size:0.7rem;color:rgba(255,255,255,.25);margin:0.375rem 0 0;">
                         Auto-generate dari nama. Bisa diedit manual jika diperlukan.
                     </p>
@@ -134,7 +134,7 @@ function previewLogo(input) {
 function autoAlt(name) {
     const altInput = document.getElementById('alt-text-input');
     if (!altInput) return;
-    altInput.value = name.trim() ? 'Klien Cyclevent | ' + name.trim() : '';
+    altInput.value = name.trim() ? 'Klien Alat Rumah | ' + name.trim() : '';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const altInput  = document.getElementById('alt-text-input');
     // Only auto-fill if alt is still empty (new form or blank edit)
     if (nameInput && altInput && !altInput.value && nameInput.value) {
-        altInput.value = 'Klien Cyclevent | ' + nameInput.value;
+        altInput.value = 'Klien Alat Rumah | ' + nameInput.value;
     }
 });
 </script>

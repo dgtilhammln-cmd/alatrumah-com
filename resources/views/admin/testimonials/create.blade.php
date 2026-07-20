@@ -14,7 +14,7 @@
             <div style="display:flex;align-items:center;gap:1.5rem;">
                 <div style="position:relative;flex-shrink:0;">
                     <img id="photo-preview"
-                         src="{{ isset($testimonial) && $testimonial->photo ? asset('storage/'.$testimonial->photo) : (isset($testimonial) ? $testimonial->photo_url : 'https://ui-avatars.com/api/?name=Cyclevent&background=F5A623&color=000000&size=80&bold=true&format=svg') }}"
+                         src="{{ isset($testimonial) && $testimonial->photo ? asset('storage/'.$testimonial->photo) : (isset($testimonial) ? $testimonial->photo_url : 'https://ui-avatars.com/api/?name=Alat Rumah&background=F5A623&color=000000&size=80&bold=true&format=svg') }}"
                          alt="Preview"
                          style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #F5A623;">
                 </div>
@@ -111,7 +111,7 @@ document.getElementById('name-input').addEventListener('input', function () {
     const preview = document.getElementById('photo-preview');
     const photoInput = document.getElementById('photo-input');
     if (!photoInput.files.length && !preview.src.includes('/storage/')) {
-        const name = encodeURIComponent(this.value || 'Cyclevent');
+        const name = encodeURIComponent(this.value || 'Alat Rumah');
         preview.src = `https://ui-avatars.com/api/?name=${name}&background=F5A623&color=000000&size=80&bold=true&format=svg`;
     }
 });

@@ -113,7 +113,7 @@ class Article extends Model
     public function getMetaTitleAttribute(): string
     {
         $val = $this->currentTranslation()?->meta_title;
-        return $val ?: Str::limit($this->title ?? '', 55) . ' | Cyclevent';
+        return $val ?: Str::limit($this->title ?? '', 55) . ' | Alatrumah.com';
     }
 
     public function getMetaDescAttribute(): string

@@ -49,7 +49,7 @@ class AdminGalleryController extends Controller
         $v['is_featured']  = $request->boolean('is_featured', false);
         $v['order']        = $v['order'] ?? 0;
 
-        if (empty($v['alt_text'])) $v['alt_text'] = $v['title'].' - Cyclevent';
+        if (empty($v['alt_text'])) $v['alt_text'] = $v['title'].' - Alatrumah.com';
 
         // Slug
         $slug = Str::slug(!empty($v['slug']) ? $v['slug'] : $v['title']);

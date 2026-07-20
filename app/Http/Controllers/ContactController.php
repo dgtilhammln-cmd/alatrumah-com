@@ -13,19 +13,21 @@ class ContactController extends Controller
         $settings = Setting::getAllAsArray();
         $wa       = WaSetting::primary();
 
+        $siteName = $settings['site_name'] ?? 'Alat Rumah';
+
         $seo = [
-            'title'       => $settings['meta_title_contact'] ?? 'Hubungi Kami | Cyclevent - Spesialis Turbine Ventilator',
-            'description' => $settings['meta_desc_contact'] ?? 'Hubungi Cyclevent untuk konsultasi dan pemasangan Turbine Ventilator & Sistem Ventilasi. Respon cepat, survei gratis, dan garansi resmi pabrik.',
-            'keywords'    => $settings['meta_keywords_contact'] ?? 'kontak cyclevent, hubungi cyclevent, pasang turbine ventilator',
+            'title'       => $settings['meta_title_contact'] ?? 'Hubungi Kami | ' . $siteName,
+            'description' => $settings['meta_desc_contact'] ?? 'Hubungi ' . $siteName . ' untuk konsultasi produk, pemesanan, dan layanan jasa. Respon cepat via WhatsApp.',
+            'keywords'    => $settings['meta_keywords_contact'] ?? 'kontak alat rumah, hubungi toko, konsultasi produk',
             'og_image'    => !empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : (!empty($settings['logo']) ? asset('storage/'.$settings['logo']) : asset('images/og-default.jpg')),
-            'canonical'   => route_locale('contact'),
+            'canonical'   => route('contact'),
         ];
 
         $faq = [
-            ['q' => 'Di mana lokasi utama Cyclevent?', 'a' => 'Kami berlokasi di Surabaya, namun melayani pengiriman dan pemasangan Turbine Ventilator ke seluruh wilayah Indonesia.'],
-            ['q' => 'Apakah konsultasi ventilasi gratis?', 'a' => 'Ya, kami menyediakan konsultasi gratis. Tim ahli kami akan membantu menghitung kebutuhan sirkulasi udara untuk bangunan Anda.'],
-            ['q' => 'Apakah ada layanan survei lokasi?', 'a' => 'Ya, kami melayani survei lokasi secara langsung untuk menentukan jumlah dan tipe ventilator yang paling optimal untuk bangunan Anda.'],
-            ['q' => 'Berapa lama proses pemasangan ventilator?', 'a' => 'Proses instalasi sangat bergantung pada jumlah unit dan tingkat kesulitan atap. Namun, tim teknisi kami sangat berpengalaman untuk menyelesaikan dengan cepat dan rapi.'],
+            ['q' => 'Bagaimana cara memesan produk?', 'a' => 'Anda dapat memesan langsung melalui website atau menghubungi tim kami via WhatsApp untuk bantuan pemesanan.'],
+            ['q' => 'Apakah tersedia layanan pemasangan?', 'a' => 'Ya, kami menyediakan layanan pemasangan oleh teknisi berpengalaman. Hubungi kami untuk informasi lebih lanjut.'],
+            ['q' => 'Berapa lama estimasi pengiriman?', 'a' => 'Estimasi pengiriman bergantung pada lokasi tujuan. Kami bekerja sama dengan berbagai ekspedisi terpercaya untuk memastikan produk tiba tepat waktu.'],
+            ['q' => 'Apakah ada garansi produk?', 'a' => 'Ya, setiap produk dilengkapi garansi sesuai ketentuan produsen. Kami siap membantu proses klaim garansi jika diperlukan.'],
         ];
 
         $schema = json_encode([
@@ -53,7 +55,7 @@ class ContactController extends Controller
         ]);
 
         // Log to database (analytics)
-        \App\Models\AnalyticsEvent::record('contact_form', route_locale('contact'), [
+        \App\Models\AnalyticsEvent::record('contact_form', route('contact'), [
             'page_title' => 'Contact Form - ' . $validated['name'],
         ]);
 

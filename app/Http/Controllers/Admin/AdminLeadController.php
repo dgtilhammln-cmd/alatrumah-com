@@ -62,7 +62,7 @@ class AdminLeadController extends Controller
         $query->whereDate('created_at', '<=', $request->end_date);
         $leads = $query->get();
 
-        $filename = 'leads-cyclevent-' . $request->start_date . '_' . $request->end_date . '.csv';
+        $filename = 'leads-alatrumah-' . $request->start_date . '_' . $request->end_date . '.csv';
 
         $headers = [
             'Content-Type'        => 'text/csv; charset=UTF-8',

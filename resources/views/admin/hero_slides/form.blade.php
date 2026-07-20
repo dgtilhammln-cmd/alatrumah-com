@@ -3,7 +3,7 @@
 @section('page-title', isset($slide) ? 'Edit Hero Slide' : 'Tambah Hero Slide Baru')
 @section('content')
 <div style="max-width:680px;">
-<form method="POST" action="{{ isset($slide) ? route('admin.hero_slides.update', $slide) : route('admin.hero_slides.store') }}" enctype="multipart/form-data">
+<form method="POST" action="{{ isset($slide) ? route('admin.hero_slides.update', $slide) : route('admin.hero_slides.store') }}" enctype="multipart/form-data" id="bannerForm">
     @csrf @if(isset($slide)) @method('PUT') @endif
 
     @if($errors->any())
@@ -16,8 +16,16 @@
 
         {{-- Main Info --}}
         <div class="admin-card">
-            <h3 style="font-size:.7rem;font-weight:700;color:#38BDF8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Konten Slide</h3>
+            <h3 style="font-size:.7rem;font-weight:700;color:#38BDF8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Konten Banner</h3>
             <div style="display:flex;flex-direction:column;gap:1rem;">
+                <div>
+                    <label class="form-label">Posisi Banner <span style="color:#f87171;">*</span></label>
+                    <select name="position" id="positionSelect" class="form-input" required>
+                        <option value="hero" {{ old('position', $slide->position ?? 'hero') == 'hero' ? 'selected' : '' }}>Hero Slider (Utama)</option>
+                        <option value="utama" {{ old('position', $slide->position ?? '') == 'utama' ? 'selected' : '' }}>Banner Utama (Samping Kanan Atas)</option>
+                        <option value="samping" {{ old('position', $slide->position ?? '') == 'samping' ? 'selected' : '' }}>Banner Samping (Samping Kanan Bawah)</option>
+                    </select>
+                </div>
                 <div>
                     <label class="form-label">Judul Slide <span style="color:#f87171;">*</span></label>
                     <input type="text" name="title" value="{{ old('title', $slide->title ?? '') }}" class="form-input" required placeholder="Pabrik & Manufaktur">
@@ -37,12 +45,37 @@
 
         {{-- Image --}}
         <div class="admin-card">
-            <h3 style="font-size:.7rem;font-weight:700;color:#38BDF8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Gambar Slide</h3>
+            <h3 style="font-size:.7rem;font-weight:700;color:#38BDF8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Gambar Banner</h3>
+            
             @if(isset($slide) && $slide->image)
-                <img src="{{ asset('storage/'.$slide->image) }}" style="height:100px;border-radius:8px;object-fit:cover;margin-bottom:.75rem;display:block;">
+                <div id="currentImageContainer">
+                    <p style="font-size:0.75rem; color:#94A3B8; margin-bottom:0.5rem;">Gambar Saat Ini:</p>
+                    <img src="{{ asset('storage/'.$slide->image) }}" style="height:120px;border-radius:8px;object-fit:cover;margin-bottom:1rem;display:block;">
+                </div>
             @endif
-            <input type="file" name="image" accept="image/*" class="form-input" style="padding:.5rem;">
-            <p style="font-size:.7rem;color:rgba(255,255,255,.25);margin:.375rem 0 0;">Disarankan: 400×300px. Auto-konversi ke WebP.</p>
+            
+            <input type="file" id="imageInput" name="image_file" accept="image/*" class="form-input" style="padding:.5rem;">
+            <input type="hidden" name="image_base64" id="imageBase64">
+            
+            <div id="previewContainer" style="display:none; margin-top:1rem;">
+                <p style="font-size:0.8rem; color:#38BDF8; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;"><svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Preview Gambar (Siap Diupload):</p>
+                <img id="imagePreview" style="max-height:200px; border-radius:10px; object-fit:cover; display:block;">
+                <button type="button" id="btnRemoveImage" style="margin-top:0.5rem; display:inline-flex; align-items:center; gap:0.3rem; background:none; border:none; color:#f87171; font-size:0.75rem; cursor:pointer; text-decoration:underline;"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path></svg>Hapus & Ganti Gambar</button>
+            </div>
+            
+            <p style="font-size:.7rem;color:rgba(255,255,255,.4);margin:.5rem 0 0;">Upload gambar dengan rasio sesuai posisi (Hero: 16:7 | Banner Kanan: 4:3). Gambar akan disimpan sesuai aslinya.</p>
+        </div>
+
+        {{-- Background Color (Oval) --}}
+        <div class="admin-card">
+            <h3 style="font-size:.7rem;font-weight:700;color:#38BDF8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Warna Background Oval (Khusus Hero)</h3>
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+                <div>
+                    <label class="form-label">Warna Gradient Oval (CSS)</label>
+                    <input type="text" name="bg_color" value="{{ old('bg_color', $slide->bg_color ?? '') }}" class="form-input" placeholder="linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)">
+                    <p style="font-size:.7rem;color:rgba(255,255,255,.4);margin:.375rem 0 0;">Misal: <code>#3b82f6</code> atau <code>linear-gradient(...)</code>. Warna ini akan diterapkan pada oval di belakang gambar banner (khusus posisi Hero).</p>
+                </div>
+            </div>
         </div>
 
         {{-- Button --}}
@@ -83,4 +116,40 @@
     </div>
 </form>
 </div>
+
+<script>
+    const imageInput = document.getElementById('imageInput');
+    const imageBase64 = document.getElementById('imageBase64');
+    const previewContainer = document.getElementById('previewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const btnRemoveImage = document.getElementById('btnRemoveImage');
+    const currentImageContainer = document.getElementById('currentImageContainer');
+
+    imageInput.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                // Set base64 value for submission
+                imageBase64.value = event.target.result;
+                // Show preview
+                imagePreview.src = event.target.result;
+                previewContainer.style.display = 'block';
+                // Hide old current image if exists
+                if (currentImageContainer) currentImageContainer.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    if (btnRemoveImage) {
+        btnRemoveImage.addEventListener('click', function() {
+            imageBase64.value = '';
+            imageInput.value = '';
+            previewContainer.style.display = 'none';
+            if (currentImageContainer) currentImageContainer.style.display = 'block';
+        });
+    }
+</script>
+
 @endsection

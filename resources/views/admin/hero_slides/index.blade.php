@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title', 'Hero Slides')
-@section('page-title', 'Hero Slides (Maks. 5 Slide)')
+@section('page-title', 'Manajemen Banner')
 @section('content')
 
 @if(session('success'))
@@ -16,13 +16,11 @@
 @endif
 
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
-    <p style="font-size:.875rem;color:rgba(255,255,255,.45);margin:0;">{{ $slides->count() }} / 5 slide aktif</p>
-    @if($slides->count() < 5)
+    <p style="font-size:.875rem;color:rgba(255,255,255,.45);margin:0;">Total Banner: {{ $slides->count() }}</p>
     <a href="{{ route('admin.hero_slides.create') }}" class="btn-primary">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-        Tambah Slide
+        Tambah Banner
     </a>
-    @endif
 </div>
 
 @if($slides->isEmpty())
@@ -58,6 +56,21 @@
         <div style="text-align:center;flex-shrink:0;">
             <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:.25rem;">Urutan</div>
             <div style="font-size:1.25rem;font-weight:700;color:#fff;">{{ $slide->order }}</div>
+        </div>
+        {{-- Position --}}
+        <div style="flex-shrink:0; width:120px; text-align:center;">
+            <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:.35rem;">Posisi</div>
+            @php
+                $posLabel = match($slide->position ?? 'hero') {
+                    'hero'    => ['label'=>'Hero Slider', 'icon'=>'🖼️', 'color'=>'rgba(56,189,248,.15)', 'text'=>'#38BDF8'],
+                    'utama'   => ['label'=>'Kanan Atas',  'icon'=>'↗️', 'color'=>'rgba(16,185,129,.15)',  'text'=>'#34d399'],
+                    'samping' => ['label'=>'Kanan Bawah', 'icon'=>'↘️', 'color'=>'rgba(245,158,11,.15)', 'text'=>'#fbbf24'],
+                    default   => ['label'=>$slide->position,'icon'=>'📌','color'=>'rgba(255,255,255,.07)','text'=>'#999'],
+                };
+            @endphp
+            <span style="font-size:.7rem;padding:.3rem .6rem;border-radius:6px;background:{{ $posLabel['color'] }};color:{{ $posLabel['text'] }};font-weight:600;display:inline-flex;align-items:center;gap:.3rem;">
+                <span>{{ $posLabel['icon'] }}</span> {{ $posLabel['label'] }}
+            </span>
         </div>
         {{-- Status --}}
         <div style="flex-shrink:0;">

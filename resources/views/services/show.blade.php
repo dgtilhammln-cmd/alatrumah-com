@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 @section('content')
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -24,97 +24,108 @@ html, body { overflow-x: hidden; max-width: 100%; }
 }
 body { background: var(--bg); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-weight: 400; line-height: 1.6; }
 
-/* ── HERO ── */
+/* ── BREADCRUMB BAR (replaces hero) ── */
 .sh-hero {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 9rem 1.5rem 5rem;
+    padding: 5.5rem 0 0.875rem;
     position: relative;
     overflow: hidden;
 }
-.sh-hero::before {
-    content: '';
-    position: absolute;
-    top:-150px; right:-100px;
-    width:500px; height:500px;
-    background: radial-gradient(circle, rgba(14,165,233,.06) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.sh-hero::after {
-    content: '';
-    position: absolute;
-    bottom:-150px; left:-100px;
-    width:600px; height:600px;
-    background: radial-gradient(circle, rgba(14,165,233,.04) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.sh-hero-inner { max-width:1200px; margin:0 auto; position:relative; z-index:2; text-align:center; }
+.sh-hero-inner { max-width:1200px; padding:0 1.5rem; margin:0 auto; position:relative; z-index:2; }
 
 .sh-breadcrumb {
-    display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:.5rem;
-    font-size:.75rem; font-weight:500; color:var(--muted); margin-bottom:2.5rem;
+    display:flex; align-items:center; flex-wrap:wrap; gap:.375rem;
+    font-size:.75rem; font-weight:500; color:var(--muted);
+    margin-bottom:0;
 }
 .sh-breadcrumb a { color:var(--muted); text-decoration:none; transition:color .2s; }
 .sh-breadcrumb a:hover { color:var(--accent); }
-.sh-breadcrumb-sep { opacity:.45; font-size:.65rem; }
-.sh-breadcrumb-current { color:var(--text); font-weight:700; }
-
-/* label */
-.sh-label {
-    display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
-    font-size:.75rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase;
-    color:var(--muted); margin-bottom:1.25rem;
-}
-.sh-label::before {
-    content:''; display:block; width:5px; height:5px;
-    background:var(--accent); border-radius:50%;
-}
-
-.sh-h1 {
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    font-weight: 400; color: var(--text);
-    line-height:1.15; letter-spacing:-.03em; margin-bottom:1.5rem;
-    max-width:800px; margin-left:auto; margin-right:auto;
-}
-.sh-short-desc { font-size:1rem; color:var(--muted); line-height:1.7; max-width:650px; margin:0 auto; }
+.sh-breadcrumb-sep { opacity:.4; font-size:.6rem; }
+.sh-breadcrumb-current { color:var(--text); font-weight:600; }
 
 .sh-layout {
     max-width:1200px; margin:0 auto;
-    padding:3rem 1.5rem 6rem;
-    display:grid; grid-template-columns:1fr 360px;
-    gap:3.5rem; align-items:start;
+    padding:1.5rem 1.5rem 2rem;
+    display:grid; grid-template-columns:420px 1fr;
+    gap:2.5rem; align-items:start;
     overflow-x: hidden;
     width: 100%;
     box-sizing: border-box;
 }
+.sh-product-name {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+    margin: 0 0 .5rem;
+}
+.sh-product-subdesc {
+    font-size:.9rem;
+    color:var(--muted);
+    line-height:1.5;
+    margin:0 0 1rem;
+}
+.sh-rating-row {
+    display:flex; align-items:center; gap:1rem; margin-bottom:1rem; font-size:.875rem; color:var(--text);
+}
+.sh-rating-stars { color:#F59E0B; display:flex; align-items:center; gap:2px; }
+.sh-rating-divider { width:1px; height:12px; background:var(--border); }
+.sh-price-box {
+    background: #FAFAFA;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+}
+.sh-price-current {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+}
+.sh-price-old {
+    font-size: 1rem;
+    text-decoration: line-through;
+    color: var(--muted);
+    margin-right: .5rem;
+}
+.sh-info-table { width:100%; font-size:.875rem; }
+.sh-info-table td { padding:.5rem 0; vertical-align:top; }
+.sh-info-table td:first-child { width:100px; color:var(--muted); }
+
+.sh-bottom-section {
+    max-width:1200px; margin:0 auto;
+    padding: 2rem 1.5rem 6rem;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+}
+
 @media (max-width: 1024px) {
-    .sh-layout { grid-template-columns: 1fr; padding-bottom: 3rem; }
+    .sh-layout { grid-template-columns: 1fr; gap:2rem; }
+    .sh-bottom-section { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
     .sh-layout {
-        padding: 1.5rem 1rem 3rem;
+        padding: 1rem 1rem 2rem;
         overflow-x: hidden;
         width: 100%;
     }
+    .sh-bottom-section { padding: 1rem 1rem 3rem; }
 }
 
 /* ── GALLERY SLIDER 1:1 ── */
-.sh-gallery { margin-bottom:2.5rem; }
+.sh-gallery { margin-bottom:0; }
 
 .sh-swiper-main {
     width:100%;
-    max-width:100%;
     border-radius:16px;
     overflow:hidden;
     background:var(--surface);
     border:1px solid var(--border);
-    margin-bottom:.75rem;
-    /* Force 4:3 to align with sidebar height */
+    margin-bottom:.625rem;
+    /* Strict 1:1 */
     position: relative;
-    padding-bottom: 75%;
-    height: 0;
+    aspect-ratio: 1 / 1;
 }
 @media (max-width:640px) {
     .sh-gallery {
@@ -124,18 +135,16 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
     }
     .sh-swiper-main {
         width:100%;
-        max-width:100%;
         border-radius:12px;
     }
     .sh-swiper-thumbs .swiper-slide {
-        width:64px !important;
-        height:52px;
+        width:52px !important;
+        height:44px;
     }
 }
 .sh-swiper-main .swiper-wrapper {
-    position: absolute;
-    inset: 0;
     height: 100%;
+    width: 100%;
 }
 .sh-swiper-main .swiper-slide {
     width: 100%; height: 100%;
@@ -149,22 +158,22 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
 /* Nav arrows */
 .sh-swiper-main .swiper-button-next,
 .sh-swiper-main .swiper-button-prev {
-    width:38px !important; height:38px !important;
+    width:28px !important; height:28px !important;
     background:rgba(255,255,255,.95);
     border-radius:50%;
     box-shadow:0 2px 10px rgba(15,23,42,.12);
-    color:var(--accent) !important;
+    color:var(--text) !important;
 }
 .sh-swiper-main .swiper-button-next::after,
-.sh-swiper-main .swiper-button-prev::after { font-size:14px !important; font-weight:900; }
+.sh-swiper-main .swiper-button-prev::after { font-size:12px !important; font-weight:900; }
 
 /* Thumb strip */
 .sh-swiper-thumbs { width:100%; }
-.sh-swiper-thumbs .swiper-wrapper { gap:8px; }
+.sh-swiper-thumbs .swiper-wrapper { gap:6px; }
 .sh-swiper-thumbs .swiper-slide {
-    width:80px !important; height:64px;
+    width:58px !important; height:58px;
     border-radius:8px; overflow:hidden; cursor:pointer;
-    border:2px solid transparent; opacity:.5;
+    border:2px solid transparent; opacity:.55;
     flex-shrink:0;
     transition:opacity .25s, border-color .25s;
 }
@@ -190,7 +199,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
     background:var(--bg); border:1.5px solid var(--border);
     border-radius:20px; padding:1.75rem;
     box-shadow:0 8px 24px rgba(15,23,42,.04);
-    position:sticky; top:90px;
+    position:sticky; top:80px;
 }
 .sh-sidebar-badge {
     display:inline-flex; align-items:center; gap:.5rem;
@@ -452,7 +461,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
     .sh-adv-header-desc { text-align:left; max-width:none; }
 }
 @media (max-width:640px) {
-    .sh-hero { padding:7rem 1rem 2.5rem; }
+    .sh-hero { padding:5rem 1rem 0.75rem; }
     .sh-hero-inner { padding:0 .25rem; }
     .sh-layout { padding:1.75rem 1rem 3rem; }
     .sh-adv-section,.sh-app-section,.sh-coverage-section,.sh-related { padding:3.5rem 1rem; }
@@ -468,28 +477,24 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
 }
 </style>
 
-{{-- ═══ HERO ═══ --}}
+{{-- ═══ BREADCRUMB ONLY ═══ --}}
 <section class="sh-hero">
     <div class="sh-hero-inner">
         <nav class="sh-breadcrumb" aria-label="Breadcrumb">
             <a href="{{ route_locale('home') }}">Beranda</a>
-            <span class="sh-breadcrumb-sep">/</span>
+            <span class="sh-breadcrumb-sep">›</span>
             <a href="{{ route_locale('products') }}">Produk &amp; Layanan</a>
-            <span class="sh-breadcrumb-sep">/</span>
+            <span class="sh-breadcrumb-sep">›</span>
             <span class="sh-breadcrumb-current">{{ $service->name }}</span>
         </nav>
-
-        <div class="sh-label">Detail Produk</div>
-        <h1 class="sh-h1">Turbine Ventilator {{ $service->name }} Non-Electric</h1>
-        @if($service->short_desc)
-            <p class="sh-short-desc">{{ $service->short_desc }}</p>
-        @endif
     </div>
 </section>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+
 {{-- ═══ DETAIL LAYOUT ═══ --}}
 <section class="sh-layout">
-    {{-- LEFT: Gallery + Content --}}
+    {{-- LEFT: Gallery --}}
     <div style="min-width:0;overflow:hidden;width:100%;">
         @php
             $imgs = [];
@@ -505,7 +510,9 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
                 <div class="swiper-wrapper">
                     @foreach($imgs as $img)
                         <div class="swiper-slide">
-                            <img src="{{ $img }}" alt="{{ $service->name }}">
+                            <a href="{{ $img }}" class="glightbox" data-gallery="gallery">
+                                <img src="{{ $img }}" alt="{{ $service->name }}">
+                            </a>
                         </div>
                     @endforeach
                 </div>
@@ -525,54 +532,175 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
                 </div>
             @endif
         </div>
+    </div>
 
-        <div class="sh-content">
-            {!! $service->description ?? '<p>Belum ada deskripsi untuk produk ini.</p>' !!}
-        </div>
-
-        {{-- Spesifikasi Table --}}
-        @if(is_array($service->specifications) && count($service->specifications) > 0)
-        <div style="margin-top:3rem;">
-            <h2 style="font-size:1.5rem; font-weight:700; color:var(--text); margin-bottom:1.25rem;">Spesifikasi Teknis Lengkap</h2>
-            <div style="overflow-x:auto; -webkit-overflow-scrolling: touch;">
-                <table style="width:100%; border-collapse:collapse; text-align:left; font-size:.9rem; color:var(--muted);">
-                    <tbody>
-                        @foreach($service->specifications as $spec)
-                        <tr style="border-bottom:1px solid var(--border);">
-                            <td style="padding:1rem; width:35%; font-weight:600; color:var(--text); background:var(--surface);">{{ $spec['key'] }}</td>
-                            <td style="padding:1rem;">{{ $spec['value'] }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+    {{-- RIGHT: Product Info, Price, Add to Cart --}}
+    <aside>
+        <h1 class="sh-product-name">{{ $service->name }}</h1>
+        
+        @if($service->rating > 0 || $service->sold_count > 0)
+        <div class="sh-rating-row">
+            @if($service->rating > 0)
+            <div class="sh-rating-stars">
+                <span style="color:#EE4D2D;font-weight:500;margin-right:4px;">{{ number_format($service->rating, 1) }}</span>
+                @for($i=1; $i<=5; $i++)
+                    @if($i <= floor($service->rating))
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    @elseif($i == ceil($service->rating) && fmod($service->rating, 1) > 0)
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><defs><linearGradient id="half-{{$i}}"><stop offset="50%" stop-color="currentColor"/><stop offset="50%" stop-color="#E2E8F0"/></linearGradient></defs><path fill="url(#half-{{$i}})" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    @else
+                        <svg width="14" height="14" fill="#E2E8F0" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    @endif
+                @endfor
             </div>
+            @endif
+
+            @if($service->rating > 0 && $service->sold_count > 0)
+                <div class="sh-rating-divider"></div>
+            @endif
+
+            @if($service->sold_count > 0)
+            <div>
+                <span style="font-weight:500;">{{ $service->sold_count >= 1000 ? number_format($service->sold_count/1000, 1, ',', '').'RB' : $service->sold_count }}</span>
+                <span style="color:var(--muted)">Terjual</span>
+            </div>
+            @endif
         </div>
         @endif
+
+        @if($service->short_desc)
+            <p class="sh-product-subdesc">{{ $service->short_desc }}</p>
+        @endif
+
+        @if($service->price > 0)
+            <div class="sh-price-box">
+                @if($service->sale_price > 0 && $service->sale_price < $service->price)
+                    <div style="display:flex;align-items:center;flex-wrap:wrap;">
+                        <span class="sh-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</span>
+                        <span class="sh-price-current">Rp{{ number_format($service->sale_price, 0, ',', '.') }}</span>
+                        <span style="margin-left:1rem;background:#FEE2E2;color:#EF4444;font-size:.7rem;font-weight:700;padding:2px 4px;border-radius:2px;">Diskon {{ round((($service->price - $service->sale_price)/$service->price)*100) }}%</span>
+                    </div>
+                @else
+                    <div class="sh-price-current">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
+                @endif
+            </div>
+
+            <table class="sh-info-table" style="margin-bottom:1.5rem;">
+                <tr>
+                    <td>Pengiriman</td>
+                    <td>
+                        <div style="display:flex;align-items:flex-start;gap:8px;">
+                            <svg width="20" height="20" fill="none" stroke="#16A34A" stroke-width="2" viewBox="0 0 24 24" style="margin-top:2px;"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                            <div>
+                                <div style="color:#1E293B;">Garansi Tiba Tepat Waktu</div>
+                                <div style="font-size:.75rem;color:var(--muted);margin-top:4px;">Dapatkan voucher jika pesanan terlambat.</div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <form action="{{ route('cart.add') }}" method="POST">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $service->id }}">
+                
+                <table class="sh-info-table" style="margin-bottom:2rem; align-items:center;">
+                    <tr>
+                        <td style="vertical-align:middle;">Kuantitas</td>
+                        <td style="vertical-align:middle;">
+                            <div style="display:inline-flex; align-items:center; border:1px solid var(--border); border-radius:4px; overflow:hidden;">
+                                <button type="button" onclick="document.getElementById('qty').stepDown()" style="width:32px; height:32px; border:none; background:#fff; border-right:1px solid var(--border); cursor:pointer; color:var(--muted); font-size:1.1rem; line-height:1;">−</button>
+                <input type="number" id="qty" name="qty" value="{{ $service->min_order ?? 1 }}" min="{{ $service->min_order ?? 1 }}" 
+                    @if($service->type !== 'service' && $service->stock > 0) max="{{ $service->stock }}" @endif
+                    style="width:50px; height:32px; text-align:center; border:none; outline:none; font-weight:500; font-size:.9rem; color:var(--text);"
+                    @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+                                <button type="button" onclick="document.getElementById('qty').stepUp()" style="width:32px; height:32px; border:none; background:#fff; border-left:1px solid var(--border); cursor:pointer; color:var(--muted); font-size:1.1rem; line-height:1;">+</button>
+                            </div>
+                            <span style="font-size:.875rem; color:var(--muted); margin-left:1rem;">
+                                @if($service->type === 'service')
+                                    Jasa / Layanan
+                                @elseif($service->stock > 0)
+                                    Tersisa {{ $service->stock }} buah
+                                @else
+                                    Stok Habis
+                                @endif
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+
+                <div style="display:flex; gap:0.5rem;">
+                    <button type="submit" name="action" value="cart" style="flex:1; padding:.75rem; display:flex; align-items:center; justify-content:center; gap:0.5rem; background:#fff; color:var(--text); border:1px solid var(--border); border-radius:6px; font-weight:600; cursor:pointer; transition:background 0.2s;" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='#fff'" @if($service->type !== 'service' && $service->stock <= 0) disabled @endif title="Tambah ke Keranjang">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20a1 1 0 100-2 1 1 0 000 2zM20 20a1 1 0 100-2 1 1 0 000 2z"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+                        Masukkan Keranjang
+                    </button>
+                    <button type="submit" name="action" value="buy" style="flex:1; padding:.75rem; display:flex; align-items:center; justify-content:center; background:var(--accent); color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer; transition:background 0.2s;" onmouseover="this.style.background='var(--accent2)'" onmouseout="this.style.background='var(--accent)'" @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+                        Beli Sekarang
+                    </button>
+                </div>
+            </form>
+        @else
+            <div class="sh-price-box" style="background:#FFF8F1; border:1px solid #FFEDD5; margin-bottom:1.5rem;">
+                <div style="font-size:1.5rem; font-weight:700; color:#EA580C;">Konsultasi Gratis</div>
+                <div style="font-size:.875rem; color:#9A3412; margin-top:.25rem;">Tim ahli kami siap membantu Anda mendapatkan informasi lengkap dan penawaran terbaik.</div>
+            </div>
+            
+            <a href="javascript:void(0)" onclick="openOrderModal('Produk: {{ addslashes($service->name) }}')" style="width:100%; padding:.75rem; display:flex; align-items:center; justify-content:center; background:var(--accent); color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer; transition:background 0.2s; text-decoration:none; margin-top:0;" onmouseover="this.style.background='var(--accent2)'" onmouseout="this.style.background='var(--accent)'">
+                Konsultasi & Tanya
+            </a>
+        @endif
+    </aside>
+</section>
+
+{{-- ═══ BOTTOM LAYOUT (Description, Specs, FAQ) ═══ --}}
+<section class="sh-bottom-section">
+    <div style="background:#fff; padding:2rem; border:1px solid var(--border); border-radius:4px; box-shadow:0 1px 1px rgba(0,0,0,.05);">
+        <div style="background:#FAFAFA; padding:1rem; font-size:1.1rem; font-weight:500; color:var(--text); margin-bottom:1.5rem;">
+            Spesifikasi Produk
+        </div>
+        
+        @if(is_array($service->specifications) && count($service->specifications) > 0)
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:.875rem; color:var(--text); margin-bottom:2rem;">
+            <tbody>
+                @foreach($service->specifications as $spec)
+                <tr>
+                    <td style="padding:.5rem 0; width:150px; color:var(--muted);">{{ $spec['key'] }}</td>
+                    <td style="padding:.5rem 0;">{{ $spec['value'] }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        @endif
+
+        <div style="background:#FAFAFA; padding:1rem; font-size:1.1rem; font-weight:500; color:var(--text); margin-bottom:1.5rem;">
+            Deskripsi Produk
+        </div>
+        <div class="sh-content" style="color:var(--text);">
+            {!! $service->description ?? '<p>Belum ada deskripsi untuk produk ini.</p>' !!}
+        </div>
 
         {{-- FAQ Table --}}
         @php
             $faqs = is_array($service->faqs) && !empty($service->faqs) ? $service->faqs : [
-                ['q' => 'Apakah Cyclevent Turbine Ventilator memerlukan listrik?', 'a' => 'Sama sekali tidak. Cyclevent beroperasi 100% menggunakan tenaga angin dan perbedaan tekanan udara, sehingga bebas biaya listrik selamanya.'],
-                ['q' => 'Berapa lama garansi yang diberikan?', 'a' => 'Kami memberikan garansi resmi untuk produk Cyclevent hingga 15 tahun, mencakup cacat pabrik dan performa putaran mesin.'],
-                ['q' => 'Apakah materialnya tahan karat?', 'a' => 'Ya, Cyclevent terbuat dari material Alumunium atau Stainless Steel berkualitas tinggi yang tahan terhadap cuaca ekstrem dan karat.']
+                ['q' => 'Apakah Alat Rumah memerlukan listrik?', 'a' => 'Sama sekali tidak. Alat Rumah beroperasi 100% menggunakan tenaga angin dan perbedaan tekanan udara, sehingga bebas biaya listrik selamanya.'],
+                ['q' => 'Berapa lama garansi yang diberikan?', 'a' => 'Kami memberikan garansi resmi untuk produk Alat Rumah hingga 15 tahun, mencakup cacat pabrik dan performa putaran mesin.'],
+                ['q' => 'Apakah materialnya tahan karat?', 'a' => 'Ya, Alat Rumah terbuat dari material Alumunium atau Stainless Steel berkualitas tinggi yang tahan terhadap cuaca ekstrem dan karat.']
             ];
         @endphp
         @if(count($faqs) > 0)
-        <div style="margin-top:3rem;">
-            <h2 style="font-size:1.5rem; font-weight:700; color:var(--text); margin-bottom:1.25rem;">FAQ {{ $service->name }}</h2>
-            <div style="overflow-x:auto; -webkit-overflow-scrolling: touch;">
-                <table style="width:100%; border-collapse:collapse; text-align:left; font-size:.9rem; color:var(--muted);">
-                    <tbody>
-                        @foreach($faqs as $f)
-                        <tr style="border-bottom:1px solid var(--border);">
-                            <td style="padding:1rem; width:35%; font-weight:600; color:var(--text); background:var(--surface);">{{ $f['q'] ?? '' }}</td>
-                            <td style="padding:1rem;">{{ $f['a'] ?? '' }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+        <div style="background:#FAFAFA; padding:1rem; font-size:1.1rem; font-weight:500; color:var(--text); margin:2rem 0 1.5rem;">
+            FAQ {{ $service->name }}
         </div>
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:.875rem; color:var(--text);">
+            <tbody>
+                @foreach($faqs as $f)
+                <tr>
+                    <td style="padding:.75rem 0; width:35%; font-weight:500; border-bottom:1px solid #F1F5F9;">{{ $f['q'] ?? '' }}</td>
+                    <td style="padding:.75rem 0; border-bottom:1px solid #F1F5F9; color:var(--muted);">{{ $f['a'] ?? '' }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
         
         {{-- JSON-LD FAQ Schema --}}
         <script type="application/ld+json">
@@ -595,57 +723,13 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
         </script>
         @endif
 
-    </div>
 
-    {{-- RIGHT: Sidebar CTA --}}
-    <aside>
-        <div class="sh-sidebar-card">
-            <div class="sh-sidebar-badge">Konsultasi Gratis</div>
-            <h3 class="sh-sidebar-title">Tertarik dengan {{ $service->name }}?</h3>
-            <p class="sh-sidebar-desc">Tim ahli kami siap membantu Anda mendapatkan informasi lengkap dan penawaran terbaik.</p>
-
-            <div class="sh-info-row">
-                <div class="sh-info-icon">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.9a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                </div>
-                <span>Konsultasi via telepon tersedia</span>
-            </div>
-            <div class="sh-info-row">
-                <div class="sh-info-icon">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                </div>
-                <span>Respons cepat di jam kerja</span>
-            </div>
-            <div class="sh-info-row">
-                <div class="sh-info-icon">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                </div>
-                <span>Garansi kualitas 15 tahun</span>
-            </div>
-
-            @if($wa)
-                <a href="javascript:void(0)" onclick="openOrderModal('Produk: {{ addslashes($service->name) }}')" class="sh-btn-primary">
-                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    Chat via WhatsApp
-                </a>
-            @endif
             @if($service->brochure)
-            <a href="{{ asset('storage/'.$service->brochure) }}" target="_blank" class="sh-btn-outline" style="margin-bottom:1.5rem;">
+            <a href="{{ asset('storage/'.$service->brochure) }}" target="_blank" class="sh-btn-outline" style="margin-top:1.5rem;">
                 <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                 Unduh Brosur/Datasheet
             </a>
             @endif
-
-            {{-- Sertifikasi (E-E-A-T) --}}
-            <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
-                <h4 style="font-size:.875rem; font-weight:700; color:var(--text); margin-bottom:.75rem;">Standar Kualitas &amp; Sertifikasi</h4>
-                <ul style="margin:0; padding-left:1.25rem; font-size:.8rem; color:var(--muted); line-height:1.6;">
-                    <li>Material plat Zincalume/Stainless anti karat</li>
-                    <li>Desain standar USA teruji cuaca ekstrem</li>
-                    <li>Sertifikasi uji coba kelayakan pakai</li>
-                    <li>Garansi resmi pabrik 15 tahun</li>
-                </ul>
-            </div>
         </div>
     </aside>
 </section>
@@ -657,135 +741,62 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
         <div class="sh-adv-header">
             <div>
                 <div class="cv-section-label">KEUNGGULAN</div>
-                <h2 class="cv-section-title" style="margin-top:.75rem;">Mengapa Pilih<br>Cyclevent?</h2>
+                <h2 class="cv-section-title" style="margin-top:.75rem;">Mengapa Pilih<br>Alat Rumah?</h2>
             </div>
-            <p class="sh-adv-header-desc">Didesain untuk iklim tropis Indonesia, dibuktikan oleh ratusan proyek dari Sabang sampai Merauke.</p>
+            <p class="sh-adv-header-desc">Hadir untuk memenuhi semua kebutuhan rumah tangga Anda dengan kualitas terbaik dan pelayanan terpercaya dari ahlinya.</p>
         </div>
 
         <div class="sh-adv-cards">
-            {{-- Card 1: Garansi 15 Tahun --}}
+            {{-- Card 1: Produk Berkualitas --}}
             <div class="sh-adv-card accent">
                 <div class="sh-adv-card-icon white-bg">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <div class="sh-adv-title white" style="margin-top:auto;">Produk Premium</div>
+                <div class="sh-adv-desc white">Kami hanya menyediakan produk alat rumah tangga dengan kualitas terbaik dan brand terpercaya.</div>
+            </div>
+            {{-- Card 2: Garansi Resmi --}}
+            <div class="sh-adv-card">
+                <div class="sh-adv-card-icon blue-bg">
                     <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
-                <div class="sh-adv-num white">15+</div>
-                <div class="sh-adv-title white">Garansi 15 Tahun</div>
-                <div class="sh-adv-desc white">Garansi tidak berkarat &amp; tidak rusak. Instalasi 5 tahun dan sparepart 5 tahun.</div>
+                <div class="sh-adv-title" style="margin-top:auto;">Garansi Resmi</div>
+                <div class="sh-adv-desc">Setiap pembelian produk dilengkapi dengan garansi resmi untuk menjamin ketenangan Anda.</div>
             </div>
-            {{-- Card 2: 0 Watt --}}
+            {{-- Card 3: Teknisi --}}
             <div class="sh-adv-card">
                 <div class="sh-adv-card-icon blue-bg">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 10-16 0"/></svg>
                 </div>
-                <div class="sh-adv-num">0W</div>
-                <div class="sh-adv-title">Tanpa Listrik</div>
-                <div class="sh-adv-desc">Bertenaga sepenuhnya dari angin. Tidak ada tagihan listrik, nol risiko korsleting.</div>
+                <div class="sh-adv-title" style="margin-top:auto;">Teknisi Profesional</div>
+                <div class="sh-adv-desc">Layanan instalasi dan perbaikan dilakukan oleh teknisi bersertifikat dan berpengalaman.</div>
             </div>
-            {{-- Card 3: 24 Jam --}}
-            <div class="sh-adv-card">
-                <div class="sh-adv-card-icon blue-bg">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                </div>
-                <div class="sh-adv-num">24/7</div>
-                <div class="sh-adv-title">Non-Stop 365 Hari</div>
-                <div class="sh-adv-desc">Bebas perawatan dan beroperasi 24 jam sehari, 365 hari setahun tanpa henti.</div>
-            </div>
-            {{-- Card 4: Kapasitas --}}
+            {{-- Card 4: Pengiriman --}}
             <div class="sh-adv-card accent-dark">
                 <div class="sh-adv-card-icon dark-bg">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                 </div>
-                <div class="sh-adv-num blue">257</div>
-                <div class="sh-adv-title light">Kapasitas Hisap Superior</div>
-                <div class="sh-adv-desc white">Hingga 257,87 m³/menit — jauh lebih tinggi dari ventilator stasioner manapun.</div>
+                <div class="sh-adv-title light" style="margin-top:auto;">Pengiriman Aman</div>
+                <div class="sh-adv-desc white">Proses pengiriman yang cepat, aman, dan berasuransi hingga sampai ke rumah Anda.</div>
             </div>
-            {{-- Card 5: Anti Hujan --}}
-            <div class="sh-adv-card">
-                <div class="sh-adv-card-icon blue-bg">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-                </div>
-                <div class="sh-adv-title" style="margin-top:auto;">100% Anti Tampias Hujan</div>
-                <div class="sh-adv-desc">Desain khusus memastikan air hujan tidak masuk ke dalam bangunan dalam kondisi apapun.</div>
-            </div>
-            {{-- Card 6: Iklim Tropis --}}
-            <div class="sh-adv-card">
-                <div class="sh-adv-card-icon blue-bg">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-                </div>
-                <div class="sh-adv-title" style="margin-top:auto;">Cocok Iklim Tropis</div>
-                <div class="sh-adv-desc">Dioptimalkan untuk kondisi panas dan lembab Indonesia, efektif bahkan di angin minimum.</div>
-            </div>
-            {{-- Card 7: Desain USA (span 2) --}}
+            {{-- Card 5: Layanan Purna Jual (span 2) --}}
             <div class="sh-adv-card sh-adv-card-span-2" style="grid-column:span 2; flex-direction:row; gap:2rem; align-items:center;">
                 <div class="sh-adv-card-icon blue-bg" style="flex-shrink:0; width:56px; height:56px;">
-                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
                 </div>
                 <div>
-                    <div class="sh-adv-title" style="font-size:1.125rem; margin-bottom:.5rem;">Desain Konstruksi USA</div>
-                    <div class="sh-adv-desc">Mengikuti standar desain USA dengan powder coating pada rangka dan topi bola untuk ketahanan maksimal di iklim tropis yang ekstrem hingga 15 tahun.</div>
+                    <div class="sh-adv-title" style="font-size:1.125rem; margin-bottom:.5rem;">Layanan Purna Jual Terpadu</div>
+                    <div class="sh-adv-desc">Kami tidak hanya menjual, tetapi memastikan alat rumah Anda beroperasi optimal dengan layanan konsultasi dan customer service responsif 24/7.</div>
                 </div>
             </div>
         </div>
     </div>
+    {{-- RIGHT SIDEBAR (Bottom) - Removed Grid for Full Width --}}
+    <style>
+        /* Force bottom section to be 1fr */
+        .sh-bottom-section { grid-template-columns: 1fr; }
+    </style>
 </section>
-
-{{-- ═══ APLIKASI ═══ --}}
-<section class="sh-app-section" id="aplikasi">
-    <div class="sh-app-inner">
-        <div class="sh-app-header">
-            <div class="cv-section-label">APLIKASI</div>
-            <h2 class="cv-section-title" style="margin-top:.75rem;">Cocok untuk<br>Berbagai Bangunan</h2>
-            <p style="margin-top:1rem; font-size:.875rem; color:var(--muted); line-height:1.65;">
-                Cyclevent terbukti efektif di berbagai jenis bangunan — dari rumah tinggal hingga pabrik skala besar.
-            </p>
-        </div>
-        <div class="sh-app-grid">
-            @php
-                $apps = [
-                    [
-                        'title' => 'Restaurant',
-                        'desc' => 'Sirkulasi udara alami dan berkelanjutan membuat ruangan restaurant lebih nyaman, meningkatkan produktivitas kerja dan kualitas udara melalui sistem ventilasi udara.',
-                        'icon' => '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>',
-                        'img' => !empty($settings['app_img_restoran']) ? asset('storage/'.$settings['app_img_restoran']) : asset('images/placeholder-app.jpg')
-                    ],
-                    [
-                        'title' => 'Pabrik & Gudang',
-                        'desc' => 'Sebagai ventilator atap pabrik, turbine ventilator mampu menghilangkan udara panas, debu, dan partikel berbahaya secara otomatis tanpa listrik, cocok sebagai exhaust fan pabrik.',
-                        'icon' => '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/></svg>',
-                        'img' => !empty($settings['app_img_pabrik']) ? asset('storage/'.$settings['app_img_pabrik']) : asset('images/placeholder-app.jpg')
-                    ],
-                    [
-                        'title' => 'Gedung Olahraga',
-                        'desc' => 'Ventilasi yang optimal membantu menjaga udara tetap segar, mendukung performa atlet melalui sistem turbine vent yang efisien.',
-                        'icon' => '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
-                        'img' => !empty($settings['app_img_gor']) ? asset('storage/'.$settings['app_img_gor']) : asset('images/placeholder-app.jpg')
-                    ],
-                    [
-                        'title' => 'Dapur',
-                        'desc' => 'Sistem ventilator turbine menjaga dapur tetap bersih dari asap dan bau, memenuhi standar kesehatan dengan sirkulasi udara optimal.',
-                        'icon' => '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
-                        'img' => !empty($settings['app_img_dapur']) ? asset('storage/'.$settings['app_img_dapur']) : asset('images/placeholder-app.jpg')
-                    ],
-                ];
-            @endphp
-            @foreach($apps as $app)
-                <div class="sh-app-card">
-                    <div class="sh-app-img-wrapper">
-                        <img src="{{ $app['img'] }}" alt="{{ $app['title'] }}" loading="lazy">
-                    </div>
-                    <div class="sh-app-card-body">
-                        <div style="display:flex; align-items:center; gap:1rem;">
-                            <div class="sh-app-icon">{!! $app['icon'] !!}</div>
-                            <h3 class="sh-app-title">{{ $app['title'] }}</h3>
-                        </div>
-                        <p class="sh-app-desc">{{ $app['desc'] }}</p>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
 
 
 {{-- ═══ TESTIMONI ═══ --}}
@@ -896,9 +907,28 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
 </section>
 @endif
 
+{{-- ═══ SEO AUTO TEXT (MINIMALIST) ═══ --}}
+<div style="background:var(--surface); padding:2rem 1.5rem; text-align:center; border-top:1px solid var(--border);">
+    <div style="max-width:1200px; margin:0 auto; font-size:0.75rem; color:var(--muted); line-height:1.6;">
+        @if($service->price > 0)
+            Jual {{ $service->name }} di Indonesia. Distributor, Supplier, Agen, {{ $service->name }}. Kami Menjual {{ $service->name }} terlengkap dengan harga termurah di Surabaya, Jawa Timur, Indonesia.
+        @else
+            Layanan {{ $service->name }} profesional dan terpercaya. Solusi terbaik untuk kebutuhan {{ $service->name }} Anda di Surabaya, Jawa Timur dan sekitarnya.
+        @endif
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    const lightbox = GLightbox({
+        selector: '.glightbox',
+        touchNavigation: true,
+        loop: true,
+        autoplayVideos: true
+    });
+
     var thumbsEl = document.getElementById('sh-swiper-thumbs');
     if (thumbsEl) {
         var swiperThumbs = new Swiper('#sh-swiper-thumbs', {

@@ -63,12 +63,106 @@
 </div>
 
 <script>
+if (typeof window.initCropperModal === 'undefined') {
+    window.initCropperModal = function(input, imgPreviewId) {
+        if (!document.getElementById('cropper-css')) {
+            let css = document.createElement('link');
+            css.id = 'cropper-css'; css.rel = 'stylesheet';
+            css.href = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css';
+            document.head.appendChild(css);
+        }
+        if (!window.Cropper) {
+            let js = document.createElement('script');
+            js.src = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js';
+            js.onload = () => openCropper(input, imgPreviewId);
+            document.head.appendChild(js);
+        } else {
+            openCropper(input, imgPreviewId);
+        }
+    };
+
+    window.openCropper = function(input, imgPreviewId) {
+        if (!input.files || !input.files[0]) return;
+        
+        let modal = document.createElement('div');
+        modal.id = 'cropperModal';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(4px);';
+        
+        let container = document.createElement('div');
+        container.style.cssText = 'background:#fff;border-radius:20px;padding:1.5rem;max-width:800px;width:100%;display:flex;flex-direction:column;gap:1.5rem;box-shadow:0 24px 64px rgba(0,0,0,0.2);';
+        
+        let title = document.createElement('h3');
+        title.style.cssText = 'margin:0;font-size:1.1rem;font-weight:800;color:#1E293B;';
+        title.innerText = 'Crop Gambar';
+        
+        let imgWrapper = document.createElement('div');
+        imgWrapper.style.cssText = 'width:100%;height:60vh;max-height:500px;background:#F8FAFC;border-radius:12px;overflow:hidden;';
+        
+        let imgToCrop = document.createElement('img');
+        imgToCrop.style.maxWidth = '100%';
+        imgToCrop.style.display = 'block';
+        imgToCrop.src = URL.createObjectURL(input.files[0]);
+        imgWrapper.appendChild(imgToCrop);
+        
+        let btnWrapper = document.createElement('div');
+        btnWrapper.style.cssText = 'display:flex;justify-content:flex-end;gap:.75rem;';
+        
+        let btnCancel = document.createElement('button');
+        btnCancel.innerText = 'Batal';
+        btnCancel.type = 'button';
+        btnCancel.style.cssText = 'padding:.75rem 1.5rem;background:#F1F5F9;color:#475569;border:none;border-radius:12px;font-weight:700;cursor:pointer;';
+        
+        let btnCrop = document.createElement('button');
+        btnCrop.innerText = 'Crop & Simpan';
+        btnCrop.type = 'button';
+        btnCrop.style.cssText = 'padding:.75rem 1.5rem;background:#3B82F6;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(59,130,246,0.3);';
+        
+        btnWrapper.appendChild(btnCancel);
+        btnWrapper.appendChild(btnCrop);
+        
+        container.appendChild(title);
+        container.appendChild(imgWrapper);
+        container.appendChild(btnWrapper);
+        modal.appendChild(container);
+        document.body.appendChild(modal);
+
+        let cropper = new Cropper(imgToCrop, {
+            aspectRatio: 16 / 9,
+            viewMode: 2,
+            autoCropArea: 1,
+        });
+
+        btnCancel.onclick = () => {
+            input.value = ''; 
+            document.body.removeChild(modal);
+        };
+        
+        btnCrop.onclick = () => {
+            btnCrop.innerText = 'Menyimpan...';
+            cropper.getCroppedCanvas({
+                width: 1200,
+                height: 675,
+                imageSmoothingQuality: 'high'
+            }).toBlob((blob) => {
+                let dt = new DataTransfer();
+                let origName = input.files[0].name;
+                dt.items.add(new File([blob], origName, {type: input.files[0].type}));
+                input.files = dt.files;
+                
+                let img = document.getElementById(imgPreviewId);
+                let placeholder = document.getElementById(imgPreviewId + '_placeholder');
+                img.src = URL.createObjectURL(blob);
+                img.style.display = 'block';
+                if (placeholder) placeholder.style.display = 'none';
+                
+                document.body.removeChild(modal);
+            }, input.files[0].type, 0.9);
+        };
+    };
+}
+
 function previewImgPremium(input, id) {
   if (!input.files || !input.files[0]) return;
-  var img = document.getElementById(id);
-  var placeholder = document.getElementById(id + '_placeholder');
-  img.src = URL.createObjectURL(input.files[0]);
-  img.style.display = 'block';
-  if (placeholder) placeholder.style.display = 'none';
+  if(window.initCropperModal) window.initCropperModal(input, id);
 }
 </script>

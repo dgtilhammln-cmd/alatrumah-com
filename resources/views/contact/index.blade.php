@@ -344,7 +344,7 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
                     <label class="ct-label">Produk yang Diminati</label>
                     <select name="product" class="ct-select">
                         <option value="">-- Pilih Produk --</option>
-                        @foreach(['Turbine Ventilator 12"','Turbine Ventilator 14"','Turbine Ventilator 18"','Turbine Ventilator 24"','Turbine Ventilator Stainless','Instalasi Ventilator','Konsultasi Ventilasi','Lainnya'] as $p)
+                        @foreach(['Alat Rumah 12"','Alat Rumah 14"','Alat Rumah 18"','Alat Rumah 24"','Alat Rumah Stainless','Instalasi Alat Rumah','Konsultasi Ventilasi','Lainnya'] as $p)
                         <option value="{{ $p }}" {{ old('product')===$p?'selected':'' }}>{{ $p }}</option>
                         @endforeach
                     </select>
@@ -385,8 +385,8 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
                 </div>
                 <div class="ct-info-body">
                     <div class="ct-info-label">Email</div>
-                    <a href="mailto:{{ $settings['email'] ?? 'info@cyclevent.id' }}" class="ct-info-value" data-track="email">
-                        {{ $settings['email'] ?? 'info@cyclevent.id' }}
+                    <a href="mailto:{{ $settings['email'] ?? 'info@alatrumah.com' }}" class="ct-info-value" data-track="email">
+                        {{ $settings['email'] ?? 'info@alatrumah.com' }}
                     </a>
                     <div class="ct-info-sub">Balasan dalam 1×24 jam</div>
                 </div>
@@ -424,7 +424,7 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
             <iframe src="{{ $settings['maps_embed'] ?? 'https://maps.google.com/maps?q=-7.1583,112.6515&output=embed' }}"
                     allowfullscreen="" loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"
-                    title="Lokasi Cyclevent"></iframe>
+                    title="Lokasi Alat Rumah"></iframe>
         </div>
     </div>
 </section>

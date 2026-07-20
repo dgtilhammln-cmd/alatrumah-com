@@ -286,7 +286,7 @@
                 $ctaUrl  = old("translations.{$lc}.cta_url", $t?->cta_button['url'] ?? '');
                 $ctaType = old("translations.{$lc}.cta_type", $t?->cta_button['type'] ?? 'wa');
                 $faqs    = old("translations.{$lc}.faqs", $t?->faqs ?? []);
-                $titlePlaceholder = ['id'=>'Cara Memilih Ventilator yang Tepat...','en'=>'How to Choose the Right Ventilator...','ar'=>'كيف تختار المروحة المناسبة...','ko'=>'올바른 환풍기 선택 방법...'];
+                $titlePlaceholder = ['id'=>'Cara Memilih Alat Rumah yang Tepat...','en'=>'How to Choose the Right Alat Rumah...','ar'=>'كيف تختار المروحة المناسبة...','ko'=>'올바른 환풍기 선택 방법...'];
             @endphp
 
             <div class="lang-panel {{ $lc === $activeLang ? 'active' : '' }}" id="panel-{{ $lc }}" dir="{{ $isRTL ? 'rtl' : 'ltr' }}">
@@ -451,7 +451,7 @@
                         <label class="form-label">Meta Keywords <span class="hint">(pisah dengan koma)</span></label>
                         <input type="text" name="translations[{{ $lc }}][meta_keywords]"
                             value="{{ old("translations.{$lc}.meta_keywords", $t?->meta_keywords) }}"
-                            class="form-input" placeholder="ventilator atap, sirkulasi udara" dir="{{ $isRTL ? 'rtl' : 'ltr' }}">
+                            class="form-input" placeholder="alat rumah atap, sirkulasi udara" dir="{{ $isRTL ? 'rtl' : 'ltr' }}">
                     </div>
                     <div class="form-group" style="margin-bottom:1.25rem;">
                         <label class="form-label">Featured Snippet Target <span class="hint">(opsional, max 60 kata / 500 char)</span></label>
@@ -463,7 +463,7 @@
                         <label class="form-label">Alt Text Gambar Utama <span class="hint">(untuk aksesibilitas & SEO gambar)</span></label>
                         <input type="text" name="translations[{{ $lc }}][thumbnail_alt]"
                             value="{{ old("translations.{$lc}.thumbnail_alt", $t?->thumbnail_alt) }}"
-                            class="form-input" placeholder="Contoh: Pemasangan Turbine Ventilator di Atap Pabrik" dir="{{ $isRTL ? 'rtl' : 'ltr' }}">
+                            class="form-input" placeholder="Contoh: Pemasangan Alat Rumah di Atap Pabrik" dir="{{ $isRTL ? 'rtl' : 'ltr' }}">
                     </div>
                 </div>
 
@@ -494,7 +494,7 @@
                 <div class="form-group">
                     <label class="form-label">Penulis</label>
                     <select name="author_id" class="form-select" style="background:#fff;">
-                        <option value="">Tim Cyclevent (Bawaan)</option>
+                        <option value="">Tim Alat Rumah (Bawaan)</option>
                         @foreach($authors as $author)
                             <option value="{{ $author->id }}" {{ old('author_id', $a?->author_id) == $author->id ? 'selected' : '' }}>{{ $author->name }}</option>
                         @endforeach

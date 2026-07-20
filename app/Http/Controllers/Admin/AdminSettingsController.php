@@ -43,10 +43,12 @@ class AdminSettingsController extends Controller
             // Handle favicon separately (ico/png, no WebP conversion)
             if ($key === 'favicon') {
                 $path = 'settings/favicon.' . $file->getClientOriginalExtension();
-                Storage::disk('public')->put($path, file_get_contents($file->getRealPath()));
+                $file->storeAs('public', $path);
+                // Also copy to root public directory for direct access
+                try {
+                    copy($file->getRealPath(), public_path('favicon.ico'));
+                } catch (\Exception $e) {}
                 Setting::set($key, $path, 'image');
-                // Also copy to public/
-                copy($file->getRealPath(), base_path('public_html/favicon.ico'));
                 continue;
             }
 

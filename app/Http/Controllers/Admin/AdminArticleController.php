@@ -18,9 +18,21 @@ class AdminArticleController extends Controller
 
     protected $locales = ['id', 'en', 'ar', 'ko'];
 
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::with('authorRel')->orderBy('created_at', 'desc')->get();
+        $query = Article::with('authorRel')->orderBy('created_at', 'desc');
+        
+        if ($search = $request->search) {
+            $query->where(function($q) use ($search) {
+                $q->where('slug', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%")
+                  ->orWhereHas('translations', function($t) use ($search) {
+                      $t->where('title', 'like', "%{$search}%");
+                  });
+            });
+        }
+        
+        $articles = $query->get();
         return view('admin.articles.index', compact('articles'));
     }
 
@@ -212,7 +224,7 @@ class AdminArticleController extends Controller
 
             $metaTitle = $data['meta_title'] ?? null;
             if (empty($metaTitle) && !empty($title)) {
-                $metaTitle = Str::limit($title, 55) . ' | Cyclevent';
+                $metaTitle = Str::limit($title, 55) . ' | Alatrumah.com';
             }
             $metaDesc = $data['meta_desc'] ?? null;
             if (empty($metaDesc)) {

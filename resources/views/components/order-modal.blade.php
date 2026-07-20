@@ -20,7 +20,16 @@
     }
     #order-modal-overlay.active .modal-box-light { transform: translateY(0) scale(1); }
 
-    .order-modal-header { padding: 2rem 2.5rem 1.5rem; background: #F8FAFC; border-bottom: 1px solid #E2E8F0; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; position: relative; }
+    .order-modal-header { 
+        padding: 2rem 2.5rem 1.5rem; 
+        background: linear-gradient(135deg, #0064D2 0%, #0EA5E9 100%); 
+        border-bottom: none; 
+        display: flex; 
+        align-items: flex-start; 
+        justify-content: space-between; 
+        gap: 1rem; 
+        position: relative; 
+    }
     
     .order-modal-body { padding: 1.75rem 2.5rem 2.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.25rem; }
     .order-modal-body::-webkit-scrollbar { width: 6px; }
@@ -61,10 +70,10 @@
         {{-- Header --}}
         <div class="order-modal-header">
             <div>
-                <h2 id="modal-title" style="font-size:1.5rem;font-weight:700;color:#0F172A;margin:0 0 0.25rem;letter-spacing:-0.02em;">Konsultasi & Order</h2>
-                <p style="font-size:0.875rem;font-weight:400;color:#64748B;margin:0;">Tim ahli kami akan segera membalas via WhatsApp.</p>
+                <h2 id="modal-title" style="font-size:1.35rem;font-weight:800;color:#fff;margin:0 0 0.25rem;letter-spacing:-0.02em;">Customer Service</h2>
+                <p style="font-size:0.825rem;font-weight:400;color:rgba(255,255,255,0.85);margin:0;">Ada pertanyaan? Jangan ragu untuk menghubungi tim kami via WhatsApp.</p>
             </div>
-            <button class="modal-close-btn" onclick="closeOrderModal()" aria-label="Tutup">
+            <button class="modal-close-btn" onclick="closeOrderModal()" aria-label="Tutup" style="background:rgba(255,255,255,0.2); color:#fff;">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
         </div>
@@ -92,7 +101,7 @@
             
             <div>
                 <label class="light-label" for="order-message">Pesan / Kebutuhan</label>
-                <textarea class="light-input" id="order-message" name="message" rows="3" placeholder="Contoh: Kami membutuhkan ventilator tipe 24 inch untuk gudang kami..." style="resize:vertical;min-height:90px;"></textarea>
+                <textarea class="light-input" id="order-message" name="message" rows="3" placeholder="Contoh: Kami membutuhkan alat rumah tipe 24 inch untuk gudang kami..." style="resize:vertical;min-height:90px;"></textarea>
             </div>
 
             {{-- Error --}}

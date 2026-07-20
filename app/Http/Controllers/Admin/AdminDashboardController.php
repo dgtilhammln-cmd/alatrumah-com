@@ -9,6 +9,7 @@ use App\Models\Article;
 use App\Models\GalleryProject;
 use App\Models\Client;
 use App\Models\Lead;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -36,13 +37,15 @@ class AdminDashboardController extends Controller
         $visitorCount = AnalyticsEvent::ofType('pageview')->whereBetween('created_at',[$from,$to])->count();
         $waClicks     = AnalyticsEvent::ofType('wa_click')->whereBetween('created_at',[$from,$to])->count();
         $leadsCount   = Lead::whereBetween('created_at',[$from,$to])->count();
-        $ctr          = $visitorCount > 0 ? round(($leadsCount / $visitorCount) * 100, 2) : 0;
+        $totalBuyers  = User::where('role','buyer')->count();
+        $newBuyers    = User::where('role','buyer')->whereBetween('created_at',[$from,$to])->count();
 
         $stats = [
-            'visitor' => $visitorCount,
-            'wa_click'=> $waClicks,
-            'leads'   => $leadsCount,
-            'ctr'     => $ctr,
+            'visitor'     => $visitorCount,
+            'wa_click'    => $waClicks,
+            'leads'       => $leadsCount,
+            'total_buyers'=> $totalBuyers,
+            'new_buyers'  => $newBuyers,
         ];
 
         // Leads daily chart
@@ -65,16 +68,25 @@ class AdminDashboardController extends Controller
             ->groupBy('date')->orderBy('date')
             ->pluck('count','date');
 
+        // Buyer daily chart
+        $buyerChart = User::where('role','buyer')
+            ->whereBetween('created_at',[$from,$to])
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->groupBy('date')->orderBy('date')
+            ->pluck('count','date');
+
         $labels = [];
         $values = [];
         $visitorValues = [];
         $waValues = [];
+        $buyerValues = [];
         for ($i = $daysDiff; $i >= 0; $i--) {
             $date     = $to->copy()->subDays($i)->format('Y-m-d');
             $labels[] = $to->copy()->subDays($i)->format('d/m');
             $values[] = $leadsChart[$date] ?? 0;
             $visitorValues[] = $visitorChart[$date] ?? 0;
             $waValues[] = $waChart[$date] ?? 0;
+            $buyerValues[] = $buyerChart[$date] ?? 0;
         }
 
         // Top pages
@@ -94,6 +106,6 @@ class AdminDashboardController extends Controller
         // Recent leads
         $recentLeads = Lead::orderByDesc('created_at')->limit(8)->get();
 
-        return view('admin.dashboard.index', compact('stats','labels','values','visitorValues','waValues','topPages','counts','recentLeads','start_date','end_date'));
+        return view('admin.dashboard.index', compact('stats','labels','values','visitorValues','waValues','buyerValues','topPages','counts','recentLeads','start_date','end_date'));
     }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Admin | Cyclevent</title>
+    <title>Login Admin | Alat Rumah</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
     @if(file_exists(public_path('build/assets')) && count(glob(public_path('build/assets/*.css'))) > 0)
@@ -14,13 +14,14 @@
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #F0F9FF; /* Sangat soft blue */
+            background-color: #F0F9FF;
             color: #0F172A;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             min-height: 100vh;
             margin: 0;
+            padding: 2rem 1rem;
+            box-sizing: border-box;
             position: relative;
             overflow-x: hidden;
             background-image: 
@@ -51,7 +52,7 @@
         .login-wrapper {
             width: 100%;
             max-width: 1000px;
-            padding: 2rem;
+            margin: auto;
             position: relative;
             z-index: 10;
         }
@@ -282,7 +283,7 @@
                 <div class="logo-placeholder">CV</div>
             @endif
             
-            <h1 class="hero-title">Cyclevent<br>Control Panel</h1>
+            <h1 class="hero-title">Alat Rumah<br>Control Panel</h1>
             <p class="hero-desc">Sistem manajemen konten dan pengaturan website untuk efisiensi bisnis Anda.</p>
             
             <a href="{{ url('/en/') }}" class="back-link">
@@ -337,7 +338,7 @@
 </div>
 
 <script>
-    localStorage.removeItem('cyclevent_intro_played');
+    localStorage.removeItem('alatrumah_intro_played');
 
     // Toggle Password Visibility
     const toggleBtn = document.getElementById('toggle-btn');

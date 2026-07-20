@@ -1,5 +1,5 @@
 ﻿@extends('layouts.app')
-@section('title', 'Halaman Tidak Ditemukan — 404 | Cyclevent')
+@section('title', 'Halaman Tidak Ditemukan — 404 | Alat Rumah')
 @section('content')
 
 <link rel="preconnect" href="https://fonts.googleapis.com">

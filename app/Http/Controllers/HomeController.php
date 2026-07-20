@@ -10,28 +10,40 @@ use App\Models\Client;
 use App\Models\Testimonial;
 use App\Models\WaSetting;
 use App\Models\HeroSlide;
+use App\Models\UspItem;
+use App\Models\CategoryItem;
+use App\Models\PromoSection;
 
 class HomeController extends Controller
 {
     public function index()
     {
         $settings     = Setting::getAllAsArray();
-        $products     = Service::active()->ordered()->limit(5)->get();
+        $products     = Service::active()->ordered()->limit(6)->get();
         $gallery      = GalleryProject::active()->ordered()->limit(8)->get();
         $articles     = Article::published()->latest()->limit(3)->get();
         $clients      = Client::active()->ordered()->get();
         $testimonials = Testimonial::active()->ordered()->get()->unique('name');
         $wa           = WaSetting::primary();
-        $heroSlides   = HeroSlide::active()->ordered()->limit(5)->get();
+        $heroSlides     = HeroSlide::active()->ordered()->where('position', 'hero')->get();
+        $utamaBanners   = HeroSlide::active()->ordered()->where('position', 'utama')->limit(2)->get();
+        $sampingBanners = HeroSlide::active()->ordered()->where('position', 'samping')->limit(2)->get();
+        $uspItems       = UspItem::active()->get();
+        $categoryItems  = CategoryItem::active()->get();
+        $promoSections  = PromoSection::active()->with('services')->get();
+
+        $siteName = $settings['site_name'] ?? 'Alat Rumah';
+        $allProducts = Service::active()->latest()->limit(30)->get();
 
         $seo = [
-            'title'       => $settings['meta_title_home'] ?? 'Cyclevent — Turbine Ventilator Non-Electric #1 Indonesia | PT. Hiranatha Makmur Sukses',
-            'description' => $settings['meta_desc_home']  ?? 'Produsen turbine ventilator non-electric terpercaya sejak 2007. Garansi 15 tahun tidak berkarat. 5 tipe: CV-45, CV-60, CV-75, CV-90, CV-105. Gratis konsultasi: 0812-9656-5757.',
-            'keywords'    => $settings['meta_keywords_home'] ?? 'turbine ventilator, ventilator atap, cyclevent, roof ventilator, ventilator non electric, kipas angin atap, vent turbine, ventilasi pabrik, ventilasi gudang',
+            'title'       => $settings['meta_title_home'] ?? $siteName . ' - Toko Alat Rumah Tangga Online',
+            'description' => $settings['meta_desc_home']  ?? 'Belanja alat rumah tangga berkualitas di alatrumah.com. Produk lengkap, harga terjangkau, pengiriman ke seluruh Indonesia.',
+            'keywords'    => $settings['meta_keywords_home'] ?? 'alat rumah tangga, peralatan rumah, toko alat rumah online, jasa pemasangan',
             'og_image'    => !empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : (!empty($settings['logo']) ? asset('storage/'.$settings['logo']) : asset('favicon.ico')),
-            'canonical'   => route_locale('home'),
+            'canonical'   => route('home'),
         ];
 
-        return view('home.index', compact('settings', 'products', 'gallery', 'articles', 'clients', 'testimonials', 'wa', 'seo', 'heroSlides'));
+        return view('home.index', compact('settings', 'products', 'allProducts', 'gallery', 'articles', 'clients', 'testimonials', 'wa', 'seo', 'heroSlides', 'utamaBanners', 'sampingBanners', 'uspItems', 'categoryItems', 'promoSections'));
     }
 }
+

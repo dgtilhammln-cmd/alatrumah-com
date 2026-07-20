@@ -41,7 +41,7 @@
         <input type="text" name="name" id="svc-name" value="{{ old('name',$s->name) }}" required oninput="svcAutoSlug()"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s;"
           onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'"
-          placeholder="Contoh: Turbine Ventilator CV-60">
+          placeholder="Contoh: Alat Rumah CV-60">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">
@@ -75,6 +75,68 @@
     </div>
     <div style="padding:1.25rem 1.75rem;">
       @include('admin.partials.rich-editor', ['name'=>'description','value'=>old('description',$s->description??''),'height'=>'320px'])
+    </div>
+  </div>
+
+  {{-- Data E-Commerce / Harga --}}
+  <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04); margin-bottom:1.5rem;">
+    <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.5rem;">
+      <div style="width:32px;height:32px;background:rgba(20,184,166,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="16" height="16" fill="none" stroke="#14B8A6" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+      </div>
+      <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Data E-Commerce / Harga</h3>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.125rem;">
+      <div style="grid-column: span 2;">
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Kategori</label>
+        <select name="product_category_id" style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+          <option value="">- Tanpa Kategori -</option>
+          @foreach($categories as $cat)
+            <option value="{{ $cat->id }}" {{ old('product_category_id', $s->product_category_id ?? '') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+          @endforeach
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Harga (Rp)</label>
+        <input type="number" name="price" value="{{ old('price',$s->price) }}" min="0" placeholder="0"
+          style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+        <p style="font-size:.7rem;color:#94A3B8;margin-top:.25rem;">Kosongkan/0 jika ini layanan jasa (Tanya via WA)</p>
+      </div>
+      <div>
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Harga Diskon (Rp)</label>
+        <input type="number" name="sale_price" value="{{ old('sale_price',$s->sale_price) }}" min="0" placeholder="Opsional"
+          style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+      </div>
+      <div>
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Stok</label>
+        <input type="number" name="stock" value="{{ old('stock',$s->stock ?? 0) }}" min="0"
+          style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+      </div>
+      <div>
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Minimum Order</label>
+        <input type="number" name="min_order" value="{{ old('min_order',$s->min_order ?? 1) }}" min="1"
+          style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+      </div>
+      <div>
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Berat (Gram)</label>
+        <input type="number" name="weight" value="{{ old('weight',$s->weight ?? 0) }}" min="0"
+          style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+      </div>
+      <div>
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Rating Bintang</label>
+        <input type="number" step="0.1" name="rating" value="{{ old('rating', $service->rating ?? 0) }}" min="0" max="5" placeholder="Cth: 4.8"
+          style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+      </div>
+      <div>
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Jumlah Terjual</label>
+        <input type="number" name="sold_count" value="{{ old('sold_count', $service->sold_count ?? 0) }}" min="0" placeholder="Cth: 1200"
+          style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+      </div>
+      <div style="grid-column:1 / -1;">
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">SKU (Opsional)</label>
+        <input type="text" name="sku" value="{{ old('sku',$service->sku) }}" placeholder="Contoh: SKU-001"
+          style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+      </div>
     </div>
   </div>
 

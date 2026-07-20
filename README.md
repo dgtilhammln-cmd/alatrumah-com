@@ -1,7 +1,7 @@
-# 🌀 Cyclevent — Turbine Ventilator Specialist Website
-**PT. Hiranatha Makmur Sukses** | [cyclevent.hvmdigital.id](https://cyclevent.hvmdigital.id)
+# 🛒 AlatRumah.com — E-Commerce & Platform Bisnis
+**PT. Hiranatha Makmur Sukses** | [alatrumah.com](https://alatrumah.com)
 
-Platform website bisnis lengkap untuk Cyclevent, spesialis Turbine Ventilator Non-Electric, dibangun dengan Laravel 13 dan dioptimalkan untuk performa, SEO, dan kemudahan pengelolaan konten melalui panel admin yang komprehensif.
+Platform e-commerce dan website bisnis komprehensif untuk AlatRumah.com. Dibangun menggunakan Laravel 13, dioptimalkan untuk performa tinggi, pengalaman berbelanja pengguna (UI/UX modern), SEO, dan kemudahan manajemen melalui panel admin yang lengkap.
 
 ---
 
@@ -12,437 +12,132 @@ Platform website bisnis lengkap untuk Cyclevent, spesialis Turbine Ventilator No
 | **Framework** | Laravel 13.x (PHP 8.3+) |
 | **Database** | MySQL (production) / SQLite (development) |
 | **Template Engine** | Blade (Laravel) |
-| **CSS Framework** | Vanilla CSS + Design System kustom |
-| **Build Tool** | Vite (opsional, tanpa wajib) |
-| **Image Processing** | Intervention Image 4.0 (auto-convert ke WebP) |
+| **CSS & UI** | Vanilla CSS + Design System Khusus (Interaktif, Grid/List view) |
+| **Build Tool** | Vite |
+| **Image Processing** | Intervention Image 4.0 (Otomatis konversi ke WebP) |
 | **PDF Export** | barryvdh/laravel-dompdf 3.0 |
 | **Excel Export** | maatwebsite/excel 3.1 |
 | **Sitemap** | spatie/laravel-sitemap 8.0 |
-| **Hosting** | Hostinger VPS (Domain: cyclevent.hvmdigital.id) |
-| **Git Repo** | github.com/dgtilhammln-cmd/cyclevent |
 
 ---
 
 ## 🎨 Design System & Frontend
 
-### Font
-- **Primary Font:** `Montserrat` (Google Fonts)
-  - Weight: 300 (Light), 400 (Regular), 500 (Medium), 600 (SemiBold), 700 (Bold), 800, 900 (Black)
-  - Load Mode: **Non-blocking** (`media="print"` swap trick) — tidak memblokir render
-  - Italic: 300i tersedia untuk variasi tipografi
-
-### Color Palette (CSS Variables)
-```css
---accent:       #38BDF8  /* Brand Blue — Utama */
---accent-light: #7DD3FC  /* Blue muda */
---accent-dark:  #0EA5E9  /* Blue gelap untuk tombol */
---accent-deep:  #0284C7  /* Blue lebih gelap */
---bg-base:      #FFFFFF  /* Background putih dominan */
---bg-1:         #F8FAFF  /* Off-white */
---bg-2:         #EFF6FF  /* Light blue tint */
-```
-
-### CSS Libraries (CDN, Non-Blocking)
-| Library | Versi | Fungsi |
-|---|---|---|
-| AOS (Animate on Scroll) | 2.3.1 | Animasi scroll masuk |
-| Swiper.js | 11 | Slider/carousel gambar |
-| GLightbox | Latest | Popup lightbox gambar |
-
-### JavaScript Libraries (CDN, Deferred)
-| Library | Versi | Fungsi |
-|---|---|---|
-| AOS JS | 2.3.1 | Controller animasi scroll |
-| Swiper Bundle | 11 | Controller slider |
-| GLightbox JS | Latest | Controller popup gambar |
+- **Primary Font:** `Montserrat` (Google Fonts) diimplementasikan secara global.
+- **Tampilan Interaktif:** Dilengkapi micro-interactions, efek hover, popup lightbox, dan animasi scroll menggunakan AOS.
+- **Layout Fleksibel:** Pengguna dapat beralih antara tampilan **Grid** dan **List** pada katalog produk, artikel, dan halaman admin, yang preferensinya disimpan di memori browser (localStorage).
+- **Performa Tinggi:** Aset CSS dan JS eksternal (Swiper, GLightbox) dimuat secara *deferred* dan *non-blocking* untuk mempercepat *page load*.
 
 ---
 
-## 🌐 Halaman Frontend (Public)
+## 🌐 Fitur Frontend (Publik)
 
-### 1. Beranda (`/`)
-- **Hero Section** — Slider gambar otomatis (Swiper) dengan 3 kolom layout
-  - Kolom kiri: Headline, badge, deskripsi, tombol CTA
-  - Kolom tengah: Hero Slider (`HeroSlide` model, upload dari admin)
-  - Kolom kanan: Gambar sekunder + statistik klien
-- **Clients Bar** — Marquee logo klien bergulir otomatis tanpa henti
-- **About Section** — 4 kartu premium (keyword chips, statistik, gambar, fitur)
-- **Products Preview** — Grid produk/layanan unggulan
-- **Advantages Section** — Keunggulan produk dengan icon
-- **Gallery Preview** — 6 foto galeri terakhir dengan **popup lightbox** (klik = popup, bukan pindah halaman)
-- **Testimonials** — Carousel testimoni klien
-- **Coverage Map** — Peta jangkauan Indonesia dengan statistik animasi count-up
-- **Articles Preview** — 3 artikel terbaru
-- **CTA Section** — Call-to-action dengan modal WhatsApp
+### 1. Halaman Utama (Homepage)
+- **Hero Slider:** Banner promosi utama dengan slide otomatis.
+- **Flash Sale & Special Promo:** Bagian promosi dinamis dengan penghitung waktu mundur (countdown timer) dan harga coret (diskon).
+- **Kategori Produk (USP):** Navigasi cepat berbasis kategori.
+- **Katalog Produk & Jasa:** Menampilkan item unggulan dengan label kategori, harga diskon, rating, dan tombol "Tambah ke Keranjang".
+- **Testimoni & Klien:** Slider ulasan pelanggan dan logo mitra.
+- **Galeri & Artikel:** Cuplikan proyek/foto terbaru dan berita/blog terkini.
 
-### 2. Halaman Produk (`/products`)
-- Grid produk dengan filter kategori
-- Setiap produk punya halaman detail (`/products/{slug}`)
-- Halaman detail: gambar utama, deskripsi lengkap, spesifikasi, FAQ, galeri produk, form order
+### 2. Fitur E-Commerce (Belanja)
+- **Keranjang Belanja (Cart):** Pengguna dapat menambah, mengubah kuantitas, dan menghapus item. Tersimpan dalam sesi browser.
+- **Checkout Pemesanan:** Pengisian alamat pengiriman dan pilihan kurir/metode.
+- **Sistem Checkout ke WhatsApp:** Pesanan diformat secara otomatis menjadi pesan WhatsApp untuk kemudahan komunikasi dan konfirmasi pembayaran.
+- **Tombol WhatsApp Floating:** Navigasi cepat untuk menghubungi CS.
 
-### 3. Halaman Galeri (`/gallery`)
-- Grid foto proyek instalasi
-- Filter berdasarkan kategori
-- Klik foto = **popup lightbox** (bukan navigasi ke halaman baru)
-- Pagination dengan desain kustom
-
-### 4. Halaman Artikel/Blog (`/articles`)
-- Daftar artikel dengan gambar dan excerpt
-- Halaman detail artikel (`/articles/{slug}`)
-- Rich content dengan FAQ section per artikel
-- Schema JSON-LD untuk Article (SEO)
-
-### 5. Halaman Tentang Kami (`/about`)
-- Profil perusahaan
-- Sejarah dan keunggulan
-- Tim dan nilai perusahaan
-
-### 6. Halaman Kontak (`/contact`)
-- Form kontak dengan validasi
-- Integrasi WhatsApp langsung
-- Peta lokasi
-
-### 7. Sitemap (`/sitemap.xml` & `/sitemap`)
-- XML Sitemap otomatis (spatie/laravel-sitemap)
-- HTML Sitemap untuk user
-
-### 8. Robots.txt (Dinamis)
-- Dihasilkan dinamis oleh Laravel, `Sitemap` URL otomatis menggunakan `APP_URL`
+### 3. Halaman Lainnya
+- **Katalog Lengkap (`/products`):** Grid/List view produk dengan fitur pencarian dan filter kategori. Tersedia fitur pengurutan (sorting).
+- **Detail Produk:** Gambar resolusi tinggi, spesifikasi, harga dinamis, opsi varian (jika ada), dan bagian FAQ khusus produk.
+- **Artikel / Blog (`/articles`):** Daftar bacaan informatif untuk SEO content marketing.
+- **Galeri (`/gallery`):** Dokumentasi foto menggunakan *Lightbox popup*.
+- **Tentang Kami & Kontak:** Profil perusahaan, integrasi Google Maps, dan form hubungi kami.
 
 ---
 
-## 🔒 Panel Admin (`/admin`)
+## 🔒 Fitur Panel Admin (`/admin`)
 
-Semua route admin dilindungi middleware `admin.auth` (session-based).
+Panel admin dilindungi oleh sistem autentikasi dan menyediakan manajemen data menyeluruh:
 
-### Autentikasi Admin
-- Login (`/admin/login`) — username & password
-- Logout
-- Session management
+### E-Commerce & Promosi
+1. **Manajemen Pesanan (`/admin/orders`):**
+   - Melacak pesanan masuk, memproses status (Pending, Diproses, Dikirim, Selesai).
+   - Tampilan pesanan mendukung **List View (Tabel)** dan **Grid View (Kartu)**.
+   - Deteksi *Abandoned Cart* untuk mem-follow up calon pembeli via WA.
+   - **Download Laporan:** Export data pesanan ke Excel, CSV, atau PDF dengan filter tanggal.
+2. **Kategori Produk (`/admin/category-items`):** CRUD kategori untuk navigasi e-commerce.
+3. **Manajemen Produk & Jasa (`/admin/services`):**
+   - CRUD Produk/Layanan.
+   - Mendukung Harga Normal, Harga Coret (Diskon), dan Manajemen Stok Cepat (*Inline Stock Edit*).
+   - Tampilan katalog admin mendukung Grid/List view interaktif.
+4. **Promo & Flash Sale (`/admin/promo-sections`):**
+   - Membuat sesi diskon tematik atau Flash Sale dengan timer.
+   - Opsi pemilihan produk: Manual (pilih satu-satu), Kategori Tertentu, Produk Diskon (Otomatis filter harga coret), atau Semua Produk.
 
-### 1. Dashboard (`/admin`)
-- Statistik ringkas: total leads, produk, galeri, artikel
-- Grafik kunjungan menggunakan Chart.js
-- Leads terbaru dengan badge notifikasi
-- Kunjungan hari ini vs kemarin
+### Manajemen Konten (CMS)
+5. **Manajemen Artikel (`/admin/articles`):** Buat berita/blog dengan format Rich Text, optimasi SEO meta, dan tag. (Mendukung Grid/List view).
+6. **Hero Slides (`/admin/hero-slides`):** Mengganti banner besar di Homepage.
+7. **Manajemen Galeri (`/admin/gallery`):** Upload portofolio foto (otomatis jadi WebP).
+8. **Klien & Testimoni:** Kelola logo klien berjalan dan ulasan teks/bintang.
 
-### 2. Analytics (`/admin/analytics`)
-- **Halaman Kunjungan** — tracking per URL
-- **Grafik Harian** — total kunjungan 30 hari terakhir
-- **Device Breakdown** — Mobile / Tablet / Desktop
-- **Top Pages** — halaman paling banyak dikunjungi
-- **Referrer** — sumber trafik
-- **Realtime** — kunjungan aktif saat ini (polling)
-- **Export XLS** — download data analytics ke Excel
-- **Export PDF** — download laporan analytics ke PDF
-
-### 3. Leads / Permintaan (`/admin/leads`)
-- Semua lead dari form kontak & modal order masuk di sini
-- Status lead: `new`, `contacted`, `converted`, `rejected`
-- Update status lead + catatan internal
-- Notifikasi badge merah di navbar jika ada lead baru
-- **Export Excel** — semua lead ke `.xlsx`
-- **Export PDF** — laporan lead ke PDF
-- **Mark All Read** — tandai semua lead sudah dibaca
-- Data lead: nama, email, telepon, produk, pesan, UTM source/medium/campaign, IP, device, timestamp
-
-### 4. Manajemen Produk (`/admin/services`)
-- CRUD Produk (nama: "services" di internal Laravel)
-- Upload gambar produk → **auto-convert ke WebP**
-- Field: judul, slug, deskripsi, spesifikasi, konten rich-text, meta SEO (title, description, keywords)
-- Upload multiple gambar galeri per produk
-- Tambah FAQ per produk
-- Urutan tampil (drag/sortable)
-
-### 5. Manajemen Galeri (`/admin/gallery`)
-- CRUD foto proyek instalasi
-- Upload foto → **auto-convert ke WebP**
-- Field: judul, klien, kategori, alt text, deskripsi, slug
-- Preview foto langsung (buka foto di tab baru)
-- Filter & search berdasarkan kategori
-
-### 6. Manajemen Artikel (`/admin/articles`)
-- CRUD artikel blog
-- Upload gambar artikel → **auto-convert ke WebP**
-- Field: judul, slug, excerpt, konten HTML, gambar, meta SEO, tags, FAQ
-- Status: draft / published
-- Tanggal publish
-
-### 7. Manajemen Klien (`/admin/clients`)
-- CRUD logo klien/mitra
-- Upload logo → **auto-convert ke WebP**
-- Field: nama perusahaan, logo, alt text, website URL
-- Tampil sebagai marquee di halaman utama
-
-### 8. Manajemen Testimoni (`/admin/testimonials`)
-- CRUD testimoni pelanggan
-- Upload foto klien → **auto-convert ke WebP**
-- Field: nama, jabatan, perusahaan, foto, isi testimoni, rating
-- Tampil di section testimonial homepage
-
-### 9. Hero Slides (`/admin/hero-slides`)
-- CRUD slide gambar hero di halaman utama
-- Upload gambar → **auto-convert ke WebP**
-- Field: judul, gambar, urutan, status aktif
-- Slider otomatis (Swiper) di hero homepage
-
-### 10. Pengaturan WhatsApp (`/admin/wa-settings`)
-- Multi-nomor WhatsApp yang bisa dikelola
-- Field per nomor: label, nomor WA, template pesan, status aktif, urutan
-- Satu nomor bisa ditandai sebagai **primary**
-- Template pesan mendukung placeholder `[produk]`
-- Tombol WA floating di semua halaman menggunakan nomor primary
-
-### 11. Pengaturan Website (`/admin/settings`)
-- **Identitas**: nama perusahaan, tagline, logo, favicon
-- **Hero**: headline, subheadline, gambar hero utama, gambar hero sekunder, tombol CTA (teks)
-- **About**: heading about, gambar kartu about
-- **Statistik**: tahun berdiri, jumlah klien, kota dilayani, tahun garansi
-- **Kontak**: alamat, telepon, email, jam operasional, koordinat GPS
-- **Sosial Media**: WhatsApp, Instagram, Facebook, YouTube, LinkedIn, TikTok
-- **SEO Global**: meta title, meta description, keywords default
-- **Tracking**: Google Search Console verification tag, kode head/body scripts (GTM, dsb)
-- **Peta Jangkauan**: upload gambar peta Indonesia
-- **Warna Tema**: accent color, main color, text color (override CSS variables)
-- **Breadcrumb Background**: gambar latar halaman dalam
-- **Custom Scripts**: kode HTML custom di head / body (cocok untuk GTM, FB Pixel, dsb)
+### Analitik & Pengaturan Sistem
+9. **Dashboard Analytics (`/admin/analytics`):**
+   - Data trafik internal: Kunjungan halaman, tipe perangkat (Mobile/Desktop), dan sumber rujukan (*Referrer*).
+   - Grafik 30 hari terakhir.
+10. **Pengaturan Website (`/admin/settings`):**
+    - Identitas (Logo, Nama Web, Alamat, Kontak).
+    - SEO Global & Custom Script (Google Tag Manager, Facebook Pixel).
+11. **Pengaturan WhatsApp (`/admin/wa-settings`):** Manajemen multi-nomor CS dan format template otomatis.
+12. **Leads (`/admin/leads`):** Data inquiry yang masuk via form website (non-cart).
 
 ---
 
-## ⚡ Fitur Teknis & Performa
+## ⚡ Optimalisasi Teknis
 
-### Image Processing
-- Semua upload gambar **otomatis dikonversi ke format WebP** menggunakan Intervention Image
-- Resize otomatis sesuai kebutuhan (maks 1920px wide, kualitas 80%)
-- Storage di `storage/app/public/` yang diakses via symlink `public_html/storage/`
-
-### SEO
-- **Component SEO** (`components/seo.blade.php`) terpusat, dipakai semua halaman
-- Open Graph (Facebook, WhatsApp share preview)
-- Twitter Card `summary_large_image`
-- JSON-LD Schema: `LocalBusiness`, `Article`, `FAQ`, `ImageObject`, `BreadcrumbList`
-- Geo meta tag (local SEO Jakarta)
-- Canonical URL (selalu gunakan `APP_URL`, bukan localhost)
-- Sitemap XML otomatis
-- Robots.txt dinamis
-
-### Analytics Internal
-- Tracking kunjungan halaman tanpa Google Analytics (privasi)
-- Middleware `track.pageview` mencatat setiap kunjungan
-- Data tersimpan di tabel `analytics_events`: URL, judul, referrer, user agent, IP, kota, device type
-- Deteksi lokasi via `ip-api.com` (di-cache 24 jam per IP)
-
-### Lead Tracking UTM
-- Form order/kontak mencatat UTM parameter (`utm_source`, `utm_medium`, `utm_campaign`)
-- Data tersimpan bersama lead di database
-
-### Caching
-- Setting website di-cache (`getAllAsArray()` sekali query per halaman)
-- IP location di-cache 24 jam per IP
-- Lokasi IP mesin di-cache 1 jam
-
-### Performance Optimizations
-- **CSS Inline** — `app.css` di-inline langsung ke HTML untuk menghilangkan render-blocking
-- **Font Non-Blocking** — Google Fonts dimuat dengan `media="print"` swap trick
-- **CSS Library Non-Blocking** — Swiper & GLightbox CSS dimuat dengan `media="print"` trick
-- **JS Deferred** — Swiper JS & GLightbox JS menggunakan atribut `defer`
-- **LCP Preload** — `<link rel="preload">` pada gambar Hero pertama untuk mempercepat Largest Contentful Paint
-- **Image Lazy Load** — semua gambar non-hero menggunakan `loading="lazy"`
-- **fetchpriority="high"** — pada gambar Hero utama
-- **Browser Cache** — Expires header untuk gambar (1 tahun), CSS/JS (1 bulan) di `.htaccess`
-- **FollowSymLinks** — diaktifkan di `.htaccess` agar symlink storage bisa diakses
-
-### Aksesibilitas
-- Semua tombol punya `aria-label`
-- Warna tombol memenuhi rasio kontras WCAG AA (min 4.5:1)
-- Gambar punya atribut `alt` dan dimensi eksplisit (`width`, `height`)
+- **Otomatisasi WebP:** Setiap gambar yang diunggah via Admin otomatis dikonversi dan dikompresi ke format `.webp` untuk menghemat bandwidth.
+- **Struktur SEO:** Dilengkapi dengan JSON-LD Schema Generator (`LocalBusiness`, `Product`, `Article`, `FAQPage`), meta tag OpenGraph, dan geo-tags.
+- **Sitemap & Robots:** `/sitemap.xml` dibuat otomatis menyesuaikan konten produk dan artikel terbaru.
+- **Keamanan:** Proteksi terhadap CSRF pada semua form, sanitasi input untuk XSS, dan validasi sisi server.
 
 ---
 
-## 📁 Struktur Direktori Penting
+## 📂 Panduan Deployment
 
-```
-├── app/
-│   ├── Http/
-│   │   ├── Controllers/          # Public controllers
-│   │   │   └── Admin/            # Admin controllers (14 file)
-│   │   └── Middleware/
-│   └── Models/                   # 11 model Eloquent
-├── database/
-│   ├── migrations/               # 20 migration file
-│   └── seeders/
-├── public/
-│   └── css/app.css               # Compiled CSS
-├── public_html/                  # Web root (Hostinger)
-│   ├── .htaccess                 # Caching + FollowSymLinks
-│   ├── index.php
-│   └── storage → ../storage/app/public (symlink)
-├── resources/
-│   ├── css/app.css               # Source CSS (Design System)
-│   ├── js/app.js                 # Source JS
-│   └── views/
-│       ├── components/           # 8 reusable components
-│       │   ├── seo.blade.php     # SEO + JSON-LD
-│       │   ├── navbar.blade.php  # Navigasi (pill design)
-│       │   ├── footer.blade.php  # Footer lengkap
-│       │   ├── lightbox-assets.blade.php
-│       │   ├── order-modal.blade.php  # Modal WhatsApp
-│       │   ├── testimonials.blade.php
-│       │   ├── wa-button.blade.php    # Tombol WA floating
-│       │   └── pagination.blade.php
-│       ├── layouts/
-│       │   ├── app.blade.php     # Layout utama frontend
-│       │   └── admin.blade.php   # Layout admin panel
-│       ├── home/                 # Halaman beranda
-│       ├── services/             # Halaman produk
-│       ├── gallery/              # Halaman galeri
-│       ├── articles/             # Halaman artikel
-│       ├── about/                # Halaman tentang kami
-│       ├── contact/              # Halaman kontak
-│       └── admin/                # Semua tampilan admin (14 modul)
-├── routes/web.php                # Semua route (public + admin)
-└── storage/app/public/           # File upload (gambar, dll)
-    ├── hero_slides/
-    ├── services/
-    ├── gallery/
-    ├── articles/
-    ├── clients/
-    ├── testimonials/
-    └── settings/
-```
+### Syarat Server Minimum
+- PHP >= 8.3
+- MySQL >= 8.0 / MariaDB >= 10.3
+- Composer & NPM (Untuk build assets jika diperlukan)
+- Ekstensi PHP: BCMath, Ctype, Fileinfo, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML, GD/ImageMagick.
 
----
-
-## 🗃 Database Tables
-
-| Tabel | Keterangan |
-|---|---|
-| `users` | Admin login |
-| `settings` | Semua konfigurasi website (key-value) |
-| `services` | Produk/layanan turbine ventilator |
-| `gallery_projects` | Foto proyek instalasi |
-| `articles` | Artikel/blog |
-| `clients` | Logo klien/mitra |
-| `testimonials` | Testimoni pelanggan |
-| `analytics_events` | Data kunjungan halaman internal |
-| `wa_settings` | Multi-nomor WhatsApp |
-| `leads` | Permintaan/inquiry dari form |
-| `hero_slides` | Slide gambar hero homepage |
-| `cache` | Laravel cache table |
-| `jobs` | Laravel queue jobs |
-
----
-
-## 🚀 Setup & Deployment
-
-### Local Development
+### Langkah Instalasi Lokal
 ```bash
-git clone https://github.com/dgtilhammln-cmd/cyclevent.git
-cd cyclevent
+# 1. Clone repositori
+git clone [repository_url] alatrumah-ecommerce
+cd alatrumah-ecommerce
 
-# Install dependencies
+# 2. Install dependensi
 composer install
 npm install
 
-# Setup environment
+# 3. Pengaturan .env
 cp .env.example .env
 php artisan key:generate
 
-# Database
-php artisan migrate
-php artisan db:seed
+# 4. Migrasi Database dan Seeder
+php artisan migrate --seed
 
-# Storage symlink
+# 5. Link Storage (Penting untuk gambar)
 php artisan storage:link
 
-# Run
-composer run dev
-# atau
+# 6. Build assets & jalankan server
+npm run build
 php artisan serve
 ```
 
-### Production (Hostinger SSH)
-```bash
-cd /home/u664715641/domains/cyclevent.hvmdigital.id/
-
-# Pull kode terbaru
-git fetch origin
-git reset --hard origin/main
-
-# Update .htaccess di web root
-cp public/.htaccess public_html/.htaccess
-
-# Symlink storage (jika belum ada)
-php artisan storage:link
-
-# Clear semua cache
-php artisan optimize:clear
-php artisan view:clear
-php artisan route:clear
-php artisan config:clear
-```
-
-### Environment Variables Penting (`.env`)
-```env
-APP_NAME="Cyclevent"
-APP_ENV=production
-APP_URL=https://cyclevent.hvmdigital.id
-
-DB_CONNECTION=mysql
-DB_HOST=...
-DB_DATABASE=...
-DB_USERNAME=...
-DB_PASSWORD=...
-
-FILESYSTEM_DISK=public
-```
+### Tips Server Hosting (cPanel/Hostinger)
+- Pastikan Document Root mengarah ke folder `/public`.
+- Jalankan `php artisan storage:link` (atau gunakan symlink manual di File Manager).
+- Gunakan perintah `php artisan optimize:clear` saat memperbarui file di server untuk menghapus cache konfigurasi dan view.
 
 ---
-
-## 👤 Akses Admin
-
-- **URL Admin:** `https://cyclevent.hvmdigital.id/admin`
-- Kredensial: dikonfigurasi melalui seeder atau langsung di database `users`
-
----
-
-## 📦 Composer Packages
-
-| Package | Versi | Fungsi |
-|---|---|---|
-| `laravel/framework` | ^13.7 | Core Laravel |
-| `intervention/image` | 4.0 | Resize & convert gambar ke WebP |
-| `barryvdh/laravel-dompdf` | ^3.0 | Generate PDF (leads, analytics) |
-| `maatwebsite/excel` | ^3.1 | Export Excel (leads, analytics) |
-| `spatie/laravel-sitemap` | 8.0 | Generate XML Sitemap otomatis |
-
----
-
-## 🔗 URL Penting
-
-| Halaman | URL |
-|---|---|
-| Beranda | `/` |
-| Produk | `/products` |
-| Galeri | `/gallery` |
-| Artikel | `/articles` |
-| Tentang Kami | `/about` |
-| Kontak | `/contact` |
-| Sitemap XML | `/sitemap.xml` |
-| Sitemap HTML | `/sitemap` |
-| Admin Dashboard | `/admin` |
-| Admin Login | `/admin/login` |
-| Admin Analytics | `/admin/analytics` |
-| Admin Leads | `/admin/leads` |
-| Admin Produk | `/admin/services` |
-| Admin Galeri | `/admin/gallery` |
-| Admin Artikel | `/admin/articles` |
-| Admin Klien | `/admin/clients` |
-| Admin Testimoni | `/admin/testimonials` |
-| Admin Hero Slides | `/admin/hero-slides` |
-| Admin WA Settings | `/admin/wa-settings` |
-| Admin Pengaturan | `/admin/settings` |
-
----
-
-*Dibuat oleh HVM Digital — dgtilhammln-cmd*
+*Dikembangkan secara khusus untuk AlatRumah.com*

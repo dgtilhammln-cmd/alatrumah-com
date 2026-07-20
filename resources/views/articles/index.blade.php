@@ -311,7 +311,7 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
         </h1>
         <p class="sv-intro">
             Kumpulan artikel, panduan teknis, dan tips perawatan seputar
-            sistem ventilasi udara untuk industri dan hunian dari tim Cyclevent.
+            sistem ventilasi udara untuk industri dan hunian dari tim Alat Rumah.
         </p>
     </div>
 </section>
@@ -425,7 +425,7 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
     <div class="sv-cta-inner">
         <div class="sv-label" style="margin-bottom:1rem;">Siap Memulai?</div>
         <h2 class="sv-cta-h2">Terapkan Tips Ventilasi<br>di Bangunan Anda</h2>
-        <p class="sv-cta-sub">Tim teknis Cyclevent siap membantu menghitung kebutuhan dan memasang turbine ventilator terbaik untuk proyek Anda.</p>
+        <p class="sv-cta-sub">Tim teknis Alat Rumah siap membantu menghitung kebutuhan dan memasang alat rumah terbaik untuk proyek Anda.</p>
         <div class="sv-cta-btns">
             @php $wa = \App\Models\WaSetting::primary(); @endphp
             @if($wa)

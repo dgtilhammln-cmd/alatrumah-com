@@ -5,7 +5,6 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\AdminAuth;
 use App\Http\Middleware\TrackPageView;
-use App\Http\Middleware\SetLocale;
 
 $builder = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -20,14 +19,18 @@ return $builder->withMiddleware(function (Middleware $middleware): void {
 
         // Register custom middleware aliases
         $middleware->alias([
-            'admin.auth'      => AdminAuth::class,
-            'track.pageview'  => TrackPageView::class,
-            'set.locale'      => SetLocale::class,
+            'admin.auth'     => AdminAuth::class,
+            'track.pageview' => TrackPageView::class,
+        ]);
+        
+        $middleware->validateCsrfTokens(except: [
+            'payment/callback',
         ]);
         
         $middleware->web(append: [
             \App\Http\Middleware\CaptureUtmMiddleware::class,
             \App\Http\Middleware\OptimizeResponseMiddleware::class,
+            \App\Http\Middleware\TrackUserActivity::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

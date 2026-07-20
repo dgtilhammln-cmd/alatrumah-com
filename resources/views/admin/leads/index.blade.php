@@ -1,6 +1,6 @@
 @extends('layouts.admin')
-@section('title','Leads — Request Order')
-@section('page-title','Leads & Request Order')
+@section('title','Laporan Chat CS & Leads')
+@section('page-title','Laporan Chat CS & Leads')
 @section('content')
 
 <style>
@@ -100,7 +100,7 @@
 {{-- Page Header --}}
 <div style="margin-bottom:2rem; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1.5rem;">
     <div>
-        <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">Leads & Request Order</h1>
+        <h1 style="font-size:1.5rem;font-weight:800;color:#1E293B;margin:0 0 .25rem;letter-spacing:-.02em;">Laporan Chat CS & Leads</h1>
         <p style="font-size:.875rem;color:#64748B;margin:0;">Daftar permintaan order dan kontak masuk dari website</p>
     </div>
     
@@ -128,7 +128,7 @@
 {{-- Stat Cards --}}
 <div class="stats-grid">
   @foreach([
-    ['Total Leads', $stats['total'], '#3B82F6', 'rgba(59,130,246,0.1)', 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22,6 12,13 2,6'],
+    ['Total Laporan', $stats['total'], '#3B82F6', 'rgba(59,130,246,0.1)', 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22,6 12,13 2,6'],
     ['Hari Ini', $stats['today'], '#10B981', 'rgba(16,213,129,0.1)', 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
     ['Bulan Ini', $stats['this_month'], '#8B5CF6', 'rgba(139,92,246,0.1)', 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'],
     ['Belum Ditindak', $stats['new'], '#F59E0B', 'rgba(245,158,11,0.1)', 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'],
@@ -149,7 +149,7 @@
 <div class="table-card">
   <div class="table-header-row">
     <div>
-      <div style="font-size:1.125rem;font-weight:800;color:#1E293B;letter-spacing:-.01em;">Semua Leads</div>
+      <div style="font-size:1.125rem;font-weight:800;color:#1E293B;letter-spacing:-.01em;">Semua Chat & Leads</div>
       <div style="font-size:.8rem;color:#64748B;margin-top:.15rem;">{{ $leads->total() }} total entri data</div>
     </div>
   </div>
@@ -248,7 +248,7 @@
             <div style="width:64px;height:64px;background:#F8FAFC;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
                 <svg width="32" height="32" fill="none" stroke="#CBD5E1" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             </div>
-            <div style="font-size:1.125rem;font-weight:700;color:#475569;margin-bottom:0.25rem;">Belum Ada Leads Masuk</div>
+            <div style="font-size:1.125rem;font-weight:700;color:#475569;margin-bottom:0.25rem;">Belum Ada Chat/Leads Masuk</div>
             <p style="font-size:0.875rem;margin:0;">Saat ini belum ada data permintaan order atau pesan yang masuk.</p>
           </td>
         </tr>

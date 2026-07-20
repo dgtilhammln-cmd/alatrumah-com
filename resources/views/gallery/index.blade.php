@@ -387,7 +387,7 @@ body { background-color: var(--c-bg); font-family: var(--font); }
             di Lapangan
         </h1>
         <p class="sv-intro">
-            Dokumentasi proyek pemasangan &amp; instalasi turbine ventilator Cyclevent
+            Dokumentasi proyek pemasangan &amp; instalasi alat rumah Alat Rumah
             di berbagai industri, gudang, dan bangunan komersial seluruh Indonesia.
         </p>
     </div>
@@ -416,7 +416,7 @@ body { background-color: var(--c-bg); font-family: var(--font); }
         @foreach($gallery as $i => $item)
         <a href="{{ $item->image_url }}"
            class="gl-card gallery-item glightbox"
-           data-gallery="cyclevent-gallery"
+           data-gallery="alatrumah-gallery"
            data-title="{{ $item->title }}"
            data-description="{{ $item->client ? 'Klien: '.$item->client : '' }}"
            data-category="{{ $item->category }}"
@@ -517,7 +517,7 @@ body { background-color: var(--c-bg); font-family: var(--font); }
         <div class="sv-label" style="margin-bottom:1rem;">Butuh Instalasi?</div>
         <h2 class="sv-cta-h2">Wujudkan Proyek<br>Ventilasi Anda Bersama Kami</h2>
         <p class="sv-cta-sub">
-            Tim teknis Cyclevent siap membantu merencanakan dan memasang sistem
+            Tim teknis Alat Rumah siap membantu merencanakan dan memasang sistem
             ventilasi terbaik untuk bangunan Anda.
         </p>
         <div class="sv-cta-btns">
