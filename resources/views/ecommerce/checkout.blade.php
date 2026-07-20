@@ -368,22 +368,25 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                 if (data.error) throw new Error(data.error);
                 allProvinces = data;
 
-                // Populate new-address province select
                 const provSelect = document.getElementById('province_select');
+                const savedProvSelect = document.getElementById('saved_province_select');
+
                 if (provSelect) {
                     provSelect.innerHTML = '<option value="">Pilih Provinsi</option>';
                     data.forEach(prov => provSelect.add(new Option(prov.province, prov.province_id)));
                 }
 
-                // Populate saved-address province select
-                const savedProvSelect = document.getElementById('saved_province_select');
                 if (savedProvSelect) {
                     savedProvSelect.innerHTML = '<option value="">Pilih Provinsi</option>';
                     data.forEach(prov => savedProvSelect.add(new Option(prov.province, prov.province_id)));
                 }
+                
+                // Now that provinces are loaded, try to auto-match saved address
+                toggleNewAddress();
             })
             .catch(err => {
                 console.error('Provinces API Error:', err);
+                toggleNewAddress(); // still run to handle display logic
             });
     }
 
@@ -842,7 +845,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
         });
     }
 
-    // Trigger on load
-    toggleNewAddress();
+    // Instead of triggering immediately, we now trigger after provinces are loaded
+    // toggleNewAddress();
 </script>
 @endsection

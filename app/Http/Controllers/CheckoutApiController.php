@@ -229,8 +229,9 @@ class CheckoutApiController extends Controller
             // Return special "manual" response so frontend can handle gracefully
             return response()->json([
                 'manual' => true,
-                'message' => 'Ongkir akan dikonfirmasi oleh admin setelah pesanan masuk.'
-            ], 200);
+                'message' => 'API Ongkir sedang tidak dapat dijangkau. Ongkir dikonfirmasi manual oleh Admin.',
+                'debug_error' => $e->getMessage()
+            ]);
         }
     }
 }
