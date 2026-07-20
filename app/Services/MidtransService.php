@@ -12,10 +12,16 @@ class MidtransService
 {
     public function __construct()
     {
-        Config::$serverKey = config('midtrans.server_key');
-        Config::$isProduction = config('midtrans.is_production');
-        Config::$isSanitized = config('midtrans.is_sanitized');
-        Config::$is3ds = config('midtrans.is_3ds');
+        // Read keys from DB settings (admin panel) with .env fallback
+        $serverKey  = \App\Models\Setting::get('midtrans_server_key')  ?: config('midtrans.server_key');
+        $clientKey  = \App\Models\Setting::get('midtrans_client_key')  ?: config('midtrans.client_key');
+        $isProd     = \App\Models\Setting::get('midtrans_is_production') ?? config('midtrans.is_production');
+
+        Config::$serverKey    = $serverKey;
+        Config::$clientKey    = $clientKey;
+        Config::$isProduction = (bool)(int)$isProd;
+        Config::$isSanitized  = true;
+        Config::$is3ds        = true;
     }
 
     /**

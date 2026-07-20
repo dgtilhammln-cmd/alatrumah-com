@@ -113,10 +113,36 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                             <label class="form-label">Pilih Alamat Tersimpan</label>
                             <select name="address_id" id="address_id_select" class="form-input" onchange="toggleNewAddress()">
                                 @foreach($addresses as $addr)
-                                    <option value="{{ $addr->id }}">{{ $addr->label }} - {{ $addr->receiver_name }} ({{ $addr->full_address }})</option>
+                                    <option value="{{ $addr->id }}"
+                                        data-city="{{ $addr->city }}"
+                                        data-province="{{ $addr->province }}">
+                                        {{ $addr->label }} - {{ $addr->receiver_name }} ({{ $addr->city }}, {{ $addr->province }})
+                                    </option>
                                 @endforeach
                                 <option value="new">+ Tambah Alamat Baru</option>
                             </select>
+                        </div>
+
+                        {{-- City selector for ongkir (shown only when using saved address) --}}
+                        <div id="saved_addr_city_wrap" style="margin-top:0;">
+                            <div style="background:#FFF9EC;border:1px dashed #F59E0B;border-radius:12px;padding:1rem 1.25rem;">
+                                <p style="font-size:0.82rem;font-weight:700;color:#92400E;margin:0 0 0.75rem;">🚚 Pilih Kota Tujuan untuk Kalkulasi Ongkir</p>
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                                    <div>
+                                        <label class="form-label" style="font-size:0.78rem;">Provinsi</label>
+                                        <select id="saved_province_select" class="form-input" style="font-size:0.85rem;">
+                                            <option value="">Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="form-label" style="font-size:0.78rem;">Kota / Kabupaten</label>
+                                        <select id="saved_city_select" class="form-input" style="font-size:0.85rem;">
+                                            <option value="">Pilih Provinsi Dulu</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="saved_city_id" value="">
+                            </div>
                         </div>
                     @else
                         <input type="hidden" name="address_id" id="address_id_select" value="new">
@@ -215,7 +241,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                         Pilih Metode Pengiriman
                     </div>
                     <div class="form-group mb-0">
-                        <label class="form-label">Kurir Ekspedisi</label>
+                        <label class="form-label">Pilih Kurir</label>
                         <select name="courier_name" id="courier_name_select" class="form-input" required>
                             <option value="">Pilih kurir pengiriman...</option>
                             @forelse($couriers ?? [] as $courier)
@@ -226,9 +252,15 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                                 <option value="tiki">TIKI</option>
                             @endforelse
                         </select>
+
+                        <div id="ongkir_loading" style="display:none;font-size:0.82rem;color:#0EA5E9;margin:0.5rem 0;font-weight:600;">⏳ Menghitung ongkir...</div>
+
                         <select name="courier_service" id="courier_service_select" class="form-input mt-2" required>
                             <option value="">Pilih Kota & Kurir Dulu</option>
                         </select>
+                        <p style="font-size:0.78rem;color:#64748B;margin:0.5rem 0 0;">
+                            💡 Ongkir dihitung otomatis setelah Anda memilih kota dan kurir.
+                        </p>
                     </div>
                 </div>
                 @endif
@@ -308,52 +340,97 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
     const subtotal = {{ $summary['subtotal'] }};
-    const totalWeight = {{ $summary['total_weight'] > 0 ? $summary['total_weight'] : 1000 }}; // Default 1kg
+    const totalWeight = {{ $summary['total_weight'] > 0 ? $summary['total_weight'] : 1000 }};
     
     let map = null;
     let marker = null;
     let selectedCost = 0;
+    let allProvinces = [];
 
+    // ────────────────────────────────────────────
+    // INIT
+    // ────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function() {
         toggleNewAddress();
-        loadProvinces();
+        loadProvincesAll();
     });
 
-    function loadProvinces() {
-        const provSelect = document.getElementById('province_select');
-        if(!provSelect) return;
-        provSelect.innerHTML = '<option value="">Loading Provinsi...</option>';
-        
+    // ────────────────────────────────────────────
+    // LOAD PROVINCES — shared for both flows
+    // ────────────────────────────────────────────
+    function loadProvincesAll() {
         fetch(`{{ route('api.rajaongkir.provinces') }}`)
             .then(res => res.json())
             .then(data => {
                 if (data.error) throw new Error(data.error);
-                provSelect.innerHTML = '<option value="">Pilih Provinsi</option>';
-                data.forEach(prov => {
-                    provSelect.add(new Option(prov.province, prov.province_id));
-                });
+                allProvinces = data;
+
+                // Populate new-address province select
+                const provSelect = document.getElementById('province_select');
+                if (provSelect) {
+                    provSelect.innerHTML = '<option value="">Pilih Provinsi</option>';
+                    data.forEach(prov => provSelect.add(new Option(prov.province, prov.province_id)));
+                }
+
+                // Populate saved-address province select
+                const savedProvSelect = document.getElementById('saved_province_select');
+                if (savedProvSelect) {
+                    savedProvSelect.innerHTML = '<option value="">Pilih Provinsi</option>';
+                    data.forEach(prov => savedProvSelect.add(new Option(prov.province, prov.province_id)));
+                }
             })
             .catch(err => {
-                console.error('API Error:', err);
-                provSelect.innerHTML = '<option value="">Gagal memuat provinsi</option>';
+                console.error('Provinces API Error:', err);
             });
     }
 
+    // ────────────────────────────────────────────
+    // NEW-ADDRESS FLOW: Province → City
+    // ────────────────────────────────────────────
     document.getElementById('province_select')?.addEventListener('change', function() {
         const text = this.options[this.selectedIndex].text;
         document.getElementById('province_name').value = this.value ? text : '';
-        loadCities(this.value);
+        loadCitiesInto('city_select', this.value, null);
         resetShipping();
     });
 
-    function loadCities(provId) {
-        const citySelect = document.getElementById('city_select');
-        if(!citySelect) return;
-        if(!provId) {
+    document.getElementById('city_select')?.addEventListener('change', function() {
+        const text = this.options[this.selectedIndex].text;
+        document.getElementById('city_name').value = this.value ? text : '';
+        resetShipping();
+        if (this.value && document.getElementById('courier_name_select')?.value) {
+            checkCost();
+        }
+    });
+
+    // ────────────────────────────────────────────
+    // SAVED-ADDRESS FLOW: Province → City
+    // ────────────────────────────────────────────
+    document.getElementById('saved_province_select')?.addEventListener('change', function() {
+        loadCitiesInto('saved_city_select', this.value, null);
+        document.getElementById('saved_city_id').value = '';
+        resetShipping();
+    });
+
+    document.getElementById('saved_city_select')?.addEventListener('change', function() {
+        document.getElementById('saved_city_id').value = this.value;
+        resetShipping();
+        if (this.value && document.getElementById('courier_name_select')?.value) {
+            checkCost();
+        }
+    });
+
+    // ────────────────────────────────────────────
+    // SHARED: Load cities into any select
+    // ────────────────────────────────────────────
+    function loadCitiesInto(selectId, provId, preselectedCityId) {
+        const citySelect = document.getElementById(selectId);
+        if (!citySelect) return;
+        if (!provId) {
             citySelect.innerHTML = '<option value="">Pilih Provinsi Dulu</option>';
             return;
         }
-        citySelect.innerHTML = '<option value="">Loading Kota/Kabupaten...</option>';
+        citySelect.innerHTML = '<option value="">Memuat kota...</option>';
         fetch(`{{ url('/api/rajaongkir/cities') }}/${provId}`)
             .then(res => res.json())
             .then(data => {
@@ -361,32 +438,46 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                 citySelect.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
                 data.forEach(city => {
                     const type = city.type === 'Kabupaten' ? 'Kab.' : 'Kota';
-                    citySelect.add(new Option(`${type} ${city.city_name}`, city.city_id));
+                    const opt = new Option(`${type} ${city.city_name}`, city.city_id);
+                    citySelect.add(opt);
                 });
+                // Auto-select if preselected
+                if (preselectedCityId) {
+                    citySelect.value = preselectedCityId;
+                    citySelect.dispatchEvent(new Event('change'));
+                }
             })
             .catch(err => {
                 citySelect.innerHTML = '<option value="">Gagal memuat kota</option>';
             });
     }
 
-    document.getElementById('city_select')?.addEventListener('change', function() {
-        const text = this.options[this.selectedIndex].text;
-        document.getElementById('city_name').value = this.value ? text : '';
-        resetShipping();
-        if(this.value && document.getElementById('courier_name_select').value) {
-            checkCost();
-        }
-    });
-
+    // ────────────────────────────────────────────
+    // KURIR: Same trigger for both flows
+    // ────────────────────────────────────────────
     document.getElementById('courier_name_select')?.addEventListener('change', function() {
-        const city = document.getElementById('city_select')?.value;
-        if (city && this.value) {
+        const cityId = getActiveCityId();
+        if (cityId && this.value) {
             checkCost();
         } else {
             resetShipping();
         }
     });
 
+    function getActiveCityId() {
+        const addrSelect = document.getElementById('address_id_select');
+        if (addrSelect && addrSelect.value && addrSelect.value !== 'new') {
+            // Using saved address → use saved_city_id
+            return document.getElementById('saved_city_id')?.value || '';
+        } else {
+            // Using new address → use city_select
+            return document.getElementById('city_select')?.value || '';
+        }
+    }
+
+    // ────────────────────────────────────────────
+    // SHIPPING COST CALCULATION
+    // ────────────────────────────────────────────
     function resetShipping() {
         const serviceSelect = document.getElementById('courier_service_select');
         if (serviceSelect) {
@@ -397,48 +488,55 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
     }
 
     function checkCost() {
-        const cityId = document.getElementById('city_select').value;
-        const courier = document.getElementById('courier_name_select').value;
+        const cityId  = getActiveCityId();
+        const courier = document.getElementById('courier_name_select')?.value;
         const serviceSelect = document.getElementById('courier_service_select');
+        const loadingEl = document.getElementById('ongkir_loading');
 
         if (!cityId || !courier) return;
 
+        if (loadingEl) loadingEl.style.display = 'block';
         serviceSelect.innerHTML = '<option value="">Menghitung ongkir...</option>';
+        serviceSelect.disabled = true;
         
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+                       || '{{ csrf_token() }}';
 
         fetch(`{{ route('api.rajaongkir.cost') }}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken || '{{ csrf_token() }}'
+                'X-CSRF-TOKEN': csrfToken
             },
             body: JSON.stringify({
-                destination: cityId,
+                destination: parseInt(cityId),
                 weight: totalWeight,
                 courier: courier
             })
         })
         .then(res => res.json())
         .then(data => {
+            if (loadingEl) loadingEl.style.display = 'none';
+            serviceSelect.disabled = false;
             if (data.error) throw new Error(data.error);
             serviceSelect.innerHTML = '<option value="">Pilih Layanan Pengiriman</option>';
+            if (!data.length) throw new Error('Tidak ada layanan tersedia untuk rute ini.');
             data.forEach(service => {
-                const cost = service.cost[0].value;
-                const etd = service.cost[0].etd ? ` (${service.cost[0].etd} hari)` : '';
-                const formatCost = new Intl.NumberFormat('id-ID').format(cost);
-                
-                const option = document.createElement('option');
-                option.value = service.service;
-                option.dataset.cost = cost;
-                option.text = `${service.service} - Rp ${formatCost}${etd}`;
-                serviceSelect.appendChild(option);
+                const cost = service.cost[0]?.value ?? 0;
+                const etd  = service.cost[0]?.etd  ? ` (${service.cost[0].etd} hari)` : '';
+                const fmt  = new Intl.NumberFormat('id-ID').format(cost);
+                const opt  = document.createElement('option');
+                opt.value  = service.service;
+                opt.dataset.cost = cost;
+                opt.text   = `${service.service} — Rp ${fmt}${etd}`;
+                serviceSelect.appendChild(opt);
             });
         })
         .catch(err => {
-            console.error(err);
-            serviceSelect.innerHTML = '<option value="">Gagal menghitung ongkir/Kurir tidak tersedia</option>';
-            Swal.fire('Gagal', err.message || 'Gagal menghitung ongkir. Coba kurir lain.', 'error');
+            if (loadingEl) loadingEl.style.display = 'none';
+            serviceSelect.disabled = false;
+            serviceSelect.innerHTML = '<option value="">Gagal menghitung ongkir / Kurir tidak tersedia</option>';
+            console.error('Ongkir Error:', err);
         });
     }
 
@@ -454,11 +552,14 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
     });
 
     function updateTotal() {
-        document.getElementById('shipping_cost_input').value = selectedCost;
+        const input = document.getElementById('shipping_cost_input');
+        if (input) input.value = selectedCost;
         
         const ongkirRowVal = document.getElementById('ongkir-row-val');
         if (ongkirRowVal) {
-            ongkirRowVal.innerText = selectedCost > 0 ? `Rp ${new Intl.NumberFormat('id-ID').format(selectedCost)}` : 'Dikalkulasi Admin';
+            ongkirRowVal.innerText = selectedCost > 0
+                ? `Rp ${new Intl.NumberFormat('id-ID').format(selectedCost)}`
+                : 'Pilih kurir & layanan';
             ongkirRowVal.style.color = selectedCost > 0 ? '#1E293B' : '#0EA5E9';
         }
 
@@ -590,46 +691,15 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
         }
     }
 
-    function toggleNewAddress() {
-        const select = document.getElementById('address_id_select');
-        const form = document.getElementById('new_address_form');
-        if (!select || !form) return;
 
-        const isNew = select.value === 'new';
-        form.style.display = isNew ? 'block' : 'none';
-        
-        // Toggle required attributes
-        const reqEls = ['new_addr_receiver','new_addr_phone','new_addr_postal','new_addr_full'];
-        const selectEls = ['province_select', 'city_select', 'district_name'];
-
-        if(isNew) {
-            reqEls.forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.setAttribute('required', 'required');
-            });
-            selectEls.forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.setAttribute('required', 'required');
-            });
-        } else {
-            reqEls.forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.removeAttribute('required');
-            });
-            selectEls.forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.removeAttribute('required');
-            });
-        }
-    }
 
     function prepareSubmit(e) {
         const select = document.getElementById('address_id_select');
-        if(select && select.value === 'new') {
+        if (select && select.value === 'new') {
             const provName = document.getElementById('province_name');
             const cityName = document.getElementById('city_name');
             const distName = document.getElementById('district_name');
-            if(!provName.value || !cityName.value || !distName.value) {
+            if (!provName.value || !cityName.value || !distName.value) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Data Belum Lengkap',
@@ -640,21 +710,59 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                 e.preventDefault();
                 return;
             }
-        }
-
-        if (document.getElementById('courier_name_select')) {
-            const service = document.getElementById('courier_service_select').value;
-            if (!service) {
+        } else if (select && select.value !== 'new') {
+            // Saved address — check city id is selected
+            const savedCityId = document.getElementById('saved_city_id')?.value;
+            if (!savedCityId) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Pilih Layanan Pengiriman',
-                    text: 'Anda belum memilih layanan pengiriman (cth: REG/YES).',
+                    title: 'Pilih Kota Tujuan',
+                    text: 'Mohon pilih Provinsi dan Kota di bagian ongkir agar biaya pengiriman dapat dihitung.',
                     confirmButtonColor: '#0F172A'
                 });
                 e.preventDefault();
                 return;
             }
         }
+
+        if (document.getElementById('courier_name_select')) {
+            const service = document.getElementById('courier_service_select')?.value;
+            if (!service) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Pilih Layanan Pengiriman',
+                    text: 'Anda belum memilih layanan pengiriman (contoh: REG / YES).',
+                    confirmButtonColor: '#0F172A'
+                });
+                e.preventDefault();
+                return;
+            }
+        }
+    }
+
+    function toggleNewAddress() {
+        const select = document.getElementById('address_id_select');
+        const form   = document.getElementById('new_address_form');
+        const savedWrap = document.getElementById('saved_addr_city_wrap');
+        if (!select) return;
+
+        const isNew = select.value === 'new';
+
+        if (form) form.style.display = isNew ? 'block' : 'none';
+        if (savedWrap) savedWrap.style.display = isNew ? 'none' : 'block';
+
+        // Toggle required on new-address fields
+        const reqEls    = ['new_addr_receiver','new_addr_phone','new_addr_postal','new_addr_full'];
+        const selectEls = ['province_select','city_select','district_name'];
+        [reqEls, selectEls].flat().forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                isNew ? el.setAttribute('required','required') : el.removeAttribute('required');
+            }
+        });
+
+        // Reset shipping when switching address
+        resetShipping();
     }
 </script>
 @endsection
