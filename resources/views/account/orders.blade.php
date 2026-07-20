@@ -22,23 +22,18 @@
                     </thead>
                     <tbody>
                         @foreach($orders as $order)
-                        <tr>
+                        <tr style="cursor:pointer; transition:background 0.2s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'" onclick="window.location.href='{{ route('account.orders.show', $order->id) }}'">
                             <td style="font-weight:700; color:#0f172a;">#{{ $order->order_number ?? $order->id }}</td>
-                            <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d M Y') }}</td>
-                            <td style="color:#64748B;">{{ $order->items_count ?? '-' }} item</td>
-                            <td style="font-weight:700;">Rp {{ number_format($order->grand_total, 0, ',', '.') }}</td>
+                            <td>{{ $order->created_at->format('d M Y') }}</td>
+                            <td style="color:#64748B;">{{ $order->items->count() ?? '-' }} item</td>
+                            <td style="font-weight:700;">Rp {{ number_format($order->total, 0, ',', '.') }}</td>
                             <td>
-                                @php $s = $order->status; @endphp
-                                <span class="order-badge badge-{{ $s }}">
-                                    {{ match($s) {
-                                        'pending'    => 'Menunggu',
-                                        'processing' => 'Diproses',
-                                        'shipped'    => 'Dikirim',
-                                        'completed'  => 'Selesai',
-                                        'cancelled'  => 'Dibatalkan',
-                                        default      => ucfirst($s),
-                                    } }}
+                                <span class="order-badge" style="background-color: var(--c-surface); color: {{ $order->status->color() === 'yellow' ? '#D97706' : ($order->status->color() === 'green' ? '#059669' : ($order->status->color() === 'blue' ? '#2563EB' : '#475569')) }}; border: 1px solid currentColor; font-size:0.75rem;">
+                                    {{ $order->status->label() }}
                                 </span>
+                            </td>
+                            <td>
+                                <a href="{{ route('account.orders.show', $order->id) }}" style="color:#0EA5E9; font-weight:600; text-decoration:none; font-size:0.85rem;">Detail &rarr;</a>
                             </td>
                         </tr>
                         @endforeach

@@ -64,8 +64,60 @@ class AccountController extends Controller
     public function orders()
     {
         $user   = Auth::user();
-        $orders = $user->orders()->latest()->paginate(10);
+        $orders = $user->orders()->with(['items.product', 'payment', 'shipment'])->latest()->paginate(10);
         return view('account.orders', compact('user', 'orders'));
+    }
+
+    // ── Order Detail (with tracking) ──
+    public function showOrder(\App\Models\Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+        $order->load(['items.product', 'payment', 'shipment', 'couponUsage']);
+
+        // If there is a tracking number, fetch live tracking from RajaOngkir
+        $tracking = null;
+        if ($order->shipment && $order->shipment->tracking_number && $order->shipment->courier_name) {
+            $apiKey  = \App\Models\Setting::get('rajaongkir_api_key');
+            $apiType = \App\Models\Setting::get('rajaongkir_type', 'starter');
+            if ($apiKey) {
+                try {
+                    $baseUrl = match($apiType) {
+                        'pro'   => 'https://pro.rajaongkir.com/api',
+                        'basic' => 'https://rajaongkir.com/api',
+                        default => 'https://api.rajaongkir.com/starter',
+                    };
+                    $response = \Illuminate\Support\Facades\Http::withoutVerifying()
+                        ->timeout(10)
+                        ->withHeaders(['key' => $apiKey, 'Content-Type' => 'application/x-www-form-urlencoded'])
+                        ->asForm()
+                        ->post("{$baseUrl}/waybill", [
+                            'waybill' => $order->shipment->tracking_number,
+                            'courier' => strtolower($order->shipment->courier_name),
+                        ]);
+                    $json = $response->json();
+                    $ro   = $json['rajaongkir'] ?? null;
+                    if ($ro && ($ro['status']['code'] ?? 0) == 200) {
+                        $result   = $ro['result'] ?? [];
+                        $manifest = $result['manifest'] ?? [];
+                        $delivery = $result['delivery_status'] ?? [];
+                        $tracking = [
+                            'status'   => $delivery['status'] ?? '',
+                            'manifest' => array_map(fn($m) => [
+                                'date'  => ($m['manifest_date'] ?? '') . ' ' . ($m['manifest_time'] ?? ''),
+                                'desc'  => $m['manifest_description'] ?? '-',
+                                'city'  => $m['city_name'] ?? '',
+                            ], $manifest),
+                        ];
+                    }
+                } catch (\Throwable $e) {
+                    \Log::warning('Order tracking fetch failed: ' . $e->getMessage());
+                }
+            }
+        }
+
+        return view('account.order-detail', compact('order', 'tracking'));
     }
 
     // ── Addresses ──

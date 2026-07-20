@@ -130,6 +130,7 @@ Route::middleware(['auth'])->prefix('akun')->name('account.')->group(function ()
     Route::get('/wishlist',  [AccountController::class, 'wishlist'])->name('wishlist');
     Route::post('/wishlist/toggle', [AccountController::class, 'toggleWishlist'])->name('wishlist.toggle');
     Route::get('/pesanan',   [AccountController::class, 'orders'])->name('orders');
+    Route::get('/pesanan/{order}', [AccountController::class, 'showOrder'])->name('orders.show');
     Route::get('/alamat',    [AccountController::class, 'addresses'])->name('addresses');
     Route::post('/alamat',   [AccountController::class, 'storeAddress'])->name('addresses.store');
     Route::delete('/alamat/{address}', [AccountController::class, 'destroyAddress'])->name('addresses.destroy');
@@ -320,5 +321,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/orders/{order}',                           [\App\Http\Controllers\Admin\AdminOrderController::class, 'show'])->name('admin.orders.show');
         Route::post('/orders/{order}/status',                   [\App\Http\Controllers\Admin\AdminOrderController::class, 'updateStatus'])->name('admin.orders.status');
         Route::post('/orders/{order}/tracking',                 [\App\Http\Controllers\Admin\AdminOrderController::class, 'updateTracking'])->name('admin.orders.tracking');
+        Route::post('/orders/{order}/shipping-cost',            [\App\Http\Controllers\Admin\AdminOrderController::class, 'updateShippingCost'])->name('admin.orders.shipping_cost');
     });
 });

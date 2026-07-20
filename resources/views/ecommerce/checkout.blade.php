@@ -267,10 +267,20 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                         @endforeach
                     </div>
 
+                    {{-- shipping_cost: 0 by default, admin will adjust later --}}
+                    <input type="hidden" name="shipping_cost" value="0" id="shipping_cost_input">
+
                     <div class="summary-row">
                         <span>Total Harga Barang</span>
                         <span>Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
                     </div>
+
+                    @if($summary['has_physical_product'])
+                    <div class="summary-row" id="ongkir-row">
+                        <span>Ongkos Kirim</span>
+                        <span style="color:#0EA5E9; font-weight:600; font-size:0.8rem;">Dikalkulasi Admin</span>
+                    </div>
+                    @endif
 
                     <div class="form-group" style="margin-top:1.5rem;">
                         <label class="form-label">Kode Kupon (Opsional)</label>
@@ -281,6 +291,13 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                         <span>Total Belanja</span>
                         <span>Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
                     </div>
+
+                    @if($summary['has_physical_product'])
+                    <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:0.75rem 1rem;margin-top:0.75rem;font-size:0.8rem;color:#92400E;display:flex;gap:0.5rem;align-items:flex-start;">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span>Ongkos kirim akan dikalkulasi oleh admin berdasarkan lokasi Anda dan dikonfirmasi via <strong>WhatsApp</strong> sebelum pesanan diproses.</span>
+                    </div>
+                    @endif
 
                     <button type="submit" class="btn-pay" onclick="prepareSubmit(event)">Pilih Pembayaran</button>
                     

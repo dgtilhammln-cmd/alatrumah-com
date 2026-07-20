@@ -212,6 +212,27 @@
         {{-- Right Col: Status Update & Info --}}
         <div>
             
+            {{-- Shipping Cost Update Form --}}
+            @if($order->status === \App\Enums\OrderStatus::Pending)
+            <div class="od-card">
+                <div class="od-card-title">
+                    <svg width="24" height="24" fill="none" stroke="#0EA5E9" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Kalkulasi Ongkos Kirim
+                </div>
+                <div style="background:#EFF6FF; padding:1rem; border-radius:10px; font-size:.8rem; color:#1E3A8A; margin-bottom:1.25rem;">
+                    Pesanan ini belum dibayar dan ongkos kirim saat ini adalah Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}. Update ongkir di sini sebelum pembeli menyelesaikan pembayaran.
+                </div>
+                <form action="{{ route('admin.orders.shipping_cost', $order) }}" method="POST">
+                    @csrf
+                    <div class="od-form-group">
+                        <label class="od-label">Nominal Ongkos Kirim (Rp)</label>
+                        <input type="number" name="shipping_cost" class="od-input" placeholder="Contoh: 15000" value="{{ $order->shipping_cost > 0 ? $order->shipping_cost : '' }}" required min="0">
+                    </div>
+                    <button type="submit" class="od-btn" style="background:#0EA5E9;box-shadow:0 4px 12px rgba(14,165,233,0.2);">Simpan Ongkir Baru</button>
+                </form>
+            </div>
+            @endif
+
             {{-- Status Update Form --}}
             <div class="od-card">
                 <div class="od-card-title">

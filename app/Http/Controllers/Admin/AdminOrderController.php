@@ -116,6 +116,29 @@ class AdminOrderController extends Controller
         return back()->with('success', 'Nomor resi berhasil disimpan.');
     }
 
+    public function updateShippingCost(Request $request, Order $order)
+    {
+        $request->validate([
+            'shipping_cost' => 'required|numeric|min:0',
+            'courier_name'  => 'nullable|string|max:100',
+        ]);
+
+        $newShippingCost = (float) $request->shipping_cost;
+        $newTotal = ($order->subtotal - $order->discount) + $newShippingCost;
+
+        $order->update([
+            'shipping_cost' => $newShippingCost,
+            'total'         => max(0, $newTotal),
+        ]);
+
+        // Update Midtrans payment amount if still pending
+        if ($order->payment && $order->payment->status->value === 'pending') {
+            $order->payment->update(['amount' => max(0, $newTotal)]);
+        }
+
+        return back()->with('success', 'Ongkos kirim berhasil diperbarui. Total pesanan: Rp ' . number_format($newTotal, 0, ',', '.'));
+    }
+
     public function export(Request $request)
     {
         $start = $request->get('start_date', now()->subDays(30)->format('Y-m-d'));
