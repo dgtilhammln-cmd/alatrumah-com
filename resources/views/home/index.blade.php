@@ -1835,9 +1835,19 @@
 
 @include('components.lightbox-assets')
 
-<script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    // Load Swiper lazily after page is interactive — does NOT block LCP
+    function loadSwiper(cb) {
+        if (window.Swiper) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
+        s.onload = cb;
+        document.head.appendChild(s);
+    }
+    (window.requestIdleCallback || function(fn){ setTimeout(fn, 200); })(function() {
+        loadSwiper(initSwipers);
+    });
+    function initSwipers() {
         // ── Hero Slider with dynamic oval bg color ──
         var heroOvalBg = document.getElementById('heroOvalBg');
         if(document.querySelector('.hero-swiper')) {
@@ -1898,7 +1908,7 @@
                 },
             });
         });
-    });
+    } // end initSwipers
     // Flash Sale Timer Logic
     document.addEventListener('DOMContentLoaded', function() {
         const timers = document.querySelectorAll('.cv-flash-timer');
