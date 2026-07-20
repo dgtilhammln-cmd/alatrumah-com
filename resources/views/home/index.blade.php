@@ -1090,12 +1090,12 @@
     </section>
 
     {{-- ════ VISIBLE H1 & SEO SECTION ════ --}}
-    <div style="background:#FFFFFF; padding:2rem 1.5rem; text-align:center; border-bottom:1px solid #F1F5F9;">
+    <div style="background:#FFFFFF; padding:1.25rem 1.5rem 0.5rem; text-align:center; border-bottom:1px solid #F1F5F9;">
         <div style="max-width:1000px; margin:0 auto;">
-            <h1 style="font-size:1.6rem; font-weight:800; color:#1E293B; margin:0 0 0.5rem 0; font-family:'Montserrat', sans-serif;">
+            <h1 style="font-size:1.4rem; font-weight:600; color:#1E293B; margin:0 0 0.25rem 0; font-family:'Montserrat', sans-serif;">
                 AlatRumah.com — Toko Alat Rumah Tangga Terlengkap di Surabaya
             </h1>
-            <p style="font-size:0.95rem; color:#64748B; line-height:1.6; margin:0; font-family:'Montserrat', sans-serif;">
+            <p style="font-size:0.9rem; color:#64748B; line-height:1.5; margin:0; font-family:'Montserrat', sans-serif;">
                 Temukan ribuan produk berkualitas dari merek-merek ternama dengan harga terbaik dan pengiriman cepat ke seluruh Indonesia.
             </p>
         </div>
@@ -1124,8 +1124,8 @@
     {{-- ════ CATEGORY SWIPER ════ --}}
     @if($categoryItems->count())
     <section class="cv-cats-section" aria-label="Kategori Produk">
-        <div class="cv-cats-inner" style="flex-direction: column; align-items: flex-start; padding: 1.5rem 1.5rem 0.5rem;">
-            <h2 style="font-size:1.25rem; font-weight:800; color:#1E293B; margin:0 0 0.5rem 0; font-family:'Montserrat', sans-serif;">
+        <div class="cv-cats-inner" style="flex-direction: column; align-items: flex-start; padding: 1rem 1.5rem 0.25rem;">
+            <h2 style="font-size:1.15rem; font-weight:600; color:#1E293B; margin:0 0 0.25rem 0; font-family:'Montserrat', sans-serif;">
                 Kategori Pilihan
             </h2>
             <div class="swiper cats-swiper hidden md:block" id="catsSwiperDesktop" style="width: 100%;">
@@ -1280,9 +1280,8 @@
     .cv-promo-title {
         font-family: 'Montserrat', sans-serif;
         font-size: 1.125rem;
-        font-weight: 800;
+        font-weight: 600;
         color: var(--text, #1E293B);
-        letter-spacing: -.02em;
         line-height: 1.2;
     }
     .cv-promo-subtitle {
@@ -1388,7 +1387,7 @@
         .cv-promo-nav { display: none !important; }
         
         .cv-promo-header { align-items: center; margin-bottom: 0.5rem; padding-right: 1rem; }
-        .cv-promo-title { font-size: 1rem; font-weight: 800; }
+        .cv-promo-title { font-size: 1rem; font-weight: 600; }
         .cv-promo-title.is-flash { 
             font-style: italic; 
             text-transform: uppercase; 
