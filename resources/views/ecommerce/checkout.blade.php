@@ -447,8 +447,8 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                     citySelect.dispatchEvent(new Event('change'));
                 }
             })
-            .catch(err => {
-                citySelect.innerHTML = '<option value="">Gagal memuat kota</option>';
+            .then(undefined, err => {
+                citySelect.innerHTML = '<option value="">Gagal memuat kota — coba lagi</option>';
             });
     }
 
@@ -518,7 +518,18 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
         .then(data => {
             if (loadingEl) loadingEl.style.display = 'none';
             serviceSelect.disabled = false;
+
+            // Special: API unreachable, admin will confirm cost manually
+            if (data.manual) {
+                serviceSelect.removeAttribute('required');
+                serviceSelect.innerHTML = '<option value="manual" data-cost="0" selected>Ongkir dikonfirmasi Admin setelah pesan</option>';
+                selectedCost = 0;
+                updateTotal('manual');
+                return;
+            }
+
             if (data.error) throw new Error(data.error);
+            serviceSelect.setAttribute('required', 'required');
             serviceSelect.innerHTML = '<option value="">Pilih Layanan Pengiriman</option>';
             if (!data.length) throw new Error('Tidak ada layanan tersedia untuk rute ini.');
             data.forEach(service => {
@@ -535,15 +546,18 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
         .catch(err => {
             if (loadingEl) loadingEl.style.display = 'none';
             serviceSelect.disabled = false;
-            serviceSelect.innerHTML = '<option value="">Gagal menghitung ongkir / Kurir tidak tersedia</option>';
+            serviceSelect.removeAttribute('required');
+            serviceSelect.innerHTML = '<option value="manual" data-cost="0" selected>Ongkir dikonfirmasi Admin setelah pesan</option>';
+            selectedCost = 0;
+            updateTotal('manual');
             console.error('Ongkir Error:', err);
         });
     }
 
     document.getElementById('courier_service_select')?.addEventListener('change', function() {
-        if (!this.value) {
+        if (!this.value || this.value === 'manual') {
             selectedCost = 0;
-            updateTotal();
+            updateTotal(this.value === 'manual' ? 'manual' : '');
             return;
         }
         const option = this.options[this.selectedIndex];
@@ -551,16 +565,21 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
         updateTotal();
     });
 
-    function updateTotal() {
+    function updateTotal(mode) {
         const input = document.getElementById('shipping_cost_input');
         if (input) input.value = selectedCost;
         
         const ongkirRowVal = document.getElementById('ongkir-row-val');
         if (ongkirRowVal) {
-            ongkirRowVal.innerText = selectedCost > 0
-                ? `Rp ${new Intl.NumberFormat('id-ID').format(selectedCost)}`
-                : 'Pilih kurir & layanan';
-            ongkirRowVal.style.color = selectedCost > 0 ? '#1E293B' : '#0EA5E9';
+            if (mode === 'manual') {
+                ongkirRowVal.innerText = 'Dikonfirmasi Admin';
+                ongkirRowVal.style.color = '#F59E0B';
+            } else {
+                ongkirRowVal.innerText = selectedCost > 0
+                    ? `Rp ${new Intl.NumberFormat('id-ID').format(selectedCost)}`
+                    : 'Pilih kurir & layanan';
+                ongkirRowVal.style.color = selectedCost > 0 ? '#1E293B' : '#0EA5E9';
+            }
         }
 
         const totalRowVal = document.getElementById('total-row-val');
@@ -727,6 +746,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
 
         if (document.getElementById('courier_name_select')) {
             const service = document.getElementById('courier_service_select')?.value;
+            // Allow 'manual' value (when ongkir API is unreachable, admin confirms cost)
             if (!service) {
                 Swal.fire({
                     icon: 'warning',
