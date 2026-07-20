@@ -263,5 +263,58 @@
         </div>
     </div>
 
+    {{-- Mobile Bottom Navbar (Capsule Style) --}}
+    <style>
+    .mobile-bottom-nav { display: none; }
+    @media (max-width: 768px) {
+        .fc-widget { bottom: 90px !important; } /* Move chat widget up */
+        .mobile-bottom-nav {
+            display: flex; position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 400px; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-radius: 999px; box-shadow: 0 10px 40px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05);
+            padding: 0.5rem 1rem; justify-content: space-between; align-items: center;
+            z-index: 99999; border: 1px solid rgba(255,255,255,0.6);
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; color: #64748B; font-size: 0.65rem; font-weight: 600; gap: 4px;
+            padding: 0.25rem 0.5rem; transition: all 0.3s ease; position: relative;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .nav-item.active { color: #0EA5E9; }
+        .nav-item svg { width: 22px; height: 22px; stroke-width: 2; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .nav-item.active svg { transform: translateY(-3px); stroke-width: 2.5; }
+        .nav-badge {
+            position: absolute; top: -2px; right: 2px; background: #EF4444; color: white;
+            font-size: 0.55rem; font-weight: bold; padding: 0.1rem 0.3rem; border-radius: 999px;
+            min-width: 14px; text-align: center; border: 1.5px solid white; line-height: 1;
+        }
+    }
+    </style>
+
+    <div class="mobile-bottom-nav">
+        <a href="{{ route('home') }}" class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Beranda</span>
+        </a>
+        <a href="{{ route('products') }}" class="nav-item {{ request()->routeIs('products*') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>Kategori</span>
+        </a>
+        <a href="{{ route('cart.index') }}" class="nav-item {{ request()->routeIs('cart*') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <span>Keranjang</span>
+            @php $cartCount = session('cart') ? count(session('cart')) : 0; @endphp
+            @if($cartCount > 0)
+                <span class="nav-badge">{{ $cartCount }}</span>
+            @endif
+        </a>
+        <a href="{{ route('account.dashboard') }}" class="nav-item {{ request()->routeIs('account*') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Akun</span>
+        </a>
+    </div>
+
 </body>
 </html>

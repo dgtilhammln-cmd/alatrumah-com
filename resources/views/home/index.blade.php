@@ -35,6 +35,9 @@
             0%, 100% { transform: scale(1); opacity: 1; }
             50% { transform: scale(0.95); opacity: 0.8; }
         }
+        @media (max-width: 768px) {
+            .hide-on-mobile { display: none !important; }
+        }
     </style>
     @endpush
 
@@ -1137,7 +1140,7 @@
     </section>
 
     {{-- ════ VISIBLE H1 & SEO SECTION ════ --}}
-    <div class="hidden md:block" style="background:#FFFFFF; padding:1.25rem 1.5rem 0.5rem; text-align:center; border-bottom:1px solid #F1F5F9;">
+    <div class="hidden md:block hide-on-mobile" style="background:#FFFFFF; padding:1.25rem 1.5rem 0.5rem; text-align:center; border-bottom:1px solid #F1F5F9;">
         <div style="max-width:1000px; margin:0 auto;">
             <h1 style="font-size:1.4rem; font-weight:600; color:#1E293B; margin:0 0 0.25rem 0; font-family:'Montserrat', sans-serif;">
                 AlatRumah.com — Toko Alat Rumah Tangga Terlengkap di Surabaya
