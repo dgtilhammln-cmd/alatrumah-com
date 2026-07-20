@@ -15,6 +15,51 @@
       Eksportir Arang Briket Premium | Surabaya, Indonesia
     ════════════════════════════════════════════════ --}}
 
+    {{-- ════ APP-LIKE PRELOADER ════ --}}
+    @push('styles')
+    <style>
+        #cv-app-preloader {
+            position: fixed; inset: 0; z-index: 999999;
+            background: #ffffff;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        #cv-app-preloader.fade-out { opacity: 0; visibility: hidden; }
+        .preloader-logo-capsule {
+            height: 48px; width: auto;
+            animation: preloaderPulse 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+        @keyframes preloaderPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.95); opacity: 0.8; }
+        }
+    </style>
+    @endpush
+
+    <div id="cv-app-preloader">
+        @php $logo = \App\Models\Setting::get('logo'); @endphp
+        @if($logo)
+            <img src="{{ asset('storage/'.$logo) }}" alt="Loading" class="preloader-logo-capsule">
+        @else
+            <span style="font-weight:700;color:#0EA5E9;font-size:1.5rem;font-family:'Montserrat',sans-serif;animation:preloaderPulse 1.5s infinite;">AlatRumah</span>
+        @endif
+    </div>
+    
+    @push('scripts')
+    <script>
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('cv-app-preloader');
+            if(preloader) {
+                setTimeout(() => {
+                    preloader.classList.add('fade-out');
+                    setTimeout(() => { preloader.remove(); }, 500);
+                }, 200);
+            }
+        });
+    </script>
+    @endpush
+
+
     <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" /></noscript>
