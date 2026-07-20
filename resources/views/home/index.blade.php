@@ -27,6 +27,8 @@
         #cv-app-preloader.fade-out { opacity: 0; visibility: hidden; }
         .preloader-logo-capsule {
             height: 48px; width: auto;
+            border-radius: 999px; /* Rounded pill effect */
+            overflow: hidden;
             animation: preloaderPulse 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
         @keyframes preloaderPulse {
@@ -888,7 +890,7 @@
     /* ── USP BAR (Premium Style) ── */
     .cv-usp-bar {
         background: #ffffff;
-        padding: 1rem 0;
+        padding: 1rem 0 0.5rem;
         position: relative;
         z-index: 10;
     }
@@ -944,7 +946,7 @@
     /* ── CATEGORY SWIPER (Premium Style) ── */
     .cv-cats-section {
         background: #ffffff;
-        padding: 3rem 0;
+        padding: 1.25rem 0 2rem;
     }
     .cv-cats-inner {
         max-width: 1200px;
@@ -1135,7 +1137,7 @@
     </section>
 
     {{-- ════ VISIBLE H1 & SEO SECTION ════ --}}
-    <div style="background:#FFFFFF; padding:1.25rem 1.5rem 0.5rem; text-align:center; border-bottom:1px solid #F1F5F9;">
+    <div class="hidden md:block" style="background:#FFFFFF; padding:1.25rem 1.5rem 0.5rem; text-align:center; border-bottom:1px solid #F1F5F9;">
         <div style="max-width:1000px; margin:0 auto;">
             <h1 style="font-size:1.4rem; font-weight:600; color:#1E293B; margin:0 0 0.25rem 0; font-family:'Montserrat', sans-serif;">
                 AlatRumah.com — Toko Alat Rumah Tangga Terlengkap di Surabaya
