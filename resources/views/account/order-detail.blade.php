@@ -3,6 +3,13 @@
 
 @section('acc_page')
 <style>
+:root {
+    --c-border: #E2E8F0;
+    --c-surface: #F8FAFC;
+    --c-text: #0F172A;
+    --c-muted: #64748B;
+    --c-accent: #0EA5E9;
+}
 .od-card { background: #fff; border: 1px solid var(--c-border); border-radius: 12px; margin-bottom: 1.5rem; overflow: hidden; }
 .od-header { background: var(--c-surface); padding: 1rem 1.5rem; border-bottom: 1px solid var(--c-border); display: flex; justify-content: space-between; align-items: center; }
 .od-body { padding: 1.5rem; }

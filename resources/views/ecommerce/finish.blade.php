@@ -3,6 +3,7 @@
 @section('content')
 <style>
 :root { --accent: #0EA5E9; --accent-dark: #0369A1; --text: #0F172A; --muted: #64748B; --border: #E2E8F0; --bg: #F8FAFC; }
+body { background-color: #F8FAFC !important; }
 
 .fin-wrap {
     max-width: 680px;
