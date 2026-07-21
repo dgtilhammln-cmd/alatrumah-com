@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('head')
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-@endsection
-
 @section('content')
 <style>
 :root{--c-bg:#ffffff;--c-surface:#F8FAFC;--c-card:#ffffff;--c-border:#E2E8F0;--c-text:#0F172A;--c-muted:#64748B;--c-accent:#0EA5E9;--font:'Montserrat',sans-serif;}
@@ -37,10 +33,6 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
     .co-grid{grid-template-columns:1fr;}
     .co-wrap{margin-top:80px;}
 }
-
-/* Leaflet map — compact & full-width */
-#map_container { width: 100% !important; }
-#map { width: 100% !important; height: 200px !important; display: block !important; }
 
 /* SweetAlert2 custom theme */
 .swal2-border-radius { border-radius: 20px !important; font-family: 'Montserrat', sans-serif !important; }
@@ -161,14 +153,6 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                                 Gunakan Lokasi Saat Ini (GPS)
                             </button>
                             <div id="loc_status" style="font-size:0.75rem;font-weight:600;color:var(--c-muted);display:none;"></div>
-                            
-                            <!-- PETA LEAFLET (Hidden by default) -->
-                            <div id="map_container" style="display:none; width:100%; margin-top:0.5rem; border-radius:10px; overflow:hidden; border:1px solid #BAE6FD;">
-                                <div id="map" style="width:100%; height:200px;"></div>
-                                <div style="background:#EFF9FF; padding:0.4rem 0.75rem; font-size:0.72rem; color:#0369A1; text-align:center;">
-                                    📍 Geser pin merah jika lokasi kurang tepat
-                                </div>
-                            </div>
                         </div>
 
                         <!-- HIDDEN COORDS -->
@@ -340,13 +324,10 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
     const subtotal = {{ $summary['subtotal'] }};
     const totalWeight = {{ $summary['total_weight'] > 0 ? $summary['total_weight'] : 1000 }};
     
-    let map = null;
-    let marker = null;
     let selectedCost = 0;
     let allProvinces = [];
 
@@ -628,89 +609,65 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
 
     function showPosition(position) {
         const status = document.getElementById('loc_status');
-        status.innerText = 'Mengambil alamat detail dari satelit...';
+        status.innerText = 'Mengambil alamat dari koordinat GPS...';
         
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
         
-        updateMapAndAddress(lat, lon, true);
-    }
-
-    function updateMapAndAddress(lat, lon, showSwal = false) {
-        const status = document.getElementById('loc_status');
-        
         document.getElementById('new_addr_lat').value = lat;
         document.getElementById('new_addr_lng').value = lon;
-
-        // Tampilkan peta
-        const mapContainer = document.getElementById('map_container');
-        mapContainer.style.display = 'block';
-        
-        if (!map) {
-            map = L.map('map', { zoomControl: true }).setView([lat, lon], 17);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© OpenStreetMap'
-            }).addTo(map);
-
-            marker = L.marker([lat, lon], {draggable: true}).addTo(map);
-            
-            // Event ketika marker digeser
-            marker.on('dragend', function(e) {
-                const pos = marker.getLatLng();
-                status.style.color = 'var(--c-muted)';
-                status.innerText = 'Mengupdate alamat dari titik baru...';
-                updateMapAndAddress(pos.lat, pos.lng, false);
-            });
-        } else {
-            map.setView([lat, lon], 17);
-            marker.setLatLng([lat, lon]);
-        }
-        
-        requestAnimationFrame(() => {
-            if(map) map.invalidateSize(true);
-            setTimeout(() => { if(map) map.invalidateSize(true); }, 200);
-            setTimeout(() => { if(map) map.invalidateSize(true); }, 600);
-        });
 
         // Reverse geocoding via Nominatim
         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1&accept-language=id`)
             .then(res => res.json())
             .then(data => {
-                if(data && data.display_name) {
+                if (data && data.address) {
                     status.style.color = '#16A34A';
-                    status.innerText = '✓ Lokasi berhasil ditemukan dan terupdate.';
+                    status.innerText = '✓ Lokasi berhasil ditemukan! Provinsi & Kota diisi otomatis.';
                     
+                    const addr = data.address;
+                    
+                    // Fill address detail
                     document.getElementById('new_addr_full').value = data.display_name;
-                    
-                    if(data.address.postcode) {
-                        document.getElementById('new_addr_postal').value = data.address.postcode;
-                    }
-                    if(data.address.village || data.address.suburb || data.address.town) {
-                        document.getElementById('district_name').value = data.address.village || data.address.suburb || data.address.town;
+                    if (addr.postcode) document.getElementById('new_addr_postal').value = addr.postcode;
+                    if (addr.village || addr.suburb || addr.town)
+                        document.getElementById('district_name').value = addr.village || addr.suburb || addr.town || '';
+
+                    // Auto-select Province from dropdown
+                    const rawProv = addr.state || '';
+                    const provSelect = document.getElementById('province_select');
+                    let matchedProvId = null;
+                    if (rawProv && provSelect) {
+                        const targetP = rawProv.toLowerCase().replace(/^(provinsi|daerah istimewa|dki|daerah khusus)\s*/i,'').trim();
+                        for (let i = 0; i < provSelect.options.length; i++) {
+                            const optP = provSelect.options[i].text.toLowerCase().replace(/^(dki|daerah istimewa|daerah khusus)\s*/i,'').trim();
+                            if (optP === targetP || optP.includes(targetP) || targetP.includes(optP)) {
+                                matchedProvId = provSelect.options[i].value;
+                                provSelect.value = matchedProvId;
+                                provSelect.dispatchEvent(new Event('change'));
+                                break;
+                            }
+                        }
                     }
 
-                    // Auto-select is not perfect with RajaOngkir, so we skip auto-selecting dropdowns.
-                    // The user must manually select Province and City to guarantee accurate shipping cost.
-
-                    if(showSwal) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: '<span style="font-weight:800; color:#1E293B;">Lokasi Ditemukan!</span>',
-                            html: '<div style="font-size:0.95rem; color:#475569; line-height:1.6; margin-top:0.5rem;">Peta berhasil dimuat ke layar.<br><br>Silakan <b>geser Pin Merah</b> jika tidak akurat.<br><br><span style="font-size:0.8rem; color:#EF4444; font-weight:700;">MOHON TETAP PILIH PROVINSI & KOTA ANDA DARI DROPDOWN UNTUK ONGKIR</span></div>',
-                            confirmButtonColor: '#3B82F6'
-                        });
-                        
-                        setTimeout(() => {
-                            document.getElementById('map_container').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }, 500);
+                    // Auto-select City after cities load
+                    if (matchedProvId) {
+                        const rawCity = addr.city || addr.county || addr.town || '';
+                        loadCitiesInto('city_select', matchedProvId, null, rawCity);
                     }
+                } else {
+                    status.style.color = '#EF4444';
+                    status.innerText = 'Gagal mendapatkan detail alamat.';
                 }
             })
             .catch(err => {
                 status.style.color = '#EF4444';
-                status.innerText = 'Gagal menterjemahkan titik koordinat.';
+                status.innerText = 'Gagal menterjemahkan koordinat GPS.';
             });
+    }
+
+    function updateMapAndAddress(lat, lon, showSwal = false) {
+        // Legacy stub — no longer used (map removed)
     }
 
     function showError(error) {

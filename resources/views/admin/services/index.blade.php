@@ -136,7 +136,7 @@
                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                   </svg>
                 </a>
-                <a href="{{ url('/en/products/' . $s->slug) }}" target="_blank" title="Lihat"
+                <a href="{{ route('products.show', $s->slug) }}" target="_blank" title="Lihat"
                   style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(139,92,246,0.08);border-radius:8px;color:#8B5CF6;text-decoration:none;transition:all .2s;"
                   onmouseover="this.style.background='rgba(139,92,246,0.16)'"
                   onmouseout="this.style.background='rgba(139,92,246,0.08)'">

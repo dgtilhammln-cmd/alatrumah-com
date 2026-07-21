@@ -78,7 +78,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
 }
 .sh-price-current {
     font-size: 1.875rem;
-    font-weight: 600;
+    font-weight: 800;
     color: var(--text);
     line-height: 1.2;
 }
@@ -536,7 +536,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
 
     {{-- RIGHT: Product Info, Price, Add to Cart --}}
     <aside>
-        <h1 class="sh-product-name">{{ $service->name }}</h1>
+        <h1 style="font-size:1.5rem;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:0.5rem;">{{ $service->name }}</h1>
         
         @if($service->rating > 0 || $service->sold_count > 0)
         <div class="sh-rating-row">
