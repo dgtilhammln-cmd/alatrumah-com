@@ -1061,9 +1061,7 @@
         <meta itemprop="address" content="Surabaya, Jawa Timur, Indonesia">
         {{-- Visible H1 moved below Hero Section --}}
         @php
-            $initialBgColor = (isset($heroSlides) && $heroSlides->count() > 0 && $heroSlides->first()->bg_color) 
-                                ? $heroSlides->first()->bg_color 
-                                : 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)';
+            $initialBgColor = \App\Models\Setting::get('hero_oval_gradient', 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)');
         @endphp
         <div class="cv-hero-oval-bg" id="heroOvalBg" style="background: {{ $initialBgColor }};"></div>
         
@@ -1943,18 +1941,7 @@
                     clickable: true,
                 },
                 keyboard: { enabled: true },
-                grabCursor: true,
-                on: {
-                    slideChange: function() {
-                        if (!heroOvalBg) return;
-                        var realIndex = this.realIndex;
-                        var slides = document.querySelectorAll('.hero-swiper .swiper-slide:not(.swiper-slide-duplicate)');
-                        if (slides[realIndex]) {
-                            var color = slides[realIndex].getAttribute('data-bg-color');
-                            if (color) heroOvalBg.style.background = color;
-                        }
-                    }
-                }
+                grabCursor: true
             });
         }
 

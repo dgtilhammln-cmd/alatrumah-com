@@ -230,8 +230,9 @@
                 <h2 style="font-size:.95rem; font-weight:700; color:#1E293B; margin:0;">Keranjang Belum Checkout (Follow Up)</h2>
             </div>
             
+            <div id="abandoned-view-list">
             @foreach($abandonedCarts as $u)
-                <div style="background:#fff; padding:1rem 1.25rem; border-radius:16px; border:1.5px solid #F1F5F9; box-shadow:0 2px 10px rgba(0,0,0,0.02); margin-bottom:1rem;">
+                <div style="background:#fff; padding:1rem 1.25rem; border-radius:16px; border:1.5px solid #F1F5F9; box-shadow:0 2px 10px rgba(0,0,0,0.02); margin-bottom:1rem; transition:all .25s;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; padding-bottom:1rem; border-bottom:1.5px dashed #F1F5F9;">
                         <div style="display:flex; align-items:center; gap:.75rem;">
                             <img src="{{ $u->avatar ? asset('storage/'.$u->avatar) : 'https://ui-avatars.com/api/?name='.urlencode($u->name).'&background=E2E8F0&color=475569' }}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
@@ -254,19 +255,19 @@
                                 </div>
                             @endforeach
                             @if($u->carts->count() > 2)
-                                <div style="font-size:.75rem; color:#64748B; margin-top:.5rem;">+ {{ $u->carts->count() - 2 }} produk lainnya</div>
+                                <div style="font-size:.75rem; color:#64748B; margin-top:.5rem; font-weight:700; background:#F8FAFC; padding:.3rem .75rem; border-radius:6px; display:inline-block;">+ {{ $u->carts->count() - 2 }} produk lainnya</div>
                             @endif
                         </div>
                         <div style="text-align:right; min-width:120px;">
-                            <div style="font-size:.75rem; color:#64748B; margin-bottom:.25rem;">Estimasi Total</div>
-                            <div style="font-size:1rem; font-weight:700; color:#0F172A;">Rp {{ number_format($u->carts->sum('subtotal'), 0, ',', '.') }}</div>
+                            <div style="font-size:.75rem; color:#64748B; margin-bottom:.25rem; font-weight:700; text-transform:uppercase;">Estimasi Total</div>
+                            <div style="font-size:1.1rem; font-weight:800; color:#EF4444;">Rp {{ number_format($u->carts->sum('subtotal'), 0, ',', '.') }}</div>
                         </div>
                         <div style="min-width:140px; text-align:right;">
                             @php
                                 $waText = "Halo Kak {$u->name}, kami melihat ada produk di keranjang Anda yang belum dicheckout nih. Apakah ada kendala saat pemesanan? 😊";
                                 $waUrl = "https://wa.me/".preg_replace('/[^0-9]/', '', $u->addresses->first()->phone ?? '')."?text=".urlencode($waText);
                             @endphp
-                            <a href="{{ $waUrl }}" target="_blank" style="display:inline-flex; align-items:center; justify-content:center; gap:.4rem; padding:.6rem 1.25rem; font-size:.8rem; font-weight:700; color:#fff; background:#10B981; text-decoration:none; border-radius:10px; transition:all .2s; box-shadow:0 4px 12px rgba(16,185,129,0.2);">
+                            <a href="{{ $waUrl }}" target="_blank" style="display:inline-flex; align-items:center; justify-content:center; gap:.4rem; padding:.6rem 1.25rem; font-size:.8rem; font-weight:700; color:#fff; background:#10B981; text-decoration:none; border-radius:10px; transition:all .2s; box-shadow:0 4px 12px rgba(16,185,129,0.2);" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10B981'">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                                 Chat Follow Up
                             </a>
@@ -274,6 +275,54 @@
                     </div>
                 </div>
             @endforeach
+            </div>
+
+            <div id="abandoned-view-grid" class="o-grid-view">
+            @foreach($abandonedCarts as $u)
+                <div class="o-grid-card">
+                    <div style="padding:1rem 1.25rem;background:#FFFBEB;border-bottom:1.5px dashed #FDE68A;display:flex;justify-content:space-between;align-items:center;">
+                        <div style="display:flex;align-items:center;gap:.75rem;">
+                            <img src="{{ $u->avatar ? asset('storage/'.$u->avatar) : 'https://ui-avatars.com/api/?name='.urlencode($u->name).'&background=E2E8F0&color=475569' }}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                            <div>
+                                <div style="font-weight:800;font-size:.88rem;color:#0F172A;">{{ $u->name }}</div>
+                                @if($u->username) <div style="font-size:.7rem;color:#64748B;">{{ '@'.$u->username }}</div> @endif
+                            </div>
+                        </div>
+                        <div style="font-size:.7rem;font-weight:700;padding:.3rem .75rem;background:#F59E0B;color:#fff;border-radius:8px;">Abandoned Cart</div>
+                    </div>
+                    <div style="padding:1rem 1.25rem;flex:1;">
+                        @foreach($u->carts->take(2) as $cart)
+                            <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;">
+                                <img src="{{ $cart->product && $cart->product->image ? asset('storage/'.$cart->product->image) : asset('img/no-image.jpg') }}" style="width:52px;height:52px;border-radius:10px;object-fit:cover;border:1.5px solid #E2E8F0;flex-shrink:0;" onerror="this.src='https://via.placeholder.com/52?text=Img'">
+                                <div>
+                                    <div style="font-weight:700;font-size:.85rem;color:#1E293B;line-height:1.3;">{{ Str::limit($cart->product->name ?? 'Produk Dihapus', 40) }}</div>
+                                    <div style="font-size:.72rem;color:#94A3B8;margin-top:.2rem;">Qty: {{ $cart->qty }}</div>
+                                </div>
+                            </div>
+                        @endforeach
+                        @if($u->carts->count() > 2)
+                            <div style="font-size:.72rem;color:#64748B;background:#F8FAFC;padding:.25rem .5rem;border-radius:6px;display:inline-block;margin-bottom:.75rem;font-weight:700;">+ {{ $u->carts->count() - 2 }} produk lainnya</div>
+                        @endif
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:.75rem;border-top:1px solid #F1F5F9;">
+                            <div>
+                                <div style="font-size:.68rem;color:#94A3B8;font-weight:700;text-transform:uppercase;margin-bottom:.2rem;">Estimasi Total</div>
+                                <div style="font-weight:800;color:#EF4444;font-size:1rem;">Rp {{ number_format($u->carts->sum('subtotal'), 0, ',', '.') }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding:.875rem 1.25rem;border-top:1.5px solid #F1F5F9;">
+                        @php
+                            $waText = "Halo Kak {$u->name}, kami melihat ada produk di keranjang Anda yang belum dicheckout nih. Apakah ada kendala saat pemesanan? 😊";
+                            $waUrl = "https://wa.me/".preg_replace('/[^0-9]/', '', $u->addresses->first()->phone ?? '')."?text=".urlencode($waText);
+                        @endphp
+                        <a href="{{ $waUrl }}" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.6rem;font-size:.8rem;font-weight:700;color:#fff;background:#10B981;text-decoration:none;border-radius:10px;transition:all .2s;box-shadow:0 4px 10px rgba(16,185,129,0.2);" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10B981'">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            Chat Follow Up
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+            </div>
         </div>
         
         <div style="display:flex; align-items:center; gap:.5rem; margin-bottom:1rem; margin-top: 1rem; padding-bottom:.5rem; border-bottom:1px solid #E2E8F0;">
@@ -493,6 +542,12 @@ function switchView(type) {
     localStorage.setItem('admin_orders_view', type);
     document.getElementById('view-list').style.display = type === 'list' ? 'block' : 'none';
     document.getElementById('view-grid').style.display = type === 'grid' ? 'grid' : 'none';
+    
+    let abl = document.getElementById('abandoned-view-list');
+    let abg = document.getElementById('abandoned-view-grid');
+    if(abl) abl.style.display = type === 'list' ? 'block' : 'none';
+    if(abg) abg.style.display = type === 'grid' ? 'grid' : 'none';
+
     document.getElementById('btn-view-list').style.background = type === 'list' ? '#3B82F6' : 'transparent';
     document.getElementById('btn-view-list').style.color     = type === 'list' ? '#fff' : '#94A3B8';
     document.getElementById('btn-view-grid').style.background = type === 'grid' ? '#3B82F6' : 'transparent';

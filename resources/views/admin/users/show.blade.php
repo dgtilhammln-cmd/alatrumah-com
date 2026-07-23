@@ -104,10 +104,11 @@
         </div>
         <div style="text-align:right;">
           <div style="font-weight:800;color:#1E293B;">Rp {{ number_format($order->total_amount ?? 0, 0,',','.') }}</div>
+          @php $statusVal = $order->status instanceof \UnitEnum ? $order->status->value : $order->status; @endphp
           <span style="display:inline-block;padding:.2rem .65rem;border-radius:50px;font-size:.7rem;font-weight:700;
-            background:{{ ['pending'=>'#FEF3C7','paid'=>'#DCFCE7','cancelled'=>'#FEE2E2'][$order->status] ?? '#F1F5F9' }};
-            color:{{ ['pending'=>'#92400E','paid'=>'#166534','cancelled'=>'#991B1B'][$order->status] ?? '#475569' }};">
-            {{ ucfirst($order->status ?? 'pending') }}
+            background:{{ ['pending'=>'#FEF3C7','paid'=>'#DCFCE7','cancelled'=>'#FEE2E2'][$statusVal] ?? '#F1F5F9' }};
+            color:{{ ['pending'=>'#92400E','paid'=>'#166534','cancelled'=>'#991B1B'][$statusVal] ?? '#475569' }};">
+            {{ ucfirst($statusVal ?? 'pending') }}
           </span>
         </div>
       </div>

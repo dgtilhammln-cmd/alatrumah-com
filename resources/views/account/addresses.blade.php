@@ -91,19 +91,25 @@
                 </div>
             </div>
 
+            {{-- Province: select drives hidden text input that gets submitted --}}
+            <input type="hidden" name="province" id="province_name_hidden">
+            <input type="hidden" name="city" id="city_name_hidden">
+
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
                 <div class="form-group">
                     <label class="form-label">Provinsi <span>*</span></label>
-                    <select id="province_select" name="province" class="form-input" required style="appearance:none;background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e\");background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
+                    <select id="province_select" class="form-input" required style="appearance:none;background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e\");background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
                         <option value="">Pilih Provinsi</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Kota / Kabupaten <span>*</span></label>
-                    <select id="city_select" name="city" class="form-input" required style="appearance:none;background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e\");background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
+                    <select id="city_select" class="form-input" required style="appearance:none;background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e\");background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
                         <option value="">Pilih Provinsi Dulu</option>
                     </select>
                 </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
                 <div class="form-group">
                     <label class="form-label">Kecamatan <span>*</span></label>
                     <input type="text" name="district" class="form-input" placeholder="Nama kecamatan" required>
@@ -143,7 +149,32 @@
             provSelectId: 'province_select',
             citySelectId: 'city_select',
         });
+
+        // Sync province text → hidden input
+        document.getElementById('province_select').addEventListener('change', function() {
+            const selected = this.options[this.selectedIndex];
+            document.getElementById('province_name_hidden').value = selected.value ? selected.text : '';
+            document.getElementById('city_name_hidden').value = '';
+        });
+
+        // Sync city text → hidden input
+        document.getElementById('city_select').addEventListener('change', function() {
+            const selected = this.options[this.selectedIndex];
+            document.getElementById('city_name_hidden').value = selected.value ? selected.text : '';
+        });
+
+        // Validate hidden inputs before submit
+        document.getElementById('addAddrForm').addEventListener('submit', function(e) {
+            const prov = document.getElementById('province_name_hidden').value;
+            const city = document.getElementById('city_name_hidden').value;
+            if (!prov || !city) {
+                e.preventDefault();
+                alert('Mohon pilih Provinsi dan Kota/Kabupaten terlebih dahulu.');
+                return false;
+            }
+        });
     });
 </script>
 @endsection
+
 

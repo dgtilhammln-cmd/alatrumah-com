@@ -15,6 +15,15 @@
 </div>
 @endif
 
+<form action="{{ route('admin.settings.update') }}" method="POST" style="margin-bottom: 1.5rem; background: #1a1a1f; padding: 1.25rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); display:flex; gap: 1rem; align-items:flex-end;">
+    @csrf
+    <div style="flex:1;">
+        <label class="form-label" style="font-size:.7rem; font-weight:700; color:#38BDF8; letter-spacing:.1em; text-transform:uppercase; margin-bottom: 0.5rem; display:block;">Warna Background Oval (Hero Slider)</label>
+        <input type="text" name="hero_oval_gradient" class="form-input" value="{{ \App\Models\Setting::get('hero_oval_gradient', 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)') }}" placeholder="linear-gradient(...)">
+    </div>
+    <button type="submit" class="btn-primary" style="height: 42px; padding: 0 1.5rem; white-space: nowrap;">Simpan Warna</button>
+</form>
+
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
     <p style="font-size:.875rem;color:rgba(255,255,255,.45);margin:0;">Total Banner: {{ $slides->count() }}</p>
     <a href="{{ route('admin.hero_slides.create') }}" class="btn-primary">
@@ -58,18 +67,18 @@
             <div style="font-size:1.25rem;font-weight:700;color:#fff;">{{ $slide->order }}</div>
         </div>
         {{-- Position --}}
-        <div style="flex-shrink:0; width:120px; text-align:center;">
+        <div style="flex-shrink:0; width:130px; text-align:center;">
             <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:.35rem;">Posisi</div>
             @php
                 $posLabel = match($slide->position ?? 'hero') {
-                    'hero'    => ['label'=>'Hero Slider', 'icon'=>'🖼️', 'color'=>'rgba(56,189,248,.15)', 'text'=>'#38BDF8'],
-                    'utama'   => ['label'=>'Kanan Atas',  'icon'=>'↗️', 'color'=>'rgba(16,185,129,.15)',  'text'=>'#34d399'],
-                    'samping' => ['label'=>'Kanan Bawah', 'icon'=>'↘️', 'color'=>'rgba(245,158,11,.15)', 'text'=>'#fbbf24'],
-                    default   => ['label'=>$slide->position,'icon'=>'📌','color'=>'rgba(255,255,255,.07)','text'=>'#999'],
+                    'hero'    => ['label'=>'Hero Slider', 'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>', 'color'=>'rgba(56,189,248,.15)', 'text'=>'#38BDF8'],
+                    'utama'   => ['label'=>'Kanan Atas',  'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>', 'color'=>'rgba(16,185,129,.15)',  'text'=>'#34d399'],
+                    'samping' => ['label'=>'Kanan Bawah', 'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="7" y1="7" x2="17" y2="17"></line><polyline points="17 7 17 17 7 17"></polyline></svg>', 'color'=>'rgba(245,158,11,.15)', 'text'=>'#fbbf24'],
+                    default   => ['label'=>$slide->position,'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>','color'=>'rgba(255,255,255,.07)','text'=>'#999'],
                 };
             @endphp
             <span style="font-size:.7rem;padding:.3rem .6rem;border-radius:6px;background:{{ $posLabel['color'] }};color:{{ $posLabel['text'] }};font-weight:600;display:inline-flex;align-items:center;gap:.3rem;">
-                <span>{{ $posLabel['icon'] }}</span> {{ $posLabel['label'] }}
+                {!! $posLabel['icon'] !!} {{ $posLabel['label'] }}
             </span>
         </div>
         {{-- Status --}}

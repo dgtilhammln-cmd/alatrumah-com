@@ -2,7 +2,6 @@
 @section('title', isset($slide) ? 'Edit Hero Slide' : 'Tambah Hero Slide')
 @section('page-title', isset($slide) ? 'Edit Hero Slide' : 'Tambah Hero Slide Baru')
 @section('content')
-<div style="max-width:680px;">
 <form method="POST" action="{{ isset($slide) ? route('admin.hero_slides.update', $slide) : route('admin.hero_slides.store') }}" enctype="multipart/form-data" id="bannerForm">
     @csrf @if(isset($slide)) @method('PUT') @endif
 
@@ -66,18 +65,6 @@
             <p style="font-size:.7rem;color:rgba(255,255,255,.4);margin:.5rem 0 0;">Upload gambar dengan rasio sesuai posisi (Hero: 16:7 | Banner Kanan: 4:3). Gambar akan disimpan sesuai aslinya.</p>
         </div>
 
-        {{-- Background Color (Oval) --}}
-        <div class="admin-card">
-            <h3 style="font-size:.7rem;font-weight:700;color:#38BDF8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Warna Background Oval (Khusus Hero)</h3>
-            <div style="display:flex;flex-direction:column;gap:1rem;">
-                <div>
-                    <label class="form-label">Warna Gradient Oval (CSS)</label>
-                    <input type="text" name="bg_color" value="{{ old('bg_color', $slide->bg_color ?? '') }}" class="form-input" placeholder="linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)">
-                    <p style="font-size:.7rem;color:rgba(255,255,255,.4);margin:.375rem 0 0;">Misal: <code>#3b82f6</code> atau <code>linear-gradient(...)</code>. Warna ini akan diterapkan pada oval di belakang gambar banner (khusus posisi Hero).</p>
-                </div>
-            </div>
-        </div>
-
         {{-- Button --}}
         <div class="admin-card">
             <h3 style="font-size:.7rem;font-weight:700;color:#38BDF8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1.25rem;">Tombol (Opsional)</h3>
@@ -115,7 +102,6 @@
         </div>
     </div>
 </form>
-</div>
 
 <script>
     const imageInput = document.getElementById('imageInput');
