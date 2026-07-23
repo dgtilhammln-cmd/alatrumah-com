@@ -1262,6 +1262,7 @@
     .cv-promo-wrap {
         background: #F8FAFC;
         padding: 0.625rem 0 0;
+        border-bottom: none;
     }
     .cv-promo-section {
         max-width: 1200px;
@@ -1604,8 +1605,8 @@
                     <img src="{{ asset('storage/'.$promo->logo) }}" alt="{{ $promo->title }}" style="max-height:30px; object-fit:contain;">
                 @else
                     <div>
-                        <div class="cv-promo-title" style="{{ $isFlashSale ? 'color:#fff;' : '' }}">{{ $promo->title }}</div>
-                        @if($promo->subtitle)<div class="cv-promo-subtitle" style="{{ $isFlashSale ? 'color:rgba(255,255,255,0.8);' : '' }}">{{ $promo->subtitle }}</div>@endif
+                        <div class="cv-promo-title">{{ $promo->title }}</div>
+                        @if($promo->subtitle)<div class="cv-promo-subtitle">{{ $promo->subtitle }}</div>@endif
                     </div>
                 @endif
                 
@@ -1621,7 +1622,7 @@
                 @endif
             </div>
             @if($promo->view_all_url)
-                <a href="{{ $promo->view_all_url }}" class="cv-promo-view-all" style="{{ $isFlashSale ? 'color:#fff;' : '' }}">Lihat semua →</a>
+                <a href="{{ $promo->view_all_url }}" class="cv-promo-view-all">Lihat semua →</a>
             @endif
         </div>
 
@@ -1723,7 +1724,7 @@
     
     {{-- ════ KATALOG SEMUA PRODUK ════ --}}
     @if(isset($allProducts) && $allProducts->count() > 0)
-    <div style="background: #fff; padding: 2rem 0 3rem;">
+    <div style="background: #fff; padding: 2rem 0 3rem; border-top: none; box-shadow: none;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;" class="cv-rekomendasi-container">
         <style>
             @media (max-width: 768px) {
@@ -1732,7 +1733,7 @@
                 .cv-rekomendasi-subtitle { display: none; }
             }
         </style>
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; border-top: none;">
             <div>
                 <h2 class="cv-rekomendasi-title" style="font-family:'Montserrat',sans-serif; font-size:1.125rem; font-weight:800; color:#1E293B; letter-spacing:-0.02em; margin:0 0 0.2rem;">Rekomendasi Untukmu</h2>
                 <div class="cv-rekomendasi-subtitle" style="font-size:0.8rem; color:#64748B;">Temukan berbagai produk pilihan terbaik dari AlatRumah</div>

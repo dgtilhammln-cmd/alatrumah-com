@@ -7,7 +7,7 @@
         <h2 style="font-size:1.125rem; font-weight:700; color:#0f172a;">Alamat Tersimpan</h2>
         <p style="font-size:0.8rem; color:#64748B;">Kelola alamat pengiriman Anda</p>
     </div>
-    <button onclick="document.getElementById('addAddrModal').classList.add('open')" class="btn-add-addr">
+    <button type="button" onclick="document.getElementById('addAddrModal').classList.add('open')" class="btn-add-addr">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Tambah Alamat
     </button>
@@ -56,7 +56,11 @@
         <div class="empty-state">
             <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             <h3>Belum ada alamat</h3>
-            <p>Tambahkan alamat pengiriman Anda untuk mempercepat proses checkout.</p>
+            <p style="margin-bottom:1.5rem;">Tambahkan alamat pengiriman Anda untuk mempercepat proses checkout.</p>
+            <button type="button" onclick="document.getElementById('addAddrModal').classList.add('open')" class="btn-add-addr" style="margin: 0 auto;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Tambah Alamat
+            </button>
         </div>
     </div>
 @endif
