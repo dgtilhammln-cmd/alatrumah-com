@@ -126,6 +126,7 @@ class CheckoutApiController extends Controller
         if ($apiKey) {
             try {
                 $response = Http::withoutVerifying()
+                                ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
                                 ->timeout(5)
                                 ->withHeaders(['key' => $apiKey])
                                 ->get($this->getApiBase() . '/province');
@@ -160,6 +161,7 @@ class CheckoutApiController extends Controller
         if ($apiKey) {
             try {
                 $response = Http::withoutVerifying()
+                                ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
                                 ->timeout(8)
                                 ->withHeaders(['key' => $apiKey])
                                 ->get($this->getApiBase() . '/city', ['province' => $provinceId]);
@@ -217,6 +219,7 @@ class CheckoutApiController extends Controller
 
         try {
             $response = Http::withoutVerifying()
+                            ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
                             ->timeout(12)
                             ->withHeaders(['key' => $apiKey])
                             ->asForm()
