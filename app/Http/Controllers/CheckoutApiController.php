@@ -128,7 +128,10 @@ class CheckoutApiController extends Controller
                 $response = Http::withoutVerifying()
                                 ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
                                 ->timeout(5)
-                                ->withHeaders(['key' => $apiKey])
+                                ->withHeaders([
+                                    'key' => $apiKey,
+                                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                                ])
                                 ->get($this->getApiBase() . '/province');
 
                 $json = $response->json();
@@ -163,7 +166,10 @@ class CheckoutApiController extends Controller
                 $response = Http::withoutVerifying()
                                 ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
                                 ->timeout(8)
-                                ->withHeaders(['key' => $apiKey])
+                                ->withHeaders([
+                                    'key' => $apiKey,
+                                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                                ])
                                 ->get($this->getApiBase() . '/city', ['province' => $provinceId]);
 
                 $json = $response->json();
@@ -221,7 +227,10 @@ class CheckoutApiController extends Controller
             $response = Http::withoutVerifying()
                             ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
                             ->timeout(12)
-                            ->withHeaders(['key' => $apiKey])
+                            ->withHeaders([
+                                'key' => $apiKey,
+                                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                            ])
                             ->asForm()
                             ->post($apiBase . '/cost', [
                                 'origin'      => $origin,
