@@ -85,7 +85,6 @@
         position: relative;
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         background: #fff;
         height: 440px;
     }
@@ -151,7 +150,7 @@
     .cv-hero-modern {
         background-color: #ffffff;
         padding-top: calc(46px + 2.5rem);
-        padding-bottom: 2rem;
+        padding-bottom: 0;
         position: relative;
         overflow: hidden;
     }
@@ -1138,16 +1137,7 @@
     </section>
 
     {{-- ════ VISIBLE H1 & SEO SECTION ════ --}}
-    <div class="hidden md:block hide-on-mobile" style="background:#FFFFFF; padding:1.25rem 1.5rem 0.5rem; text-align:center;">
-        <div style="max-width:1000px; margin:0 auto;">
-            <h1 style="font-size:1.4rem; font-weight:600; color:#1E293B; margin:0 0 0.25rem 0; font-family:'Montserrat', sans-serif;">
-                AlatRumah.com - Toko Alat Rumah Tangga Terlengkap di Surabaya
-            </h1>
-            <p style="font-size:0.9rem; color:#64748B; line-height:1.5; margin:0; font-family:'Montserrat', sans-serif;">
-                Temukan ribuan produk berkualitas dari merek-merek ternama dengan harga terbaik dan pengiriman cepat ke seluruh Indonesia.
-            </p>
-        </div>
-    </div>
+    <div style="display:none;" class="hide-on-mobile">
 
     {{-- ════ USP BAR ════ --}}
     @if($uspItems->count())

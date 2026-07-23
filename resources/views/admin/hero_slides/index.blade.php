@@ -15,14 +15,28 @@
 </div>
 @endif
 
-<form action="{{ route('admin.settings.update') }}" method="POST" style="margin-bottom: 1.5rem; background: #1a1a1f; padding: 1.25rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); display:flex; gap: 1rem; align-items:flex-end;">
-    @csrf
-    <div style="flex:1;">
-        <label class="form-label" style="font-size:.7rem; font-weight:700; color:#38BDF8; letter-spacing:.1em; text-transform:uppercase; margin-bottom: 0.5rem; display:block;">Warna Background Oval (Hero Slider)</label>
-        <input type="text" name="hero_oval_gradient" class="form-input" value="{{ \App\Models\Setting::get('hero_oval_gradient', 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)') }}" placeholder="linear-gradient(...)">
-    </div>
-    <button type="submit" class="btn-primary" style="height: 42px; padding: 0 1.5rem; white-space: nowrap;">Simpan Warna</button>
-</form>
+<div class="admin-card" style="margin-bottom: 1.5rem;">
+    <h3 style="font-size:.7rem;font-weight:700;color:#38BDF8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 1rem;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:.4rem;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Warna Background Oval (Hero Slider)
+    </h3>
+    <p style="font-size:.75rem;color:rgba(255,255,255,.35);margin:0 0 1rem;">Warna ini akan digunakan sebagai latar belakang oval di belakang hero slider. Anda bisa pilih warna solid atau isi manual dengan gradient CSS.</p>
+    <form action="{{ route('admin.settings.update') }}" method="POST" style="display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap;">
+        @csrf
+        <div style="flex:1;min-width:200px;">
+            <label style="font-size:.7rem;font-weight:600;color:rgba(255,255,255,.5);display:block;margin-bottom:.5rem;">Warna / Gradient CSS</label>
+            <div style="display:flex;gap:.5rem;align-items:center;">
+                <input type="color" id="colorPicker" value="#1e3a8a" style="width:42px;height:42px;border-radius:8px;border:none;cursor:pointer;padding:2px;background:transparent;" title="Pilih warna solid" onchange="document.getElementById('gradientInput').value = this.value;">
+                <input type="text" name="hero_oval_gradient" id="gradientInput" class="form-input" value="{{ \App\Models\Setting::get('hero_oval_gradient', 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)') }}" placeholder="linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)" style="flex:1;">
+            </div>
+            <p style="font-size:.68rem;color:rgba(255,255,255,.25);margin:.35rem 0 0;">Klik picker untuk warna solid, atau ketik manual untuk gradient. Contoh: <code style="color:#38BDF8;">linear-gradient(135deg, #1e3a8a, #3b82f6)</code></p>
+        </div>
+        <button type="submit" class="btn-primary" style="height:42px;padding:0 1.5rem;white-space:nowrap;flex-shrink:0;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right:.35rem;"><polyline points="20 6 9 17 4 12"/></svg>
+            Simpan Warna
+        </button>
+    </form>
+</div>
 
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
     <p style="font-size:.875rem;color:rgba(255,255,255,.45);margin:0;">Total Banner: {{ $slides->count() }}</p>
