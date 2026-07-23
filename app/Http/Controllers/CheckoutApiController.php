@@ -199,37 +199,96 @@ class CheckoutApiController extends Controller
 
         $apiKey = $this->getApiKey();
         if (!$apiKey) {
+            Log::error('[ONGKIR] API Key belum dikonfigurasi di settings.');
             return response()->json(['error' => 'API Key belum dikonfigurasi. Silakan hubungi admin.'], 500);
         }
 
-        $origin = Setting::get('rajaongkir_origin_city', 444);
+        // 304 = Kota Surabaya (default benar untuk AlatRumah)
+        $origin  = (int) Setting::get('rajaongkir_origin_city', 304);
+        $apiBase = $this->getApiBase();
+
+        Log::info('[ONGKIR] Request dikirim', [
+            'origin'      => $origin,
+            'destination' => $request->destination,
+            'weight'      => $request->weight,
+            'courier'     => $request->courier,
+            'api_base'    => $apiBase,
+        ]);
 
         try {
             $response = Http::withoutVerifying()
-                            ->timeout(10)
+                            ->timeout(12)
                             ->withHeaders(['key' => $apiKey])
                             ->asForm()
-                            ->post($this->getApiBase() . '/cost', [
+                            ->post($apiBase . '/cost', [
                                 'origin'      => $origin,
                                 'destination' => $request->destination,
                                 'weight'      => $request->weight,
                                 'courier'     => strtolower($request->courier),
                             ]);
 
-            $json = $response->json();
-            if (isset($json['rajaongkir']['results'][0]['costs'])) {
-                return response()->json($json['rajaongkir']['results'][0]['costs']);
+            $statusCode = $response->status();
+            $json       = $response->json();
+
+            Log::info('[ONGKIR] Response diterima', [
+                'http_status'   => $statusCode,
+                'ro_status'     => $json['rajaongkir']['status'] ?? null,
+                'has_results'   => isset($json['rajaongkir']['results']),
+                'results_count' => count($json['rajaongkir']['results'] ?? []),
+            ]);
+
+            // Cek HTTP status dulu
+            if ($statusCode !== 200) {
+                $desc = $json['rajaongkir']['status']['description'] ?? "HTTP Error {$statusCode}";
+                Log::warning('[ONGKIR] Non-200 dari RajaOngkir', [
+                    'http_status' => $statusCode,
+                    'description' => $desc,
+                    'body'        => $response->body(),
+                ]);
+                return response()->json(['error' => $desc], 400);
             }
 
-            $msg = $json['rajaongkir']['status']['description'] ?? 'Rute tidak tersedia untuk kurir ini.';
-            return response()->json(['error' => $msg], 400);
+            // Validasi struktur results
+            $results = $json['rajaongkir']['results'] ?? [];
+            if (empty($results)) {
+                $desc = $json['rajaongkir']['status']['description'] ?? 'Rute tidak tersedia.';
+                Log::warning('[ONGKIR] Results kosong dari API', ['body' => $response->body()]);
+                return response()->json(['error' => $desc], 422);
+            }
 
-        } catch (\Exception $e) {
-            Log::error('RajaOngkir Cost Error: ' . $e->getMessage());
-            // Return special "manual" response so frontend can handle gracefully
+            // Kumpulkan semua costs dari SEMUA results (bukan hanya results[0])
+            $allCosts = [];
+            foreach ($results as $result) {
+                if (!empty($result['costs'])) {
+                    foreach ($result['costs'] as $service) {
+                        $allCosts[] = $service;
+                    }
+                }
+            }
+
+            if (empty($allCosts)) {
+                Log::warning('[ONGKIR] Costs kosong di dalam results', ['results' => $results]);
+                return response()->json(['error' => 'Tidak ada layanan tersedia untuk rute dan kurir ini.'], 422);
+            }
+
+            Log::info('[ONGKIR] Sukses — ' . count($allCosts) . ' layanan ditemukan.');
+            return response()->json($allCosts);
+
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            // Timeout atau koneksi ditolak — ini satu-satunya kondisi fallback yang valid
+            Log::error('[ONGKIR] Connection timeout/refused: ' . $e->getMessage());
             return response()->json([
-                'manual' => true,
-                'message' => 'API Ongkir sedang tidak dapat dijangkau. Ongkir dikonfirmasi manual oleh Admin.',
+                'manual'      => true,
+                'message'     => 'Koneksi ke server ongkir timeout. Ongkir dikonfirmasi manual oleh Admin.',
+                'debug_error' => $e->getMessage()
+            ]);
+        } catch (\Exception $e) {
+            Log::error('[ONGKIR] Exception tidak terduga: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'manual'      => true,
+                'message'     => 'API Ongkir sedang tidak dapat dijangkau. Ongkir dikonfirmasi manual oleh Admin.',
                 'debug_error' => $e->getMessage()
             ]);
         }

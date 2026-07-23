@@ -517,13 +517,20 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                 courier: courier
             })
         })
-        .then(res => res.json())
-        .then(data => {
+        .then(res => {
+            // Log HTTP status SEBELUM parse JSON — ini penting untuk debug
+            console.info('[ONGKIR] HTTP Status:', res.status);
+            return res.json().then(data => ({ httpStatus: res.status, data }));
+        })
+        .then(({ httpStatus, data }) => {
             if (loadingEl) loadingEl.style.display = 'none';
             serviceSelect.disabled = false;
 
-            // Special: API unreachable, admin will confirm cost manually
+            console.info('[ONGKIR] Response:', data);
+
+            // Manual fallback: HANYA jika timeout/connection refused (bukan error API biasa)
             if (data.manual) {
+                console.warn('[ONGKIR] Fallback manual. Debug:', data.debug_error);
                 serviceSelect.removeAttribute('required');
                 serviceSelect.innerHTML = '<option value="manual" data-cost="0" selected>Ongkir dikonfirmasi Admin setelah pesan</option>';
                 selectedCost = 0;
@@ -531,10 +538,27 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                 return;
             }
 
-            if (data.error) throw new Error(data.error);
+            // Error dari API (origin salah, kurir tidak tersedia, dll) — tampilkan, jangan silent fallback
+            if (data.error) {
+                console.warn('[ONGKIR] API error:', data.error);
+                serviceSelect.removeAttribute('required');
+                serviceSelect.innerHTML = `<option value="" disabled selected>⚠️ ${data.error}</option>`;
+                return;
+            }
+
+            // Validasi: harus array dan tidak kosong
+            if (!Array.isArray(data) || data.length === 0) {
+                console.warn('[ONGKIR] Data kosong atau bukan array:', data);
+                serviceSelect.removeAttribute('required');
+                serviceSelect.innerHTML = '<option value="manual" data-cost="0" selected>Ongkir dikonfirmasi Admin setelah pesan</option>';
+                selectedCost = 0;
+                updateTotal('manual');
+                return;
+            }
+
+            // SUCCESS — render semua pilihan layanan
             serviceSelect.setAttribute('required', 'required');
             serviceSelect.innerHTML = '<option value="">Pilih Layanan Pengiriman</option>';
-            if (!data.length) throw new Error('Tidak ada layanan tersedia untuk rute ini.');
             data.forEach(service => {
                 const cost = service.cost[0]?.value ?? 0;
                 const etd  = service.cost[0]?.etd  ? ` (${service.cost[0].etd} hari)` : '';
@@ -545,15 +569,17 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                 opt.text   = `${service.service} — Rp ${fmt}${etd}`;
                 serviceSelect.appendChild(opt);
             });
+            console.info('[ONGKIR] Sukses:', data.length, 'layanan tampil.');
         })
         .catch(err => {
+            // Hanya terjadi jika ada error JARINGAN di sisi browser (bukan response error)
             if (loadingEl) loadingEl.style.display = 'none';
             serviceSelect.disabled = false;
+            console.error('[ONGKIR] Fetch/jaringan error:', err);
             serviceSelect.removeAttribute('required');
             serviceSelect.innerHTML = '<option value="manual" data-cost="0" selected>Ongkir dikonfirmasi Admin setelah pesan</option>';
             selectedCost = 0;
             updateTotal('manual');
-            console.error('Ongkir Error:', err);
         });
     }
 
