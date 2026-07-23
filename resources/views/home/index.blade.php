@@ -1138,7 +1138,15 @@
 
     {{-- ════ VISIBLE H1 & SEO SECTION ════ --}}
     <div style="display:none;" class="hide-on-mobile">
-
+        <div style="max-width:1000px; margin:0 auto;">
+            <h1 style="font-size:1.4rem; font-weight:600; color:#1E293B; margin:0 0 0.25rem 0; font-family:'Montserrat', sans-serif;">
+                AlatRumah.com - Toko Alat Rumah Tangga Terlengkap di Surabaya
+            </h1>
+            <p style="font-size:0.9rem; color:#64748B; line-height:1.5; margin:0; font-family:'Montserrat', sans-serif;">
+                Temukan ribuan produk berkualitas dari merek-merek ternama dengan harga terbaik dan pengiriman cepat ke seluruh Indonesia.
+            </p>
+        </div>
+    </div>
     {{-- ════ USP BAR ════ --}}
     @if($uspItems->count())
     <section class="cv-usp-bar" aria-label="Keunggulan AlatRumah">
