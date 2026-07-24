@@ -48,7 +48,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
 /* Mobile super friendly */
 @media(max-width:768px){
-    .co-wrap{margin-top:65px;padding:0 0.75rem;margin-bottom:5rem;}
+    .co-wrap{margin-top:135px;padding:0 0.75rem;margin-bottom:5rem;}
     .co-section{padding:1rem !important;border-radius:12px;margin-bottom:0.75rem !important;}
     .co-section-title{font-size:0.95rem;margin-bottom:0.85rem;}
     .form-group{margin-bottom:0.85rem;}
