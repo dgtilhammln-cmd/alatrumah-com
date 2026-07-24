@@ -2,6 +2,25 @@
 @section('title', 'Alamat – Akun')
 
 @section('acc_page')
+<style>
+.label-chip {
+    padding: 0.4rem 1rem;
+    border-radius: 99px;
+    border: 1.5px solid #E2E8F0;
+    background: #fff;
+    color: #475569;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.label-chip.active {
+    background: #0EA5E9;
+    color: #fff;
+    border-color: #0EA5E9;
+}
+</style>
 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.75rem;">
     <div>
         <h2 style="font-size:1.125rem; font-weight:700; color:#0f172a;">Alamat Tersimpan</h2>
@@ -82,7 +101,12 @@
             @csrf
             <div class="form-group" style="margin-bottom:1rem;">
                 <label class="form-label">Label <span>*</span></label>
-                <input type="text" name="label" class="form-input" placeholder="Contoh : Rumah, Kantor" required>
+                <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem; flex-wrap:wrap;">
+                    <button type="button" class="label-chip" onclick="selectLabel(this, 'Rumah')">Rumah</button>
+                    <button type="button" class="label-chip" onclick="selectLabel(this, 'Kantor')">Kantor</button>
+                    <button type="button" class="label-chip" onclick="selectLabel(this, 'Toko')">Toko</button>
+                </div>
+                <input type="text" name="label" id="labelInput" class="form-input" placeholder="Atau ketik label lainnya..." required>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
                 <div class="form-group">
@@ -178,6 +202,15 @@
             }
         });
     });
+
+    function selectLabel(btn, value) {
+        // Remove active class from all chips
+        document.querySelectorAll('.label-chip').forEach(el => el.classList.remove('active'));
+        // Add active class to clicked
+        btn.classList.add('active');
+        // Set input value
+        document.getElementById('labelInput').value = value;
+    }
 </script>
 @endsection
 
