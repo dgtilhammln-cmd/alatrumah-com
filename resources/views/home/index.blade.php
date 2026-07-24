@@ -164,6 +164,11 @@
         
         .cv-hero-static-col { display: none !important; }
     }
+    /* Fix: Swiper slide must be position:relative so child images inside it are positioned correctly */
+    @media (max-width: 991px) {
+        .hero-swiper-slide { position: relative !important; display: block !important; height: 100% !important; }
+        .hero-swiper-slide img { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; }
+    }
     .cv-hero-modern {
         background-color: #ffffff;
         padding-top: calc(46px + 2.5rem);
@@ -173,9 +178,9 @@
     }
     @media (max-width: 768px) {
         .cv-hero-modern {
-            padding-top: 0.75rem;
+            padding-top: 0.5rem;
             padding-bottom: 0.5rem;
-            align-items: flex-start;
+            background: transparent !important;
         }
     }
     @media (max-width: 480px) {
@@ -196,9 +201,10 @@
     }
     @media (max-width: 991px) {
         .cv-hero-oval-bg {
-            height: 100%;
-            border-radius: 0;
-            background: linear-gradient(180deg, #F0F9FF 0%, #F8FAFC 100%) !important;
+            display: none !important;
+        }
+        .cv-hero-bg-layer {
+            display: none !important;
         }
     }
     .cv-hero-bg-layer {
@@ -1087,48 +1093,6 @@
             <div class="cv-hero-bg-layer" style="background-image:url('{{ asset('storage/' . $settings['hero_bg_image']) }}')"></div>
         @endif
         
-        {{-- MOBILE HORIZONTAL PILL CATEGORIES (PlugPro Style) --}}
-        <style>
-            .mobile-cat-pills { display: none; }
-            @media (max-width: 991px) {
-                .mobile-cat-pills {
-                    display: flex; gap: 0.75rem; padding: 0.25rem 1rem 1.25rem;
-                    overflow-x: auto; scrollbar-width: none; position: relative; z-index: 10;
-                }
-                .mobile-cat-pills::-webkit-scrollbar { display: none; }
-                .mobile-cat-pills a {
-                    font-size: 0.8rem; font-weight: 700; color: #64748B; background: #fff;
-                    padding: 0.6rem 1.2rem; border-radius: 999px; white-space: nowrap;
-                    text-decoration: none; border: 1.5px solid #E2E8F0;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: all 0.3s;
-                    display: flex; align-items: center; gap: 0.5rem;
-                }
-                .mobile-cat-pills a.active { background: #0EA5E9; color: #fff; border-color: #0EA5E9; box-shadow: 0 4px 12px rgba(14,165,233,0.3); }
-                .mobile-cat-pills a svg { width: 16px; height: 16px; }
-            }
-        </style>
-        <div class="mobile-cat-pills">
-            <a href="{{ route('products') }}" class="active">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 12H4M20 6H4M20 18H4"/></svg>
-                Semua
-            </a>
-            <a href="{{ route('products', ['q' => 'Terlaris']) }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                Terlaris
-            </a>
-            <a href="{{ route('products', ['q' => 'Dapur']) }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
-                Dapur
-            </a>
-            <a href="{{ route('products', ['q' => 'Kamar']) }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 4v16M22 4v16M4 8h16M4 16h16M2 12h20"/></svg>
-                Kamar Tidur
-            </a>
-            <a href="{{ route('products', ['q' => 'Pembersih']) }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                Kebersihan
-            </a>
-        </div>
 
         <div class="cv-hero-grid">
             {{-- Left Column: Slider --}}
@@ -1197,6 +1161,49 @@
             </div>
         </div>
     </section>
+
+    {{-- MOBILE HORIZONTAL PILL CATEGORIES (moved outside hero section to prevent empty space) --}}
+    <style>
+        .mobile-cat-pills { display: none; }
+        @media (max-width: 991px) {
+            .mobile-cat-pills {
+                display: flex; gap: 0.75rem; padding: 0.5rem 1rem 0.75rem;
+                overflow-x: auto; scrollbar-width: none; background: #F8FAFC;
+            }
+            .mobile-cat-pills::-webkit-scrollbar { display: none; }
+            .mobile-cat-pills a {
+                font-size: 0.8rem; font-weight: 700; color: #64748B; background: #fff;
+                padding: 0.5rem 1rem; border-radius: 999px; white-space: nowrap;
+                text-decoration: none; border: 1.5px solid #E2E8F0;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: all 0.3s;
+                display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0;
+            }
+            .mobile-cat-pills a.active { background: #0EA5E9; color: #fff; border-color: #0EA5E9; }
+            .mobile-cat-pills a svg { width: 14px; height: 14px; }
+        }
+    </style>
+    <div class="mobile-cat-pills">
+        <a href="{{ route('products') }}" class="active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 12H4M20 6H4M20 18H4"/></svg>
+            Semua
+        </a>
+        <a href="{{ route('products', ['q' => 'Terlaris']) }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Terlaris
+        </a>
+        <a href="{{ route('products', ['q' => 'Dapur']) }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+            Dapur
+        </a>
+        <a href="{{ route('products', ['q' => 'Kamar']) }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 4v16M22 4v16M4 8h16M4 16h16M2 12h20"/></svg>
+            Kamar Tidur
+        </a>
+        <a href="{{ route('products', ['q' => 'Pembersih']) }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Kebersihan
+        </a>
+    </div>
 
     {{-- ════ VISIBLE H1 & SEO SECTION ════ --}}
     <div style="display:none;" class="hide-on-mobile">
