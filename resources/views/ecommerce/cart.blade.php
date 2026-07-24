@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Keranjang Belanja')
 @section('meta_description', 'Lihat dan kelola keranjang belanja Anda di AlatRumah.')
@@ -18,7 +18,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--c-bg); font-family: var(--font); }
 
-.cart-page { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 120px; }
+.cart-page { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 240px; }
 .cart-topbar { background: #fff; padding: 1rem 1.25rem 0.85rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--c-border); position: sticky; top: 65px; z-index: 50; }
 .cart-topbar h1 { font-size: 1.05rem; font-weight: 800; color: var(--c-text); flex: 1; }
 .cart-count-badge { background: var(--c-accent); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 99px; }
@@ -41,7 +41,7 @@ body { background: var(--c-bg); font-family: var(--font); }
 .btn-del { background: none; border: none; color: #CBD5E1; cursor: pointer; padding: 0.25rem; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: color 0.2s, background 0.2s; flex-shrink: 0; }
 .btn-del:hover { color: #EF4444; background: #FEE2E2; }
 
-.cart-sticky-footer { position: fixed; bottom: 56px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #fff; border-top: 1px solid var(--c-border); padding: 0.85rem 1.25rem; z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.07); }
+.cart-sticky-footer { position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #fff; border-top: 1px solid var(--c-border); padding: 0.85rem 1.25rem; z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.07); }
 .footer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
 .footer-row-label { font-size: 0.78rem; color: var(--c-muted); font-weight: 500; }
 .footer-row-val { font-size: 0.78rem; color: var(--c-muted); font-weight: 600; }
@@ -63,6 +63,10 @@ body { background: var(--c-bg); font-family: var(--font); }
     .cart-topbar h1 { font-size: 1.4rem; }
     .cart-items-wrap { padding: 0; grid-column: 1; }
     .cart-sticky-footer { position: sticky; bottom: auto; top: 100px; transform: none; left: auto; max-width: none; background: var(--c-card); border: 1px solid var(--c-border); border-radius: 16px; padding: 1.25rem; box-shadow: none; grid-column: 2; }
+}
+@media (max-width: 768px) {
+    /* Hide floating chat widget on cart page to avoid overlapping checkout button */
+    .fc-widget { display: none !important; }
 }
 </style>
 

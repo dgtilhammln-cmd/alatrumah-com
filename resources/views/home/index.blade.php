@@ -198,7 +198,7 @@
     }
     @media (max-width: 480px) {
         .cv-hero-modern {
-            padding-top: 0.5rem;
+            padding-top: 1.25rem;
         }
     }
     .cv-hero-oval-bg {

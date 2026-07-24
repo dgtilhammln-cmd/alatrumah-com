@@ -58,6 +58,9 @@ label:focus{outline:none !important;box-shadow:none !important;}
     .summary-item{gap:0.75rem;}
     .summary-img{width:48px;height:48px;}
     .summary-title{font-size:0.85rem;}
+    
+    /* Hide floating chat widget on checkout page */
+    .fc-widget { display: none !important; }
     .summary-meta,.summary-price{font-size:0.78rem;}
     .summary-row,.summary-total{font-size:0.85rem;}
     .btn-pay{padding:1rem;font-size:1rem;border-radius:12px;margin-top:0.75rem;}
