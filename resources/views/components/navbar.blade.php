@@ -288,24 +288,33 @@
 
     @media (max-width: 991px) {
         .pill-navbar-wrapper {
-            top: 0.75rem;
-            left: 0.75rem;
-            right: 0.75rem;
-            width: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            border-radius: 0;
             display: flex;
             justify-content: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            z-index: 999;
         }
         .pill-navbar-inner {
             width: 100%;
             max-width: 100%;
             justify-content: space-between;
             align-items: center;
-            gap: 0.25rem;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 999px;
-            padding: 0.25rem 0.35rem;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
-            border: 1px solid rgba(0,0,0,0.05);
+            gap: 0.4rem;
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            border: none;
             box-sizing: border-box;
         }
         
@@ -313,7 +322,7 @@
             background: transparent !important;
             box-shadow: none !important;
             border: none !important;
-            height: 34px !important;
+            height: 36px !important;
             display: flex;
             align-items: center;
             min-width: 0;
@@ -321,24 +330,24 @@
 
         /* Show logo pill on mobile */
         .nav-pill-logo { padding: 0 !important; margin-right: 0 !important; flex-shrink: 0; }
-        .nav-logo-img-wrap { height: 34px; display: flex; align-items: center; border-radius: 999px; }
+        .nav-logo-img-wrap { height: 36px; display: flex; align-items: center; border-radius: 999px; }
         .nav-logo-img-wrap img { height: 100%; width: auto; object-fit: contain; }
         
-        /* Search pill */
+        /* Search pill — balanced */
         .nav-pill-search { max-width: none; flex: 1; padding: 0 !important; min-width: 0; }
-        .search-form { padding: 0 0.25rem 0 0.5rem; border: 1px solid #E2E8F0; border-radius: 999px; height: 34px; width: 100%; background: #F8FAFC; display: flex; align-items: center; min-width: 0; }
-        .search-input { font-size: 0.7rem; padding: 0; height: 100%; margin: 0; border: none; background: transparent; outline: none; flex: 1; min-width: 0; width: 100%; }
-        .search-btn { width: 24px; height: 24px; border-radius: 50%; background: transparent; display: flex; align-items: center; justify-content: center; margin-left: 0.15rem; flex-shrink: 0; }
+        .search-form { padding: 0 0.3rem 0 0.65rem; border: 1.5px solid #E2E8F0; border-radius: 999px; height: 36px; width: 100%; background: #F8FAFC; display: flex; align-items: center; min-width: 0; }
+        .search-input { font-size: 0.78rem; padding: 0; height: 100%; margin: 0; border: none; background: transparent; outline: none; flex: 1; min-width: 0; width: 100%; }
+        .search-btn { width: 26px; height: 26px; border-radius: 50%; background: #E2E8F0; display: flex; align-items: center; justify-content: center; margin-left: 0.15rem; flex-shrink: 0; }
         
         /* Actions pill */
         .nav-pill-actions { padding: 0 !important; flex-shrink: 0; }
-        .auth-solid-btn { padding: 0 0.75rem; font-size: 0.7rem; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 999px; margin: 0; line-height: 1; flex-shrink: 0; }
+        .auth-solid-btn { padding: 0 0.85rem; font-size: 0.72rem; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 999px; margin: 0; line-height: 1; flex-shrink: 0; }
         
         /* Hide all icons except Daftar */
         .pill-icon-btn { display: none !important; }
         .auth-text-btn { display: none; }
         .auth-divider { display: none; }
-        body { padding-top: 70px; }
+        body { padding-top: 65px; }
     }
     /* RTL support */
     [dir="rtl"] .pill-navbar-inner { flex-direction: row-reverse; }
