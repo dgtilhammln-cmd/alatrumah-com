@@ -191,14 +191,14 @@
     }
     @media (max-width: 768px) {
         .cv-hero-modern {
-            padding-top: 1.25rem;
+            padding-top: 0.5rem;
             padding-bottom: 0.5rem;
             background: transparent !important;
         }
     }
     @media (max-width: 480px) {
         .cv-hero-modern {
-            padding-top: 1.25rem;
+            padding-top: 0.5rem;
         }
     }
     .cv-hero-oval-bg {

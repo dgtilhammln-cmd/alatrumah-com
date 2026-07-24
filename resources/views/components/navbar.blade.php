@@ -371,7 +371,7 @@
         .pill-icon-btn svg { width: 16px; height: 16px; color: #64748B; }
         .cart-dropdown-wrap, .auth-text-btn, .auth-divider { display: none !important; } /* Hide cart and login text on mobile header since they go to bottom nav */
         
-        body { padding-top: 135px !important; background-color: #F8FAFC !important; }
+        body { padding-top: 115px !important; background-color: #F8FAFC !important; }
     }
     /* RTL support */
     [dir="rtl"] .pill-navbar-inner { flex-direction: row-reverse; }

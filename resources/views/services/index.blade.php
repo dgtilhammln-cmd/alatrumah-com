@@ -144,10 +144,10 @@ body{background:var(--c-bg);}
     .sp-sidebar.mobile-open{display:flex;}
     .sp-mobile-filter-btn{display:flex;}
     .sp-toolbar{width:100%;justify-content:space-between;}
-    .sp-topbar{margin-top:70px;}
+    .sp-topbar{margin-top:0.5rem;}
 }
 @media(max-width:640px){
-    .sp-topbar{padding:0.875rem 0;margin-top:65px;}
+    .sp-topbar{padding:0.875rem 0;margin-top:0.5rem;}
     .sp-topbar-inner{flex-direction:column;align-items:flex-start;gap:0.625rem;padding:0 1rem;}
     .sp-toolbar{gap:0.5rem;}
     

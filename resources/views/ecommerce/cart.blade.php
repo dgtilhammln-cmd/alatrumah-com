@@ -19,7 +19,7 @@
 body { background: var(--c-bg); font-family: var(--font); }
 
 .cart-page { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 240px; }
-.cart-topbar { background: #fff; padding: 1rem 1.25rem 0.85rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--c-border); position: sticky; top: 135px; z-index: 50; }
+.cart-topbar { background: #fff; padding: 1rem 1.25rem 0.85rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--c-border); z-index: 50; }
 .cart-topbar h1 { font-size: 1.05rem; font-weight: 800; color: var(--c-text); flex: 1; margin: 0; }
 .cart-count-badge { background: var(--c-accent); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 99px; }
 .cart-items-wrap { padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
