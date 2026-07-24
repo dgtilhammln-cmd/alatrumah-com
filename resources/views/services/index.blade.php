@@ -164,16 +164,19 @@ body{background:var(--c-bg);}
     .sp-btn-icon svg{width:16px;height:16px;}
     
     /* MOBILE LIST VIEW (1 col, horizontal) */
-    .sp-grid.list-view{grid-template-columns:1fr;}
-    .sp-grid.list-view .sp-card{flex-direction:row;min-height:110px;}
-    .sp-grid.list-view .sp-card-img{width:110px;min-height:110px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;}
-    .sp-grid.list-view .sp-card-img img{object-fit:contain;width:100%;height:100%;}
-    .sp-grid.list-view .sp-card-body{padding:0.625rem;flex:1;}
-    .sp-grid.list-view .sp-card-name{font-size:0.9rem;}
+    .sp-grid.list-view{grid-template-columns:1fr;gap:0.5rem;}
+    .sp-grid.list-view .sp-card{flex-direction:row;min-height:90px;border-radius:12px;}
+    .sp-grid.list-view .sp-card-img{width:90px;min-height:90px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;padding:0.25rem;}
+    .sp-grid.list-view .sp-card-img img{object-fit:contain;width:100%;height:100%;border-radius:8px;}
+    .sp-grid.list-view .sp-card-body{padding:0.5rem;flex:1;}
+    .sp-grid.list-view .sp-card-name{font-size:0.85rem;margin-bottom:0.2rem;}
     .sp-grid.list-view .sp-card-desc{display:none;} /* hide desc to save space */
-    .sp-grid.list-view .sp-card-meta-row{gap:0.75rem;margin-bottom:0.5rem;}
-    .sp-grid.list-view .sp-card-footer{flex-direction:column;align-items:flex-start;gap:0.5rem;}
-    .sp-grid.list-view .sp-card-actions{grid-template-columns:1fr auto;width:100%;}
+    .sp-grid.list-view .sp-card-meta-row{gap:0.5rem;margin-bottom:0.4rem;flex-wrap:wrap;}
+    .sp-grid.list-view .sp-card-meta-item{font-size:0.68rem;gap:0.25rem;}
+    .sp-grid.list-view .sp-card-footer{flex-direction:row;align-items:center;justify-content:space-between;gap:0.4rem;}
+    .sp-grid.list-view .sp-card-actions{grid-template-columns:auto auto;margin-top:0;}
+    .sp-grid.list-view .sp-btn-main{padding:0.35rem 0.6rem;font-size:0.65rem;}
+    .sp-grid.list-view .sp-btn-icon{width:28px;height:28px;}
 }
 </style>
 
@@ -439,12 +442,10 @@ body{background:var(--c-bg);}
                             Stok: {{ $service->stock }}
                         </span>
                         @endif
-                        @if($service->sku)
                         <span class="sp-card-meta-item">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3v4M8 3v4M12 3v4"/></svg>
-                            SKU: {{ $service->sku }}
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                            Terjual: {{ $service->sold_count ?? 0 }}
                         </span>
-                        @endif
                     </div>
 
                     <div class="sp-card-footer">

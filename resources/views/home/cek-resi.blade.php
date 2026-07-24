@@ -5,7 +5,6 @@
 
 @section('content')
 <style>
-<style>
 :root{
     --tr-blue:#0EA5E9; --tr-blue-d:#0369A1; --tr-blue-l:#E0F2FE;
     --tr-slate:#64748B; --tr-text:#0F172A; --tr-bg:#F8FAFC;
