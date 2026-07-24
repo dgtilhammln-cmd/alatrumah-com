@@ -39,6 +39,8 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
 .swal2-title { font-family: 'Montserrat', sans-serif !important; }
 .swal2-html-container { font-family: 'Montserrat', sans-serif !important; }
 .swal2-confirm { border-radius: 999px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; padding: 0.75rem 2rem !important; }
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
 </style>
 
 <div class="co-wrap">
@@ -240,14 +242,21 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                             @endforelse
                         </select>
 
-                        <div id="ongkir_loading" style="display:none;font-size:0.82rem;color:#0EA5E9;margin:0.5rem 0;font-weight:600;">⏳ Menghitung ongkir...</div>
+                        <div id="ongkir_loading" style="display:none; align-items:center; gap:0.5rem; font-size:0.85rem; color:#0EA5E9; margin-top:1rem; font-weight:600;">
+                            <svg style="animation: spin 1s linear infinite;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                            Menghitung ongkir...
+                        </div>
 
-                        <select name="courier_service" id="courier_service_select" class="form-input mt-2" required>
-                            <option value="">Pilih Kota & Kurir Dulu</option>
-                        </select>
-                        <p style="font-size:0.78rem;color:#64748B;margin:0.5rem 0 0;">
-                            💡 Ongkir dihitung otomatis setelah Anda memilih kota dan kurir.
-                        </p>
+                        <div id="courier_service_container" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <!-- Default empty state -->
+                            <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #64748B; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Pilih kota dan kurir terlebih dahulu untuk melihat opsi pengiriman.
+                            </div>
+                        </div>
+
+                        <!-- Hidden input required for form submission -->
+                        <input type="hidden" name="courier_service" id="courier_service_hidden" required>
                     </div>
                 </div>
                 @endif
@@ -482,10 +491,17 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
     // SHIPPING COST CALCULATION
     // ────────────────────────────────────────────
     function resetShipping() {
-        const serviceSelect = document.getElementById('courier_service_select');
-        if (serviceSelect) {
-            serviceSelect.innerHTML = '<option value="">Pilih Kota & Kurir Dulu</option>';
+        const serviceContainer = document.getElementById('courier_service_container');
+        if (serviceContainer) {
+            serviceContainer.innerHTML = `
+                <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #64748B; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Pilih kota dan kurir terlebih dahulu untuk melihat opsi pengiriman.
+                </div>
+            `;
         }
+        const hiddenInput = document.getElementById('courier_service_hidden');
+        if (hiddenInput) hiddenInput.value = '';
         selectedCost = 0;
         updateTotal();
     }
@@ -493,14 +509,20 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
     function checkCost() {
         const cityId  = getActiveCityId();
         const courier = document.getElementById('courier_name_select')?.value;
-        const serviceSelect = document.getElementById('courier_service_select');
+        const serviceContainer = document.getElementById('courier_service_container');
+        const hiddenInput = document.getElementById('courier_service_hidden');
         const loadingEl = document.getElementById('ongkir_loading');
 
         if (!cityId || !courier) return;
 
-        if (loadingEl) loadingEl.style.display = 'block';
-        serviceSelect.innerHTML = '<option value="">Menghitung ongkir...</option>';
-        serviceSelect.disabled = true;
+        if (loadingEl) loadingEl.style.display = 'flex';
+        serviceContainer.innerHTML = `
+            <div style="padding: 1rem; border: 1px dashed #CBD5E1; border-radius: 10px; background: #F8FAFC; color: #0EA5E9; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; font-weight:600;">
+                <svg style="animation: spin 1s linear infinite;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                Menghitung ongkir...
+            </div>
+        `;
+        hiddenInput.value = '';
         
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
                        || '{{ csrf_token() }}';
@@ -518,81 +540,158 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
             })
         })
         .then(res => {
-            // Log HTTP status SEBELUM parse JSON — ini penting untuk debug
             console.info('[ONGKIR] HTTP Status:', res.status);
             return res.json().then(data => ({ httpStatus: res.status, data }));
         })
         .then(({ httpStatus, data }) => {
             if (loadingEl) loadingEl.style.display = 'none';
-            serviceSelect.disabled = false;
 
             console.info('[ONGKIR] Response:', data);
 
             // Manual fallback: HANYA jika timeout/connection refused (bukan error API biasa)
             if (data.manual) {
                 console.warn('[ONGKIR] Fallback manual. Debug:', data.debug_error);
-                serviceSelect.removeAttribute('required');
-                serviceSelect.innerHTML = '<option value="manual" data-cost="0" selected>Ongkir dikonfirmasi Admin setelah pesan</option>';
+                serviceContainer.innerHTML = `
+                    <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #0EA5E9; border-radius:10px; background:#F0F9FF;">
+                        <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#0EA5E9; width:1.2rem; height:1.2rem;">
+                        <div style="flex:1;">
+                            <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
+                            <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
+                        </div>
+                        <div style="font-weight:700; color:#0EA5E9; font-size:1rem;">Rp 0</div>
+                    </label>
+                `;
+                hiddenInput.value = 'manual';
+                hiddenInput.removeAttribute('required');
                 selectedCost = 0;
                 updateTotal('manual');
+                attachRadioListeners();
                 return;
             }
 
             // Error dari API (origin salah, kurir tidak tersedia, dll) — tampilkan, jangan silent fallback
             if (data.error) {
                 console.warn('[ONGKIR] API error:', data.error);
-                serviceSelect.removeAttribute('required');
-                serviceSelect.innerHTML = `<option value="" disabled selected>⚠️ ${data.error}</option>`;
+                serviceContainer.innerHTML = `
+                    <div style="padding: 1rem; border: 1px dashed #FCA5A5; border-radius: 10px; background: #FEF2F2; color: #B91C1C; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01"></path></svg>
+                        ${data.error}
+                    </div>
+                `;
+                hiddenInput.value = '';
+                hiddenInput.removeAttribute('required');
                 return;
             }
 
             // Validasi: harus array dan tidak kosong
             if (!Array.isArray(data) || data.length === 0) {
                 console.warn('[ONGKIR] Data kosong atau bukan array:', data);
-                serviceSelect.removeAttribute('required');
-                serviceSelect.innerHTML = '<option value="manual" data-cost="0" selected>Ongkir dikonfirmasi Admin setelah pesan</option>';
+                serviceContainer.innerHTML = `
+                    <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #0EA5E9; border-radius:10px; background:#F0F9FF;">
+                        <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#0EA5E9; width:1.2rem; height:1.2rem;">
+                        <div style="flex:1;">
+                            <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
+                            <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
+                        </div>
+                        <div style="font-weight:700; color:#0EA5E9; font-size:1rem;">Rp 0</div>
+                    </label>
+                `;
+                hiddenInput.value = 'manual';
+                hiddenInput.removeAttribute('required');
                 selectedCost = 0;
                 updateTotal('manual');
+                attachRadioListeners();
                 return;
             }
 
             // SUCCESS — render semua pilihan layanan
-            serviceSelect.setAttribute('required', 'required');
-            serviceSelect.innerHTML = '<option value="">Pilih Layanan Pengiriman</option>';
-            data.forEach(service => {
+            hiddenInput.setAttribute('required', 'required');
+            let html = '';
+            data.forEach((service, idx) => {
                 const cost = service.cost[0]?.value ?? 0;
-                const etd  = service.cost[0]?.etd  ? ` (${service.cost[0].etd} hari)` : '';
+                const etd  = service.cost[0]?.etd  ? `${service.cost[0].etd} hari` : 'Estimasi tidak tersedia';
                 const fmt  = new Intl.NumberFormat('id-ID').format(cost);
-                const opt  = document.createElement('option');
-                opt.value  = service.service;
-                opt.dataset.cost = cost;
-                opt.text   = `${service.service} — Rp ${fmt}${etd}`;
-                serviceSelect.appendChild(opt);
+                
+                // Tambahkan deskripsi agar pembeli gaptek mengerti
+                let desc = service.description || '';
+                if(service.service.toUpperCase() === 'JTR') desc = 'Layanan Kargo/Barang Berat (Lebih hemat)';
+                if(service.service.toUpperCase() === 'REG' || service.service.toUpperCase() === 'EZ') desc = 'Layanan Standar Reguler';
+                if(service.service.toUpperCase() === 'YES') desc = 'Layanan Cepat (Yakin Esok Sampai)';
+                
+                html += `
+                    <label class="service-card" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #E2E8F0; border-radius:10px; background:#fff; transition:all 0.2s;">
+                        <input type="radio" name="courier_service_radio" value="${service.service}" data-cost="${cost}" style="accent-color:#0EA5E9; width:1.2rem; height:1.2rem;">
+                        <div style="flex:1;">
+                            <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">${service.service}</div>
+                            <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.3rem;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                ${desc}
+                            </div>
+                            <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.3rem;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+                                ${etd}
+                            </div>
+                        </div>
+                        <div style="font-weight:800; color:#0EA5E9; font-size:1.1rem;">Rp ${fmt}</div>
+                    </label>
+                `;
             });
+            serviceContainer.innerHTML = html;
+            attachRadioListeners();
             console.info('[ONGKIR] Sukses:', data.length, 'layanan tampil.');
         })
         .catch(err => {
             // Hanya terjadi jika ada error JARINGAN di sisi browser (bukan response error)
             if (loadingEl) loadingEl.style.display = 'none';
-            serviceSelect.disabled = false;
             console.error('[ONGKIR] Fetch/jaringan error:', err);
-            serviceSelect.removeAttribute('required');
-            serviceSelect.innerHTML = '<option value="manual" data-cost="0" selected>Ongkir dikonfirmasi Admin setelah pesan</option>';
+            serviceContainer.innerHTML = `
+                <label class="service-card selected" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #0EA5E9; border-radius:10px; background:#F0F9FF;">
+                    <input type="radio" name="courier_service_radio" value="manual" data-cost="0" checked style="accent-color:#0EA5E9; width:1.2rem; height:1.2rem;">
+                    <div style="flex:1;">
+                        <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">Manual</div>
+                        <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Ongkir dikonfirmasi Admin setelah pesan</div>
+                    </div>
+                    <div style="font-weight:700; color:#0EA5E9; font-size:1rem;">Rp 0</div>
+                </label>
+            `;
+            hiddenInput.value = 'manual';
+            hiddenInput.removeAttribute('required');
             selectedCost = 0;
             updateTotal('manual');
+            attachRadioListeners();
         });
     }
 
-    document.getElementById('courier_service_select')?.addEventListener('change', function() {
-        if (!this.value || this.value === 'manual') {
-            selectedCost = 0;
-            updateTotal(this.value === 'manual' ? 'manual' : '');
-            return;
-        }
-        const option = this.options[this.selectedIndex];
-        selectedCost = parseInt(option.dataset.cost) || 0;
-        updateTotal();
-    });
+    function attachRadioListeners() {
+        const radios = document.querySelectorAll('input[name="courier_service_radio"]');
+        const hiddenInput = document.getElementById('courier_service_hidden');
+        
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Reset semua background card
+                document.querySelectorAll('.service-card').forEach(card => {
+                    card.style.borderColor = '#E2E8F0';
+                    card.style.background = '#fff';
+                });
+                
+                // Tambahkan styling di card yang dipilih
+                if (this.checked) {
+                    this.closest('.service-card').style.borderColor = '#0EA5E9';
+                    this.closest('.service-card').style.background = '#F0F9FF';
+                    
+                    hiddenInput.value = this.value;
+                    
+                    if (this.value === 'manual') {
+                        selectedCost = 0;
+                        updateTotal('manual');
+                    } else {
+                        selectedCost = parseInt(this.dataset.cost) || 0;
+                        updateTotal();
+                    }
+                }
+            });
+        });
+    }
 
     function updateTotal(mode) {
         const input = document.getElementById('shipping_cost_input');
