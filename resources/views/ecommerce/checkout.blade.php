@@ -13,12 +13,12 @@ body{background:var(--c-bg);}
 
 .form-group{margin-bottom:1.25rem;}
 .form-label{display:block;font-size:0.85rem;font-weight:600;color:var(--c-text);margin-bottom:0.5rem;}
-.form-input{width:100%;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:0.75rem 1rem;font-size:0.9rem;color:#0F172A;transition:all 0.2s;}
-.form-input:focus{outline:none;border-color:#0EA5E9;box-shadow:0 0 0 3px rgba(14,165,233,0.1);background:#fff;}
+.form-input{width:100%;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:0.75rem 1rem;font-size:0.9rem;color:#0F172A;transition:border-color 0.2s;}
+.form-input:focus{outline:none;border-color:#0EA5E9;background:#fff;}
 select.form-input{appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 1rem center;background-size:1em;}
 
 .summary-item{display:flex;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px dashed #E2E8F0;}
-.summary-img{width:60px;height:60px;border-radius:8px;object-fit:cover;background:#F1F5F9;}
+.summary-img{width:60px;height:60px;border-radius:8px;object-fit:cover;background:#F1F5F9;flex-shrink:0;}
 .summary-title{font-size:0.9rem;font-weight:600;color:var(--c-text);line-height:1.3;}
 .summary-meta{font-size:0.8rem;color:var(--c-muted);margin-top:0.25rem;}
 .summary-price{font-size:0.9rem;font-weight:700;color:var(--c-accent);}
@@ -26,12 +26,42 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
 .summary-row{display:flex;justify-content:space-between;font-size:0.9rem;color:var(--c-muted);margin-bottom:0.5rem;}
 .summary-total{display:flex;justify-content:space-between;font-size:1.1rem;font-weight:800;color:var(--c-text);margin-top:1rem;padding-top:1rem;border-top:1px solid var(--c-border);}
 
-.btn-pay{display:block;width:100%;background:var(--c-text);color:#fff;border:none;border-radius:999px;padding:1rem;font-size:1rem;font-weight:700;cursor:pointer;transition:all 0.2s;text-align:center;margin-top:1.5rem;}
-.btn-pay:hover{background:#000;transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,0.1);}
+.btn-pay{display:block;width:100%;background:var(--c-text);color:#fff;border:none;border-radius:999px;padding:1rem;font-size:1rem;font-weight:700;cursor:pointer;transition:background 0.2s;text-align:center;margin-top:1.5rem;}
+.btn-pay:hover{background:#000;}
+
+/* Scrollbar biru — hapus kuning */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:#F1F5F9;}
+::-webkit-scrollbar-thumb{background:#0EA5E9;border-radius:4px;}
+
+/* Hapus semua outline/highlight kuning browser */
+*:focus{outline:none !important;}
+*:focus-visible{outline:2px solid #0EA5E9 !important;outline-offset:2px !important;}
+input[type="radio"]:focus,input[type="radio"]:focus-visible{outline:none !important;box-shadow:none !important;}
+label:focus{outline:none !important;box-shadow:none !important;}
+.service-card{outline:none !important;box-shadow:none !important;}
 
 @media(max-width:991px){
     .co-grid{grid-template-columns:1fr;}
     .co-wrap{margin-top:80px;}
+}
+
+/* Mobile super friendly */
+@media(max-width:768px){
+    .co-wrap{margin-top:65px;padding:0 0.75rem;margin-bottom:5rem;}
+    .co-section{padding:1rem !important;border-radius:12px;margin-bottom:0.75rem !important;}
+    .co-section-title{font-size:0.95rem;margin-bottom:0.85rem;}
+    .form-group{margin-bottom:0.85rem;}
+    .form-label{font-size:0.8rem;}
+    .form-input{font-size:0.95rem;padding:0.8rem 0.85rem;border-radius:8px;}
+    select.form-input{font-size:0.95rem;}
+    .summary-item{gap:0.75rem;}
+    .summary-img{width:48px;height:48px;}
+    .summary-title{font-size:0.85rem;}
+    .summary-meta,.summary-price{font-size:0.78rem;}
+    .summary-row,.summary-total{font-size:0.85rem;}
+    .btn-pay{padding:1rem;font-size:1rem;border-radius:12px;margin-top:0.75rem;}
+    #courier_service_container label{padding:0.85rem !important;border-radius:8px !important;gap:0.75rem !important;}
 }
 
 /* SweetAlert2 custom theme */
