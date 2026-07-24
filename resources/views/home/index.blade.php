@@ -921,7 +921,6 @@
         .cv-gallery-grid .gallery-item:first-child { grid-column: 1; grid-row: 1; }
     }
     @media (max-width: 640px) {
-        .cv-hero-modern { padding-top: calc(46px + 1.25rem); }
         .cv-hero-center { height: 320px; }
         .cv-gallery-grid { grid-template-columns: 1fr; }
         .cv-products-grid, .cv-adv-grid, .cv-apps-grid { grid-template-columns: 1fr; }
