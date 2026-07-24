@@ -98,12 +98,8 @@ class CheckoutApiController extends Controller
 
     private function getApiBase(): string
     {
-        $apiType = Setting::get('rajaongkir_type', 'starter');
-        return match($apiType) {
-            'pro'   => 'https://pro.rajaongkir.com/api',
-            'basic' => 'https://rajaongkir.com/api',
-            default => 'https://api.rajaongkir.com/starter'
-        };
+        // Force Komerce API v1 since standard RajaOngkir is blocked by Hostinger/Cloudflare
+        return 'https://rajaongkir.komerce.id/api/v1';
     }
 
     private function getApiKey(): ?string
@@ -132,12 +128,21 @@ class CheckoutApiController extends Controller
                                     'key' => $apiKey,
                                     'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                                 ])
-                                ->get($this->getApiBase() . '/province');
+                                ->get($this->getApiBase() . '/destination/province');
 
                 $json = $response->json();
-                if (isset($json['rajaongkir']['results']) && count($json['rajaongkir']['results']) > 0) {
-                    Cache::put('rajaongkir_provinces', $json['rajaongkir']['results'], now()->addHours(24));
-                    return response()->json($json['rajaongkir']['results']);
+                
+                // Parse Komerce v1 structure and map to legacy RajaOngkir structure
+                if (isset($json['data']) && count($json['data']) > 0) {
+                    $results = array_map(function($item) {
+                        return [
+                            'province_id' => $item['id'],
+                            'province' => $item['name']
+                        ];
+                    }, $json['data']);
+                    
+                    Cache::put('rajaongkir_provinces', $results, now()->addHours(24));
+                    return response()->json($results);
                 }
             } catch (\Exception $e) {
                 Log::warning('RajaOngkir Provinces API unreachable, using static data: ' . $e->getMessage());
@@ -170,12 +175,22 @@ class CheckoutApiController extends Controller
                                     'key' => $apiKey,
                                     'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                                 ])
-                                ->get($this->getApiBase() . '/city', ['province' => $provinceId]);
+                                ->get($this->getApiBase() . '/destination/city/' . $provinceId);
 
                 $json = $response->json();
-                if (isset($json['rajaongkir']['results']) && count($json['rajaongkir']['results']) > 0) {
-                    Cache::put($cacheKey, $json['rajaongkir']['results'], now()->addHours(24));
-                    return response()->json($json['rajaongkir']['results']);
+                
+                // Parse Komerce v1 structure and map to legacy RajaOngkir structure
+                if (isset($json['data']) && count($json['data']) > 0) {
+                    $results = array_map(function($item) {
+                        return [
+                            'city_id' => $item['id'],
+                            'city_name' => $item['name'],
+                            'type' => 'Kota/Kabupaten' // Komerce API doesn't distinguish type in the basic endpoint
+                        ];
+                    }, $json['data']);
+                    
+                    Cache::put($cacheKey, $results, now()->addHours(24));
+                    return response()->json($results);
                 }
             } catch (\Exception $e) {
                 Log::warning('RajaOngkir Cities API unreachable for province ' . $provinceId . ': ' . $e->getMessage());
@@ -232,7 +247,7 @@ class CheckoutApiController extends Controller
                                 'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                             ])
                             ->asForm()
-                            ->post($apiBase . '/cost', [
+                            ->post($apiBase . '/calculate/domestic-cost', [
                                 'origin'      => $origin,
                                 'destination' => $request->destination,
                                 'weight'      => $request->weight,
@@ -244,15 +259,15 @@ class CheckoutApiController extends Controller
 
             Log::info('[ONGKIR] Response diterima', [
                 'http_status'   => $statusCode,
-                'ro_status'     => $json['rajaongkir']['status'] ?? null,
-                'has_results'   => isset($json['rajaongkir']['results']),
-                'results_count' => count($json['rajaongkir']['results'] ?? []),
+                'meta_status'   => $json['meta']['status'] ?? null,
+                'has_data'      => isset($json['data']),
+                'results_count' => count($json['data'] ?? []),
             ]);
 
             // Cek HTTP status dulu
             if ($statusCode !== 200) {
-                $desc = $json['rajaongkir']['status']['description'] ?? "HTTP Error {$statusCode}";
-                Log::warning('[ONGKIR] Non-200 dari RajaOngkir', [
+                $desc = $json['meta']['message'] ?? "HTTP Error {$statusCode}";
+                Log::warning('[ONGKIR] Non-200 dari API Komerce', [
                     'http_status' => $statusCode,
                     'description' => $desc,
                     'body'        => $response->body(),
@@ -260,27 +275,29 @@ class CheckoutApiController extends Controller
                 return response()->json(['error' => $desc], 400);
             }
 
-            // Validasi struktur results
-            $results = $json['rajaongkir']['results'] ?? [];
+            // Validasi struktur data
+            $results = $json['data'] ?? [];
             if (empty($results)) {
-                $desc = $json['rajaongkir']['status']['description'] ?? 'Rute tidak tersedia.';
-                Log::warning('[ONGKIR] Results kosong dari API', ['body' => $response->body()]);
+                $desc = $json['meta']['message'] ?? 'Rute tidak tersedia.';
+                Log::warning('[ONGKIR] Data kosong dari API Komerce', ['body' => $response->body()]);
                 return response()->json(['error' => $desc], 422);
             }
 
-            // Kumpulkan semua costs dari SEMUA results (bukan hanya results[0])
+            // Map Komerce structure to what the frontend expects (legacy RajaOngkir format)
+            // Komerce returns flat array: [{name, code, service, description, cost, etd}]
+            // Frontend expects: { service, description, cost: [{ value, etd }] }
             $allCosts = [];
-            foreach ($results as $result) {
-                if (!empty($result['costs'])) {
-                    foreach ($result['costs'] as $service) {
-                        $allCosts[] = $service;
-                    }
-                }
-            }
-
-            if (empty($allCosts)) {
-                Log::warning('[ONGKIR] Costs kosong di dalam results', ['results' => $results]);
-                return response()->json(['error' => 'Tidak ada layanan tersedia untuk rute dan kurir ini.'], 422);
+            foreach ($results as $item) {
+                $allCosts[] = [
+                    'service' => $item['service'],
+                    'description' => $item['description'],
+                    'cost' => [
+                        [
+                            'value' => $item['cost'],
+                            'etd' => str_replace(' day', '', $item['etd'])
+                        ]
+                    ]
+                ];
             }
 
             Log::info('[ONGKIR] Sukses — ' . count($allCosts) . ' layanan ditemukan.');
