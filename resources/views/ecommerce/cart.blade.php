@@ -58,7 +58,7 @@ body { background: var(--c-bg); font-family: var(--font); }
 .btn-shop { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.75rem; background: linear-gradient(135deg, var(--c-accent), var(--c-accent-dark)); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 0.9rem; }
 
 @media (min-width: 768px) {
-    .cart-page { max-width: 1100px; display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; align-items: start; padding: 2rem 1.5rem 4rem; }
+    .cart-page { max-width: 1100px; display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; align-items: start; padding: 110px 1.5rem 4rem; }
     .cart-topbar { position: relative; top: auto; border-bottom: none; padding: 0 0 1rem; grid-column: 1 / -1; }
     .cart-topbar h1 { font-size: 1.4rem; }
     .cart-items-wrap { padding: 0; grid-column: 1; }
