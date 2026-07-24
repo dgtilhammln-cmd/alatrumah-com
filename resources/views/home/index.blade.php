@@ -1302,7 +1302,7 @@
     @if(isset($promoSections) && $promoSections->count())
     <style>
     .cv-promo-wrap {
-        background: transparent;
+        background: #ffffff;
         padding: 0.625rem 0 0;
         border-bottom: none;
     }
