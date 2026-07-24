@@ -296,18 +296,40 @@ class CheckoutApiController extends Controller
             // Map Komerce structure to what the frontend expects (legacy RajaOngkir format)
             // Komerce returns flat array: [{name, code, service, description, cost, etd}]
             // Frontend expects: { service, description, cost: [{ value, etd }] }
+            // Filter: exclude JTR* services (kargo/trucking) — not suitable for regular products
+            $EXCLUDED = ['JTR', 'JTR<130', 'JTR>130', 'JTR>200', 'JTR250', 'LITER'];
             $allCosts = [];
             foreach ($results as $item) {
+                $svc = strtoupper($item['service'] ?? '');
+                if (in_array($svc, $EXCLUDED)) continue;
+
+                // Parse ETD: "1-2 day" → "1-2", "2 day" → "2"
+                $etdRaw = trim($item['etd'] ?? '');
+                $etdNum = preg_replace('/\s*days?\s*/i', '', $etdRaw);
+
                 $allCosts[] = [
-                    'service' => $item['service'],
+                    'service'     => $item['service'],
                     'description' => $item['description'],
-                    'cost' => [
+                    'cost'        => [
                         [
                             'value' => $item['cost'],
-                            'etd' => str_replace(' day', '', $item['etd'])
+                            'etd'   => $etdNum,
                         ]
                     ]
                 ];
+            }
+
+            if (empty($allCosts)) {
+                // All results were trucking — return them anyway
+                foreach ($results as $item) {
+                    $etdRaw = trim($item['etd'] ?? '');
+                    $etdNum = preg_replace('/\s*days?\s*/i', '', $etdRaw);
+                    $allCosts[] = [
+                        'service'     => $item['service'],
+                        'description' => $item['description'],
+                        'cost'        => [['value' => $item['cost'], 'etd' => $etdNum]]
+                    ];
+                }
             }
 
             Log::info('[ONGKIR] Sukses — ' . count($allCosts) . ' layanan ditemukan.');

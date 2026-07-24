@@ -13,49 +13,100 @@ class ResiController extends Controller
     }
     public function track(Request $request)
     {
-        $request->validate(['awb'=>'required|string|max:100','courier'=>'required|string|max:50'],['awb.required'=>'Nomor resi wajib diisi.','courier.required'=>'Kurir wajib dipilih.']);
+        $request->validate(
+            ['awb'=>'required|string|max:100','courier'=>'required|string|max:50'],
+            ['awb.required'=>'Nomor resi wajib diisi.','courier.required'=>'Kurir wajib dipilih.']
+        );
         $settings = Setting::getAllAsArray();
-        $awb = trim($request->awb);
-        $courier = strtolower(trim($request->courier));
-        $apiKey = $settings['rajaongkir_api_key'] ?? null;
-        $apiType = $settings['rajaongkir_type'] ?? 'starter';
+        $awb      = trim($request->awb);
+        $courier  = strtolower(trim($request->courier));
+        $apiKey   = $settings['rajaongkir_api_key'] ?? null;
+
         if (empty($apiKey)) {
-            return view('home.cek-resi',['settings'=>$settings,'awb'=>$awb,'courier'=>$courier,'error'=>'API key RajaOngkir belum dikonfigurasi. Hubungi administrator.']);
+            return view('home.cek-resi', [
+                'settings' => $settings,
+                'awb'      => $awb,
+                'courier'  => $courier,
+                'error'    => 'API key RajaOngkir belum dikonfigurasi. Hubungi administrator.',
+            ]);
         }
+
         try {
-            $baseUrl = 'https://rajaongkir.komerce.id/api/v1';
-            $response = Http::withoutVerifying()->timeout(15)
+            // Komerce new endpoint: POST /api/v1/track/waybill with param 'awb' (not 'waybill')
+            $response = Http::withoutVerifying()
+                ->timeout(20)
                 ->withHeaders([
                     'key'          => $apiKey,
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ])
                 ->asForm()
-                ->post("{$baseUrl}/waybill", [
-                    'waybill' => $awb,
+                ->post('https://rajaongkir.komerce.id/api/v1/track/waybill', [
+                    'awb'     => $awb,
                     'courier' => $courier,
-                ]);$json = $response->json();
-            $ro = $json['rajaongkir'] ?? null;
-            if (!$ro || ($ro['status']['code'] ?? 200) != 200) {
-                $msg = $ro['status']['description'] ?? ($ro['message'] ?? 'Resi tidak ditemukan.');
-                return view('home.cek-resi', compact('settings','awb','courier') + ['error'=>$msg]);
+                ]);
+
+            $json = $response->json();
+            $meta = $json['meta'] ?? [];
+            $data = $json['data'] ?? null;
+
+            // Check for API errors
+            if (!$data || ($meta['code'] ?? 200) != 200) {
+                $msg = $meta['message'] ?? 'Resi tidak ditemukan atau kurir tidak mendukung pelacakan.';
+                Log::warning('[RESI] API error', ['meta' => $meta, 'awb' => $awb, 'courier' => $courier]);
+                return view('home.cek-resi', compact('settings','awb','courier') + ['error' => $msg]);
             }
-            $result   = $ro['result'] ?? [];
-            $delivery = $result['delivery_status'] ?? [];
-            $summary2 = $result['summary'] ?? [];
-            $details  = $result['details'] ?? [];
-            $manifest = $result['manifest'] ?? [];
-            $st = strtolower($delivery['status'] ?? '');
-            $label = match(true){ str_contains($st,'delivered')=>'TERKIRIM',str_contains($st,'transit')=>'DALAM PERJALANAN',str_contains($st,'pickup')=>'PICKUP',str_contains($st,'on process')=>'DIPROSES',str_contains($st,'return')=>'DIKEMBALIKAN',default=>strtoupper($delivery['status'] ?? 'TIDAK DIKETAHUI') };
-            $tracking = ['summary'=>['awb'=>$awb,'courier'=>strtoupper($courier),'service'=>$summary2['service_code'] ?? ($details['service_code'] ?? '-'),'status'=>$label],'detail'=>['shipper'=>$details['shipper_name'] ?? '-','origin'=>$details['shipper_city'] ?? '-','receiver'=>$details['receiver_name'] ?? '-','destination'=>$details['receiver_city'] ?? '-'],'history'=>array_map(function($m){return['date'=>($m['manifest_date'] ?? '').' '.($m['manifest_time'] ?? ''),'desc'=>$m['manifest_description'] ?? '-','location'=>$m['city_name'] ?? ''];},$manifest)];
+
+            $summary    = $data['summary']         ?? [];
+            $details    = $data['details']          ?? [];
+            $manifest   = $data['manifest']         ?? [];
+            $delivery   = $data['delivery_status']  ?? [];
+
+            // Normalize status
+            $st    = strtolower($delivery['status'] ?? $summary['status'] ?? '');
+            $label = match(true) {
+                str_contains($st, 'delivered')   => 'TERKIRIM',
+                str_contains($st, 'transit')      => 'DALAM PERJALANAN',
+                str_contains($st, 'pickup')       => 'PICKUP',
+                str_contains($st, 'on process')   => 'DIPROSES',
+                str_contains($st, 'return')        => 'DIKEMBALIKAN',
+                str_contains($st, 'out for')       => 'DALAM PENGIRIMAN',
+                default                            => strtoupper($delivery['status'] ?? $summary['status'] ?? 'TIDAK DIKETAHUI'),
+            };
+
+            $tracking = [
+                'summary' => [
+                    'awb'     => $awb,
+                    'courier' => strtoupper($summary['courier_name'] ?? $courier),
+                    'service' => $summary['service_code'] ?? '-',
+                    'status'  => $label,
+                ],
+                'detail'  => [
+                    'shipper'     => $details['shipper_name']   ?? ($summary['shipper_name']   ?? '-'),
+                    'origin'      => $details['origin']         ?? ($summary['origin']          ?? '-'),
+                    'receiver'    => $details['receiver_name']  ?? ($summary['receiver_name']   ?? '-'),
+                    'destination' => $details['destination']    ?? ($summary['destination']     ?? '-'),
+                    'weight'      => isset($details['weight']) ? $details['weight'] . ' gr' : '-',
+                ],
+                'history' => array_map(function ($m) {
+                    return [
+                        'date'     => ($m['manifest_date'] ?? '') . ' ' . ($m['manifest_time'] ?? ''),
+                        'desc'     => $m['manifest_description'] ?? ($m['title'] ?? '-'),
+                        'location' => $m['city_name'] ?? '',
+                    ];
+                }, $manifest),
+            ];
+
+            Log::info('[RESI] Tracking sukses', ['awb' => $awb, 'courier' => $courier, 'status' => $label]);
             return view('home.cek-resi', compact('settings','tracking','awb','courier'));
+
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error('ResiController connection: ' . $e->getMessage());
+            Log::error('[RESI] Connection error: ' . $e->getMessage());
             return view('home.cek-resi', compact('settings', 'awb', 'courier') + [
-                'error' => 'Gagal terhubung ke server ekspedisi (Request Timed Out). Ini adalah hal wajar karena provider internet lokal Anda saat ini (di Localhost) kemungkinan memblokir akses ke API RajaOngkir. Fitur ini akan berjalan 100% normal saat website sudah di-online-kan (hosting).',
+                'error' => 'Gagal terhubung ke server ekspedisi. Pastikan koneksi internet aktif dan coba lagi.',
             ]);
         } catch (\Throwable $e) {
-            Log::error('Resi: '.$e->getMessage());
-            return view('home.cek-resi', compact('settings','awb','courier') + ['error'=>'Terjadi kesalahan. Coba lagi nanti.']);
+            Log::error('[RESI] Error: ' . $e->getMessage());
+            return view('home.cek-resi', compact('settings','awb','courier') + ['error' => 'Terjadi kesalahan. Coba lagi nanti.']);
         }
     }
 }

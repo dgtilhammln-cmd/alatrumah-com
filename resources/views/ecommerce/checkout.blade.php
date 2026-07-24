@@ -398,7 +398,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const subtotal = {{ $summary['subtotal'] }};
-    const totalWeight = {{ $summary['total_weight'] > 0 ? $summary['total_weight'] : 1000 }};
+    const totalWeight = {{ $summary['total_weight'] > 0 ? $summary['total_weight'] : 100 }};
     
     let selectedCost = 0;
     let allProvinces = [];
