@@ -145,7 +145,7 @@
     }
     @media (max-width: 480px) {
         .cv-hero-slider-col { aspect-ratio: 21/9; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
-        .cv-hero-img-main { border-radius: 20px; }
+        .cv-hero-img-main { border-radius: 20px; position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
     }
     .cv-hero-modern {
         background-color: #ffffff;
@@ -932,11 +932,11 @@
     .cv-usp-label { color: #0f172a; font-weight: 700; }
     
     @media (max-width: 768px) {
-        .cv-usp-bar { padding: 0.5rem 0.5rem 1rem; border-bottom: none; box-shadow: none; margin-top: 0; background: transparent; }
+        .cv-usp-bar { padding: 0.5rem 1rem 1rem; border-bottom: none; box-shadow: none; margin-top: 0; background: transparent; }
         .cv-usp-inner {
             flex-wrap: nowrap;
-            justify-content: space-between;
-            gap: 0.25rem;
+            justify-content: center;
+            gap: 1rem;
             overflow-x: auto;
             scrollbar-width: none;
         }
@@ -1215,8 +1215,8 @@
     {{-- ════ CATEGORY SWIPER ════ --}}
     @if($categoryItems->count())
     <section class="cv-cats-section" aria-label="Kategori Produk">
-        <div class="cv-cats-inner" style="flex-direction: column; align-items: flex-start; padding: 1rem 1.5rem 0.25rem;">
-            <h2 style="font-size:1.15rem; font-weight:600; color:#1E293B; margin:0 0 0.25rem 0; font-family:'Montserrat', sans-serif;">
+        <div class="cv-cats-inner" style="flex-direction: column; align-items: flex-start; padding: 1rem 1.5rem 1.25rem;">
+            <h2 style="font-size:1.15rem; font-weight:600; color:#1E293B; margin:0 0 1rem 0; font-family:'Montserrat', sans-serif;">
                 Kategori Pilihan
             </h2>
             <div class="swiper cats-swiper hidden md:block" id="catsSwiperDesktop" style="width: 100%;">
