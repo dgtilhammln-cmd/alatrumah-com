@@ -1377,6 +1377,12 @@
         color: #64748B;
         margin-top: .15rem;
     }
+    .cv-promo-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
     .cv-promo-view-all {
         font-size: .825rem;
         font-weight: 600;
@@ -1440,8 +1446,7 @@
     .cv-promo-swiper {
         width: 100%;
         height: 100%;
-        padding: 16px 8px; /* Added to prevent hover shadow/transform clipping */
-        margin: -16px -8px;
+        overflow: visible;
     }
     .cv-promo-swiper .swiper-wrapper {
         align-items: stretch;
@@ -1458,7 +1463,7 @@
             border-radius: 0; 
         }
         .cv-promo-grid { gap: 0; }
-        .cv-promo-swiper { padding: 4px 8px; margin: -4px -8px; }
+        .cv-promo-swiper { overflow: visible; }
         .cv-promo-banner-wrap.desktop-only { display: none; }
         .cv-promo-banner-wrap.mobile-only { 
             display: flex; 
