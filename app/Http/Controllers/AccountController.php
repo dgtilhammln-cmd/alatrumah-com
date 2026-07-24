@@ -83,11 +83,7 @@ class AccountController extends Controller
             $apiType = \App\Models\Setting::get('rajaongkir_type', 'starter');
             if ($apiKey) {
                 try {
-                    $baseUrl = match($apiType) {
-                        'pro'   => 'https://pro.rajaongkir.com/api',
-                        'basic' => 'https://rajaongkir.com/api',
-                        default => 'https://api.rajaongkir.com/starter',
-                    };
+                    $baseUrl = 'https://rajaongkir.komerce.id/api/v1';
                     $response = \Illuminate\Support\Facades\Http::withoutVerifying()
                         ->timeout(10)
                         ->withHeaders(['key' => $apiKey, 'Content-Type' => 'application/x-www-form-urlencoded'])

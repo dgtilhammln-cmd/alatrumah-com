@@ -23,7 +23,7 @@ class ResiController extends Controller
             return view('home.cek-resi',['settings'=>$settings,'awb'=>$awb,'courier'=>$courier,'error'=>'API key RajaOngkir belum dikonfigurasi. Hubungi administrator.']);
         }
         try {
-            $baseUrl = match($apiType) { 'pro'=>'https://pro.rajaongkir.com/api','basic'=>'https://rajaongkir.com/api',default=>'https://api.rajaongkir.com/starter' };
+            $baseUrl = 'https://rajaongkir.komerce.id/api/v1';
             $response = Http::withoutVerifying()->timeout(15)
                 ->withHeaders([
                     'key'          => $apiKey,
