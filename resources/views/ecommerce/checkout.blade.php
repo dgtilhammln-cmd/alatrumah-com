@@ -64,6 +64,30 @@ label:focus{outline:none !important;box-shadow:none !important;}
     .summary-meta,.summary-price{font-size:0.78rem;}
     .summary-row,.summary-total{font-size:0.85rem;}
     .btn-pay{padding:1rem;font-size:1rem;border-radius:12px;margin-top:0.75rem;}
+
+    /* SUPER APP STICKY FOOTER */
+    .co-wrap { padding-bottom: 100px; }
+    .checkout-sticky-footer {
+        position: fixed; bottom: 0; left: 0; right: 0; width: 100%;
+        background: #fff; padding: 0.85rem 1rem;
+        box-shadow: 0 -4px 25px rgba(0,0,0,0.08);
+        display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+        z-index: 1000; border-top: 1px solid var(--c-border);
+        margin: 0;
+    }
+    .checkout-sticky-footer .summary-total {
+        margin: 0; padding: 0; border: none; display: flex; flex-direction: column; align-items: flex-start;
+    }
+    .checkout-sticky-footer .summary-total span:first-child {
+        font-size: 0.75rem; font-weight: 500; color: var(--c-muted); margin-bottom: 0.15rem; font-family: var(--font);
+    }
+    .checkout-sticky-footer .summary-total span:last-child {
+        font-size: 1.15rem; font-weight: 800; color: var(--c-accent); font-family: var(--font);
+    }
+    .checkout-sticky-footer .btn-pay {
+        margin: 0; width: auto; padding: 0.8rem 1.5rem; font-size: 0.95rem; flex-shrink: 0; flex: 1; max-width: 200px;
+    }
+    .secure-badge { display: none !important; }
     #courier_service_container label{padding:0.85rem !important;border-radius:8px !important;gap:0.75rem !important;}
 }
 
@@ -353,14 +377,15 @@ label:focus{outline:none !important;box-shadow:none !important;}
                         <input type="text" name="coupon_code" class="form-input" placeholder="Masukkan kode promo">
                     </div>
 
-                    <div class="summary-total">
-                        <span>Total Belanja</span>
-                        <span id="total-row-val">Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
+                    <div class="checkout-sticky-footer" style="margin-top: 1.5rem;">
+                        <div class="summary-total" style="margin-top:0; padding-top:1rem;">
+                            <span>Total Belanja</span>
+                            <span id="total-row-val">Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
+                        </div>
+                        <button type="submit" class="btn-pay" onclick="prepareSubmit(event)">Pilih Pembayaran</button>
                     </div>
-
-                    <button type="submit" class="btn-pay" onclick="prepareSubmit(event)">Pilih Pembayaran</button>
                     
-                    <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:1.5rem;color:var(--c-muted);font-size:0.75rem;">
+                    <div class="secure-badge" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:1.5rem;color:var(--c-muted);font-size:0.75rem;">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                         Pembayaran 100% Aman & Terenkripsi
                     </div>
@@ -647,7 +672,8 @@ label:focus{outline:none !important;box-shadow:none !important;}
             let html = '';
             data.forEach((service, idx) => {
                 const cost = service.cost[0]?.value ?? 0;
-                const etd  = service.cost[0]?.etd  ? `${service.cost[0].etd} hari` : 'Estimasi tidak tersedia';
+                let etdString = service.cost[0]?.etd ? service.cost[0].etd.toString().replace(/hari/gi, '').trim() : '';
+                const etd = etdString ? `Estimasi ${etdString} Hari` : 'Estimasi tidak tersedia';
                 const fmt  = new Intl.NumberFormat('id-ID').format(cost);
                 
                 // Tambahkan deskripsi agar pembeli gaptek mengerti
