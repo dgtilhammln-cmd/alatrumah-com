@@ -1473,7 +1473,7 @@
         .cv-promo-swiper { overflow: hidden; padding: 4px; }
         .cv-promo-banner-wrap.desktop-only { display: none; }
         .cv-promo-banner-wrap.mobile-only { 
-            display: flex; 
+            display: flex !important; 
             width: 155px !important; 
             margin-right: 0.5rem; 
             border-radius: 8px; 
