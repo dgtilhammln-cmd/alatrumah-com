@@ -66,18 +66,20 @@
     }
 
     /* Scrolled State */
-    .pill-navbar-inner.navbar-scrolled {
-        background: #ffffff;
-        border-radius: 999px;
-        padding: 0.25rem 0.75rem;
-        box-shadow: 0 10px 40px rgba(14, 165, 233, 0.12), 0 2px 10px rgba(0,0,0,0.05);
-        border: 1px solid rgba(14, 165, 233, 0.1);
-        gap: 0.5rem;
-    }
-    .pill-navbar-inner.navbar-scrolled .nav-pill-box {
-        box-shadow: none;
-        border: none;
-        background: transparent;
+    @media (min-width: 992px) {
+        .pill-navbar-inner.navbar-scrolled {
+            background: #ffffff;
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            box-shadow: 0 10px 40px rgba(14, 165, 233, 0.12), 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(14, 165, 233, 0.1);
+            gap: 0.5rem;
+        }
+        .pill-navbar-inner.navbar-scrolled .nav-pill-box {
+            box-shadow: none;
+            border: none;
+            background: transparent;
+        }
     }
 
     /* ── Logo Pill ── */
@@ -289,20 +291,20 @@
     @media (max-width: 991px) {
         .pill-navbar-wrapper {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            padding: 0.5rem 0.75rem;
-            background: rgba(255,255,255,0.98);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-            border-radius: 0;
+            top: 0.75rem;
+            left: 0.75rem;
+            right: 0.75rem;
+            width: auto;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
             display: flex;
             justify-content: center;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
             z-index: 999;
+            padding: 0;
+            pointer-events: none; /* Let clicks pass through empty wrapper space */
         }
         .pill-navbar-inner {
             width: 100%;
@@ -310,12 +312,13 @@
             justify-content: space-between;
             align-items: center;
             gap: 0.4rem;
-            background: transparent;
-            border-radius: 0;
-            padding: 0;
-            box-shadow: none;
-            border: none;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 999px;
+            padding: 0.25rem 0.35rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.05);
             box-sizing: border-box;
+            pointer-events: auto; /* Enable clicks inside the pill */
         }
         
         .nav-pill-box {
