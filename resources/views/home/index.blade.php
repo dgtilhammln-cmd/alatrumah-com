@@ -189,7 +189,7 @@
         position: relative;
         overflow: hidden;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 991px) {
         .cv-hero-modern {
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
