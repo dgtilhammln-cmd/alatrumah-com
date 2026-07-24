@@ -138,15 +138,14 @@
     @media (max-width: 1024px) {
         .cv-hero-grid { grid-template-columns: 1fr; padding: 0 1rem; gap: 0.75rem; }
         .cv-hero-slider-col { aspect-ratio: 2/1; position: relative; border-radius: 12px; overflow: hidden; }
-        .cv-hero-slider-col .swiper,
-        .cv-hero-slider-col .hero-swiper-slide,
-        .cv-hero-slider-col img { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
+        .cv-hero-slider-col .swiper { position: absolute; inset: 0; height: 100%; width: 100%; }
+        .cv-hero-slider-col img { height: 100%; width: 100%; object-fit: cover; }
         
         .cv-hero-static-col { display: none; /* Hide static banners on mobile for minimalist look */ }
     }
     @media (max-width: 480px) {
-        .cv-hero-slider-col { aspect-ratio: 20/11; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-        .cv-hero-img-main { border-radius: 24px; }
+        .cv-hero-slider-col { aspect-ratio: 21/9; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+        .cv-hero-img-main { border-radius: 20px; }
     }
     .cv-hero-modern {
         background-color: #ffffff;
@@ -909,9 +908,8 @@
     }
     .cv-usp-item {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.75rem;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.85rem;
         font-weight: 600;
@@ -919,34 +917,34 @@
         transition: transform 0.2s;
         text-decoration: none;
     }
-    .cv-usp-item:hover { transform: translateY(-3px); }
+    .cv-usp-item:hover { transform: translateY(-2px); }
     .cv-usp-icon {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 48px; height: 48px;
-        background: linear-gradient(135deg, #FFF7ED, #FFEDD5);
-        border-radius: 20px;
-        color: #F97316;
-        box-shadow: 0 4px 14px rgba(249, 115, 22, 0.15);
+        width: 36px; height: 36px;
+        background: #F0F9FF;
+        border-radius: 50%;
+        color: #0EA5E9;
     }
-    .cv-usp-icon img { width: 24px; height: 24px; object-fit: contain; }
-    .cv-usp-icon svg { width: 20px; height: 20px; }
+    .cv-usp-icon img { width: 20px; height: 20px; object-fit: contain; }
+    .cv-usp-icon svg { width: 16px; height: 16px; }
     .cv-usp-label { color: #0f172a; font-weight: 700; }
     
     @media (max-width: 768px) {
-        .cv-usp-bar { padding: 0.75rem 0.5rem 1.5rem; border-bottom: none; box-shadow: none; margin-top: 0; background: transparent; }
+        .cv-usp-bar { padding: 0.5rem 0.5rem 1rem; border-bottom: none; box-shadow: none; margin-top: 0; background: transparent; }
         .cv-usp-inner {
-            flex-wrap: wrap;
-            justify-content: flex-start;
-            gap: 1rem;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            gap: 0.25rem;
+            overflow-x: auto;
+            scrollbar-width: none;
         }
-        .cv-usp-item { gap: 0.4rem; white-space: normal; text-align: center; }
-        .cv-usp-icon { width: 56px; height: 56px; background: #ffffff; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin: 0 auto; color: #0EA5E9; }
-        .cv-usp-icon img { width: 28px; height: 28px; }
-        .cv-usp-label { font-size: 0.65rem; font-weight: 700; line-height: 1.2; color: #475569; }
+        .cv-usp-inner::-webkit-scrollbar { display: none; }
+        .cv-usp-item { gap: 0.35rem; white-space: nowrap; flex: 1; justify-content: center; flex-direction: row; }
+        .cv-usp-icon { width: 26px; height: 26px; background: transparent; border-radius: 50%; box-shadow: none; margin: 0; }
+        .cv-usp-icon img { width: 18px; height: 18px; }
+        .cv-usp-label { font-size: 0.65rem; font-weight: 700; line-height: normal; }
     }
 
     /* ── CATEGORY SWIPER (Premium Style) ── */
@@ -1364,12 +1362,11 @@
     }
 
 
-    .cv-promo-header {
+    .cv-section-title-wrap {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         justify-content: space-between;
-        margin-bottom: 1rem;
-        gap: 1rem;
+        margin-bottom: 1.5rem;
     }
     .cv-promo-title {
         font-family: 'Montserrat', sans-serif;

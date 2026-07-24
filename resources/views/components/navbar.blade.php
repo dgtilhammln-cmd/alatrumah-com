@@ -363,8 +363,8 @@
         .search-btn { width: 36px; height: 36px; border-radius: 12px; background: #FFF0F0; color: #F97316; display: flex; align-items: center; justify-content: center; margin-left: 0.5rem; flex-shrink: 0; border: none; }
         .search-btn svg { width: 18px; height: 18px; stroke-width: 2.5; }
         
-        /* Make search icon a light orange like Image 3 */
-        .search-btn { background: #FFF7ED; color: #F97316; }
+        /* Make search icon blue to match theme */
+        .search-btn { background: #F0F9FF; color: #0EA5E9; }
 
         /* Hide all icons except Daftar */
         .pill-icon-btn { display: flex !important; width: 32px; height: 32px; background: #fff; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center; justify-content: center; }
