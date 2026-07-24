@@ -1302,7 +1302,7 @@
     @if(isset($promoSections) && $promoSections->count())
     <style>
     .cv-promo-wrap {
-        background: #F8FAFC;
+        background: transparent;
         padding: 0.625rem 0 0;
         border-bottom: none;
     }
@@ -1452,7 +1452,7 @@
     }
     
     @media (max-width: 768px) {
-        .cv-promo-section { padding: 1.25rem 0 1.25rem 1rem; margin-bottom: 0; border-bottom: 4px solid #F1F5F9; }
+        .cv-promo-section { padding: 1.25rem 0 1.25rem 1rem; margin-bottom: 0; border-bottom: none; }
         .cv-promo-section.is-flash-section { 
             margin-bottom: 0; 
             border-radius: 0; 
