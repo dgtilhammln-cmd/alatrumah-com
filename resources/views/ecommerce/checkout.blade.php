@@ -41,6 +41,11 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
 .swal2-confirm { border-radius: 999px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; padding: 0.75rem 2rem !important; }
 
 @keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* Service card: hilangkan outline/garis kuning bawaan browser */
+.service-card { outline: none !important; }
+.service-card:focus { outline: none !important; box-shadow: none !important; }
+.service-card input[type="radio"]:focus { outline: none !important; box-shadow: none !important; }
 </style>
 
 <div class="co-wrap">
@@ -619,7 +624,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
                 if(service.service.toUpperCase() === 'YES') desc = 'Layanan Cepat (Yakin Esok Sampai)';
                 
                 html += `
-                    <label class="service-card" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #E2E8F0; border-radius:10px; background:#fff; transition:all 0.2s;">
+                    <label class="service-card" style="cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1rem; border:1px solid #E2E8F0; border-radius:10px; background:#fff;">
                         <input type="radio" name="courier_service_radio" value="${service.service}" data-cost="${cost}" style="accent-color:#0EA5E9; width:1.2rem; height:1.2rem;">
                         <div style="flex:1;">
                             <div style="font-weight:700; color:#0F172A; font-size:0.95rem;">${service.service}</div>
