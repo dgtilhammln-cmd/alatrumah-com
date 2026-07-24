@@ -224,7 +224,10 @@
                     </div>
                     <div class="tr-tl">
                         <div class="tr-tl-line"></div>
-                        @foreach($tracking['history'] as $i => $hist)
+                        @php
+                            $historyReversed = array_reverse($tracking['history']);
+                        @endphp
+                        @foreach($historyReversed as $i => $hist)
                         <div class="tr-tl-item {{ $i === 0 ? 'active' : '' }}" style="animation-delay:{{ $i * 0.05 }}s">
                             <div class="tr-tl-dot {{ $i === 0 ? 'active' : '' }}"></div>
                             <div class="tr-tl-date">
