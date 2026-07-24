@@ -137,14 +137,14 @@
 
     @media (max-width: 1024px) {
         .cv-hero-grid { grid-template-columns: 1fr; padding: 0 1rem; gap: 0.75rem; }
-        .cv-hero-slider-col { aspect-ratio: 2/1; position: relative; border-radius: 12px; overflow: hidden; }
+        .cv-hero-slider-col { position: relative; border-radius: 12px; overflow: hidden; width: 100%; padding-top: 50%; height: 0; }
         .cv-hero-slider-col .swiper { position: absolute; inset: 0; height: 100%; width: 100%; }
-        .cv-hero-slider-col img { height: 100%; width: 100%; object-fit: cover; }
+        .cv-hero-slider-col img { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
         
         .cv-hero-static-col { display: none; /* Hide static banners on mobile for minimalist look */ }
     }
     @media (max-width: 480px) {
-        .cv-hero-slider-col { aspect-ratio: 21/9; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+        .cv-hero-slider-col { padding-top: 45%; height: 0; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
         .cv-hero-img-main { border-radius: 20px; position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
     }
     .cv-hero-modern {
