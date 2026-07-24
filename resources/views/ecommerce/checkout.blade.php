@@ -863,20 +863,22 @@ label:focus{outline:none !important;box-shadow:none !important;}
     function showError(error) {
         const status = document.getElementById('loc_status');
         status.style.color = '#EF4444';
+        let msg = "";
         switch(error.code) {
             case error.PERMISSION_DENIED:
-                status.innerText = "Anda menolak permintaan akses GPS.";
+                msg = "Akses GPS ditolak/diblokir oleh perangkat Anda.";
                 break;
             case error.POSITION_UNAVAILABLE:
-                status.innerText = "Informasi lokasi GPS tidak tersedia.";
+                msg = "Informasi lokasi GPS tidak tersedia saat ini.";
                 break;
             case error.TIMEOUT:
-                status.innerText = "Waktu tunggu GPS habis (Timeout).";
+                msg = "Waktu tunggu pencarian GPS habis (Timeout).";
                 break;
             default:
-                status.innerText = "Terjadi kesalahan tidak diketahui pada GPS.";
+                msg = "Terjadi kesalahan tidak diketahui pada GPS.";
                 break;
         }
+        status.innerHTML = `<b>${msg}</b><br><span style="color:#64748B;font-size:0.8rem;">Silakan isi Provinsi & Kota/Kecamatan secara manual di bawah.</span>`;
     }
 
 
