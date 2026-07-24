@@ -137,7 +137,7 @@
 
     @media (max-width: 1024px) {
         .cv-hero-grid { grid-template-columns: 1fr; padding: 0 1rem; gap: 0.75rem; }
-        .cv-hero-slider-col { height: auto; aspect-ratio: 2/1; position: relative; border-radius: 12px; overflow: hidden; }
+        .cv-hero-slider-col { aspect-ratio: 2/1; position: relative; border-radius: 12px; overflow: hidden; }
         .cv-hero-slider-col .swiper,
         .cv-hero-slider-col .hero-swiper-slide,
         .cv-hero-slider-col img { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
@@ -145,7 +145,8 @@
         .cv-hero-static-col { display: none; /* Hide static banners on mobile for minimalist look */ }
     }
     @media (max-width: 480px) {
-        .cv-hero-slider-col { aspect-ratio: 20/11; border-radius: 12px; }
+        .cv-hero-slider-col { aspect-ratio: 20/11; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .cv-hero-img-main { border-radius: 24px; }
     }
     .cv-hero-modern {
         background-color: #ffffff;
@@ -177,10 +178,11 @@
         transition: background 0.5s ease;
         background: linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%); /* Default */
     }
-    @media (max-width: 768px) {
+    @media (max-width: 991px) {
         .cv-hero-oval-bg {
             height: 100%;
-            border-radius: 0 0 50% 50% / 0 0 15% 15%;
+            border-radius: 0;
+            background: linear-gradient(180deg, #F0F9FF 0%, #F8FAFC 100%) !important;
         }
     }
     .cv-hero-bg-layer {
@@ -907,42 +909,44 @@
     }
     .cv-usp-item {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 0.75rem;
+        gap: 0.5rem;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.85rem;
         font-weight: 600;
         color: #334155;
         transition: transform 0.2s;
+        text-decoration: none;
     }
-    .cv-usp-item:hover { transform: translateY(-2px); }
+    .cv-usp-item:hover { transform: translateY(-3px); }
     .cv-usp-icon {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px; height: 36px;
-        background: #F0F9FF;
-        border-radius: 50%;
-        color: #0EA5E9;
+        width: 48px; height: 48px;
+        background: linear-gradient(135deg, #FFF7ED, #FFEDD5);
+        border-radius: 20px;
+        color: #F97316;
+        box-shadow: 0 4px 14px rgba(249, 115, 22, 0.15);
     }
-    .cv-usp-icon img { width: 20px; height: 20px; }
-    .cv-usp-icon svg { width: 16px; height: 16px; }
+    .cv-usp-icon img { width: 24px; height: 24px; object-fit: contain; }
+    .cv-usp-icon svg { width: 20px; height: 20px; }
     .cv-usp-label { color: #0f172a; font-weight: 700; }
     
     @media (max-width: 768px) {
-        .cv-usp-bar { padding: 0.25rem 0.5rem 0.5rem; border-bottom: none; box-shadow: none; margin-top: 0; }
+        .cv-usp-bar { padding: 0.75rem 0.5rem 1.5rem; border-bottom: none; box-shadow: none; margin-top: 0; background: transparent; }
         .cv-usp-inner {
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            gap: 0.25rem;
-            overflow-x: auto;
-            scrollbar-width: none; /* Hide scrollbar */
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 1rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
         }
-        .cv-usp-inner::-webkit-scrollbar { display: none; }
-        .cv-usp-item { gap: 0.35rem; white-space: nowrap; flex: 1; justify-content: center; }
-        .cv-usp-icon { width: 24px; height: 24px; background: transparent; }
-        .cv-usp-icon img { width: 16px; height: 16px; }
-        .cv-usp-label { font-size: 0.65rem; font-weight: 700; }
+        .cv-usp-item { gap: 0.4rem; white-space: normal; text-align: center; }
+        .cv-usp-icon { width: 56px; height: 56px; background: #ffffff; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin: 0 auto; color: #0EA5E9; }
+        .cv-usp-icon img { width: 28px; height: 28px; }
+        .cv-usp-label { font-size: 0.65rem; font-weight: 700; line-height: 1.2; color: #475569; }
     }
 
     /* ── CATEGORY SWIPER (Premium Style) ── */
@@ -1068,6 +1072,49 @@
             <div class="cv-hero-bg-layer" style="background-image:url('{{ asset('storage/' . $settings['hero_bg_image']) }}')"></div>
         @endif
         
+        {{-- MOBILE HORIZONTAL PILL CATEGORIES (PlugPro Style) --}}
+        <style>
+            .mobile-cat-pills { display: none; }
+            @media (max-width: 991px) {
+                .mobile-cat-pills {
+                    display: flex; gap: 0.75rem; padding: 0.25rem 1rem 1.25rem;
+                    overflow-x: auto; scrollbar-width: none; position: relative; z-index: 10;
+                }
+                .mobile-cat-pills::-webkit-scrollbar { display: none; }
+                .mobile-cat-pills a {
+                    font-size: 0.8rem; font-weight: 700; color: #64748B; background: #fff;
+                    padding: 0.6rem 1.2rem; border-radius: 999px; white-space: nowrap;
+                    text-decoration: none; border: 1.5px solid #E2E8F0;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: all 0.3s;
+                    display: flex; align-items: center; gap: 0.5rem;
+                }
+                .mobile-cat-pills a.active { background: #0EA5E9; color: #fff; border-color: #0EA5E9; box-shadow: 0 4px 12px rgba(14,165,233,0.3); }
+                .mobile-cat-pills a svg { width: 16px; height: 16px; }
+            }
+        </style>
+        <div class="mobile-cat-pills">
+            <a href="{{ route('products') }}" class="active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 12H4M20 6H4M20 18H4"/></svg>
+                Semua
+            </a>
+            <a href="{{ route('products', ['q' => 'Terlaris']) }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                Terlaris
+            </a>
+            <a href="{{ route('products', ['q' => 'Dapur']) }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+                Dapur
+            </a>
+            <a href="{{ route('products', ['q' => 'Kamar']) }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 4v16M22 4v16M4 8h16M4 16h16M2 12h20"/></svg>
+                Kamar Tidur
+            </a>
+            <a href="{{ route('products', ['q' => 'Pembersih']) }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Kebersihan
+            </a>
+        </div>
+
         <div class="cv-hero-grid">
             {{-- Left Column: Slider --}}
             <div class="cv-hero-slider-col">

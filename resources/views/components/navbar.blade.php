@@ -291,66 +291,87 @@
     @media (max-width: 991px) {
         .pill-navbar-wrapper {
             position: fixed;
-            top: 0.75rem;
-            left: 0.75rem;
-            right: 0.75rem;
-            width: auto;
-            background: transparent;
-            border: none;
-            box-shadow: none;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: rgba(248, 250, 252, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.03);
             display: flex;
             justify-content: center;
             z-index: 999;
-            padding: 0;
-            pointer-events: none; /* Let clicks pass through empty wrapper space */
+            padding: 0.75rem 1rem;
+            pointer-events: none;
         }
         .pill-navbar-inner {
+            display: grid !important;
+            grid-template-columns: 1fr auto;
+            grid-template-rows: auto auto;
+            grid-template-areas: 
+                "logo actions"
+                "search search";
+            gap: 0.85rem;
             width: 100%;
             max-width: 100%;
-            justify-content: space-between;
             align-items: center;
-            gap: 0.4rem;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 999px;
-            padding: 0.25rem 0.35rem;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
-            border: 1px solid rgba(0,0,0,0.05);
+            background: transparent !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            border: none !important;
             box-sizing: border-box;
-            pointer-events: auto; /* Enable clicks inside the pill */
+            pointer-events: auto;
         }
         
         .nav-pill-box {
             background: transparent !important;
             box-shadow: none !important;
             border: none !important;
-            height: 36px !important;
             display: flex;
             align-items: center;
             min-width: 0;
         }
 
         /* Show logo pill on mobile */
-        .nav-pill-logo { padding: 0 !important; margin-right: 0 !important; flex-shrink: 0; }
-        .nav-logo-img-wrap { height: 36px; display: flex; align-items: center; border-radius: 999px; }
+        .nav-pill-logo { grid-area: logo; padding: 0 !important; margin-right: 0 !important; height: 32px !important; }
+        .nav-logo-img-wrap { height: 32px; display: flex; align-items: center; }
         .nav-logo-img-wrap img { height: 100%; width: auto; object-fit: contain; }
         
-        /* Search pill — balanced */
-        .nav-pill-search { max-width: none; flex: 1; padding: 0 !important; min-width: 0; }
-        .search-form { padding: 0 0.3rem 0 0.65rem; border: 1.5px solid #E2E8F0; border-radius: 999px; height: 36px; width: 100%; background: #F8FAFC; display: flex; align-items: center; min-width: 0; }
-        .search-input { font-size: 0.78rem; padding: 0; height: 100%; margin: 0; border: none; background: transparent; outline: none; flex: 1; min-width: 0; width: 100%; }
-        .search-btn { width: 26px; height: 26px; border-radius: 50%; background: #E2E8F0; display: flex; align-items: center; justify-content: center; margin-left: 0.15rem; flex-shrink: 0; }
-        
         /* Actions pill */
-        .nav-pill-actions { padding: 0 !important; flex-shrink: 0; }
-        .auth-solid-btn { padding: 0 0.85rem; font-size: 0.72rem; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 999px; margin: 0; line-height: 1; flex-shrink: 0; }
+        .nav-pill-actions { grid-area: actions; padding: 0 !important; height: 32px !important; justify-content: flex-end; }
+        .auth-solid-btn { padding: 0 0.85rem; font-size: 0.75rem; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 999px; margin: 0; line-height: 1; flex-shrink: 0; background: #fff; color: #0EA5E9; border: 1.5px solid #0EA5E9; box-shadow: none; font-weight: 700; }
+        .auth-solid-btn:hover { background: #0EA5E9; color: #fff; box-shadow: 0 4px 12px rgba(14,165,233,0.2); }
         
+        /* Search pill — Huge and modern */
+        .nav-pill-search { grid-area: search; max-width: none; width: 100%; padding: 0 !important; min-width: 0; height: auto !important; }
+        .search-form { 
+            padding: 0 0.5rem 0 1rem; 
+            border: 1px solid rgba(0,0,0,0.05); 
+            border-radius: 16px; 
+            height: 48px; 
+            width: 100%; 
+            background: #ffffff; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
+            display: flex; 
+            align-items: center; 
+            min-width: 0; 
+        }
+        .search-input { font-size: 0.85rem; padding: 0; height: 100%; margin: 0; border: none; background: transparent; outline: none; flex: 1; min-width: 0; width: 100%; font-weight: 500; color: #334155; }
+        .search-input::placeholder { color: #94A3B8; }
+        .search-btn { width: 36px; height: 36px; border-radius: 12px; background: #FFF0F0; color: #F97316; display: flex; align-items: center; justify-content: center; margin-left: 0.5rem; flex-shrink: 0; border: none; }
+        .search-btn svg { width: 18px; height: 18px; stroke-width: 2.5; }
+        
+        /* Make search icon a light orange like Image 3 */
+        .search-btn { background: #FFF7ED; color: #F97316; }
+
         /* Hide all icons except Daftar */
-        .pill-icon-btn { display: none !important; }
-        .auth-text-btn { display: none; }
-        .auth-divider { display: none; }
-        body { padding-top: 65px; }
+        .pill-icon-btn { display: flex !important; width: 32px; height: 32px; background: #fff; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center; justify-content: center; }
+        .pill-icon-btn svg { width: 16px; height: 16px; color: #64748B; }
+        .cart-dropdown-wrap, .auth-text-btn, .auth-divider { display: none !important; } /* Hide cart and login text on mobile header since they go to bottom nav */
+        
+        body { padding-top: 115px; background-color: #F8FAFC !important; }
     }
     /* RTL support */
     [dir="rtl"] .pill-navbar-inner { flex-direction: row-reverse; }
