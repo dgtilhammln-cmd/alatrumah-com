@@ -125,12 +125,12 @@
     {{-- Custom Head Scripts (e.g. GTM, Analytics) --}}
     {!! $headScripts !!}
 </head>
-<body style="overflow-x: hidden; margin: 0; padding: 0;">
+<body style="overflow-x: hidden; margin: 0; padding: 0; background-color: #ffffff;">
 
     @include('components.navbar')
 
     {{-- Main Content --}}
-    <main>
+    <main style="background-color: #ffffff; min-height: 60vh;">
         @yield('content')
     </main>
 
