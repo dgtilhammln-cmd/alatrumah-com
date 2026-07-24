@@ -88,10 +88,34 @@ class ResiController extends Controller
                     'weight'      => isset($details['weight']) ? $details['weight'] . ' gr' : '-',
                 ],
                 'history' => array_map(function ($m) {
+                    $rawDesc = trim($m['manifest_description'] ?? '');
+                    $title   = trim($m['title'] ?? '');
+
+                    // Map generic/short manifest codes to readable Indonesian labels
+                    $titleMap = [
+                        'Pickup'          => 'Paket Diambil oleh Kurir',
+                        'Delivered'       => 'Paket Diterima di Titik Pengumpulan',
+                        'Transit Center'  => 'Paket di Transit Center',
+                        'On Delivery'     => 'Paket Dalam Pengiriman ke Penerima',
+                        'Received'        => 'Paket Diterima oleh Penerima',
+                        'Return'          => 'Paket Dikembalikan',
+                    ];
+
+                    // If description is too generic (1-10 chars or just "Manifes"), use title mapping
+                    $isGeneric = strlen($rawDesc) <= 10 ||
+                                 in_array(strtolower($rawDesc), ['manifes', 'manifest', 'pickup', 'transit', '-', '']);
+
+                    if ($isGeneric && $title) {
+                        $desc = $titleMap[$title] ?? ($title . (strlen($rawDesc) > 2 && !$isGeneric ? " - {$rawDesc}" : ''));
+                    } else {
+                        $desc = $rawDesc ?: ($titleMap[$title] ?? $title ?: '-');
+                    }
+
                     return [
                         'date'     => ($m['manifest_date'] ?? '') . ' ' . ($m['manifest_time'] ?? ''),
-                        'desc'     => $m['manifest_description'] ?? ($m['title'] ?? '-'),
+                        'desc'     => $desc,
                         'location' => $m['city_name'] ?? '',
+                        'title'    => $title,
                     ];
                 }, $manifest),
             ];
