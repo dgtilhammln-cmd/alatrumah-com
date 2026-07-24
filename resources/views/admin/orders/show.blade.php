@@ -266,15 +266,28 @@
                     <svg width="24" height="24" fill="none" stroke="#10B981" stroke-width="2.5" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                     Input Resi Kirim
                 </div>
+                @php
+                    $currentCourierName = $order->shipment->courier_name ?? '';
+                    $currentService     = $order->shipment->courier_service ?? '';
+                @endphp
                 <form action="{{ route('admin.orders.tracking', $order) }}" method="POST">
                     @csrf
                     <div class="od-form-group">
                         <label class="od-label">Jasa Ekspedisi (Kurir)</label>
-                        <input type="text" name="courier_name" class="od-input" value="{{ $order->shipment->courier_name ?? '' }}">
+                        <select name="courier_name" id="resi_courier_name" class="od-select" onchange="updateServiceOptions()">
+                            <option value="">-- Pilih Kurir --</option>
+                            @foreach($couriers as $c)
+                                <option value="{{ $c->name }}" data-code="{{ $c->code }}" {{ strtolower($currentCourierName) == strtolower($c->name) ? 'selected' : '' }}>{{ strtoupper($c->name) }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="od-form-group">
-                        <label class="od-label">Layanan Ekspedisi (REG, YES, dll)</label>
-                        <input type="text" name="courier_service" class="od-input" value="{{ $order->shipment->courier_service ?? '' }}">
+                        <label class="od-label">Layanan Ekspedisi</label>
+                        <select name="courier_service" id="resi_courier_service" class="od-select">
+                            <option value="">-- Pilih Layanan --</option>
+                            {{-- Akan diisi oleh JS berdasarkan kurir --}}
+                        </select>
+                        <input type="hidden" id="resi_current_service" value="{{ $currentService }}">
                     </div>
                     <div class="od-form-group">
                         <label class="od-label">Nomor Resi / Pelacakan</label>
@@ -311,5 +324,55 @@
     </div>
 
 </div>
+
+<script>
+// Layanan per kurir (kode kurir => daftar service)
+const courierServices = {
+    'jne':   ['REG', 'YES', 'OKE', 'SPS', 'JTR', 'JTR250'],
+    'jnt':   ['EZ', 'Reguler'],
+    'sicepat':  ['BEST', 'GOKIL', 'REG', 'HALU'],
+    'anteraja': ['Reguler', 'Same Day', 'Next Day'],
+    'pos':   ['Paket Kilat Khusus', 'Express Dalam Kota', 'Surat Biasa'],
+    'tiki':  ['REG', 'ECO', 'ONS', 'SDS'],
+    'wahana':['Reguler'],
+    'sap':   ['Reguler'],
+    'lion':  ['REG'],
+};
+
+function updateServiceOptions() {
+    const courierSelect = document.getElementById('resi_courier_name');
+    const serviceSelect = document.getElementById('resi_courier_service');
+    const currentService = document.getElementById('resi_current_service')?.value || '';
+
+    if (!courierSelect || !serviceSelect) return;
+
+    const selectedOption = courierSelect.options[courierSelect.selectedIndex];
+    const code = (selectedOption?.dataset?.code || courierSelect.value || '').toLowerCase().replace(/\s+/g, '').replace('&t','t').replace('j&t','jnt');
+    const services = courierServices[code] || courierServices[Object.keys(courierServices).find(k => code.includes(k))] || [];
+
+    serviceSelect.innerHTML = '<option value="">-- Pilih Layanan --</option>';
+    services.forEach(svc => {
+        const opt = document.createElement('option');
+        opt.value = svc;
+        opt.text = svc;
+        if (svc.toUpperCase() === currentService.toUpperCase()) opt.selected = true;
+        serviceSelect.appendChild(opt);
+    });
+
+    // Jika tidak ada match, tambah option dari existing value agar tidak hilang
+    if (currentService && !services.find(s => s.toUpperCase() === currentService.toUpperCase())) {
+        const opt = document.createElement('option');
+        opt.value = currentService;
+        opt.text = currentService;
+        opt.selected = true;
+        serviceSelect.appendChild(opt);
+    }
+}
+
+// Jalankan saat page load untuk pre-fill layanan
+document.addEventListener('DOMContentLoaded', function() {
+    updateServiceOptions();
+});
+</script>
 
 @endsection

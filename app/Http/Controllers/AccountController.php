@@ -83,6 +83,25 @@ class AccountController extends Controller
             $apiType = \App\Models\Setting::get('rajaongkir_type', 'starter');
             if ($apiKey) {
                 try {
+                    // Map courier name to API code
+                    $rawCourier = strtolower(trim($order->shipment->courier_name));
+                    $courierCodeMap = [
+                        'j&t'       => 'jnt',
+                        'j&t express' => 'jnt',
+                        'jnt'       => 'jnt',
+                        'jne'       => 'jne',
+                        'sicepat'   => 'sicepat',
+                        'anteraja'  => 'anteraja',
+                        'pos'       => 'pos',
+                        'tiki'      => 'tiki',
+                        'wahana'    => 'wahana',
+                        'sap'       => 'sap',
+                        'lion'      => 'lion',
+                        'ninja'     => 'ninjaxpress',
+                        'ninjaxpress' => 'ninjaxpress',
+                    ];
+                    $courierCode = $courierCodeMap[$rawCourier] ?? $rawCourier;
+
                     $baseUrl = 'https://rajaongkir.komerce.id/api/v1';
                     $response = \Illuminate\Support\Facades\Http::withoutVerifying()
                         ->timeout(10)
@@ -90,7 +109,7 @@ class AccountController extends Controller
                         ->asForm()
                         ->post("{$baseUrl}/waybill", [
                             'waybill' => $order->shipment->tracking_number,
-                            'courier' => strtolower($order->shipment->courier_name),
+                            'courier' => $courierCode,
                         ]);
                     $json = $response->json();
                     $ro   = $json['rajaongkir'] ?? null;

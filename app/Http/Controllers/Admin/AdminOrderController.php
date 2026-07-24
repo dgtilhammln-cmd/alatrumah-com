@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Courier;
 use App\Enums\OrderStatus;
 use Illuminate\Http\Request;
 
@@ -86,7 +87,8 @@ class AdminOrderController extends Controller
     {
         $order->load(['user', 'items.product', 'payment', 'shipment', 'couponUsage']);
         $nextStatuses = $order->status->nextStatuses();
-        return view('admin.orders.show', compact('order', 'nextStatuses'));
+        $couriers = Courier::where('is_active', true)->orderBy('order')->get();
+        return view('admin.orders.show', compact('order', 'nextStatuses', 'couriers'));
     }
 
     public function updateStatus(Request $request, Order $order)
