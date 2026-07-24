@@ -673,6 +673,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
             data.forEach((service, idx) => {
                 const cost = service.cost[0]?.value ?? 0;
                 let etdString = service.cost[0]?.etd ? service.cost[0].etd.toString().replace(/hari/gi, '').trim() : '';
+                etdString = etdString.replace(/-/g, ' - '); // Fix optical illusion (1-2 looking like 8)
                 const etd = etdString ? `Estimasi ${etdString} Hari` : 'Estimasi tidak tersedia';
                 const fmt  = new Intl.NumberFormat('id-ID').format(cost);
                 
@@ -691,8 +692,8 @@ label:focus{outline:none !important;box-shadow:none !important;}
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                                 ${desc}
                             </div>
-                            <div style="font-size:0.8rem; color:#64748B; margin-top:0.2rem; display:flex; align-items:center; gap:0.3rem;">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+                            <div style="font-size:0.8rem; color:#0369A1; font-weight:600; margin-top:0.3rem; display:flex; align-items:center; gap:0.3rem;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
                                 ${etd}
                             </div>
                         </div>
