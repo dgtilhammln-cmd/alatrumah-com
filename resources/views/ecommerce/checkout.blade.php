@@ -26,8 +26,8 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml;chars
 .summary-row{display:flex;justify-content:space-between;font-size:0.9rem;color:var(--c-muted);margin-bottom:0.5rem;}
 .summary-total{display:flex;justify-content:space-between;font-size:1.1rem;font-weight:800;color:var(--c-text);margin-top:1rem;padding-top:1rem;border-top:1px solid var(--c-border);}
 
-.btn-pay{display:block;width:100%;background:var(--c-text);color:#fff;border:none;border-radius:999px;padding:1rem;font-size:1rem;font-weight:700;cursor:pointer;transition:background 0.2s;text-align:center;margin-top:1.5rem;}
-.btn-pay:hover{background:#000;}
+.btn-pay{display:block;width:100%;background:linear-gradient(135deg, #0EA5E9, #0369A1);color:#fff;border:none;border-radius:999px;padding:1rem;font-size:1rem;font-weight:700;cursor:pointer;transition:transform 0.2s, box-shadow 0.2s;text-align:center;margin-top:1.5rem;box-shadow:0 6px 20px rgba(14,165,233,.25);}
+.btn-pay:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(14,165,233,.35);}
 
 /* Scrollbar biru — hapus kuning */
 ::-webkit-scrollbar{width:4px;}
@@ -916,7 +916,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
         }
 
         if (document.getElementById('courier_name_select')) {
-            const service = document.getElementById('courier_service_select')?.value;
+            const service = document.getElementById('courier_service_hidden')?.value;
             // Allow 'manual' value (when ongkir API is unreachable, admin confirms cost)
             if (!service) {
                 Swal.fire({
