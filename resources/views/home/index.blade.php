@@ -1421,7 +1421,7 @@
         background-size: 1000px 100%;
         animation: cvSkeletonShimmer 2s infinite linear;
     }
-    .cv-promo-banner-wrap.mobile-only { display: none; }
+    .cv-promo-banner-wrap.mobile-only { display: none !important; }
     
     .cv-promo-banner-img {
         width: 100%;
@@ -1450,7 +1450,8 @@
     .cv-promo-swiper {
         width: 100%;
         height: 100%;
-        overflow: visible;
+        padding: 12px 4px; /* padding for shadow */
+        overflow: hidden; /* restore clipping for swipe */
     }
     .cv-promo-swiper .swiper-wrapper {
         align-items: stretch;
@@ -1469,7 +1470,7 @@
             border-radius: 0; 
         }
         .cv-promo-grid { gap: 0; }
-        .cv-promo-swiper { overflow: visible; }
+        .cv-promo-swiper { overflow: hidden; padding: 4px; }
         .cv-promo-banner-wrap.desktop-only { display: none; }
         .cv-promo-banner-wrap.mobile-only { 
             display: flex; 
