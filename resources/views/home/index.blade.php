@@ -135,17 +135,34 @@
         display: block;
     }
 
-    @media (max-width: 1024px) {
-        .cv-hero-grid { grid-template-columns: 1fr; padding: 0 1rem; gap: 0.75rem; }
-        .cv-hero-slider-col { position: relative; border-radius: 12px; overflow: hidden; width: 100%; padding-top: 50%; height: 0; }
-        .cv-hero-slider-col .swiper { position: absolute; inset: 0; height: 100%; width: 100%; }
-        .cv-hero-slider-col img { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
+    @media (max-width: 991px) {
+        .cv-hero-grid { grid-template-columns: 1fr !important; padding: 0 0.75rem !important; gap: 0.75rem !important; }
+        .cv-hero-slider-col { 
+            height: 180px !important; 
+            max-height: 200px !important;
+            min-height: 150px !important;
+            width: 100% !important; 
+            position: relative !important; 
+            border-radius: 16px !important; 
+            overflow: hidden !important; 
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+            padding-top: 0 !important;
+        }
+        .cv-hero-slider-col .swiper,
+        .cv-hero-slider-col .swiper-wrapper,
+        .cv-hero-slider-col .hero-swiper-slide,
+        .cv-hero-slider-col .cv-hero-img-main,
+        .cv-hero-slider-col img { 
+            position: absolute !important; 
+            top: 0 !important; 
+            left: 0 !important; 
+            width: 100% !important; 
+            height: 100% !important; 
+            object-fit: cover !important; 
+            border-radius: 16px !important;
+        }
         
-        .cv-hero-static-col { display: none; /* Hide static banners on mobile for minimalist look */ }
-    }
-    @media (max-width: 480px) {
-        .cv-hero-slider-col { padding-top: 45%; height: 0; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
-        .cv-hero-img-main { border-radius: 20px; position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
+        .cv-hero-static-col { display: none !important; }
     }
     .cv-hero-modern {
         background-color: #ffffff;
