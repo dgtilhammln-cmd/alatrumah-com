@@ -220,6 +220,16 @@ class CheckoutApiController extends Controller
             'courier'     => 'required|string',
         ]);
 
+        // Intercept Custom Courier (Kurir Toko)
+        if (strtolower($request->courier) === 'custom') {
+            Log::info('[ONGKIR] Menggunakan Kurir Toko (Manual)');
+            return response()->json([
+                'manual'      => true,
+                'message'     => 'Menggunakan Kurir Toko. Ongkir dikonfirmasi manual oleh Admin.',
+                'debug_error' => 'custom_courier'
+            ]);
+        }
+
         $apiKey = $this->getApiKey();
         if (!$apiKey) {
             Log::error('[ONGKIR] API Key belum dikonfigurasi di settings.');
