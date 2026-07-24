@@ -48,6 +48,9 @@ class CheckoutController extends Controller
             
             // Auto Register if Guest
             if (!auth()->check()) {
+                // Tangkap session ID sebelum login (karena auth()->login bisa mengubah/regenerate session ID)
+                $guestSessionId = \Illuminate\Support\Facades\Session::getId();
+
                 $user = \App\Models\User::create([
                     'name'     => $data['guest_name'],
                     'email'    => $data['guest_email'],
@@ -58,7 +61,7 @@ class CheckoutController extends Controller
                 auth()->login($user);
                 
                 // Merge guest cart to the new user
-                $this->cartService->mergeGuestCart($user->id, \Illuminate\Support\Facades\Session::getId());
+                $this->cartService->mergeGuestCart($user->id, $guestSessionId);
             }
 
             $order = $this->checkoutService->processCheckout($data, auth()->user());
