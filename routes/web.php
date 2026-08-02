@@ -59,18 +59,6 @@ Route::prefix('api/region')->group(function() {
 Route::middleware(['track.pageview'])->group(function () {
     // Legacy redirects for cached locale routes
     Route::get('/en', function () { return redirect('/', 301); });
-    Route::get('/fix-db', function () {
-        \DB::statement("UPDATE services SET name = REPLACE(name, 'Cyclevent', 'Alat Rumah')");
-        \DB::statement("UPDATE services SET meta_title = REPLACE(meta_title, 'Cyclevent', 'Alat Rumah')");
-        \DB::statement("UPDATE services SET short_desc = REPLACE(short_desc, 'Cyclevent', 'Alat Rumah')");
-        \DB::statement("UPDATE services SET description = REPLACE(description, 'Cyclevent', 'Alat Rumah')");
-        \DB::statement("UPDATE services SET meta_desc = REPLACE(meta_desc, 'Cyclevent', 'Alat Rumah')");
-        \DB::statement("UPDATE settings SET value = REPLACE(value, 'Cyclevent', 'Alat Rumah')");
-        \DB::statement("UPDATE articles SET title = REPLACE(title, 'Cyclevent', 'Alat Rumah')");
-        \DB::statement("UPDATE articles SET content = REPLACE(content, 'Cyclevent', 'Alat Rumah')");
-        \DB::statement("UPDATE product_categories SET name = REPLACE(name, 'Cyclevent', 'Alat Rumah')");
-        return 'Fixed!';
-    });
 
     Route::get('/',               [HomeController::class,    'index'])->name('home');
     Route::get('/tentang-kami',   [AboutController::class,  'index'])->name('about');
