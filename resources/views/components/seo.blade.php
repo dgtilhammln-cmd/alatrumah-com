@@ -27,9 +27,9 @@
     $parts = array_filter([$addressDetail, $village, $district]);
     $streetAddress = !empty($parts) ? implode(', ', $parts) : $city;
     // Auto-Fallback Logic
-    $autoTitle = $seoData['title'] ?? ($siteName . ' - ' . $tagline);
-    $autoDesc  = $seoData['description'] ?? $shortDesc;
-    $autoKeywords = $seoData['keywords'] ?? ($settings['meta_keywords_home'] ?? 'alat rumah tangga, peralatan rumah');
+    $autoTitle = !empty($seoData['title']) ? $seoData['title'] : ($siteName . ' - ' . $tagline);
+    $autoDesc  = !empty($seoData['description']) ? $seoData['description'] : $shortDesc;
+    $autoKeywords = !empty($seoData['keywords']) ? $seoData['keywords'] : (!empty($settings['meta_keywords_home']) ? $settings['meta_keywords_home'] : 'alat rumah tangga, peralatan rumah');
 
     // Canonical — always use app.url, never localhost
     $rawCanonical   = $seoData['canonical'] ?? url()->current();
