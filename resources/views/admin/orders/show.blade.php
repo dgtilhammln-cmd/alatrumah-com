@@ -264,34 +264,27 @@
             <div class="od-card">
                 <div class="od-card-title">
                     <svg width="24" height="24" fill="none" stroke="#10B981" stroke-width="2.5" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                    Input Resi Kirim
+                    Input Nomor Resi
                 </div>
-                @php
-                    $currentCourierName = $order->shipment->courier_name ?? '';
-                    $currentService     = $order->shipment->courier_service ?? '';
-                @endphp
+
+                {{-- Info kurir dari checkout buyer (read-only) --}}
+                @if($order->shipment && $order->shipment->courier_name)
+                <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:0.85rem 1.1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.6rem;font-size:0.85rem;">
+                    <svg width="16" height="16" fill="none" stroke="#16A34A" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                    <span style="color:#15803D;font-weight:700;">Kurir dari Buyer:</span>
+                    <span style="color:#166534;font-weight:800;">{{ strtoupper($order->shipment->courier_name) }} {{ strtoupper($order->shipment->courier_service ?? '') }}</span>
+                </div>
+                @endif
+
                 <form action="{{ route('admin.orders.tracking', $order) }}" method="POST">
                     @csrf
                     <div class="od-form-group">
-                        <label class="od-label">Jasa Ekspedisi (Kurir)</label>
-                        <select name="courier_name" id="resi_courier_name" class="od-select" onchange="updateServiceOptions()">
-                            <option value="">-- Pilih Kurir --</option>
-                            @foreach($couriers as $c)
-                                <option value="{{ $c->name }}" data-code="{{ $c->code }}" {{ strtolower($currentCourierName) == strtolower($c->name) ? 'selected' : '' }}>{{ strtoupper($c->name) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="od-form-group">
-                        <label class="od-label">Layanan Ekspedisi</label>
-                        <select name="courier_service" id="resi_courier_service" class="od-select">
-                            <option value="">-- Pilih Layanan --</option>
-                            {{-- Akan diisi oleh JS berdasarkan kurir --}}
-                        </select>
-                        <input type="hidden" id="resi_current_service" value="{{ $currentService }}">
-                    </div>
-                    <div class="od-form-group">
                         <label class="od-label">Nomor Resi / Pelacakan</label>
-                        <input type="text" name="tracking_number" class="od-input" placeholder="Masukkan nomor resi..." value="{{ $order->shipment->tracking_number ?? '' }}">
+                        <input type="text" name="tracking_number" class="od-input"
+                            placeholder="Masukkan nomor resi..."
+                            value="{{ $order->shipment->tracking_number ?? '' }}"
+                            style="font-size:1rem;font-weight:700;letter-spacing:0.05em;"
+                            autofocus>
                     </div>
                     <button type="submit" class="od-btn" style="background:#10B981;box-shadow:0 4px 12px rgba(16,185,129,0.2);">Simpan Nomor Resi</button>
                 </form>

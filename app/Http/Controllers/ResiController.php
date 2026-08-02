@@ -32,20 +32,22 @@ class ResiController extends Controller
         }
 
         try {
-            // Komerce new endpoint: POST /api/v1/track/waybill with param 'awb' (not 'waybill')
+            // Komerce endpoint: params harus dikirim sebagai QUERY STRING di URL
+            $url = 'https://rajaongkir.komerce.id/api/v1/track/waybill'
+                   . '?awb=' . urlencode($awb)
+                   . '&courier=' . urlencode($courier);
+
             $response = Http::withoutVerifying()
                 ->timeout(20)
                 ->withHeaders([
                     'key'          => $apiKey,
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ])
-                ->asForm()
-                ->post('https://rajaongkir.komerce.id/api/v1/track/waybill', [
-                    'awb'     => $awb,
-                    'courier' => $courier,
-                ]);
+                ->post($url);
 
             $json = $response->json();
+            Log::info('[RESI] Raw API response', ['status' => $response->status(), 'body' => $json, 'awb' => $awb, 'courier' => $courier]);
+
             $meta = $json['meta'] ?? [];
             $data = $json['data'] ?? null;
 

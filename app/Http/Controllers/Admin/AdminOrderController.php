@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Courier;
+use App\Models\Shipment;
 use App\Enums\OrderStatus;
 use Illuminate\Http\Request;
 
@@ -107,25 +108,25 @@ class AdminOrderController extends Controller
     {
         $request->validate([
             'tracking_number' => 'nullable|string|max:100',
-            'courier_name'    => 'nullable|string|max:100',
-            'courier_service' => 'nullable|string|max:100',
         ]);
-        
+
+        $trackingNumber = trim($request->tracking_number);
+
         if ($order->shipment) {
-            $order->shipment->update([
-                'tracking_number' => $request->tracking_number,
-                'courier_name'    => $request->courier_name ?? $order->shipment->courier_name,
-                'courier_service' => $request->courier_service ?? $order->shipment->courier_service,
-            ]);
+            // Only update tracking_number — keep courier info from checkout
+            // Use updateOrIgnore to avoid unique constraint if same value
+            \App\Models\Shipment::where('id', $order->shipment->id)
+                ->update(['tracking_number' => $trackingNumber ?: null]);
         } else {
+            // No shipment yet — create one using courier info from order notes / fallback
             $order->shipment()->create([
-                'courier_name'    => $request->courier_name ?? '—',
-                'courier_service' => $request->courier_service ?? null,
-                'tracking_number' => $request->tracking_number,
+                'courier_name'    => $order->shipment->courier_name ?? '—',
+                'courier_service' => $order->shipment->courier_service ?? null,
+                'tracking_number' => $trackingNumber ?: null,
                 'status'          => 'shipped',
             ]);
         }
-        return back()->with('success', 'Nomor resi berhasil disimpan.');
+        return back()->with('success', 'Nomor resi berhasil disimpan. Buyer bisa tracking real-time sekarang!');
     }
 
     public function updateShippingCost(Request $request, Order $order)
