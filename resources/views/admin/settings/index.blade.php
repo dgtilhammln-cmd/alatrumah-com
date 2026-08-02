@@ -722,9 +722,43 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
           <input type="email" name="email" id="s-email" class="form-input" value="{{ $settings['email'] ?? '' }}" placeholder="karyaperdanateknik@gmail.com">
           <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Tampil di footer & halaman kontak</p>
         </div>
+        <div style="grid-column:span 2; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <label class="form-label">Provinsi</label>
+            <select name="province_id" id="province-select" class="form-input" data-selected="{{ $settings['province_id'] ?? '' }}" required>
+                <option value="">Pilih Provinsi</option>
+            </select>
+            <input type="hidden" name="province_name" id="province-name" value="{{ $settings['province_name'] ?? '' }}">
+          </div>
+          <div>
+            <label class="form-label">Kota/Kabupaten</label>
+            <select name="city_id" id="city-select" class="form-input" data-selected="{{ $settings['city_id'] ?? '' }}" required disabled>
+                <option value="">Pilih Kota/Kabupaten</option>
+            </select>
+            <input type="hidden" name="city_name" id="city-name" value="{{ $settings['city_name'] ?? '' }}">
+          </div>
+          <div>
+            <label class="form-label">Kecamatan</label>
+            <select name="district_id" id="district-select" class="form-input" data-selected="{{ $settings['district_id'] ?? '' }}" required disabled>
+                <option value="">Pilih Kecamatan</option>
+            </select>
+            <input type="hidden" name="district_name" id="district-name" value="{{ $settings['district_name'] ?? '' }}">
+          </div>
+          <div>
+            <label class="form-label">Kelurahan / Desa</label>
+            <select name="village_id" id="village-select" class="form-input" data-selected="{{ $settings['village_id'] ?? '' }}" required disabled>
+                <option value="">Pilih Kelurahan</option>
+            </select>
+            <input type="hidden" name="village_name" id="village-name" value="{{ $settings['village_name'] ?? '' }}">
+          </div>
+          <div>
+            <label class="form-label" for="s-postal_code">Kode Pos</label>
+            <input type="text" name="postal_code" id="s-postal_code" class="form-input" value="{{ $settings['postal_code'] ?? '' }}" placeholder="Kode Pos">
+          </div>
+        </div>
         <div style="grid-column:span 2;">
-          <label class="form-label" for="s-address">Alamat Lengkap Perusahaan</label>
-          <textarea name="address" id="s-address" class="form-input" rows="3" placeholder="Jl. ... No. ..., Kota, Provinsi">{{ $settings['address'] ?? '' }}</textarea>
+          <label class="form-label" for="s-address">Alamat Jalan / Gedung (Detail)</label>
+          <textarea name="address" id="s-address" class="form-input" rows="3" placeholder="Jl. ... No. ...">{{ $settings['address'] ?? '' }}</textarea>
           <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Tampil di footer & halaman kontak</p>
         </div>
         <div style="grid-column:span 2;">
@@ -962,5 +996,115 @@ switchTab('general');
 <style>
 @keyframes fadeIn { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
 </style>
-@endsection
 
+<script>
+// EMSIFA API WILAYAH INDONESIA
+document.addEventListener("DOMContentLoaded", function() {
+    const apiBase = "https://www.emsifa.com/api-wilayah-indonesia/api";
+    
+    const provSelect = document.getElementById("province-select");
+    const citySelect = document.getElementById("city-select");
+    const distSelect = document.getElementById("district-select");
+    const villSelect = document.getElementById("village-select");
+    
+    const provName = document.getElementById("province-name");
+    const cityName = document.getElementById("city-name");
+    const distName = document.getElementById("district-name");
+    const villName = document.getElementById("village-name");
+
+    const selProv = provSelect.getAttribute('data-selected');
+    const selCity = citySelect.getAttribute('data-selected');
+    const selDist = distSelect.getAttribute('data-selected');
+    const selVill = villSelect.getAttribute('data-selected');
+
+    // Fetch Provinces
+    fetch(`${apiBase}/provinces.json`)
+        .then(response => response.json())
+        .then(provinces => {
+            provinces.forEach(prov => {
+                let option = new Option(prov.name, prov.id);
+                if (prov.id == selProv) option.selected = true;
+                provSelect.add(option);
+            });
+            if (selProv) {
+                loadCities(selProv, selCity);
+            }
+        });
+
+    provSelect.addEventListener('change', function() {
+        provName.value = this.options[this.selectedIndex].text;
+        citySelect.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
+        distSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+        villSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
+        citySelect.disabled = distSelect.disabled = villSelect.disabled = true;
+        cityName.value = distName.value = villName.value = '';
+        
+        if (this.value) loadCities(this.value);
+    });
+
+    citySelect.addEventListener('change', function() {
+        cityName.value = this.options[this.selectedIndex].text;
+        distSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+        villSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
+        distSelect.disabled = villSelect.disabled = true;
+        distName.value = villName.value = '';
+
+        if (this.value) loadDistricts(this.value);
+    });
+
+    distSelect.addEventListener('change', function() {
+        distName.value = this.options[this.selectedIndex].text;
+        villSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
+        villSelect.disabled = true;
+        villName.value = '';
+
+        if (this.value) loadVillages(this.value);
+    });
+
+    villSelect.addEventListener('change', function() {
+        villName.value = this.options[this.selectedIndex].text;
+    });
+
+    function loadCities(provId, selectedId = null) {
+        fetch(`${apiBase}/regencies/${provId}.json`)
+            .then(res => res.json())
+            .then(cities => {
+                cities.forEach(city => {
+                    let option = new Option(city.name, city.id);
+                    if (city.id == selectedId) option.selected = true;
+                    citySelect.add(option);
+                });
+                citySelect.disabled = false;
+                if (selectedId) loadDistricts(selectedId, selDist);
+            });
+    }
+
+    function loadDistricts(cityId, selectedId = null) {
+        fetch(`${apiBase}/districts/${cityId}.json`)
+            .then(res => res.json())
+            .then(districts => {
+                districts.forEach(dist => {
+                    let option = new Option(dist.name, dist.id);
+                    if (dist.id == selectedId) option.selected = true;
+                    distSelect.add(option);
+                });
+                distSelect.disabled = false;
+                if (selectedId) loadVillages(selectedId, selVill);
+            });
+    }
+
+    function loadVillages(distId, selectedId = null) {
+        fetch(`${apiBase}/villages/${distId}.json`)
+            .then(res => res.json())
+            .then(villages => {
+                villages.forEach(vill => {
+                    let option = new Option(vill.name, vill.id);
+                    if (vill.id == selectedId) option.selected = true;
+                    villSelect.add(option);
+                });
+                villSelect.disabled = false;
+            });
+    }
+});
+</script>
+@endsection

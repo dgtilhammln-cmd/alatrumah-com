@@ -487,7 +487,18 @@ www.alatrumah.com
                 </div>
                 <div class="cv-footer-v2-contact-text">
                     <span class="cv-footer-v2-contact-label">Alamat</span>
-                    {!! nl2br(e($s['address'] ?? 'Jl. Kerukunan IX, Komp. Citra Garden 2, Blok G1 No.6, Kalideres, Jakarta Barat 11830')) !!}
+                    @php
+                        $addrDetail = $s['address'] ?? '';
+                        $village    = $s['village_name'] ?? '';
+                        $district   = $s['district_name'] ?? '';
+                        $city       = $s['city_name'] ?? 'Surabaya';
+                        $province   = $s['province_name'] ?? 'Jawa Timur';
+                        $postal     = $s['postal_code'] ?? '';
+                        
+                        $fullAddressParts = array_filter([$addrDetail, $village, $district, $city, $province, $postal]);
+                        $fullAddress = !empty($fullAddressParts) ? implode(', ', $fullAddressParts) : 'Surabaya, Jawa Timur';
+                    @endphp
+                    {!! nl2br(e($fullAddress)) !!}
                 </div>
             </div>
 

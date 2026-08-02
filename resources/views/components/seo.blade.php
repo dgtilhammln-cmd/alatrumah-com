@@ -14,12 +14,18 @@
     $tagline  = $settings['tagline']   ?? 'Semua Kebutuhan Rumah, Satu Tempat';
     $domain   = $settings['domain']    ?? 'alatrumah.com';
     $shortDesc= $settings['short_desc']?? 'Toko online alat rumah tangga terlengkap.';
-    $address  = $settings['contact.address'] ?? '';
-    $city     = $settings['contact.city'] ?? 'Surabaya';
-    $province = $settings['contact.province'] ?? 'Jawa Timur';
-    $waNumber = $settings['contact.whatsapp'] ?? '';
-    $email    = $settings['contact.email'] ?? 'info@' . $domain;
+    $addressDetail = $settings['address'] ?? '';
+    $village  = $settings['village_name'] ?? '';
+    $district = $settings['district_name'] ?? '';
+    $city     = $settings['city_name'] ?? 'Surabaya';
+    $province = $settings['province_name'] ?? 'Jawa Timur';
+    $postal   = $settings['postal_code'] ?? '';
     
+    $waNumber = $settings['phone'] ?? '';
+    $email    = $settings['email'] ?? 'info@' . $domain;
+
+    $parts = array_filter([$addressDetail, $village, $district]);
+    $streetAddress = !empty($parts) ? implode(', ', $parts) : $city;
     // Auto-Fallback Logic
     $autoTitle = $seoData['title'] ?? ($siteName . ' - ' . $tagline);
     $autoDesc  = $seoData['description'] ?? $shortDesc;
@@ -115,9 +121,10 @@ $lbSchema = [
     'priceRange'    => '$$',
     'address'       => [
         '@@type'           => 'PostalAddress',
-        'streetAddress'    => $address ?: $city,
+        'streetAddress'    => $streetAddress,
         'addressLocality'  => $city,
         'addressRegion'    => $province,
+        'postalCode'       => $postal,
         'addressCountry'   => 'ID',
     ],
     'hasMap'        => 'https://www.google.com/maps?q=' . urlencode($city . ', ' . $province),

@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 @section('content')
 
 <style>
@@ -399,7 +399,18 @@ body { background: var(--c-bg); font-family: var(--font); color: var(--c-text); 
                 </div>
                 <div class="ct-info-body">
                     <div class="ct-info-label">Alamat</div>
-                    <span class="ct-info-value" style="cursor:default;">{{ $settings['address'] ?? 'Pergudangan Legundi Business Park Blok D-11, Gresik - Jawa Timur' }}</span>
+                    @php
+                        $addrDetail = $settings['address'] ?? '';
+                        $village    = $settings['village_name'] ?? '';
+                        $district   = $settings['district_name'] ?? '';
+                        $city       = $settings['city_name'] ?? 'Surabaya';
+                        $province   = $settings['province_name'] ?? 'Jawa Timur';
+                        $postal     = $settings['postal_code'] ?? '';
+                        
+                        $fullAddressParts = array_filter([$addrDetail, $village, $district, $city, $province, $postal]);
+                        $fullAddress = !empty($fullAddressParts) ? implode(', ', $fullAddressParts) : 'Pergudangan Legundi Business Park Blok D-11, Gresik - Jawa Timur';
+                    @endphp
+                    <span class="ct-info-value" style="cursor:default;">{{ $fullAddress }}</span>
                     <div class="ct-info-sub">Kunjungi kami dengan janji</div>
                 </div>
             </div>
