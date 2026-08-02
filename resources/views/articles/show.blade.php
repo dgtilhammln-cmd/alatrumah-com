@@ -600,14 +600,12 @@ a { text-decoration: none; color: inherit; }
         $ctaWa = \App\Models\WaSetting::primary();
     @endphp
     <div class="ar-cta-box">
-        <h3>Tertarik Pasang Alat Rumah?</h3>
-        <p>Tim teknis Alat Rumah siap membantu Anda memilih dan memasang solusi ventilasi yang tepat secara gratis.</p>
-        <button onclick="openOrderModal('Artikel CTA: {{ addslashes($trans?->title ?? $article->slug) }}')" class="ar-cta-btn">
-            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            {{ $cta['text'] }}
-        </button>
+        <h3>Cari Produk Alat Rumah Tangga?</h3>
+        <p>Temukan ribuan produk alat rumah tangga berkualitas dengan harga terbaik, dikirim ke seluruh Indonesia dari Surabaya.</p>
+        <a href="{{ route_locale('products') }}" class="ar-cta-btn" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            Lihat Semua Produk
+        </a>
     </div>
     @endif
 
@@ -669,11 +667,59 @@ a { text-decoration: none; color: inherit; }
 
 </section>
 
-{{-- ════ KEUNGGULAN + APLIKASI + COVERAGE — from homepage ════ --}}
-@php
-    // Reuse the CSS & HTML classes already defined in home/index
-    // We include the styles inline here for standalone use
-@endphp
+{{-- ════ KEUNGGULAN ALATRUMAH ════ --}}
+<style>
+.ar-why { background:#fff; padding:5rem 0; }
+.ar-why-inner { max-width:1200px; margin:0 auto; padding:0 1.5rem; }
+.ar-why-header { text-align:center; margin-bottom:3rem; }
+.ar-why-label { font-size:0.72rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:#0EA5E9; display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:0.75rem; }
+.ar-why-title { font-size:clamp(1.75rem,3.5vw,2.75rem); font-weight:600; color:#0F172A; line-height:1.2; letter-spacing:-0.025em; }
+.ar-why-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem; }
+.ar-why-card { background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:20px; padding:1.75rem; display:flex; flex-direction:column; gap:0.75rem; transition:all 0.3s; }
+.ar-why-card:hover { border-color:#0EA5E9; transform:translateY(-5px); box-shadow:0 16px 40px rgba(14,165,233,0.09); }
+.ar-why-icon { width:46px; height:46px; background:#EFF6FF; border-radius:13px; display:flex; align-items:center; justify-content:center; color:#0EA5E9; }
+.ar-why-card-title { font-size:0.9375rem; font-weight:700; color:#0F172A; }
+.ar-why-card-desc { font-size:0.8125rem; color:#64748B; line-height:1.65; }
+.ar-why-cta { text-align:center; margin-top:2.5rem; }
+@media(max-width:768px) { .ar-why-grid { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:480px) { .ar-why-grid { grid-template-columns:1fr; } }
+</style>
+<section class="ar-why">
+    <div class="ar-why-inner">
+        <div class="ar-why-header">
+            <div class="ar-why-label">Mengapa AlatRumah.com</div>
+            <h2 class="ar-why-title">Toko Alat Rumah Tangga<br>Terpercaya di Surabaya</h2>
+        </div>
+        <div class="ar-why-grid">
+            <div class="ar-why-card" data-aos="fade-up">
+                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                <div class="ar-why-card-title">Produk Berkualitas</div>
+                <div class="ar-why-card-desc">Semua produk tersertifikasi dan telah diuji kualitasnya. Garansi resmi dari produsen.</div>
+            </div>
+            <div class="ar-why-card" data-aos="fade-up" data-aos-delay="80">
+                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+                <div class="ar-why-card-title">Pengiriman Cepat</div>
+                <div class="ar-why-card-desc">Dikirim ke seluruh Indonesia dari Surabaya. Proses packing aman, pesanan tiba tepat waktu.</div>
+            </div>
+            <div class="ar-why-card" data-aos="fade-up" data-aos-delay="160">
+                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                <div class="ar-why-card-title">Harga Terbaik</div>
+                <div class="ar-why-card-desc">Harga kompetitif langsung dari distributor resmi. Promo dan diskon spesial setiap hari.</div>
+            </div>
+            <div class="ar-why-card" data-aos="fade-up" data-aos-delay="240">
+                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+                <div class="ar-why-card-title">Layanan CS Responsif</div>
+                <div class="ar-why-card-desc">Tim customer service kami siap membantu via WhatsApp, cepat dan ramah setiap hari.</div>
+            </div>
+        </div>
+        <div class="ar-why-cta">
+            <a href="{{ route_locale('products') }}" style="display:inline-flex;align-items:center;gap:0.5rem;background:#0EA5E9;color:#fff;padding:0.8rem 2rem;border-radius:50px;font-weight:700;font-size:0.9rem;text-decoration:none;box-shadow:0 4px 12px rgba(14,165,233,0.2);transition:all 0.3s;" onmouseover="this.style.background='#0284C7';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#0EA5E9';this.style.transform='translateY(0)'">
+                Belanja Sekarang
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </div>
+    </div>
+</section>
 <style>
 /* ─── shared section styles (same as homepage) ─── */
 .cv-adv-premium { background:#ffffff; padding:5rem 0; position:relative; overflow:hidden; }
