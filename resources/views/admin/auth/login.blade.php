@@ -280,7 +280,7 @@
             @if($logo)
                 <img src="{{ asset('storage/'.$logo) }}" alt="Logo" style="height: 50px; width: auto; max-width: 250px; object-fit: contain; align-self: flex-start; margin-bottom: 2rem;">
             @else
-                <div class="logo-placeholder">CV</div>
+                <div class="logo-placeholder">AR</div>
             @endif
             
             <h1 class="hero-title">Alat Rumah<br>Control Panel</h1>
