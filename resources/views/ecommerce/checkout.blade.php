@@ -929,6 +929,103 @@ label:focus{outline:none !important;box-shadow:none !important;}
                 return;
             }
         }
+
+        // PREVENT DEFAULT TO SHOW CONFIRMATION MODAL FIRST
+        e.preventDefault();
+
+        // Gather summary data for double check
+        let receiverName = '';
+        let receiverPhone = '';
+        let addressText = '';
+
+        const isNewAddress = (!select || select.value === 'new');
+        
+        if (isNewAddress) {
+            // Guest or New Address
+            const guestName = document.querySelector('input[name="guest_name"]');
+            const guestPhone = document.querySelector('input[name="guest_phone"]');
+            
+            if (guestName && guestName.value) {
+                receiverName = guestName.value;
+                receiverPhone = guestPhone ? guestPhone.value : '';
+            } else {
+                receiverName = document.getElementById('new_addr_receiver')?.value || '';
+                receiverPhone = document.getElementById('new_addr_phone')?.value || '';
+            }
+            
+            const prov = document.getElementById('province_name')?.value || '';
+            const city = document.getElementById('city_name')?.value || '';
+            const dist = document.getElementById('district_name')?.value || '';
+            const full = document.getElementById('new_addr_full')?.value || '';
+            addressText = `${full}, ${dist}, ${city}, ${prov}`;
+        } else {
+            // Saved Address
+            const opt = select.options[select.selectedIndex];
+            // Format format dari blade: "Label - Nama (Kota, Prov)"
+            const parts = opt.text.split('-');
+            receiverName = parts.length > 1 ? parts[1].split('(')[0].trim() : opt.text;
+            addressText = opt.text;
+        }
+
+        let courierText = '';
+        if (document.getElementById('courier_name_select')) {
+            const cSel = document.getElementById('courier_name_select');
+            const cName = cSel.options[cSel.selectedIndex]?.text || '';
+            const cSvc = document.getElementById('courier_service_hidden')?.value || '';
+            courierText = `${cName} - ${cSvc}`;
+        } else {
+            courierText = 'Tidak menggunakan kurir fisik';
+        }
+
+        const totalCost = document.getElementById('total-row-val')?.innerText || '';
+
+        const htmlSummary = `
+            <div style="text-align:left; font-size:0.9rem; line-height:1.5; color:#334155; margin-top:1rem;">
+                <div style="margin-bottom:0.75rem;">
+                    <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Penerima</strong>
+                    <div>${receiverName}</div>
+                    ${receiverPhone ? `<div>${receiverPhone}</div>` : ''}
+                </div>
+                <div style="margin-bottom:0.75rem;">
+                    <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Alamat Pengiriman</strong>
+                    <div>${addressText}</div>
+                </div>
+                <div style="margin-bottom:0.75rem;">
+                    <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Kurir</strong>
+                    <div>${courierText}</div>
+                </div>
+                <div style="margin-top:1rem; padding-top:1rem; border-top:1px dashed #CBD5E1; color:#0EA5E9; font-weight:700; font-size:1.1rem; text-align:right;">
+                    ${totalCost}
+                </div>
+            </div>
+        `;
+
+        Swal.fire({
+            title: 'Konfirmasi Pesanan',
+            html: htmlSummary,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#059669',
+            cancelButtonColor: '#94A3B8',
+            confirmButtonText: 'Semua Benar, Lanjut!',
+            cancelButtonText: 'Cek Lagi',
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-xl',
+                title: 'text-lg font-bold'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Show loading state
+                Swal.fire({
+                    title: 'Memproses Pesanan...',
+                    text: 'Mohon tunggu sebentar.',
+                    allowOutsideClick: false,
+                    didOpen: () => { Swal.showLoading(); }
+                });
+                document.getElementById('checkoutForm').submit();
+            }
+        });
     }
 
     function toggleNewAddress() {
