@@ -80,7 +80,8 @@ class AdminServiceController extends Controller
         $v['slug'] = $slug;
 
         $v['is_active'] = $request->boolean('is_active', true);
-        $v['order']     = $v['order'] ?? 0;
+        // Order otomatis: produk baru selalu di atas (urutan = 0 = paling atas, atau pakai timestamp)
+        $v['order']     = empty($v['order']) ? 0 : (int)$v['order'];
 
         if (empty($v['meta_title'])) $v['meta_title'] = $v['name'].' | Alatrumah.com';
         if (empty($v['meta_desc'])) {

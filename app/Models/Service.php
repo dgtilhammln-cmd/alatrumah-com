@@ -93,7 +93,7 @@ class Service extends Model
     // =========================================================================
 
     public function scopeActive(Builder $query): Builder { return $query->where('is_active', true); }
-    public function scopeOrdered(Builder $query): Builder { return $query->orderBy('order')->orderBy('id'); }
+    public function scopeOrdered(Builder $query): Builder { return $query->orderBy('created_at', 'desc'); }
 
     /**
      * Hanya produk yang ditandai sebagai unggulan.

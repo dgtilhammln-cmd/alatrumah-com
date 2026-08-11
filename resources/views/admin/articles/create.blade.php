@@ -249,6 +249,8 @@
     {{-- Track active lang for repopulate after validation error --}}
     <input type="hidden" name="_active_lang" id="active-lang-input" value="{{ $activeLang }}">
 
+    <div id="validation-alert" style="display:none;background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;color:#991B1B;font-size:.875rem;line-height:1.6;"></div>
+
     <div style="display:grid;grid-template-columns:minmax(0, 1fr) 340px;gap:1.5rem;">
 
         {{-- LEFT COLUMN --}}
@@ -726,6 +728,36 @@ function updateCompleteness() {
 document.getElementById('article-form').addEventListener('input', updateCompleteness);
 // Run on init
 setTimeout(updateCompleteness, 100);
+
+// ── Double-check validasi sebelum submit ──
+document.getElementById('article-form').addEventListener('submit', function(e) {
+    const errors = [];
+
+    // Judul Bahasa Indonesia wajib ada
+    const titleId = document.getElementById('art-title-id');
+    if (!titleId || titleId.value.trim() === '') {
+        errors.push('❌  Judul Artikel (Bahasa Indonesia) wajib diisi.');
+    }
+
+    // Isi artikel ID wajib ada
+    const contentId = document.getElementById('html-editor-id')?.value.trim() ||
+                      document.getElementById('editor-id')?.innerHTML.replace(/<[^>]+>/g,'').trim();
+    if (!contentId || contentId.length < 30) {
+        errors.push('❌  Isi Artikel (Bahasa Indonesia) wajib diisi minimal 30 karakter.');
+    }
+
+    if (errors.length > 0) {
+        e.preventDefault();
+        const box = document.getElementById('validation-alert');
+        box.innerHTML = '<strong>Mohon perbaiki sebelum menyimpan:</strong><ul style="margin:.5rem 0 0;padding-left:1.25rem;">' +
+            errors.map(err => `<li style="margin-bottom:.25rem;">${err}</li>`).join('') + '</ul>';
+        box.style.display = 'block';
+        box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Switch ke tab ID agar error terlihat
+        switchLang('id');
+        return false;
+    }
+});
 </script>
 @endpush
 @endsection

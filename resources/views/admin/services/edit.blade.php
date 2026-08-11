@@ -22,6 +22,8 @@
 <form method="POST" action="{{ route('admin.services.update',$s) }}" enctype="multipart/form-data" id="svc-form">
 @csrf @method('PUT')
 
+<div id="validation-alert" style="display:none;background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;color:#991B1B;font-size:.875rem;line-height:1.6;"></div>
+
 <div style="display:grid;grid-template-columns:1fr 340px;gap:1.75rem;align-items:start;">
 
 {{-- ═══════════════ LEFT COLUMN ═══════════════ --}}
@@ -229,7 +231,7 @@
       <div style="width:32px;height:32px;background:rgba(16,185,129,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
         <svg width="16" height="16" fill="none" stroke="#10B981" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Status & Urutan</h3>
+      <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Status Publikasi</h3>
     </div>
     <div style="display:flex;flex-direction:column;gap:1rem;">
       <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:.875rem 1rem;background:#F8FAFC;border-radius:12px;border:1.5px solid #E4E7F0;">
@@ -245,10 +247,6 @@
           </div>
         </div>
       </label>
-      <div>
-        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Urutan Tampil</label>
-        <input type="number" name="order" value="{{ old('order',$s->order??0) }}" min="0"
-          style="width:100%;padding:.625rem .875rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Icon (opsional)</label>
@@ -326,8 +324,27 @@ function svcAutoSlug() {
   if(svcSlugManual) return;
   document.getElementById('svc-slug').value = document.getElementById('svc-name').value.toLowerCase().replace(/[^a-z0-9\s\-]/g,'').trim().replace(/\s+/g,'-');
 }
-document.getElementById('svc-form').addEventListener('submit',function(){
-  document.querySelectorAll('textarea[style*="display:none"]').forEach(t=>t.style.display='block');
+document.getElementById('svc-form').addEventListener('submit', function(e) {
+  // Sync hidden textareas
+  document.querySelectorAll('textarea[style*="display:none"]').forEach(t => t.style.display='block');
+
+  // ── Double-check validasi ──
+  const errors = [];
+  const name = document.getElementById('svc-name').value.trim();
+  if (!name) errors.push('❌  Nama Layanan wajib diisi.');
+
+  const desc = document.querySelector('textarea[name="description"]');
+  if (desc && desc.value.trim().length < 20) errors.push('❌  Deskripsi Lengkap minimal 20 karakter.');
+
+  if (errors.length > 0) {
+    e.preventDefault();
+    const box = document.getElementById('validation-alert');
+    box.innerHTML = '<strong>Mohon perbaiki sebelum menyimpan:</strong><ul style="margin:.5rem 0 0;padding-left:1.25rem;">' +
+      errors.map(err => `<li style="margin-bottom:.25rem;">${err}</li>`).join('') + '</ul>';
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return false;
+  }
 });
 function updateToggle(chk) {
   document.getElementById('toggle-track').style.background = chk.checked ? '#3B82F6' : '#E4E7F0';
