@@ -894,6 +894,8 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
     function prepareSubmit(e) {
         const select = document.getElementById('address_id_select');
+        const isNewAddress = (!select || select.value === 'new');
+
         if (isNewAddress) {
             const provName = document.getElementById('province_name');
             const cityName = document.getElementById('city_name');
@@ -964,8 +966,6 @@ label:focus{outline:none !important;box-shadow:none !important;}
         let receiverPhone = '';
         let addressText = '';
 
-        const isNewAddress = (!select || select.value === 'new');
-        
         if (isNewAddress) {
             // Guest or New Address
             const guestName = document.querySelector('input[name="guest_name"]');
