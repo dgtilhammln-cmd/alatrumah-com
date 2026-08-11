@@ -20,6 +20,13 @@ class ResiController extends Controller
         $settings = Setting::getAllAsArray();
         $awb      = trim($request->awb);
         $courier  = strtolower(trim($request->courier));
+        // Map common codes to RajaOngkir codes
+        $courierMap = [
+            'idx' => 'ide',
+            'ninja' => 'ninjaxpress'
+        ];
+        $mappedCourier = $courierMap[$courier] ?? $courier;
+        
         $apiKey   = $settings['shipping_delivery_api_key'] ?: ($settings['rajaongkir_api_key'] ?? null);
         $apiType  = $settings['rajaongkir_type'] ?? 'starter';
 
@@ -58,11 +65,11 @@ class ResiController extends Controller
                 ->asForm()
                 ->post($url, [
                     'waybill' => $awb,
-                    'courier' => $courier
+                    'courier' => $mappedCourier
                 ]);
 
             $json = $response->json();
-            Log::info('[RESI] Raw API response', ['status' => $response->status(), 'body' => $json, 'awb' => $awb, 'courier' => $courier]);
+            Log::info('[RESI] Raw API response', ['status' => $response->status(), 'body' => $json, 'awb' => $awb, 'courier' => $mappedCourier]);
 
             $ro = $json['rajaongkir'] ?? [];
             $status = $ro['status'] ?? [];
