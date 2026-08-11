@@ -103,7 +103,7 @@ class AccountController extends Controller
                     $courierCode = $courierCodeMap[$rawCourier] ?? $rawCourier;
 
                     $baseUrl = match($apiType) {
-                        'pro'   => 'https://pro.rajaongkir.com/api',
+                        'pro', 'enterprise'   => 'https://pro.rajaongkir.com/api',
                         'basic' => 'https://api.rajaongkir.com/basic',
                         default => 'https://api.rajaongkir.com/starter'
                     };

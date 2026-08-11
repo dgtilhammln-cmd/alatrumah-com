@@ -186,8 +186,8 @@
         <label style="display:block;font-size:.85rem;font-weight:700;color:#475569;margin-bottom:.5rem;">Tipe Akun</label>
         <select name="rajaongkir_type" style="width:100%;padding:.875rem 1rem;border:1.5px solid #E2E8F0;border-radius:12px;font-size:.95rem;outline:none;background:#fff;font-family:inherit;">
           <option value="starter" {{ $settings->get('rajaongkir_type', '') == 'starter' ? 'selected' : '' }}>Starter (Gratis)</option>
-          <option value="basic" {{ $settings->get('rajaongkir_type', '') == 'basic' ? 'selected' : '' }}>Basic</option>
           <option value="pro" {{ $settings->get('rajaongkir_type', '') == 'pro' ? 'selected' : '' }}>Pro</option>
+          <option value="enterprise" {{ $settings->get('rajaongkir_type', '') == 'enterprise' ? 'selected' : '' }}>Enterprise</option>
         </select>
       </div>
       <div style="display:flex;gap:1rem;">

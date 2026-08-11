@@ -99,7 +99,7 @@ class CheckoutApiController extends Controller
     private function getApiBase(): string
     {
         $type = Setting::get('rajaongkir_type', 'starter');
-        if ($type === 'pro') {
+        if (in_array($type, ['pro', 'enterprise'])) {
             return 'https://pro.rajaongkir.com/api';
         }
         if ($type === 'basic') {

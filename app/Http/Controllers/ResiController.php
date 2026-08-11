@@ -43,7 +43,7 @@ class ResiController extends Controller
 
         try {
             $baseUrl = match($apiType) {
-                'pro'   => 'https://pro.rajaongkir.com/api',
+                'pro', 'enterprise'   => 'https://pro.rajaongkir.com/api',
                 default => 'https://api.rajaongkir.com/basic' // Starter blocked above, Basic is fallback
             };
 
