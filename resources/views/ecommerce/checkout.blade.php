@@ -263,6 +263,15 @@ label:focus{outline:none !important;box-shadow:none !important;}
                         </div>
 
                         <div class="form-group mb-0">
+                            <label class="form-label">Kategori Alamat (Rumah/Kantor)</label>
+                            <select name="new_address_label" id="new_addr_label" class="form-input">
+                                <option value="Rumah">Rumah</option>
+                                <option value="Kantor">Kantor</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-0" style="margin-top:1rem;">
                             <label class="form-label">Alamat Lengkap (Nama Jalan, Gedung, RT/RW)</label>
                             <textarea name="new_address_full" id="new_addr_full" class="form-input" rows="3" placeholder="Masukkan detail alamat lengkap..."></textarea>
                         </div>
@@ -327,10 +336,10 @@ label:focus{outline:none !important;box-shadow:none !important;}
                 <div class="co-section">
                     <div class="co-section-title">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                        Catatan (Opsional)
+                        Catatan (Wajib Diisi)
                     </div>
                     <div class="form-group mb-0">
-                        <textarea name="notes" class="form-input" rows="2" placeholder="Pesan untuk penjual..."></textarea>
+                        <textarea name="notes" id="notes_input" class="form-input" rows="2" placeholder="Tuliskan catatan pesanan (Warna, Ukuran, atau instruksi pengiriman)..." required></textarea>
                     </div>
                 </div>
             </div>
@@ -885,17 +894,21 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
     function prepareSubmit(e) {
         const select = document.getElementById('address_id_select');
-        if (select && select.value === 'new') {
+        if (isNewAddress) {
             const provName = document.getElementById('province_name');
             const cityName = document.getElementById('city_name');
             const distName = document.getElementById('district_name');
-            if (!provName.value || !cityName.value || !distName.value) {
+            const newAddrFull = document.getElementById('new_addr_full');
+            const newAddrReceiver = document.getElementById('new_addr_receiver');
+            const newAddrPhone = document.getElementById('new_addr_phone');
+
+            if (!provName?.value || !cityName?.value || !distName?.value || !newAddrFull?.value || !newAddrReceiver?.value || !newAddrPhone?.value) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Data Belum Lengkap',
-                    text: 'Mohon lengkapi pilihan Provinsi, Kota, dan Kecamatan.',
+                    title: 'Data Alamat Belum Lengkap',
+                    text: 'Mohon isi semua kolom penerima, nomor telepon, dan detail alamat lengkap.',
                     confirmButtonColor: '#0F172A',
-                    confirmButtonText: 'Baiklah'
+                    confirmButtonText: 'Lengkapi Data'
                 });
                 e.preventDefault();
                 return;
@@ -928,6 +941,19 @@ label:focus{outline:none !important;box-shadow:none !important;}
                 e.preventDefault();
                 return;
             }
+        }
+
+        const notes = document.getElementById('notes_input')?.value;
+        if (!notes || notes.trim() === '') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Catatan Wajib Diisi',
+                text: 'Mohon isi catatan pesanan (bisa berupa ukuran, warna, atau keterangan lainnya).',
+                confirmButtonColor: '#0F172A'
+            });
+            document.getElementById('notes_input')?.focus();
+            e.preventDefault();
+            return;
         }
 
         // PREVENT DEFAULT TO SHOW CONFIRMATION MODAL FIRST
@@ -977,6 +1003,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
             courierText = 'Tidak menggunakan kurir fisik';
         }
 
+        const notesText = document.getElementById('notes_input')?.value || '-';
         const totalCost = document.getElementById('total-row-val')?.innerText || '';
 
         const htmlSummary = `
@@ -993,6 +1020,10 @@ label:focus{outline:none !important;box-shadow:none !important;}
                 <div style="margin-bottom:0.75rem;">
                     <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Kurir</strong>
                     <div>${courierText}</div>
+                </div>
+                <div style="margin-bottom:0.75rem;">
+                    <strong style="color:#0F172A; display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px;">Catatan</strong>
+                    <div style="font-style:italic;">"${notesText}"</div>
                 </div>
                 <div style="margin-top:1rem; padding-top:1rem; border-top:1px dashed #CBD5E1; color:#0EA5E9; font-weight:700; font-size:1.1rem; text-align:right;">
                     ${totalCost}
