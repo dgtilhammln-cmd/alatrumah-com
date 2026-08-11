@@ -74,8 +74,33 @@ trait HandlesImageUpload
     }
 
     /**
-     * Encode GD image to WebP string
+     * Crop image to exact target dimensions from center (cover mode)
      */
+    private function gdCenterCrop($src, int $targetW, int $targetH)
+    {
+        $origW = imagesx($src);
+        $origH = imagesy($src);
+
+        // Scale so the image fills the target (cover mode)
+        $ratio = max($targetW / $origW, $targetH / $origH);
+        $scaledW = (int) round($origW * $ratio);
+        $scaledH = (int) round($origH * $ratio);
+
+        // Crop from center
+        $cropX = (int) round(($scaledW - $targetW) / 2);
+        $cropY = (int) round(($scaledH - $targetH) / 2);
+
+        $dst = imagecreatetruecolor($targetW, $targetH);
+        imagealphablending($dst, false);
+        imagesavealpha($dst, true);
+        imagecopyresampled($dst, $src, 0, 0,
+            (int)round($cropX / $ratio), (int)round($cropY / $ratio),
+            $targetW, $targetH,
+            (int)round($targetW / $ratio), (int)round($targetH / $ratio));
+        imagedestroy($src);
+        return $dst;
+    }
+
     private function gdEncodeWebP($img, int $quality): string
     {
         ob_start();
@@ -86,12 +111,12 @@ trait HandlesImageUpload
     }
 
     /**
-     * Store uploaded image as WebP (scaled down)
+     * Store uploaded image as WebP (scaled down, or exact crop if both maxW & maxH given strictly)
      */
     protected function storeWebP(UploadedFile $file, string $folder, int $maxW = 1200, int $maxH = 800, int $quality = 88): string
     {
         $img      = $this->gdLoad($file);
-        $img      = $this->gdScaleDown($img, $maxW, $maxH);
+        $img      = $this->gdCenterCrop($img, $maxW, $maxH);
         $webp     = $this->gdEncodeWebP($img, $quality);
         $filename = $folder . '/' . Str::random(16) . '.webp';
         Storage::disk('public')->put($filename, $webp);

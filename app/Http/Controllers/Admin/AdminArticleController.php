@@ -16,7 +16,7 @@ class AdminArticleController extends Controller
 {
     use HandlesImageUpload;
 
-    protected $locales = ['id', 'en', 'ar', 'ko'];
+    protected $locales = ['id'];
 
     public function index(Request $request)
     {
@@ -87,14 +87,14 @@ class AdminArticleController extends Controller
         $validated['tags']         = $validated['tags'] ? array_filter(array_map('trim', explode(',', $validated['tags']))) : null;
 
         if ($request->hasFile('image')) {
-            $validated['image']    = $this->storeWebP($request->file('image'), 'articles', 1200, 630);
+            $validated['image']    = $this->storeWebP($request->file('image'), 'articles', 1280, 720);
             $validated['alt_text'] = $idTitle;
             if (!$request->hasFile('og_image')) {
-                $validated['og_image'] = $this->storeOgWebP($request->file('image'), 'articles/og');
+                $validated['og_image'] = $this->storeWebP($request->file('image'), 'articles/og', 1280, 720);
             }
         }
         if ($request->hasFile('og_image')) {
-            $validated['og_image'] = $this->storeOgWebP($request->file('og_image'), 'articles/og');
+            $validated['og_image'] = $this->storeWebP($request->file('og_image'), 'articles/og', 1280, 720);
         }
 
         unset($validated['translations'], $validated['slug']);
@@ -162,14 +162,14 @@ class AdminArticleController extends Controller
 
         if ($request->hasFile('image')) {
             $this->deleteStorageFile($article->getRawOriginal('image'));
-            $article->image = $this->storeWebP($request->file('image'), 'articles', 1200, 630);
+            $article->image = $this->storeWebP($request->file('image'), 'articles', 1280, 720);
             if (!$request->hasFile('og_image') && !$article->getRawOriginal('og_image')) {
-                $article->og_image = $this->storeOgWebP($request->file('image'), 'articles/og');
+                $article->og_image = $this->storeWebP($request->file('image'), 'articles/og', 1280, 720);
             }
         }
         if ($request->hasFile('og_image')) {
             $this->deleteStorageFile($article->getRawOriginal('og_image'));
-            $article->og_image = $this->storeOgWebP($request->file('og_image'), 'articles/og');
+            $article->og_image = $this->storeWebP($request->file('og_image'), 'articles/og', 1280, 720);
         }
 
         $article->save();
