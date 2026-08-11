@@ -20,22 +20,34 @@ class ResiController extends Controller
         $settings = Setting::getAllAsArray();
         $awb      = trim($request->awb);
         $courier  = strtolower(trim($request->courier));
-        $apiKey   = $settings['rajaongkir_api_key'] ?? null;
+        $apiKey   = $settings['shipping_delivery_api_key'] ?: ($settings['rajaongkir_api_key'] ?? null);
+        $apiType  = $settings['rajaongkir_type'] ?? 'starter';
 
         if (empty($apiKey)) {
             return view('home.cek-resi', [
                 'settings' => $settings,
                 'awb'      => $awb,
                 'courier'  => $courier,
-                'error'    => 'API key RajaOngkir belum dikonfigurasi. Hubungi administrator.',
+                'error'    => 'API key RajaOngkir/Delivery belum dikonfigurasi. Hubungi administrator.',
+            ]);
+        }
+        
+        if ($apiType === 'starter') {
+            return view('home.cek-resi', [
+                'settings' => $settings,
+                'awb'      => $awb,
+                'courier'  => $courier,
+                'error'    => 'Akun Starter RajaOngkir tidak mendukung fitur pelacakan resi. Upgrade ke Basic/Pro.',
             ]);
         }
 
         try {
-            // Komerce endpoint: params harus dikirim sebagai QUERY STRING di URL
-            $url = 'https://rajaongkir.komerce.id/api/v1/track/waybill'
-                   . '?awb=' . urlencode($awb)
-                   . '&courier=' . urlencode($courier);
+            $baseUrl = match($apiType) {
+                'pro'   => 'https://pro.rajaongkir.com/api',
+                default => 'https://api.rajaongkir.com/basic' // Starter blocked above, Basic is fallback
+            };
+
+            $url = $baseUrl . '/waybill';
 
             $response = Http::withoutVerifying()
                 ->timeout(20)
@@ -43,25 +55,30 @@ class ResiController extends Controller
                     'key'          => $apiKey,
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ])
-                ->post($url);
+                ->asForm()
+                ->post($url, [
+                    'waybill' => $awb,
+                    'courier' => $courier
+                ]);
 
             $json = $response->json();
             Log::info('[RESI] Raw API response', ['status' => $response->status(), 'body' => $json, 'awb' => $awb, 'courier' => $courier]);
 
-            $meta = $json['meta'] ?? [];
-            $data = $json['data'] ?? null;
+            $ro = $json['rajaongkir'] ?? [];
+            $status = $ro['status'] ?? [];
+            $result = $ro['result'] ?? null;
 
             // Check for API errors
-            if (!$data || ($meta['code'] ?? 200) != 200) {
-                $msg = $meta['message'] ?? 'Resi tidak ditemukan atau kurir tidak mendukung pelacakan.';
-                Log::warning('[RESI] API error', ['meta' => $meta, 'awb' => $awb, 'courier' => $courier]);
+            if (!$result || ($status['code'] ?? 200) != 200) {
+                $msg = $status['description'] ?? 'Resi tidak ditemukan atau kurir tidak mendukung pelacakan.';
+                Log::warning('[RESI] API error', ['status' => $status, 'awb' => $awb, 'courier' => $courier]);
                 return view('home.cek-resi', compact('settings','awb','courier') + ['error' => $msg]);
             }
 
-            $summary    = $data['summary']         ?? [];
-            $details    = $data['details']          ?? [];
-            $manifest   = $data['manifest']         ?? [];
-            $delivery   = $data['delivery_status']  ?? [];
+            $summary    = $result['summary']         ?? [];
+            $details    = $result['details']          ?? [];
+            $manifest   = $result['manifest']         ?? [];
+            $delivery   = $result['delivery_status']  ?? [];
 
             // Normalize status
             $st    = strtolower($delivery['status'] ?? $summary['status'] ?? '');

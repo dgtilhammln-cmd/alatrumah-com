@@ -124,6 +124,46 @@
                         <button onclick="openApiModal('midtrans')" style="background:transparent;border:none;color:#3B82F6;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
                     </td>
                 </tr>
+                <!-- Shipping Delivery -->
+                <tr>
+                    <td style="text-align:center;color:#94A3B8;">3</td>
+                    <td>Shipping Delivery <span style="font-size:.75rem;color:#94A3B8;display:block;font-weight:400;">Lacak Resi / Waybill</span></td>
+                    <td>
+                        <div class="api-key-hidden">
+                            <button type="button" onclick="toggleApiKey(this)" data-full="{{ $settings->get('shipping_delivery_api_key', '') }}" data-hidden="{{ $settings->get('shipping_delivery_api_key') ? substr($settings->get('shipping_delivery_api_key'), 0, 5) . str_repeat('•', 20) : 'Belum diatur' }}" style="background:none;border:none;cursor:pointer;color:inherit;display:flex;align-items:center;padding:0;">
+                                <svg class="icon-hide" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/></svg>
+                                <svg class="icon-show" style="display:none;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                            <span class="key-text" style="color:{{ $settings->get('shipping_delivery_api_key') ? '#DC2626' : '#94A3B8' }}; letter-spacing:1px; font-family:monospace;">
+                                {{ $settings->get('shipping_delivery_api_key') ? substr($settings->get('shipping_delivery_api_key'), 0, 5) . str_repeat('•', 20) : 'Belum diatur' }}
+                            </span>
+                        </div>
+                    </td>
+                    <td style="color:#64748B;font-size:.85rem;">{{ date('d/m/Y') }}</td>
+                    <td style="text-align:center;">
+                        <button onclick="openApiModal('delivery')" style="background:transparent;border:none;color:#3B82F6;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
+                    </td>
+                </tr>
+                <!-- QRISLY API -->
+                <tr>
+                    <td style="text-align:center;color:#94A3B8;">4</td>
+                    <td>QRISLY API <span style="font-size:.75rem;color:#94A3B8;display:block;font-weight:400;">Qris Payment</span></td>
+                    <td>
+                        <div class="api-key-hidden">
+                            <button type="button" onclick="toggleApiKey(this)" data-full="{{ $settings->get('qrisly_api_key', '') }}" data-hidden="{{ $settings->get('qrisly_api_key') ? substr($settings->get('qrisly_api_key'), 0, 5) . str_repeat('•', 20) : 'Belum diatur' }}" style="background:none;border:none;cursor:pointer;color:inherit;display:flex;align-items:center;padding:0;">
+                                <svg class="icon-hide" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/></svg>
+                                <svg class="icon-show" style="display:none;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                            <span class="key-text" style="color:{{ $settings->get('qrisly_api_key') ? '#DC2626' : '#94A3B8' }}; letter-spacing:1px; font-family:monospace;">
+                                {{ $settings->get('qrisly_api_key') ? substr($settings->get('qrisly_api_key'), 0, 5) . str_repeat('•', 20) : 'Belum diatur' }}
+                            </span>
+                        </div>
+                    </td>
+                    <td style="color:#64748B;font-size:.85rem;">{{ date('d/m/Y') }}</td>
+                    <td style="text-align:center;">
+                        <button onclick="openApiModal('qrisly')" style="background:transparent;border:none;color:#3B82F6;font-weight:600;cursor:pointer;font-size:.85rem;">Edit ➔</button>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -190,12 +230,56 @@
   </div>
 </div>
 
+{{-- MODAL SHIPPING DELIVERY --}}
+<div id="modal-delivery" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:#fff;border-radius:20px;padding:2.5rem;width:100%;max-width:500px;box-shadow:0 24px 64px rgba(0,0,0,0.2);margin:1rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <h3 style="font-size:1.25rem;font-weight:800;color:#1E293B;margin:0;">Shipping Delivery API</h3>
+      <button onclick="document.getElementById('modal-delivery').style.display='none'" style="background:#F1F5F9;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:1rem;color:#64748B;">✕</button>
+    </div>
+    <form action="{{ route('admin.apikeys.update') }}" method="POST">
+      @csrf
+      <div style="margin-bottom:2rem;">
+        <label style="display:block;font-size:.85rem;font-weight:700;color:#475569;margin-bottom:.5rem;">API Key</label>
+        <input type="text" name="shipping_delivery_api_key" value="{{ $settings->get('shipping_delivery_api_key', '') }}" required style="width:100%;padding:.875rem 1rem;border:1.5px solid #E2E8F0;border-radius:12px;font-size:.95rem;outline:none;box-sizing:border-box;font-family:inherit;">
+      </div>
+      <div style="display:flex;gap:1rem;">
+        <button type="button" onclick="document.getElementById('modal-delivery').style.display='none'" style="flex:1;padding:.875rem;background:#F1F5F9;color:#475569;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;">Batal</button>
+        <button type="submit" style="flex:2;padding:.875rem;background:#DC2626;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;">Simpan API Key</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{{-- MODAL QRISLY API --}}
+<div id="modal-qrisly" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:#fff;border-radius:20px;padding:2.5rem;width:100%;max-width:500px;box-shadow:0 24px 64px rgba(0,0,0,0.2);margin:1rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <h3 style="font-size:1.25rem;font-weight:800;color:#1E293B;margin:0;">QRISLY API</h3>
+      <button onclick="document.getElementById('modal-qrisly').style.display='none'" style="background:#F1F5F9;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:1rem;color:#64748B;">✕</button>
+    </div>
+    <form action="{{ route('admin.apikeys.update') }}" method="POST">
+      @csrf
+      <div style="margin-bottom:2rem;">
+        <label style="display:block;font-size:.85rem;font-weight:700;color:#475569;margin-bottom:.5rem;">API Key</label>
+        <input type="text" name="qrisly_api_key" value="{{ $settings->get('qrisly_api_key', '') }}" required style="width:100%;padding:.875rem 1rem;border:1.5px solid #E2E8F0;border-radius:12px;font-size:.95rem;outline:none;box-sizing:border-box;font-family:inherit;">
+      </div>
+      <div style="display:flex;gap:1rem;">
+        <button type="button" onclick="document.getElementById('modal-qrisly').style.display='none'" style="flex:1;padding:.875rem;background:#F1F5F9;color:#475569;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;">Batal</button>
+        <button type="submit" style="flex:2;padding:.875rem;background:#DC2626;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;">Simpan API Key</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
 function openApiModal(type) {
     document.getElementById('modal-' + type).style.display = 'flex';
 }
 document.getElementById('modal-rajaongkir').addEventListener('click', function(e){ if(e.target===this) this.style.display='none'; });
 document.getElementById('modal-midtrans').addEventListener('click', function(e){ if(e.target===this) this.style.display='none'; });
+document.getElementById('modal-delivery').addEventListener('click', function(e){ if(e.target===this) this.style.display='none'; });
+document.getElementById('modal-qrisly').addEventListener('click', function(e){ if(e.target===this) this.style.display='none'; });
 
 function toggleApiKey(btn) {
     const container = btn.closest('.api-key-hidden');

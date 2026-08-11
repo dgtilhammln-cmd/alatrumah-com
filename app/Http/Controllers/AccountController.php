@@ -79,7 +79,7 @@ class AccountController extends Controller
         // If there is a tracking number, fetch live tracking from RajaOngkir
         $tracking = null;
         if ($order->shipment && $order->shipment->tracking_number && $order->shipment->courier_name) {
-            $apiKey  = \App\Models\Setting::get('rajaongkir_api_key');
+            $apiKey  = \App\Models\Setting::get('shipping_delivery_api_key') ?: \App\Models\Setting::get('rajaongkir_api_key');
             $apiType = \App\Models\Setting::get('rajaongkir_type', 'starter');
             if ($apiKey) {
                 try {
@@ -102,7 +102,12 @@ class AccountController extends Controller
                     ];
                     $courierCode = $courierCodeMap[$rawCourier] ?? $rawCourier;
 
-                    $baseUrl = 'https://rajaongkir.komerce.id/api/v1';
+                    $baseUrl = match($apiType) {
+                        'pro'   => 'https://pro.rajaongkir.com/api',
+                        'basic' => 'https://api.rajaongkir.com/basic',
+                        default => 'https://api.rajaongkir.com/starter'
+                    };
+
                     $response = \Illuminate\Support\Facades\Http::withoutVerifying()
                         ->timeout(10)
                         ->withHeaders(['key' => $apiKey, 'Content-Type' => 'application/x-www-form-urlencoded'])
