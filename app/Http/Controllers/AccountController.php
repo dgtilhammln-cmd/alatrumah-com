@@ -103,22 +103,19 @@ class AccountController extends Controller
                     $courierCode = $courierCodeMap[$rawCourier] ?? $rawCourier;
 
                     $baseUrl = 'https://rajaongkir.komerce.id/api/v1';
+                    $trackUrl = $baseUrl . '/track/waybill?awb=' . urlencode($order->shipment->tracking_number) . '&courier=' . urlencode($courierCode);
                     $response = \Illuminate\Support\Facades\Http::withoutVerifying()
                         ->timeout(10)
-                        ->withHeaders(['key' => $apiKey, 'Content-Type' => 'application/x-www-form-urlencoded'])
-                        ->asForm()
-                        ->post("{$baseUrl}/waybill", [
-                            'waybill' => $order->shipment->tracking_number,
-                            'courier' => $courierCode,
-                        ]);
+                        ->withHeaders(['Authorization' => 'Bearer ' . $apiKey])
+                        ->post($trackUrl);
                     $json = $response->json();
-                    $ro   = $json['rajaongkir'] ?? null;
-                    if ($ro && ($ro['status']['code'] ?? 0) == 200) {
-                        $result   = $ro['result'] ?? [];
-                        $manifest = $result['manifest'] ?? [];
-                        $delivery = $result['delivery_status'] ?? [];
+                    $meta = $json['meta'] ?? [];
+                    $data = $json['data'] ?? null;
+                    if ($data && ($meta['code'] ?? 0) == 200) {
+                        $manifest = $data['manifest'] ?? [];
+                        $delivery = $data['delivery_status'] ?? [];
                         $tracking = [
-                            'status'   => $delivery['status'] ?? '',
+                            'status'   => $delivery['status'] ?? ($data['summary']['status'] ?? ''),
                             'manifest' => array_map(fn($m) => [
                                 'date'  => ($m['manifest_date'] ?? '') . ' ' . ($m['manifest_time'] ?? ''),
                                 'desc'  => $m['manifest_description'] ?? '-',

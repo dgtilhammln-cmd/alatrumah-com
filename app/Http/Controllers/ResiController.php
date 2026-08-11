@@ -60,8 +60,8 @@ class ResiController extends Controller
             $response = Http::withoutVerifying()
                 ->timeout(20)
                 ->withHeaders([
-                    'key'          => $apiKey,
-                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'Authorization' => 'Bearer ' . $apiKey,
+                    'Content-Type'  => 'application/x-www-form-urlencoded',
                 ])
                 ->post($url);
 
