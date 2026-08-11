@@ -102,12 +102,7 @@ class AccountController extends Controller
                     ];
                     $courierCode = $courierCodeMap[$rawCourier] ?? $rawCourier;
 
-                    $baseUrl = match($apiType) {
-                        'pro', 'enterprise'   => 'https://pro.rajaongkir.com/api',
-                        'basic' => 'https://api.rajaongkir.com/basic',
-                        default => 'https://api.rajaongkir.com/starter'
-                    };
-
+                    $baseUrl = 'https://rajaongkir.komerce.id/api/v1';
                     $response = \Illuminate\Support\Facades\Http::withoutVerifying()
                         ->timeout(10)
                         ->withHeaders(['key' => $apiKey, 'Content-Type' => 'application/x-www-form-urlencoded'])

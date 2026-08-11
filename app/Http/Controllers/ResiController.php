@@ -52,12 +52,10 @@ class ResiController extends Controller
         }
 
         try {
-            $baseUrl = match($apiType) {
-                'pro', 'enterprise'   => 'https://pro.rajaongkir.com/api',
-                default => 'https://api.rajaongkir.com/basic' // Starter blocked above, Basic is fallback
-            };
-
-            $url = $baseUrl . '/waybill';
+            // Komerce endpoint: params harus dikirim sebagai QUERY STRING di URL
+            $url = 'https://rajaongkir.komerce.id/api/v1/track/waybill'
+                   . '?awb=' . urlencode($awb)
+                   . '&courier=' . urlencode($mappedCourier);
 
             $response = Http::withoutVerifying()
                 ->timeout(20)
@@ -65,30 +63,25 @@ class ResiController extends Controller
                     'key'          => $apiKey,
                     'Content-Type' => 'application/x-www-form-urlencoded',
                 ])
-                ->asForm()
-                ->post($url, [
-                    'waybill' => $awb,
-                    'courier' => $mappedCourier
-                ]);
+                ->post($url);
 
             $json = $response->json();
             Log::info('[RESI] Raw API response', ['status' => $response->status(), 'body' => $json, 'awb' => $awb, 'courier' => $mappedCourier]);
 
-            $ro = $json['rajaongkir'] ?? [];
-            $status = $ro['status'] ?? [];
-            $result = $ro['result'] ?? null;
+            $meta = $json['meta'] ?? [];
+            $data = $json['data'] ?? null;
 
             // Check for API errors
-            if (!$result || ($status['code'] ?? 200) != 200) {
-                $msg = $status['description'] ?? 'Resi tidak ditemukan atau kurir tidak mendukung pelacakan.';
-                Log::warning('[RESI] API error', ['status' => $status, 'awb' => $awb, 'courier' => $courier]);
+            if (!$data || ($meta['code'] ?? 200) != 200) {
+                $msg = $meta['message'] ?? 'Resi tidak ditemukan atau kurir tidak mendukung pelacakan.';
+                Log::warning('[RESI] API error', ['meta' => $meta, 'awb' => $awb, 'courier' => $mappedCourier]);
                 return view('home.cek-resi', compact('settings','awb','courier') + ['error' => $msg]);
             }
 
-            $summary    = $result['summary']         ?? [];
-            $details    = $result['details']          ?? [];
-            $manifest   = $result['manifest']         ?? [];
-            $delivery   = $result['delivery_status']  ?? [];
+            $summary    = $data['summary']         ?? [];
+            $details    = $data['details']          ?? [];
+            $manifest   = $data['manifest']         ?? [];
+            $delivery   = $data['delivery_status']  ?? [];
 
             // Normalize status
             $st    = strtolower($delivery['status'] ?? $summary['status'] ?? '');
