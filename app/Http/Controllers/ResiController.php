@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 class ResiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->filled('awb') && $request->filled('courier')) {
+            return $this->track($request);
+        }
         $settings = Setting::getAllAsArray();
         return view('home.cek-resi', compact('settings'));
     }

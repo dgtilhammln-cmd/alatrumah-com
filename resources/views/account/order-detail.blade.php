@@ -88,6 +88,7 @@
                     <div style="text-align: right;">
                         <div style="font-size: 0.8rem; color: var(--c-muted);">No. Resi</div>
                         <div style="font-weight: 700; color: var(--c-accent); font-family: monospace; font-size: 1.1rem;">{{ $order->shipment->tracking_number }}</div>
+                        <a href="{{ route('cek-resi', ['awb' => $order->shipment->tracking_number, 'courier' => $order->shipment->courier_name]) }}" style="display:inline-block; margin-top:0.3rem; background:var(--c-accent); color:#fff; font-size:0.75rem; padding:0.3rem 0.6rem; border-radius:6px; text-decoration:none; font-weight:600;">Lacak di Cek Resi &rarr;</a>
                     </div>
                     @endif
                 </div>
