@@ -1,4 +1,4 @@
-﻿{{-- Shared Image Upload Partial --}}
+{{-- Shared Image Upload Partial --}}
 {{-- Usage: @include('admin.partials.image-upload', ['item'=>$item??null,'field'=>'image','label'=>'Foto Utama','required'=>true]) --}}
 @php
   $imgField      = $field    ?? 'image';
@@ -37,8 +37,8 @@
   <div id="{{ $imgPreviewId }}_newwrap" style="display:none;position:relative;border-radius:10px;overflow:hidden;border:2px solid #3B82F6;margin-bottom:.75rem;">
     <img id="{{ $imgPreviewId }}_new" src="" style="width:100%;height:140px;object-fit:cover;display:block;">
     <button type="button" onclick="removeNewImg('{{ $imgInputId }}','{{ $imgPreviewId }}')"
-      style="position:absolute;top:.375rem;right:.375rem;width:26px;height:26px;background:rgba(239,68,68,0.9);border:none;border-radius:50%;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);">
-      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      style="position:absolute;top:.375rem;right:.375rem;width:28px;height:28px;background:rgba(239,68,68,0.95);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
     </button>
     <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(59,130,246,0.85);padding:.3rem .625rem;font-size:.68rem;color:#fff;font-weight:700;">
       ✓ Gambar baru dipilih — belum tersimpan
