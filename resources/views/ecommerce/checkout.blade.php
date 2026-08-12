@@ -408,8 +408,8 @@ label:focus{outline:none !important;box-shadow:none !important;}
                     </div>
 
                     {{-- ====== VOUCHER MODAL ====== --}}
-                    <div id="voucher-modal-overlay" onclick="closeVoucherModal()" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);z-index:9998;backdrop-filter:blur(4px);opacity:0;transition:opacity 0.3s ease;"></div>
-                    <div id="voucher-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -45%);width:92%;max-width:420px;z-index:9999;background:#fff;border-radius:20px;max-height:85vh;overflow:hidden;flex-direction:column;opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);">
+                    <div id="voucher-modal-overlay" onclick="closeVoucherModal()" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);z-index:99998;backdrop-filter:blur(4px);opacity:0;transition:opacity 0.3s ease;"></div>
+                    <div id="voucher-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);width:92%;max-width:420px;z-index:99999;background:#fff;border-radius:20px;max-height:75vh;overflow:hidden;flex-direction:column;opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);">
                         {{-- Header --}}
                         <div style="padding:1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F1F5F9;background:#F8FAFC;">
                             <div style="display:flex;align-items:center;gap:0.5rem;font-size:1.1rem;font-weight:800;color:#0F172A;">
@@ -1200,7 +1200,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
         const modal   = document.getElementById('voucher-modal');
         overlay.style.opacity = '0';
         modal.style.opacity   = '0';
-        modal.style.transform = 'translate(-50%, -45%)';
+        modal.style.transform = 'translate(-50%, -50%)';
         setTimeout(() => {
             overlay.style.display = 'none';
             modal.style.display   = 'none';
