@@ -381,9 +381,59 @@ label:focus{outline:none !important;box-shadow:none !important;}
                     </div>
                     @endif
 
-                    <div class="form-group" style="margin-top:1.5rem;">
-                        <label class="form-label">Kode Kupon (Opsional)</label>
-                        <input type="text" name="coupon_code" class="form-input" placeholder="Masukkan kode promo">
+                    {{-- ====== VOUCHER PICKER ====== --}}
+                    <div style="margin-top:1.5rem;">
+                        <input type="hidden" name="coupon_code" id="coupon_code_input" value="">
+
+                        {{-- Applied State --}}
+                        <div id="voucher-applied-state" style="display:none; background:linear-gradient(135deg,#D1FAE5,#A7F3D0); border:1.5px solid #10B981; border-radius:12px; padding:0.875rem 1.25rem; margin-bottom:0.5rem; display:flex; align-items:center; justify-content:space-between; gap:0.5rem;">
+                            <div style="display:flex;align-items:center;gap:0.5rem;">
+                                <svg width="18" height="18" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <div>
+                                    <div id="voucher-applied-code" style="font-size:0.85rem;font-weight:800;color:#065F46;font-family:monospace;letter-spacing:1px;"></div>
+                                    <div id="voucher-applied-save" style="font-size:0.8rem;color:#059669;font-weight:600;"></div>
+                                </div>
+                            </div>
+                            <button type="button" onclick="clearVoucher()" style="background:none;border:none;color:#B91C1C;font-size:0.8rem;font-weight:700;cursor:pointer;padding:0.25rem 0.5rem;border-radius:6px;background:#FEE2E2;">✕ Hapus</button>
+                        </div>
+
+                        {{-- Picker Button --}}
+                        <button type="button" id="voucher-picker-btn" onclick="openVoucherModal()" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1.25rem;background:#fff;border:1.5px dashed #CBD5E1;border-radius:12px;cursor:pointer;font-family:var(--font);transition:all 0.2s;" onmouseover="this.style.borderColor='#0EA5E9'" onmouseout="this.style.borderColor='#CBD5E1'">
+                            <div style="display:flex;align-items:center;gap:0.75rem;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0EA5E9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                <span style="font-size:0.9rem;font-weight:600;color:#334155;">Pilih atau Masukkan Voucher</span>
+                            </div>
+                            <svg width="16" height="16" fill="none" stroke="#94A3B8" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                        </button>
+                    </div>
+
+                    {{-- ====== VOUCHER MODAL ====== --}}
+                    <div id="voucher-modal-overlay" onclick="closeVoucherModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9998;backdrop-filter:blur(3px);"></div>
+                    <div id="voucher-modal" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#fff;border-radius:24px 24px 0 0;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);">
+                        {{-- Handle --}}
+                        <div style="display:flex;justify-content:center;padding:0.75rem;">
+                            <div style="width:40px;height:4px;background:#E2E8F0;border-radius:99px;"></div>
+                        </div>
+                        {{-- Header --}}
+                        <div style="padding:0 1.25rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F1F5F9;">
+                            <div style="font-size:1.1rem;font-weight:800;color:#0F172A;">🏷️ Pilih Voucher</div>
+                            <button type="button" onclick="closeVoucherModal()" style="background:#F1F5F9;border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:#64748B;">✕</button>
+                        </div>
+                        {{-- Manual Input --}}
+                        <div style="padding:1rem 1.25rem;border-bottom:1px solid #F1F5F9;">
+                            <div style="display:flex;gap:0.5rem;">
+                                <input type="text" id="voucher-manual-input" placeholder="Masukkan kode voucher..." style="flex:1;border:1.5px solid #E2E8F0;border-radius:10px;padding:0.65rem 1rem;font-size:0.9rem;font-family:var(--font);outline:none;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
+                                <button type="button" onclick="applyManualVoucher()" style="background:linear-gradient(135deg,#0EA5E9,#0284C7);color:#fff;border:none;border-radius:10px;padding:0.65rem 1.25rem;font-weight:700;font-size:0.875rem;cursor:pointer;white-space:nowrap;">Pakai</button>
+                            </div>
+                            <div id="voucher-manual-msg" style="font-size:0.78rem;margin-top:0.4rem;display:none;"></div>
+                        </div>
+                        {{-- List --}}
+                        <div style="overflow-y:auto;flex:1;padding:0.75rem 1.25rem 2rem;" id="voucher-list-container">
+                            <div style="font-size:0.75rem;color:#94A3B8;font-weight:600;margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.5px;">Voucher Tersedia</div>
+                            <div id="voucher-list">
+                                <div style="text-align:center;padding:2rem;color:#94A3B8;font-size:0.875rem;">Memuat voucher...</div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="checkout-sticky-footer" style="margin-top: 1.5rem;">
@@ -1124,5 +1174,208 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
     // Instead of triggering immediately, we now trigger after provinces are loaded
     // toggleNewAddress();
+
+    // ────────────────────────────────────────────────────
+    // VOUCHER PICKER
+    // ────────────────────────────────────────────────────
+    let appliedVoucherDiscount = 0;
+    const COUPON_API_URL = '{{ route("api.coupons.index") }}';
+    const COUPON_VALIDATE_URL = '{{ route("api.coupons.validate") }}';
+    const CSRF = '{{ csrf_token() }}';
+
+    function openVoucherModal() {
+        const overlay = document.getElementById('voucher-modal-overlay');
+        const modal   = document.getElementById('voucher-modal');
+        overlay.style.display = 'block';
+        modal.style.display   = 'flex';
+        setTimeout(() => { modal.style.transform = 'translateY(0)'; }, 10);
+        loadVouchers();
+    }
+
+    function closeVoucherModal() {
+        const overlay = document.getElementById('voucher-modal-overlay');
+        const modal   = document.getElementById('voucher-modal');
+        modal.style.transform = 'translateY(100%)';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            modal.style.display   = 'none';
+        }, 350);
+    }
+
+    function loadVouchers() {
+        const totalNow = subtotal + selectedCost;
+        fetch(`${COUPON_API_URL}?subtotal=${totalNow}`)
+            .then(r => r.json())
+            .then(vouchers => renderVoucherList(vouchers))
+            .catch(() => {
+                document.getElementById('voucher-list').innerHTML =
+                    '<div style="text-align:center;padding:2rem;color:#EF4444;">Gagal memuat voucher.</div>';
+            });
+    }
+
+    function renderVoucherList(vouchers) {
+        const container = document.getElementById('voucher-list');
+        if (!vouchers.length) {
+            container.innerHTML = '<div style="text-align:center;padding:2rem;color:#94A3B8;font-size:0.875rem;">Belum ada voucher tersedia saat ini.</div>';
+            return;
+        }
+
+        const categoryLabel = {
+            product: '🛒 Diskon Produk', shipping: '🚚 Gratis Ongkir',
+            event: '🎉 Event Spesial', member: '💎 Member', referral: '👥 Referral'
+        };
+
+        let html = '';
+        vouchers.forEach(v => {
+            const opacity = v.eligible ? '1' : '0.5';
+            const cursor  = v.eligible ? 'pointer' : 'default';
+            const bgCard  = v.eligible ? '#fff' : '#F8FAFC';
+            const hint    = v.already_used ? '⚠️ Sudah digunakan' : (!v.eligible ? '⚠️ Belum memenuhi syarat' : '');
+
+            html += `
+            <div onclick="${v.eligible ? `selectVoucher('${v.code}', '${v.estimated_discount_fmt || ''}', ${v.estimated_discount})` : ''}"
+                 style="border:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};border-radius:14px;padding:1rem;margin-bottom:0.75rem;cursor:${cursor};background:${bgCard};opacity:${opacity};transition:all 0.2s;position:relative;overflow:hidden;"
+                 ${v.eligible ? 'onmouseover="this.style.borderColor=\'#0EA5E9\';this.style.boxShadow=\'0 4px 16px rgba(14,165,233,0.15)\'"' : ''}
+                 ${v.eligible ? 'onmouseout="this.style.borderColor=\'#E2E8F0\';this.style.boxShadow=\'none\'"' : ''}>
+                <!-- Left accent bar -->
+                <div style="position:absolute;left:0;top:0;bottom:0;width:4px;background:${v.badge_color};border-radius:4px 0 0 4px;"></div>
+                <div style="padding-left:0.5rem;">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.4rem;">
+                        <div>
+                            <span style="display:inline-block;background:${v.badge_color}22;color:${v.badge_color};font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:99px;margin-bottom:0.25rem;">${v.badge || categoryLabel[v.category] || v.category}</span>
+                            <div style="font-size:0.95rem;font-weight:800;color:#0F172A;font-family:monospace;letter-spacing:0.5px;">${v.code}</div>
+                        </div>
+                        <div style="text-align:right;flex-shrink:0;">
+                            <div style="font-size:1.1rem;font-weight:900;color:${v.badge_color};">${v.value}</div>
+                            ${v.estimated_discount_fmt ? `<div style="font-size:0.7rem;color:#059669;font-weight:700;">${v.estimated_discount_fmt}</div>` : ''}
+                        </div>
+                    </div>
+                    <div style="font-size:0.8rem;color:#64748B;margin-bottom:0.35rem;">${v.description || ''}</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:0.4rem;font-size:0.72rem;">
+                        <span style="background:#F1F5F9;color:#64748B;padding:0.15rem 0.5rem;border-radius:99px;">${v.min_purchase}</span>
+                        ${v.max_discount ? `<span style="background:#F1F5F9;color:#64748B;padding:0.15rem 0.5rem;border-radius:99px;">${v.max_discount}</span>` : ''}
+                        ${v.expired_label ? `<span style="background:#FFF7ED;color:#C2410C;padding:0.15rem 0.5rem;border-radius:99px;">⏰ ${v.expired_label}</span>` : ''}
+                        ${v.remaining !== null ? `<span style="background:#FFF1F2;color:#BE185D;padding:0.15rem 0.5rem;border-radius:99px;">Sisa ${v.remaining}x</span>` : ''}
+                        ${hint ? `<span style="background:#FEF3C7;color:#92400E;padding:0.15rem 0.5rem;border-radius:99px;">${hint}</span>` : ''}
+                    </div>
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    function selectVoucher(code, savingFmt, discountAmount) {
+        document.getElementById('coupon_code_input').value = code;
+        appliedVoucherDiscount = discountAmount;
+
+        // Show applied state
+        document.getElementById('voucher-applied-code').textContent = code;
+        document.getElementById('voucher-applied-save').textContent = savingFmt || `Hemat Rp ${discountAmount.toLocaleString('id-ID')}`;
+        document.getElementById('voucher-applied-state').style.display = 'flex';
+        document.getElementById('voucher-picker-btn').style.display    = 'none';
+
+        updateTotal();
+        closeVoucherModal();
+
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: `Voucher ${code} diterapkan!`,
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+        });
+    }
+
+    function clearVoucher() {
+        document.getElementById('coupon_code_input').value = '';
+        appliedVoucherDiscount = 0;
+        document.getElementById('voucher-applied-state').style.display = 'none';
+        document.getElementById('voucher-picker-btn').style.display    = 'flex';
+        updateTotal();
+    }
+
+    function applyManualVoucher() {
+        const code = document.getElementById('voucher-manual-input').value.trim();
+        const msg  = document.getElementById('voucher-manual-msg');
+        if (!code) return;
+
+        const totalNow = subtotal + selectedCost;
+        msg.style.display = 'block';
+        msg.style.color   = '#64748B';
+        msg.textContent   = 'Memvalidasi voucher...';
+
+        fetch(COUPON_VALIDATE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+            body: JSON.stringify({ code, subtotal: totalNow }),
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.valid) {
+                msg.style.color = '#059669';
+                msg.textContent = '✓ ' + data.message;
+                setTimeout(() => {
+                    selectVoucher(data.code, data.discount_fmt ? 'Hemat ' + data.discount_fmt : '', data.discount);
+                }, 600);
+            } else {
+                msg.style.color = '#EF4444';
+                msg.textContent = '✗ ' + (data.message || 'Voucher tidak valid.');
+            }
+        })
+        .catch(() => {
+            msg.style.color   = '#EF4444';
+            msg.textContent   = '✗ Gagal memvalidasi. Coba lagi.';
+        });
+    }
+
+    // Override updateTotal to include voucher discount
+    function updateTotal() {
+        const shippingCost = selectedCost || 0;
+        const discount = appliedVoucherDiscount || 0;
+        const total = Math.max(0, subtotal + shippingCost - discount);
+        document.getElementById('total-row-val').textContent = 'Rp ' + total.toLocaleString('id-ID');
+
+        // Show/update discount row
+        let discRow = document.getElementById('voucher-discount-row');
+        if (discount > 0) {
+            if (!discRow) {
+                discRow = document.createElement('div');
+                discRow.id = 'voucher-discount-row';
+                discRow.className = 'summary-row';
+                discRow.style.color = '#059669';
+                const ongkirRow = document.getElementById('ongkir-row');
+                if (ongkirRow) ongkirRow.after(discRow);
+                else document.getElementById('total-row-val').parentElement.before(discRow);
+            }
+            discRow.innerHTML = `<span>Diskon Voucher</span><span style="font-weight:700;color:#059669;">- Rp ${discount.toLocaleString('id-ID')}</span>`;
+        } else if (discRow) {
+            discRow.remove();
+        }
+
+        // Update hidden shipping input as well
+        document.getElementById('shipping_cost_input').value = shippingCost;
+    }
+
+    // Auto-load voucher with best discount on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch(`${COUPON_API_URL}?subtotal=${subtotal}`)
+            .then(r => r.json())
+            .then(vouchers => {
+                const best = vouchers.find(v => v.eligible && v.estimated_discount > 0);
+                if (best) {
+                    // Show subtle suggestion
+                    const btn = document.getElementById('voucher-picker-btn');
+                    if (btn) {
+                        const hint = document.createElement('div');
+                        hint.style = 'font-size:0.72rem;color:#059669;margin-top:0.35rem;text-align:center;font-weight:600;';
+                        hint.textContent = `✓ Ada voucher tersedia: hemat hingga ${best.estimated_discount_fmt || 'Rp ' + best.estimated_discount.toLocaleString('id-ID')}`;
+                        btn.insertAdjacentElement('afterend', hint);
+                    }
+                }
+            })
+            .catch(() => {});
+    });
 </script>
 @endsection
