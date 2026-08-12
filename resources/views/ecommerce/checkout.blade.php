@@ -1239,30 +1239,31 @@ label:focus{outline:none !important;box-shadow:none !important;}
 
             html += `
             <div onclick="${v.eligible ? `selectVoucher('${v.code}', '${v.estimated_discount_fmt || ''}', ${v.estimated_discount})` : ''}"
-                 style="border:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};border-radius:14px;padding:1rem;margin-bottom:0.75rem;cursor:${cursor};background:${bgCard};opacity:${opacity};transition:all 0.2s;position:relative;overflow:hidden;"
-                 ${v.eligible ? 'onmouseover="this.style.borderColor=\'#0EA5E9\';this.style.boxShadow=\'0 4px 16px rgba(14,165,233,0.15)\'"' : ''}
+                 style="position:relative;border:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};border-radius:12px;padding:0.875rem 1rem;margin-bottom:0.75rem;cursor:${cursor};background:${bgCard};opacity:${opacity};transition:all 0.2s;"
+                 ${v.eligible ? 'onmouseover="this.style.borderColor=\'#0EA5E9\';this.style.boxShadow=\'0 4px 12px rgba(14,165,233,0.1)\'"' : ''}
                  ${v.eligible ? 'onmouseout="this.style.borderColor=\'#E2E8F0\';this.style.boxShadow=\'none\'"' : ''}>
-                <!-- Left accent bar -->
-                <div style="position:absolute;left:0;top:0;bottom:0;width:4px;background:${v.badge_color};border-radius:4px 0 0 4px;"></div>
-                <div style="padding-left:0.5rem;">
-                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.4rem;">
-                        <div>
-                            <span style="display:inline-block;background:${v.badge_color}22;color:${v.badge_color};font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:99px;margin-bottom:0.25rem;">${v.badge || categoryLabel[v.category] || v.category}</span>
-                            <div style="font-size:0.95rem;font-weight:800;color:#0F172A;font-family:monospace;letter-spacing:0.5px;">${v.code}</div>
-                        </div>
-                        <div style="text-align:right;flex-shrink:0;">
-                            <div style="font-size:1.1rem;font-weight:900;color:${v.badge_color};">${v.value}</div>
-                            ${v.estimated_discount_fmt ? `<div style="font-size:0.7rem;color:#059669;font-weight:700;">${v.estimated_discount_fmt}</div>` : ''}
-                        </div>
+                
+                <!-- Ticket cutouts left & right -->
+                <div style="position:absolute;left:-7px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:#fff;border-radius:50%;border-right:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};z-index:2;"></div>
+                <div style="position:absolute;right:-7px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:#fff;border-radius:50%;border-left:1.5px solid ${v.eligible ? '#E2E8F0' : '#F1F5F9'};z-index:2;"></div>
+
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.25rem;">
+                    <div>
+                        <span style="display:inline-block;background:#F0F9FF;color:#0EA5E9;font-size:0.65rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:99px;margin-bottom:0.15rem;">${v.badge || categoryLabel[v.category] || v.category}</span>
+                        <div style="font-size:0.9rem;font-weight:800;color:#0F172A;font-family:monospace;letter-spacing:0.5px;">${v.code}</div>
                     </div>
-                    <div style="font-size:0.8rem;color:#64748B;margin-bottom:0.35rem;">${v.description || ''}</div>
-                    <div style="display:flex;flex-wrap:wrap;gap:0.4rem;font-size:0.72rem;">
-                        <span style="background:#F1F5F9;color:#64748B;padding:0.15rem 0.5rem;border-radius:99px;">${v.min_purchase}</span>
-                        ${v.max_discount ? `<span style="background:#F1F5F9;color:#64748B;padding:0.15rem 0.5rem;border-radius:99px;">${v.max_discount}</span>` : ''}
-                        ${v.expired_label ? `<span style="background:#FFF7ED;color:#C2410C;padding:0.15rem 0.5rem;border-radius:99px;">⏰ ${v.expired_label}</span>` : ''}
-                        ${v.remaining !== null ? `<span style="background:#FFF1F2;color:#BE185D;padding:0.15rem 0.5rem;border-radius:99px;">Sisa ${v.remaining}x</span>` : ''}
-                        ${hint ? `<span style="background:#FEF3C7;color:#92400E;padding:0.15rem 0.5rem;border-radius:99px;">${hint}</span>` : ''}
+                    <div style="text-align:right;flex-shrink:0;">
+                        <div style="font-size:1rem;font-weight:900;color:#0EA5E9;">${v.value}</div>
+                        ${v.estimated_discount_fmt ? `<div style="font-size:0.65rem;color:#059669;font-weight:700;">${v.estimated_discount_fmt}</div>` : ''}
                     </div>
+                </div>
+                <div style="font-size:0.75rem;color:#64748B;margin-bottom:0.35rem;line-height:1.2;">${v.description || ''}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:0.3rem;font-size:0.65rem;">
+                    <span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">${v.min_purchase}</span>
+                    ${v.max_discount ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">${v.max_discount}</span>` : ''}
+                    ${v.expired_label ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">⏰ ${v.expired_label}</span>` : ''}
+                    ${v.remaining !== null ? `<span style="background:#F1F5F9;color:#64748B;padding:0.1rem 0.4rem;border-radius:99px;">Sisa ${v.remaining}x</span>` : ''}
+                    ${hint ? `<span style="background:#FEF2F2;color:#DC2626;padding:0.1rem 0.4rem;border-radius:99px;">${hint}</span>` : ''}
                 </div>
             </div>`;
         });
