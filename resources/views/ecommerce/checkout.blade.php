@@ -386,7 +386,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
                         <input type="hidden" name="coupon_code" id="coupon_code_input" value="">
 
                         {{-- Applied State --}}
-                        <div id="voucher-applied-state" style="display:none; background:linear-gradient(135deg,#D1FAE5,#A7F3D0); border:1.5px solid #10B981; border-radius:12px; padding:0.875rem 1.25rem; margin-bottom:0.5rem; display:flex; align-items:center; justify-content:space-between; gap:0.5rem;">
+                        <div id="voucher-applied-state" style="display:none; background:linear-gradient(135deg,#D1FAE5,#A7F3D0); border:1.5px solid #10B981; border-radius:12px; padding:0.875rem 1.25rem; margin-bottom:0.5rem; align-items:center; justify-content:space-between; gap:0.5rem;">
                             <div style="display:flex;align-items:center;gap:0.5rem;">
                                 <svg width="18" height="18" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 <div>
