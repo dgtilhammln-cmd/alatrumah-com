@@ -76,18 +76,10 @@
             onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
         </div>
 
-        <div>
-          <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">URL "Lihat Semua" (Opsional)</label>
-          <input type="text" name="view_all_url" value="{{ old('view_all_url', $promoSection->view_all_url ?? '') }}"
-            placeholder="cth: /produk?tipe=promo"
-            style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;"
-            onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
-        </div>
-
-        <div>
+        <div style="grid-column:1/-1;">
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Urutan Tampil</label>
           <input type="number" name="sort_order" value="{{ old('sort_order', $promoSection->sort_order ?? 0) }}" min="0"
-            style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;"
+            style="width:200px;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;"
             onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
         </div>
       </div>

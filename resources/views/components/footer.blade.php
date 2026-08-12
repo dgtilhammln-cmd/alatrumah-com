@@ -535,8 +535,21 @@ www.alatrumah.com
                 <div class="cv-footer-v2-contact-text">
                     <span class="cv-footer-v2-contact-label">WhatsApp</span>
                     @if($wa)
+                        @php
+                            $waNum = $wa->nomor_wa;
+                            // Convert international format 628xx → 08xx for display
+                            $waDisplay = $waNum;
+                            if (str_starts_with($waNum, '62')) {
+                                $waDisplay = '0' . substr($waNum, 2);
+                            }
+                            // Format as 0812-9656-5757 style (4-4-4)
+                            $waClean = preg_replace('/[^0-9]/', '', $waDisplay);
+                            if (strlen($waClean) >= 10) {
+                                $waDisplay = substr($waClean,0,4).'-'.substr($waClean,4,4).'-'.substr($waClean,8);
+                            }
+                        @endphp
                         <a href="javascript:void(0)" onclick="openOrderModal('Footer WA')"
-                            data-track="Footer WA">{{ $wa->nomor_wa }}</a>
+                            data-track="Footer WA">{{ $waDisplay }}</a>
                     @else
                         <a href="javascript:void(0)" onclick="openOrderModal('Footer WA')">0812-9656-5757</a>
                     @endif

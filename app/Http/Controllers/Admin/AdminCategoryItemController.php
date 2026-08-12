@@ -99,4 +99,11 @@ class AdminCategoryItemController extends Controller
         $categoryItem->delete();
         return back()->with('success', 'Kategori dihapus.');
     }
+
+    public function updateOrder(Request $request)
+    {
+        $request->validate(['id' => 'required|integer', 'sort_order' => 'required|integer|min:0']);
+        CategoryItem::where('id', $request->id)->update(['sort_order' => $request->sort_order]);
+        return response()->json(['success' => true]);
+    }
 }

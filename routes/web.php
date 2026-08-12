@@ -310,6 +310,7 @@ Route::prefix('admin')->group(function () {
             'store'   => 'admin.category-items.store',   'edit'   => 'admin.category-items.edit',
             'update'  => 'admin.category-items.update',  'destroy'=> 'admin.category-items.destroy',
         ]);
+        Route::post('category-items/update-order', [AdminCategoryItemController::class, 'updateOrder'])->name('admin.category-items.updateOrder');
 
         Route::resource('promo-sections', AdminPromoSectionController::class)->names([
             'index'   => 'admin.promo-sections.index',   'create' => 'admin.promo-sections.create',
