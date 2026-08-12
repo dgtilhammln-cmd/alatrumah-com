@@ -53,7 +53,7 @@
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                 {{ $addr->phone }}
             </div>
-            <div class="addr-actions">
+            <div class="addr-actions" style="display:flex;gap:0.5rem;margin-top:1rem;">
                 @if(!$addr->is_default)
                 <form method="POST" action="{{ route('account.addresses.default', $addr) }}" style="flex:2;">
                     @csrf
@@ -62,6 +62,7 @@
                 @else
                 <span style="flex:2;"></span>
                 @endif
+                <button type="button" class="btn-addr-del" style="flex:1;background:#F1F5F9;color:#0F172A;border:1px solid #E2E8F0;" onclick="openEditModal({{ htmlspecialchars(json_encode($addr)) }})">Edit</button>
                 <form method="POST" action="{{ route('account.addresses.destroy', $addr) }}" style="flex:1;" onsubmit="return confirm('Hapus alamat ini?')">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn-addr-del" style="width:100%;">Hapus</button>
@@ -170,12 +171,102 @@
     </div>
 </div>
 
+{{-- EDIT ADDRESS MODAL --}}
+<div class="modal-overlay" id="editAddrModal" onclick="if(event.target===this) this.classList.remove('open')">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title">Edit Alamat</div>
+                <div class="modal-subtitle">Perbarui data alamat Anda</div>
+            </div>
+            <button class="modal-close" onclick="document.getElementById('editAddrModal').classList.remove('open')" type="button">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+
+        <form method="POST" action="" id="editAddrForm">
+            @csrf
+            @method('PUT')
+            <div class="form-group" style="margin-bottom:1rem;">
+                <label class="form-label">Label <span>*</span></label>
+                <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem; flex-wrap:wrap;" id="editLabelChips">
+                    <button type="button" class="label-chip" onclick="selectEditLabel(this, 'Rumah')">Rumah</button>
+                    <button type="button" class="label-chip" onclick="selectEditLabel(this, 'Kantor')">Kantor</button>
+                    <button type="button" class="label-chip" onclick="selectEditLabel(this, 'Toko')">Toko</button>
+                </div>
+                <input type="text" name="label" id="editLabelInput" class="form-input" placeholder="Atau ketik label lainnya..." required>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+                <div class="form-group">
+                    <label class="form-label">Nama Penerima <span>*</span></label>
+                    <input type="text" name="receiver_name" id="editReceiver" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nomor Telepon <span>*</span></label>
+                    <input type="tel" name="phone" id="editPhone" class="form-input" required>
+                </div>
+            </div>
+
+            <input type="hidden" name="province" id="edit_province_name_hidden">
+            <input type="hidden" name="city" id="edit_city_name_hidden">
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+                <div class="form-group">
+                    <label class="form-label">Provinsi <span>*</span></label>
+                    <select id="edit_province_select" class="form-input" required style="appearance:none;background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e\");background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
+                        <option value="">Pilih Provinsi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kota / Kabupaten <span>*</span></label>
+                    <select id="edit_city_select" class="form-input" required style="appearance:none;background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e\");background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
+                        <option value="">Pilih Provinsi Dulu</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+                <div class="form-group">
+                    <label class="form-label">Kecamatan <span>*</span></label>
+                    <input type="text" name="district" id="editDistrict" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kelurahan / Desa</label>
+                    <input type="text" name="village" id="editVillage" class="form-input">
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom:1rem;">
+                <label class="form-label">Kode Pos <span>*</span></label>
+                <input type="text" name="postal_code" id="editPostal" class="form-input" required pattern="[0-9]{5}" maxlength="5">
+            </div>
+            <div class="form-group" style="margin-bottom:1.5rem;">
+                <label class="form-label">Alamat Lengkap <span>*</span></label>
+                <textarea name="full_address" id="editFullAddress" class="form-input" rows="3" required></textarea>
+            </div>
+            <div class="btn-save-row">
+                <button type="button" onclick="document.getElementById('editAddrModal').classList.remove('open')"
+                    style="background:#F1F5F9; color:#374151; border:none; border-radius:10px; padding:0.6rem 1.25rem; font-family:'Montserrat',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; margin-right:0.75rem;">
+                    Batal
+                </button>
+                <button type="submit" class="btn-save">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script src="{{ asset('js/indo-regions.js') }}?v={{ time() }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         initIndoRegions({
             provSelectId: 'province_select',
             citySelectId: 'city_select',
+        });
+        
+        initIndoRegions({
+            provSelectId: 'edit_province_select',
+            citySelectId: 'edit_city_select',
         });
 
         // Sync province text → hidden input
@@ -190,26 +281,95 @@
             const selected = this.options[this.selectedIndex];
             document.getElementById('city_name_hidden').value = selected.value ? selected.text : '';
         });
+        
+        // Sync for Edit Form
+        document.getElementById('edit_province_select').addEventListener('change', function() {
+            const selected = this.options[this.selectedIndex];
+            document.getElementById('edit_province_name_hidden').value = selected.value ? selected.text : '';
+            document.getElementById('edit_city_name_hidden').value = '';
+        });
+
+        document.getElementById('edit_city_select').addEventListener('change', function() {
+            const selected = this.options[this.selectedIndex];
+            document.getElementById('edit_city_name_hidden').value = selected.value ? selected.text : '';
+        });
 
         // Validate hidden inputs before submit
         document.getElementById('addAddrForm').addEventListener('submit', function(e) {
-            const prov = document.getElementById('province_name_hidden').value;
-            const city = document.getElementById('city_name_hidden').value;
-            if (!prov || !city) {
+            if (!document.getElementById('province_name_hidden').value || !document.getElementById('city_name_hidden').value) {
                 e.preventDefault();
                 alert('Mohon pilih Provinsi dan Kota/Kabupaten terlebih dahulu.');
-                return false;
+            }
+        });
+        
+        document.getElementById('editAddrForm').addEventListener('submit', function(e) {
+            if (!document.getElementById('edit_province_name_hidden').value || !document.getElementById('edit_city_name_hidden').value) {
+                e.preventDefault();
+                alert('Mohon pilih Provinsi dan Kota/Kabupaten terlebih dahulu.');
             }
         });
     });
 
     function selectLabel(btn, value) {
-        // Remove active class from all chips
-        document.querySelectorAll('.label-chip').forEach(el => el.classList.remove('active'));
-        // Add active class to clicked
+        document.querySelectorAll('#addAddrForm .label-chip').forEach(el => el.classList.remove('active'));
         btn.classList.add('active');
-        // Set input value
         document.getElementById('labelInput').value = value;
+    }
+    
+    function selectEditLabel(btn, value) {
+        document.querySelectorAll('#editAddrForm .label-chip').forEach(el => el.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('editLabelInput').value = value;
+    }
+
+    function openEditModal(addr) {
+        const form = document.getElementById('editAddrForm');
+        // Gunakan template literal untuk url form
+        form.action = `/akun/alamat/${addr.id}`;
+        
+        document.getElementById('editLabelInput').value = addr.label;
+        document.getElementById('editReceiver').value = addr.receiver_name;
+        document.getElementById('editPhone').value = addr.phone;
+        document.getElementById('editDistrict').value = addr.district;
+        document.getElementById('editVillage').value = addr.village;
+        document.getElementById('editPostal').value = addr.postal_code;
+        document.getElementById('editFullAddress').value = addr.full_address;
+        
+        // Update label chip active state
+        document.querySelectorAll('#editAddrForm .label-chip').forEach(el => {
+            if(el.textContent === addr.label) el.classList.add('active');
+            else el.classList.remove('active');
+        });
+        
+        // Coba cocokan provinsi
+        document.getElementById('edit_province_name_hidden').value = addr.province;
+        document.getElementById('edit_city_name_hidden').value = addr.city;
+        
+        const provSelect = document.getElementById('edit_province_select');
+        let provId = null;
+        for (let i=0; i<provSelect.options.length; i++) {
+            if (provSelect.options[i].text.toUpperCase() === addr.province.toUpperCase()) {
+                provSelect.selectedIndex = i;
+                provId = provSelect.options[i].value;
+                break;
+            }
+        }
+        
+        // Trigger change untuk meload kota
+        if (provId) {
+            provSelect.dispatchEvent(new Event('change'));
+            setTimeout(() => {
+                const citySelect = document.getElementById('edit_city_select');
+                for (let i=0; i<citySelect.options.length; i++) {
+                    if (citySelect.options[i].text.toUpperCase() === addr.city.toUpperCase()) {
+                        citySelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            }, 100);
+        }
+        
+        document.getElementById('editAddrModal').classList.add('open');
     }
 </script>
 @endsection

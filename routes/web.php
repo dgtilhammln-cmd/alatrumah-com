@@ -142,6 +142,7 @@ Route::middleware(['auth'])->prefix('akun')->name('account.')->group(function ()
     Route::get('/pesanan/{order}', [AccountController::class, 'showOrder'])->name('orders.show');
     Route::get('/alamat',    [AccountController::class, 'addresses'])->name('addresses');
     Route::post('/alamat',   [AccountController::class, 'storeAddress'])->name('addresses.store');
+    Route::put('/alamat/{address}', [AccountController::class, 'updateAddress'])->name('addresses.update');
     Route::delete('/alamat/{address}', [AccountController::class, 'destroyAddress'])->name('addresses.destroy');
     Route::post('/alamat/{address}/utama', [AccountController::class, 'setDefaultAddress'])->name('addresses.default');
     Route::get('/profil',    [AccountController::class, 'profile'])->name('profile');

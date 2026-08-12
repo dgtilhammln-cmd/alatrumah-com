@@ -167,6 +167,30 @@ class AccountController extends Controller
         return back()->with('success', 'Alamat berhasil ditambahkan!');
     }
 
+    // ── Update Address ──
+    public function updateAddress(Request $request, Address $address)
+    {
+        if ($address->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $data = $request->validate([
+            'label'         => 'required|string|max:50',
+            'receiver_name' => 'required|string|max:100',
+            'phone'         => 'required|string|max:20',
+            'province'      => 'required|string|max:100',
+            'city'          => 'required|string|max:100',
+            'district'      => 'required|string|max:100',
+            'village'       => 'nullable|string|max:100',
+            'postal_code'   => 'required|string|max:10',
+            'full_address'  => 'required|string|max:500',
+        ]);
+
+        $address->update($data);
+
+        return back()->with('success', 'Alamat berhasil diperbarui!');
+    }
+
     // ── Delete Address ──
     public function destroyAddress(Address $address)
     {
