@@ -133,13 +133,13 @@
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
                 <div class="form-group">
                     <label class="form-label">Provinsi <span>*</span></label>
-                    <select id="province_select" class="form-input" required style="appearance:none;background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e\");background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
+                    <select id="province_select" class="form-input" required style="appearance:none;background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
                         <option value="">Pilih Provinsi</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Kota / Kabupaten <span>*</span></label>
-                    <select id="city_select" class="form-input" required style="appearance:none;background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e\");background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
+                    <select id="city_select" class="form-input" required style="appearance:none;background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
                         <option value="">Pilih Provinsi Dulu</option>
                     </select>
                 </div>
@@ -219,13 +219,13 @@
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
                 <div class="form-group">
                     <label class="form-label">Provinsi <span>*</span></label>
-                    <select id="edit_province_select" class="form-input" required style="appearance:none;background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e\");background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
+                    <select id="edit_province_select" class="form-input" required style="appearance:none;background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
                         <option value="">Pilih Provinsi</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Kota / Kabupaten <span>*</span></label>
-                    <select id="edit_city_select" class="form-input" required style="appearance:none;background-image:url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e\");background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
+                    <select id="edit_city_select" class="form-input" required style="appearance:none; background-repeat:no-repeat;background-position:right 0.75rem center;background-size:1em;">
                         <option value="">Pilih Provinsi Dulu</option>
                     </select>
                 </div>
