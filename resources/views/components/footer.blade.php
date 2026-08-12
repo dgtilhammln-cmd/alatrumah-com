@@ -435,10 +435,15 @@ www.alatrumah.com
                         <polyline points="22,6 12,12 2,6" />
                     </svg>
                 </a>
-                <a href="tel:02122523334" class="cv-footer-v2-social-btn" title="Telepon">
+                @php
+                    $footerPhone = $s['phone'] ?? '';
+                    $footerPhoneClean = preg_replace('/[^0-9+]/', '', $footerPhone);
+                    $footerPhoneDisplay = $footerPhone ?: ($wa ? $wa->nomor_wa : '0812-9656-5757');
+                    $footerPhoneClean = $footerPhoneClean ?: preg_replace('/[^0-9+]/', '', $footerPhoneDisplay);
+                @endphp
+                <a href="tel:{{ $footerPhoneClean }}" class="cv-footer-v2-social-btn" title="Telepon">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path
-                            d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.5 12.05a19.79 19.79 0 01-3.07-8.67A2 2 0 012.41 1.5h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.4a16 16 0 006.69 6.69l1.27-.76a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
+                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.5 12.05a19.79 19.79 0 01-3.07-8.67A2 2 0 012.41 1.5h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.4a16 16 0 006.69 6.69l1.27-.76a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
                     </svg>
                 </a>
             </div>
@@ -511,9 +516,11 @@ www.alatrumah.com
                 </div>
                 <div class="cv-footer-v2-contact-text">
                     <span class="cv-footer-v2-contact-label">Telepon</span>
-                    @php $phone = $s['phone'] ?? '';
-                    $phoneDisplay = $phone ?: '0812-9656-5757';
-                    $phoneClean = preg_replace('/[^0-9+]/', '', $phoneDisplay); @endphp
+                    @php
+                        $phoneVal = $s['phone'] ?? '';
+                        $phoneDisplay = $phoneVal ?: ($wa ? $wa->nomor_wa : '0812-9656-5757');
+                        $phoneClean = preg_replace('/[^0-9+]/', '', $phoneDisplay);
+                    @endphp
                     <a href="tel:{{ $phoneClean }}">{{ $phoneDisplay }}</a>
                 </div>
             </div>
