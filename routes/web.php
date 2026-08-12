@@ -244,6 +244,13 @@ Route::prefix('admin')->group(function () {
             'destroy' => 'admin.services.destroy',
         ]);
 
+        Route::resource('coupons', \App\Http\Controllers\Admin\AdminCouponController::class)->names([
+            'index'   => 'admin.coupons.index',   'create'  => 'admin.coupons.create',
+            'store'   => 'admin.coupons.store',   'show'    => 'admin.coupons.show',
+            'edit'    => 'admin.coupons.edit',    'update'  => 'admin.coupons.update',
+            'destroy' => 'admin.coupons.destroy',
+        ]);
+
         Route::resource('gallery', AdminGalleryController::class)->names([
             'index'   => 'admin.gallery.index',   'create'  => 'admin.gallery.create',
             'store'   => 'admin.gallery.store',   'show'    => 'admin.gallery.show',

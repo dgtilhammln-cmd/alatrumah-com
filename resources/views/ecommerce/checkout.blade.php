@@ -408,16 +408,15 @@ label:focus{outline:none !important;box-shadow:none !important;}
                     </div>
 
                     {{-- ====== VOUCHER MODAL ====== --}}
-                    <div id="voucher-modal-overlay" onclick="closeVoucherModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9998;backdrop-filter:blur(3px);"></div>
-                    <div id="voucher-modal" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#fff;border-radius:24px 24px 0 0;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);">
-                        {{-- Handle --}}
-                        <div style="display:flex;justify-content:center;padding:0.75rem;">
-                            <div style="width:40px;height:4px;background:#E2E8F0;border-radius:99px;"></div>
-                        </div>
+                    <div id="voucher-modal-overlay" onclick="closeVoucherModal()" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);z-index:9998;backdrop-filter:blur(4px);opacity:0;transition:opacity 0.3s ease;"></div>
+                    <div id="voucher-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -45%);width:92%;max-width:420px;z-index:9999;background:#fff;border-radius:20px;max-height:85vh;overflow:hidden;flex-direction:column;opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);">
                         {{-- Header --}}
-                        <div style="padding:0 1.25rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F1F5F9;">
-                            <div style="font-size:1.1rem;font-weight:800;color:#0F172A;">🏷️ Pilih Voucher</div>
-                            <button type="button" onclick="closeVoucherModal()" style="background:#F1F5F9;border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:#64748B;">✕</button>
+                        <div style="padding:1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F1F5F9;background:#F8FAFC;">
+                            <div style="display:flex;align-items:center;gap:0.5rem;font-size:1.1rem;font-weight:800;color:#0F172A;">
+                                <svg width="20" height="20" fill="none" stroke="#0EA5E9" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                                Pilih Voucher
+                            </div>
+                            <button type="button" onclick="closeVoucherModal()" style="background:#E2E8F0;border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:#475569;transition:background 0.2s;" onmouseover="this.style.background='#CBD5E1'" onmouseout="this.style.background='#E2E8F0'">✕</button>
                         </div>
                         {{-- Manual Input --}}
                         <div style="padding:1rem 1.25rem;border-bottom:1px solid #F1F5F9;">
@@ -1188,18 +1187,24 @@ label:focus{outline:none !important;box-shadow:none !important;}
         const modal   = document.getElementById('voucher-modal');
         overlay.style.display = 'block';
         modal.style.display   = 'flex';
-        setTimeout(() => { modal.style.transform = 'translateY(0)'; }, 10);
+        // Trigger reflow
+        void modal.offsetWidth;
+        overlay.style.opacity = '1';
+        modal.style.opacity   = '1';
+        modal.style.transform = 'translate(-50%, -50%)';
         loadVouchers();
     }
 
     function closeVoucherModal() {
         const overlay = document.getElementById('voucher-modal-overlay');
         const modal   = document.getElementById('voucher-modal');
-        modal.style.transform = 'translateY(100%)';
+        overlay.style.opacity = '0';
+        modal.style.opacity   = '0';
+        modal.style.transform = 'translate(-50%, -45%)';
         setTimeout(() => {
             overlay.style.display = 'none';
             modal.style.display   = 'none';
-        }, 350);
+        }, 300);
     }
 
     function loadVouchers() {
