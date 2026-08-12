@@ -27,7 +27,7 @@
         <p style="font-size:0.8rem; color:#64748B;">Kelola alamat pengiriman Anda</p>
     </div>
     <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-        <button type="button" class="btn-add-addr" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem; background:#F8FAFC; color:#0EA5E9; border:1px solid #0EA5E9; cursor:pointer;" onclick="document.getElementById('addAddrModal').classList.add('open')">
+        <button type="button" class="btn-add-addr" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem; background:#F8FAFC; color:#0EA5E9; border:1px solid #0EA5E9; cursor:pointer;" onclick="document.getElementById('addAddrModal').classList.add('active')">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Tambah Alamat
         </button>
@@ -83,7 +83,7 @@
             <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             <h3>Belum ada alamat</h3>
             <p style="margin-bottom:1.5rem;">Silakan tambahkan alamat pengiriman pertama Anda.</p>
-            <button type="button" class="btn-add-addr" style="margin:0 auto; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem;" onclick="document.getElementById('addAddrModal').classList.add('open')">
+            <button type="button" class="btn-add-addr" style="margin:0 auto; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem;" onclick="document.getElementById('addAddrModal').classList.add('active')">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Tambah Alamat
             </button>
@@ -92,14 +92,14 @@
 @endif
 
 {{-- ADD ADDRESS MODAL --}}
-<div class="modal-overlay" id="addAddrModal" onclick="if(event.target===this) this.classList.remove('open')">
+<div class="modal-overlay" id="addAddrModal" onclick="if(event.target===this) this.classList.remove('active')">
     <div class="modal-box">
         <div class="modal-header">
             <div>
                 <div class="modal-title">Tambah Alamat</div>
                 <div class="modal-subtitle">Form ini digunakan untuk menambahkan data alamat</div>
             </div>
-            <button class="modal-close" onclick="document.getElementById('addAddrModal').classList.remove('open')" type="button">
+            <button class="modal-close" onclick="document.getElementById('addAddrModal').classList.remove('active')" type="button">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
@@ -164,7 +164,7 @@
                 <textarea name="full_address" class="form-input" rows="3" placeholder="Nomor rumah, nama jalan, RT/RW, patokan, dll." required></textarea>
             </div>
             <div class="btn-save-row">
-                <button type="button" onclick="document.getElementById('addAddrModal').classList.remove('open')"
+                <button type="button" onclick="document.getElementById('addAddrModal').classList.remove('active')"
                     style="background:#F1F5F9; color:#374151; border:none; border-radius:10px; padding:0.6rem 1.25rem; font-family:'Montserrat',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; margin-right:0.75rem;">
                     Batal
                 </button>
@@ -178,14 +178,14 @@
 </div>
 
 {{-- EDIT ADDRESS MODAL --}}
-<div class="modal-overlay" id="editAddrModal" onclick="if(event.target===this) this.classList.remove('open')">
+<div class="modal-overlay" id="editAddrModal" onclick="if(event.target===this) this.classList.remove('active')">
     <div class="modal-box">
         <div class="modal-header">
             <div>
                 <div class="modal-title">Edit Alamat</div>
                 <div class="modal-subtitle">Perbarui data alamat Anda</div>
             </div>
-            <button class="modal-close" onclick="document.getElementById('editAddrModal').classList.remove('open')" type="button">
+            <button class="modal-close" onclick="document.getElementById('editAddrModal').classList.remove('active')" type="button">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
@@ -249,7 +249,7 @@
                 <textarea name="full_address" id="editFullAddress" class="form-input" rows="3" required></textarea>
             </div>
             <div class="btn-save-row">
-                <button type="button" onclick="document.getElementById('editAddrModal').classList.remove('open')"
+                <button type="button" onclick="document.getElementById('editAddrModal').classList.remove('active')"
                     style="background:#F1F5F9; color:#374151; border:none; border-radius:10px; padding:0.6rem 1.25rem; font-family:'Montserrat',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; margin-right:0.75rem;">
                     Batal
                 </button>
@@ -375,7 +375,7 @@
             }, 100);
         }
         
-        document.getElementById('editAddrModal').classList.add('open');
+        document.getElementById('editAddrModal').classList.add('active');
     }
 </script>
 @endsection
