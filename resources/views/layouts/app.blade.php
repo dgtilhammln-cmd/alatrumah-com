@@ -231,8 +231,8 @@
         </button>
         <div class="fc-panel">
             <div class="fc-head">
-                <button class="fc-close" onclick="document.getElementById('fcWidget').classList.remove('open')">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <button class="fc-close" aria-label="Tutup chat" onclick="document.getElementById('fcWidget').classList.remove('open')">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
                 <h3>Customer Service</h3>
                 <p>Ada pertanyaan? Jangan ragu untuk menghubungi tim kami via WhatsApp.</p>
