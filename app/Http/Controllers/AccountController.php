@@ -76,11 +76,18 @@ class AccountController extends Controller
         }
         $order->load(['items.product', 'payment', 'shipment', 'couponUsage']);
 
-        // If there is a tracking number, fetch live tracking from RajaOngkir
+        // If there is a tracking number, fetch live tracking from RajaOngkir/Komerce
         $tracking = null;
         if ($order->shipment && $order->shipment->tracking_number && $order->shipment->courier_name) {
-            $apiKey  = \App\Models\Setting::get('shipping_delivery_api_key') ?: \App\Models\Setting::get('rajaongkir_api_key');
-            $apiType = \App\Models\Setting::get('rajaongkir_type', 'starter');
+            $mode = \App\Models\Setting::get('komerce_mode', 'sandbox');
+            $isLive = ($mode === 'live');
+            
+            if ($isLive) {
+                $apiKey  = \App\Models\Setting::get('shipping_delivery_api_key') ?: \App\Models\Setting::get('rajaongkir_api_key');
+            } else {
+                $apiKey  = \App\Models\Setting::get('shipping_delivery_api_key_sandbox') ?: \App\Models\Setting::get('rajaongkir_api_key_sandbox');
+            }
+
             if ($apiKey) {
                 try {
                     // Map courier name to API code
@@ -107,8 +114,9 @@ class AccountController extends Controller
                         $baseUrl = 'https://api.collaborator.komerce.id';
                         $trackUrl = $baseUrl . '/order/api/v1/orders/history-airway-bill';
                         $response = \Illuminate\Support\Facades\Http::withoutVerifying()
-                            ->timeout(10)
-                            ->withHeaders(['x-api-key' => $apiKey, 'Accept' => 'application/json'])
+                            ->timeout(20)
+                            ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
+                            ->withHeaders(['x-api-key' => $apiKey, 'Accept' => 'application/json', 'User-Agent' => 'Mozilla/5.0'])
                             ->get($trackUrl, [
                                 'awb' => $order->shipment->tracking_number,
                                 'courier' => $courierCode,
@@ -117,8 +125,9 @@ class AccountController extends Controller
                         $baseUrl = 'https://rajaongkir.komerce.id/api/v1';
                         $trackUrl = $baseUrl . '/track/waybill?awb=' . urlencode($order->shipment->tracking_number) . '&courier=' . urlencode($courierCode);
                         $response = \Illuminate\Support\Facades\Http::withoutVerifying()
-                            ->timeout(10)
-                            ->withHeaders(['key' => $apiKey, 'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'])
+                            ->timeout(20)
+                            ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
+                            ->withHeaders(['key' => $apiKey, 'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded', 'User-Agent' => 'Mozilla/5.0'])
                             ->post($trackUrl);
                     }
                     $json = $response->json();
