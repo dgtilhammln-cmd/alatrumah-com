@@ -11,8 +11,8 @@
         @endif
     @endpush
     {{-- ════════════════════════════════════════════════
-      HOME PAGE — PT. Airlangga Merapi Nusantara
-      Eksportir Arang Briket Premium | Surabaya, Indonesia
+      HOME PAGE — AlatRumah.com
+      Toko Online Alat Rumah Tangga Terbaik
     ════════════════════════════════════════════════ --}}
 
     {{-- ════ APP-LIKE PRELOADER ════ --}}
