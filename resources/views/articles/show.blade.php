@@ -534,13 +534,13 @@ a { text-decoration: none; color: inherit; }
                 @endif
             </div>
             <div>
-                <h4 style="margin:0 0 0.5rem; font-size:1.125rem; font-weight:700; color:#0F172A; font-family:var(--font);">
+                <div style="margin:0 0 0.5rem; font-size:1.125rem; font-weight:700; color:#0F172A; font-family:var(--font);">
                     @if($article->authorRel->slug)
                         <a href="{{ url("/{$locale}/author/" . $article->authorRel->slug) }}" style="color:inherit; transition:color .2s;" onmouseover="this.style.color='var(--c-accent)'" onmouseout="this.style.color='inherit'">{{ $article->authorRel->name }}</a>
                     @else
                         {{ $article->authorRel->name }}
                     @endif
-                </h4>
+                </div>
                 <p style="margin:0; font-size:0.95rem; color:#475569; line-height:1.6; font-family:var(--font);">{{ $authorTrans->bio }}</p>
                 @if(!empty($article->authorRel->social_links))
                     <div style="margin-top:1rem; display:flex; gap:0.75rem;">
@@ -565,7 +565,7 @@ a { text-decoration: none; color: inherit; }
             <div style="width:42px; height:42px; border-radius:12px; background:rgba(14,165,233,0.08); color:#0EA5E9; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
-            <h4 style="margin:0; font-size:1.15rem; color:#0F172A; font-weight:700; letter-spacing:-0.01em;">Lengkapi Kebutuhan Rumah Anda</h4>
+            <div style="margin:0; font-size:1.15rem; color:#0F172A; font-weight:700; letter-spacing:-0.01em;">Lengkapi Kebutuhan Rumah Anda</div>
         </div>
         
         <p style="margin:0; color:#475569; font-size:0.95rem; line-height:1.65; max-width:95%;">Tingkatkan kenyamanan rumah dengan produk dari AlatRumah.com. Kualitas terjamin, harga bersahabat, dan bergaransi resmi.</p>
