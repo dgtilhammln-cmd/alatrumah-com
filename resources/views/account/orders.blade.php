@@ -4,9 +4,9 @@
 @section('acc_page')
 <style>
 .order-tabs { display:flex; gap:1.5rem; border-bottom:1px solid #E2E8F0; margin-bottom:1.25rem; overflow-x:auto; }
-.order-tab { padding:0.75rem 0; font-weight:600; color:#64748B; cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:all 0.2s; font-size:0.9rem; }
-.order-tab:hover { color:#0EA5E9; }
-.order-tab.active { color:#0EA5E9; border-bottom-color:#0EA5E9; }
+.ord-tab { padding:0.75rem 0; font-weight:600; color:#64748B; cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:all 0.2s; font-size:0.9rem; }
+.ord-tab:hover { color:#0EA5E9; }
+.ord-tab.ord-active { color:#0EA5E9; border-bottom-color:#0EA5E9; }
 
 .order-search-box { background:#F1F5F9; border-radius:10px; padding:0.75rem 1rem; display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem; }
 .order-search-box svg { color:#94A3B8; flex-shrink:0; }
@@ -49,12 +49,12 @@
 
     <!-- TABS -->
     <div class="order-tabs" id="statusTabs">
-        <div class="order-tab active" data-filter="all">Semua</div>
-        <div class="order-tab" data-filter="pending">Belum Bayar</div>
-        <div class="order-tab" data-filter="processing">Sedang Dikemas</div>
-        <div class="order-tab" data-filter="shipped">Dikirim</div>
-        <div class="order-tab" data-filter="delivered">Selesai</div>
-        <div class="order-tab" data-filter="cancelled">Dibatalkan</div>
+        <div class="ord-tab ord-active" data-filter="all">Semua</div>
+        <div class="ord-tab" data-filter="pending">Belum Bayar</div>
+        <div class="ord-tab" data-filter="processing">Sedang Dikemas</div>
+        <div class="ord-tab" data-filter="shipped">Dikirim</div>
+        <div class="ord-tab" data-filter="delivered">Selesai</div>
+        <div class="ord-tab" data-filter="cancelled">Dibatalkan</div>
     </div>
 
     <!-- SEARCH -->
@@ -74,7 +74,9 @@
                     
                     $firstItem = $order->items->first();
                     $productName = $firstItem && $firstItem->product ? $firstItem->product->name : 'Produk Dihapus';
-                    $productImg = $firstItem && $firstItem->product ? Storage::url($firstItem->product->primary_image ?? 'default.png') : asset('images/default-product.png');
+                    $productImg = $firstItem && $firstItem->product && $firstItem->product->primary_image 
+                        ? Storage::url($firstItem->product->primary_image) 
+                        : 'https://placehold.co/150x150/f1f5f9/94a3b8?text=No+Image';
                     $qty = $firstItem ? $firstItem->quantity : 0;
                     $otherCount = $order->items->count() - 1;
                     $orderNo = $order->order_number ?? $order->id;
@@ -94,7 +96,7 @@
                     </div>
                     <div class="order-card-body">
                         <div class="order-item-main">
-                            <img src="{{ $productImg }}" alt="Product" class="order-item-img" onerror="this.src='{{ asset('images/default-product.png') }}'">
+                            <img src="{{ $productImg }}" alt="Product" class="order-item-img" onerror="this.src='https://placehold.co/150x150/f1f5f9/94a3b8?text=No+Image'">
                             <div class="order-item-info">
                                 <div class="order-item-title">{{ $productName }}</div>
                                 <div class="order-item-variant">x {{ $qty }}</div>
@@ -131,7 +133,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const tabs = document.querySelectorAll('.order-tab');
+    const tabs = document.querySelectorAll('.ord-tab');
     const searchInput = document.getElementById('searchInput');
     const cards = document.querySelectorAll('.order-card');
     const noResults = document.getElementById('noResults');
@@ -164,8 +166,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     tabs.forEach(tab => {
         tab.addEventListener('click', function() {
-            tabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
+            tabs.forEach(t => t.classList.remove('ord-active'));
+            this.classList.add('ord-active');
             currentFilter = this.getAttribute('data-filter');
             filterOrders();
         });

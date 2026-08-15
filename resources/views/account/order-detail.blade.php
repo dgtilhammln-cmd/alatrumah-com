@@ -30,19 +30,19 @@
 
 /* Shopee-style Tracking & Address Card */
 .tr-card { background: #fff; border: 1px solid var(--c-border); border-radius: 12px; display: flex; overflow: hidden; margin-bottom: 1.5rem; }
-.tr-left { width: 35%; padding: 1.5rem; border-right: 1px solid var(--c-border); background: #FAFAFA; }
-.tr-right { width: 65%; padding: 1.5rem; position: relative; }
+.tr-left { width: 320px; padding: 1.5rem; border-right: 1px solid var(--c-border); background: #FAFAFA; flex-shrink: 0; }
+.tr-right { flex: 1; padding: 1.5rem; }
 
 .tr-title { font-size: 1.1rem; font-weight: 700; color: var(--c-text); margin-bottom: 1.25rem; }
 .tr-addr-name { font-weight: 700; color: var(--c-text); margin-bottom: 0.5rem; font-size: 0.95rem; }
 .tr-addr-phone { color: var(--c-muted); margin-bottom: 0.5rem; font-size: 0.9rem; }
 .tr-addr-text { color: var(--c-text); font-size: 0.9rem; line-height: 1.5; }
 
-.tr-courier-info { position: absolute; top: 1.5rem; right: 1.5rem; text-align: right; }
-.tr-courier-name { font-weight: 700; color: var(--c-muted); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.1rem; }
-.tr-courier-awb { font-size: 0.85rem; color: var(--c-muted); letter-spacing: 0.05em; }
+.tr-right-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; border-bottom: 1px dashed var(--c-border); padding-bottom: 1rem; }
+.tr-courier-name { font-weight: 700; color: var(--c-text); font-size: 0.95rem; text-transform: uppercase; margin-bottom: 0.2rem; }
+.tr-courier-awb { font-size: 0.85rem; color: var(--c-muted); letter-spacing: 0.05em; font-family: monospace; }
 
-.tr-timeline { margin-top: 2rem; position: relative; padding-left: 1.5rem; }
+.tr-timeline { position: relative; padding-left: 1.5rem; }
 .tr-timeline::before { content: ''; position: absolute; left: 0.6rem; top: 0.5rem; bottom: 0; width: 1px; background: #E2E8F0; }
 
 .tr-tl-item { position: relative; margin-bottom: 1.25rem; display: flex; gap: 1rem; align-items: flex-start; }
@@ -172,9 +172,15 @@
     
     <div class="tr-right">
         @if($order->shipment)
-        <div class="tr-courier-info">
-            <div class="tr-courier-name">{{ strtoupper($order->shipment->courier_name) }} {{ strtoupper($order->shipment->courier_service ?? '') }}</div>
-            <div class="tr-courier-awb">{{ $order->shipment->tracking_number ?? 'Resi belum diinput' }}</div>
+        <div class="tr-right-header">
+            <div>
+                <h3 class="tr-title" style="margin-bottom:0.25rem;">Status Pengiriman</h3>
+                <span style="font-size:0.85rem; color:var(--c-muted);">Informasi tracking resi otomatis</span>
+            </div>
+            <div style="text-align: right;">
+                <div class="tr-courier-name">{{ strtoupper($order->shipment->courier_name) }} {{ strtoupper($order->shipment->courier_service ?? '') }}</div>
+                <div class="tr-courier-awb">{{ $order->shipment->tracking_number ?? 'Resi belum diinput' }}</div>
+            </div>
         </div>
 
         @if($tracking && !empty($tracking['manifest']))
@@ -230,7 +236,11 @@
                 @endif
             </div>
         @elseif($order->shipment->tracking_number)
-            <div style="margin-top:4rem; color:var(--c-muted); text-align:center;">Tracking belum tersedia atau masih diproses ekspedisi.</div>
+            <div style="margin-top:2rem; padding: 2rem; background: #F8FAFC; border-radius: 8px; border: 1px solid #E2E8F0; color:var(--c-muted); text-align:center;">
+                <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:0.5rem; opacity:0.5;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <div>Tracking belum tersedia atau masih diproses oleh ekspedisi.</div>
+                <div style="font-size: 0.8rem; margin-top: 0.25rem;">Biasanya update status membutuhkan waktu 1x24 jam setelah resi diinput.</div>
+            </div>
         @endif
         
         @endif
@@ -243,7 +253,8 @@
     .tr-card { flex-direction: column; }
     .tr-left, .tr-right { width: 100%; border-right: none; }
     .tr-left { border-bottom: 1px solid var(--c-border); }
-    .tr-courier-info { position: static; text-align: left; margin-bottom: 1rem; }
+    .tr-right-header { flex-direction: column; gap: 1rem; }
+    .tr-right-header > div:last-child { text-align: left !important; }
 }
 </style>
 @endsection

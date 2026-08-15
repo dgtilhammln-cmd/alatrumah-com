@@ -85,22 +85,20 @@ class AccountController extends Controller
                 try {
                     // Map courier name to API code
                     $rawCourier = strtolower(trim($order->shipment->courier_name));
-                    $courierCodeMap = [
-                        'j&t'       => 'jnt',
-                        'j&t express' => 'jnt',
-                        'jnt'       => 'jnt',
-                        'jne'       => 'jne',
-                        'sicepat'   => 'sicepat',
-                        'anteraja'  => 'anteraja',
-                        'pos'       => 'pos',
-                        'tiki'      => 'tiki',
-                        'wahana'    => 'wahana',
-                        'sap'       => 'sap',
-                        'lion'      => 'lion',
-                        'ninja'     => 'ninjaxpress',
-                        'ninjaxpress' => 'ninjaxpress',
-                    ];
-                    $courierCode = $courierCodeMap[$rawCourier] ?? $rawCourier;
+                    $courierCode = match(true) {
+                        str_contains($rawCourier, 'j&t') || str_contains($rawCourier, 'jnt') => 'jnt',
+                        str_contains($rawCourier, 'jne') => 'jne',
+                        str_contains($rawCourier, 'sicepat') => 'sicepat',
+                        str_contains($rawCourier, 'anteraja') => 'anteraja',
+                        str_contains($rawCourier, 'pos') => 'pos',
+                        str_contains($rawCourier, 'tiki') => 'tiki',
+                        str_contains($rawCourier, 'ninja') => 'ninjaxpress',
+                        str_contains($rawCourier, 'sap') => 'sap',
+                        str_contains($rawCourier, 'spx') || str_contains($rawCourier, 'shopee') => 'spx',
+                        str_contains($rawCourier, 'lion') => 'lion',
+                        str_contains($rawCourier, 'ide') || str_contains($rawCourier, 'idx') => 'ide',
+                        default => $rawCourier,
+                    };
 
                     $mode = \App\Models\Setting::get('komerce_mode', 'sandbox');
                     $isLive = ($mode === 'live');
