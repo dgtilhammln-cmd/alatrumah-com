@@ -2,500 +2,268 @@
 @section('content')
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 
 <style>
-/* ── RESET ── */
-*, *::before, *::after { box-sizing: border-box; }
-html, body { overflow-x: hidden; max-width: 100%; }
-.sh-hero, .sh-layout, .sh-adv-section, .sh-app-section, .sh-coverage-section, .sh-related { overflow-x: hidden; }
-
-/* ── TOKENS ── */
+/* ── TOKENS & RESET ── */
 :root {
-    --bg:      #ffffff;
-    --surface: #F8FAFC;
-    --bg-gray: #EAEBED;
-    --border:  #E2E8F0;
-    --text:    #0F172A;
-    --muted:   #64748B;
-    --accent:  #0EA5E9;
-    --accent2: #0284C7;
-    --font:    'Montserrat', sans-serif;
-    --ease:    cubic-bezier(0.22,1,0.36,1);
+    --bg-base: #ffffff;
+    --bg-surface: #F8FAFC;
+    --border-1: #E2E8F0;
+    --text-main: #0F172A;
+    --text-muted: #64748B;
+    --accent: #0EA5E9;
+    --accent-dark: #0284C7;
 }
-body { background: var(--bg); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-weight: 400; line-height: 1.6; }
 
-/* ── BREADCRUMB BAR (replaces hero) ── */
-.sh-hero {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 5.5rem 0 0.875rem;
-    position: relative;
-    overflow: hidden;
-}
-.sh-hero-inner { max-width:1200px; padding:0 1.5rem; margin:0 auto; position:relative; z-index:2; }
-
-.sh-breadcrumb {
-    display:flex; align-items:center; flex-wrap:wrap; gap:.375rem;
-    font-size:.75rem; font-weight:500; color:var(--muted);
-    margin-bottom:0;
-}
-.sh-breadcrumb a { color:var(--muted); text-decoration:none; transition:color .2s; }
-.sh-breadcrumb a:hover { color:var(--accent); }
-.sh-breadcrumb-sep { opacity:.4; font-size:.6rem; }
-.sh-breadcrumb-current { color:var(--text); font-weight:600; }
-
-.sh-layout {
-    max-width:1200px; margin:0 auto;
-    padding:1.5rem 1.5rem 2rem;
-    display:grid; grid-template-columns:420px 1fr;
-    gap:2.5rem; align-items:start;
-    overflow-x: hidden;
-    width: 100%;
-    box-sizing: border-box;
-}
-.sh-product-name {
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--text);
-    line-height: 1.4;
-    margin: 0 0 .5rem;
-}
-.sh-product-subdesc {
-    font-size:.9rem;
-    color:var(--muted);
-    line-height:1.5;
-    margin:0 0 1rem;
-}
-.sh-rating-row {
-    display:flex; align-items:center; gap:1rem; margin-bottom:1rem; font-size:.875rem; color:var(--text);
-}
-.sh-rating-stars { color:#F59E0B; display:flex; align-items:center; gap:2px; }
-.sh-rating-divider { width:1px; height:12px; background:var(--border); }
-.sh-price-box {
-    background: #FAFAFA;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.5rem;
-}
-.sh-price-current {
-    font-size: 1.875rem;
-    font-weight: 800;
-    color: var(--text);
-    line-height: 1.2;
-}
-.sh-price-old {
-    font-size: 1rem;
-    text-decoration: line-through;
-    color: var(--muted);
-    margin-right: .5rem;
-}
-.sh-info-table { width:100%; font-size:.875rem; }
-.sh-info-table td { padding:.5rem 0; vertical-align:top; }
-.sh-info-table td:first-child { width:100px; color:var(--muted); }
-
-.sh-bottom-section {
-    max-width:1200px; margin:0 auto;
-    padding: 2rem 1.5rem 6rem;
+.pd-layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 3rem;
     display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 2rem;
+    grid-template-columns: 420px 1fr;
+    gap: 3rem;
+    align-items: start;
 }
 
-@media (max-width: 1024px) {
-    .sh-layout { grid-template-columns: 1fr; gap:2rem; }
-    .sh-bottom-section { grid-template-columns: 1fr; }
-}
-@media (max-width: 640px) {
-    .sh-layout {
-        padding: 1rem 1rem 2rem;
-        overflow-x: hidden;
-        width: 100%;
-    }
-    .sh-bottom-section { padding: 1rem 1rem 3rem; }
+.pd-card {
+    background: var(--bg-base);
+    border: 1px solid var(--border-1);
+    border-radius: 20px;
+    padding: 1.75rem;
+    box-shadow: 0 16px 40px rgba(14,165,233,0.03);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
-/* ── GALLERY SLIDER 1:1 ── */
-.sh-gallery { margin-bottom:0; }
-
-.sh-swiper-main {
-    width:100%;
-    border-radius:16px;
-    overflow:hidden;
-    background:var(--surface);
-    border:1px solid var(--border);
-    margin-bottom:.625rem;
-    /* Strict 1:1 */
-    position: relative;
-    aspect-ratio: 1 / 1;
-}
-@media (max-width:640px) {
-    .sh-gallery {
-        margin-left:0;
-        margin-right:0;
-        overflow:hidden;
-    }
-    .sh-swiper-main {
-        width:100%;
-        border-radius:12px;
-    }
-    .sh-swiper-thumbs .swiper-slide {
-        width:52px !important;
-        height:44px;
-    }
-}
-.sh-swiper-main .swiper-wrapper {
-    height: 100%;
-    width: 100%;
-}
-.sh-swiper-main .swiper-slide {
-    width: 100%; height: 100%;
-    overflow: hidden;
-}
-.sh-swiper-main .swiper-slide img {
-    width:100%; height:100%;
-    object-fit:cover; object-position:center; display:block;
+.pd-card-hover:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(14,165,233,0.1);
 }
 
-/* Nav arrows */
-.sh-swiper-main .swiper-button-next,
-.sh-swiper-main .swiper-button-prev {
-    width:28px !important; height:28px !important;
-    background:rgba(255,255,255,.95);
-    border-radius:50%;
-    box-shadow:0 2px 10px rgba(15,23,42,.12);
-    color:var(--text) !important;
-}
-.sh-swiper-main .swiper-button-next::after,
-.sh-swiper-main .swiper-button-prev::after { font-size:12px !important; font-weight:900; }
-
-/* Thumb strip */
-.sh-swiper-thumbs { width:100%; }
-.sh-swiper-thumbs .swiper-wrapper { gap:6px; }
-.sh-swiper-thumbs .swiper-slide {
-    width:58px !important; height:58px;
-    border-radius:8px; overflow:hidden; cursor:pointer;
-    border:2px solid transparent; opacity:.55;
-    flex-shrink:0;
-    transition:opacity .25s, border-color .25s;
-}
-.sh-swiper-thumbs .swiper-slide img { width:100%; height:100%; object-fit:cover; display:block; }
-.sh-swiper-thumbs .swiper-slide-thumb-active { opacity:1; border-color:var(--accent); }
-
-/* ── ARTICLE CONTENT ── */
-.sh-content { color:var(--muted); font-size:.9375rem; line-height:1.85; font-weight:400; }
-.sh-content h1,.sh-content h2,.sh-content h3,.sh-content h4 {
-    color:var(--text); font-weight:600; line-height:1.3;
-    margin:2rem 0 .875rem; letter-spacing:-.015em;
-}
-.sh-content h2 { font-size:1.4rem; }
-.sh-content h3 { font-size:1.15rem; }
-.sh-content p { margin-bottom:1.1rem; }
-.sh-content ul,.sh-content ol { margin:.875rem 0 1.1rem 1.4rem; }
-.sh-content li { margin-bottom:.4rem; }
-.sh-content strong { color:var(--text); font-weight:600; }
-.sh-content img { max-width:100%; border-radius:8px; margin:1.5rem 0; }
-
-/* ── SIDEBAR ── */
-.sh-sidebar-card {
-    background:var(--bg); border:1.5px solid var(--border);
-    border-radius:20px; padding:1.75rem;
-    box-shadow:0 8px 24px rgba(15,23,42,.04);
-    position:sticky; top:80px;
-}
-.sh-sidebar-badge {
-    display:inline-flex; align-items:center; gap:.5rem;
-    font-size:.7rem; font-weight:600; letter-spacing:.12em;
-    text-transform:uppercase; color:var(--muted); margin-bottom:1rem;
-}
-.sh-sidebar-badge::before {
-    content:''; display:inline-block;
-    width:5px; height:5px; background:var(--accent); border-radius:50%;
-}
-.sh-sidebar-title { font-size:1.125rem; font-weight:600; color:var(--text); line-height:1.3; margin-bottom:.625rem; }
-.sh-sidebar-desc { font-size:.875rem; color:var(--muted); line-height:1.6; margin-bottom:1.25rem; border-bottom:1px solid var(--border); padding-bottom:1.25rem; }
-
-.sh-info-row {
-    display:flex; align-items:center; gap:.75rem;
-    padding:.55rem 0; font-size:.8rem; color:var(--muted);
-    border-bottom:1px solid var(--border);
-}
-.sh-info-row:last-of-type { border-bottom:none; }
-.sh-info-icon {
-    flex-shrink:0; width:30px; height:30px;
-    display:flex; align-items:center; justify-content:center;
-    background:rgba(14,165,233,.08); border-radius:8px; color:var(--accent);
-}
-
-.sh-btn-primary {
-    display:flex; align-items:center; justify-content:center; gap:.6rem;
-    background:var(--accent); color:#fff !important;
-    font-size:.9375rem; font-weight:600;
-    padding:.875rem 1.5rem; border-radius:50px;
-    border:none; cursor:pointer; text-decoration:none !important;
-    transition:all .3s var(--ease);
-    box-shadow:0 6px 18px rgba(14,165,233,.25);
-    width:100%; margin-top:1.5rem; margin-bottom:.625rem;
-}
-.sh-btn-primary:hover {
-    background:var(--accent2); transform:translateY(-2px);
-    box-shadow:0 10px 24px rgba(14,165,233,.35);
-}
-.sh-btn-outline {
-    display:flex; align-items:center; justify-content:center; gap:.6rem;
-    background:transparent; color:var(--text) !important;
-    font-size:.9375rem; font-weight:600;
-    padding:.875rem 1.5rem; border-radius:50px;
-    border:1.5px solid var(--border); cursor:pointer;
-    text-decoration:none !important; transition:all .3s; width:100%;
-}
-.sh-btn-outline:hover { border-color:var(--accent); color:var(--accent) !important; }
-
-/* ── SECTION SHARED LABELS ── */
-.cv-section-label {
-    display:inline-flex; align-items:center; gap:.5rem;
-    font-size:.72rem; font-weight:600; letter-spacing:.14em;
-    text-transform:uppercase; color:var(--muted); margin-bottom:.875rem;
-}
-.cv-section-label::before {
-    content:''; display:inline-block;
-    width:5px; height:5px; background:var(--accent); border-radius:50%;
-}
-.cv-section-title {
-    font-size:clamp(1.75rem,3vw,2.5rem);
-    font-weight:500; color:var(--text); line-height:1.15;
-    letter-spacing:-.03em; margin-bottom:0;
-}
-
-/* ── KEUNGGULAN ── */
-.sh-adv-section {
-    background:var(--bg); padding:5rem 1.5rem;
-    border-top:1px solid var(--border);
-}
-.sh-adv-inner { max-width:1200px; margin:0 auto; }
-.sh-adv-header {
-    display:flex; align-items:flex-end; justify-content:space-between;
-    flex-wrap:wrap; gap:2rem; margin-bottom:3rem;
-}
-.sh-adv-header-desc { max-width:320px; font-size:.875rem; color:var(--muted); line-height:1.65; text-align:right; }
-.sh-adv-cards {
-    display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem;
-}
-.sh-adv-card {
-    background:var(--surface); border:1.5px solid var(--border);
-    border-radius:20px; padding:1.75rem;
-    display:flex; flex-direction:column; gap:.75rem;
-    transition:all .35s var(--ease); min-height:200px;
-}
-.sh-adv-card:hover { border-color:var(--accent); transform:translateY(-6px); box-shadow:0 16px 40px rgba(14,165,233,.08); }
-.sh-adv-card.accent { background:var(--accent); border-color:var(--accent); }
-.sh-adv-card.accent-dark { background:var(--text); border-color:var(--text); }
-.sh-adv-card-icon {
-    width:44px; height:44px; border-radius:12px;
-    display:flex; align-items:center; justify-content:center; flex-shrink:0;
-}
-.sh-adv-card-icon.blue-bg { background:#E0F2FE; color:var(--accent); }
-.sh-adv-card-icon.white-bg { background:rgba(255,255,255,.2); color:#fff; }
-.sh-adv-card-icon.dark-bg { background:rgba(255,255,255,.08); color:#38BDF8; }
-.sh-adv-num { font-size:2.5rem; font-weight:300; line-height:1; letter-spacing:-.04em; color:var(--text); }
-.sh-adv-num.white { color:#fff; }
-.sh-adv-num.blue { color:#38BDF8; }
-.sh-adv-title { font-size:.9375rem; font-weight:600; color:var(--text); }
-.sh-adv-title.white { color:#fff; }
-.sh-adv-title.light { color:rgba(255,255,255,.9); }
-.sh-adv-desc { font-size:.8rem; color:var(--muted); line-height:1.6; margin-top:auto; }
-.sh-adv-desc.white { color:rgba(255,255,255,.75); }
-
-@media (max-width: 1024px) { .sh-adv-cards { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 768px) {
-    .sh-adv-section { padding: 3.5rem 0; }
-    .sh-adv-cards { 
-        grid-template-columns: none !important;
-        grid-auto-flow: column;
-        grid-auto-columns: 78vw;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        padding-bottom: 1.5rem;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        gap: 1rem;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-    }
-    .sh-adv-cards::-webkit-scrollbar { display: none; }
-    .sh-adv-cards > * { scroll-snap-align: start; }
-    .sh-adv-card-span-2 {
-        grid-column: auto !important;
-        flex-direction: column !important;
-        align-items: flex-start !important;
-    }
-}
-
-/* ── APLIKASI ── */
-.sh-app-section { background:var(--surface); padding:5rem 1.5rem; border-top:1px solid var(--border); }
-.sh-app-inner { max-width:1200px; margin:0 auto; }
-.sh-app-header { max-width:600px; margin-bottom:3rem; }
-.sh-app-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; }
-.sh-app-card {
-    background:var(--bg); border:1px solid var(--border);
-    border-radius:20px;
-    display:flex; flex-direction:column;
-    transition:all .3s var(--ease); overflow:hidden;
-}
-.sh-app-card:hover { border-color:var(--accent); transform:translateY(-6px); box-shadow:0 16px 40px rgba(14,165,233,.08); }
-.sh-app-icon {
-    width:50px; height:50px; background:#F0F9FF;
-    border-radius:14px; display:flex; align-items:center; justify-content:center;
-    color:var(--accent); transition:all .3s; flex-shrink:0;
-}
-.sh-app-card:hover .sh-app-icon { background:var(--accent); color:#fff; }
-.sh-app-img-wrapper { width:100%; aspect-ratio:4/3; overflow:hidden; background:var(--surface); }
-.sh-app-img-wrapper img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
-.sh-app-card:hover .sh-app-img-wrapper img { transform:scale(1.05); }
-.sh-app-card-body { padding:1.5rem; display:flex; flex-direction:column; gap:1rem; flex:1; }
-.sh-app-title { font-size:1.05rem; font-weight:600; color:var(--text); margin:0; }
-.sh-app-desc { font-size:.9rem; color:var(--muted); line-height:1.7; margin:0; }
-
-@media (max-width: 1024px) { .sh-app-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 768px) { 
-    .sh-app-section { padding: 3.5rem 0; }
-    .sh-app-header { padding: 0 1.5rem; }
-    .sh-app-grid { 
-        grid-template-columns: none !important;
-        grid-auto-flow: column;
-        grid-auto-columns: 78vw;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        padding-bottom: 1.5rem;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        gap: 1rem;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-    }
-    .sh-app-grid::-webkit-scrollbar { display: none; }
-    .sh-app-grid > * { scroll-snap-align: start; }
-}
-
-/* ── COVERAGE / MELAYANI ── */
-.sh-coverage-section {
-    background: #F8FAFC;
-    padding: 6rem 0 0;
-    position: relative;
-}
-.sh-coverage-inner { max-width:1200px; margin:0 auto; position:relative; z-index:2; }
-.sh-coverage-header-row {
+/* ── BREADCRUMB ── */
+.pd-breadcrumb {
+    padding: 2rem 1.5rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    margin-bottom: 3rem;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
 }
-.sh-coverage-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 500; color:var(--text); line-height:1.1;
-    letter-spacing:-.04em; flex-shrink:0; min-width:220px;
-}
-.sh-stats-grid {
-    display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; flex:1;
-}
-.sh-stat-card {
-    background:#fff; border-radius:16px; padding:1.5rem;
-    box-shadow:0 10px 40px rgba(0,0,0,.04);
-    display:flex; flex-direction:column;
-    transition:transform .3s;
-}
-.sh-stat-card:hover { transform:translateY(-5px); }
-.sh-stat-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem; }
-.sh-stat-label { font-size:.65rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
-.sh-stat-icon { color:var(--text); opacity:.8; }
-.sh-stat-val { font-size:3.5rem; font-weight:300; color:var(--text); line-height:1; letter-spacing:-.05em; display:flex; align-items:baseline; gap:0.1em; }
-.sh-stat-val span { color:var(--accent); font-size:2rem; font-weight:600; line-height:1; }
-.sh-glass-box {
-    background:rgba(255,255,255,.4); backdrop-filter:blur(24px);
-    -webkit-backdrop-filter:blur(24px);
-    border:1px solid rgba(255,255,255,.7); border-radius:24px;
-    padding:3rem; margin-top:5rem;
-}
-.sh-glass-title { font-size:2rem; font-weight:500; color:var(--text); margin-bottom:2rem; letter-spacing:-.04em; }
-.sh-cities-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
-.sh-city-item { font-size:.875rem; color:#1E293B; display:flex; align-items:center; gap:.5rem; }
-.sh-city-item::before {
-    content:''; width:8px; height:8px; border-radius:50%;
-    background:transparent; border:1.5px solid #94A3B8; flex-shrink:0;
-}
-.sh-city-item.active::before { background:var(--accent); border-color:var(--accent); }
+.pd-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: 0.2s; }
+.pd-breadcrumb a:hover { color: var(--accent); }
+.pd-breadcrumb span { color: var(--text-main); font-weight: 600; }
 
-@keyframes pulse-dot {
-    0% { transform:scale(1); opacity:.6; }
-    50% { transform:scale(1.5); opacity:0; }
-    100% { transform:scale(1); opacity:0; }
+/* ── GALLERY ── */
+.pd-gallery-main {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-1);
+    margin-bottom: 1rem;
+    position: relative;
+}
+.pd-gallery-main img {
+    width: 100%; height: 100%; object-fit: cover;
+}
+.pd-gallery-main .swiper-button-next,
+.pd-gallery-main .swiper-button-prev {
+    color: var(--text-main);
+    background: rgba(255,255,255,0.95);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.pd-gallery-main .swiper-button-next::after,
+.pd-gallery-main .swiper-button-prev::after { font-size: 14px; font-weight: 800; }
+
+.pd-thumbs {
+    display: flex; gap: 0.5rem;
+}
+.pd-thumb-item {
+    width: 65px; height: 65px;
+    border-radius: 12px; overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer; opacity: 0.5; transition: 0.2s;
+}
+.pd-thumb-item.swiper-slide-thumb-active {
+    opacity: 1; border-color: var(--accent);
+}
+.pd-thumb-item img {
+    width: 100%; height: 100%; object-fit: cover;
 }
 
-/* ── RELATED ── */
-.sh-related {
-    background:var(--surface); border-top:1px solid var(--border);
-    padding:4rem 1.5rem 6rem;
+/* ── INFO ── */
+.pd-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.25;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
 }
-.sh-related-inner { max-width:1200px; margin:0 auto; }
-.sh-related-title { font-size:clamp(1.5rem,2.5vw,2rem); font-weight:500; color:var(--text); margin-bottom:2rem; letter-spacing:-.02em; }
-.sh-related-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; }
-.sh-related-card {
-    background:var(--bg); border:1.5px solid var(--border); border-radius:16px;
-    overflow:hidden; text-decoration:none !important;
-    transition:all .35s var(--ease);
+.pd-desc-short {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
 }
-.sh-related-card:hover { border-color:var(--accent); transform:translateY(-6px); box-shadow:0 16px 32px rgba(14,165,233,.08); }
-.sh-related-img { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; }
-.sh-related-body { padding:1.1rem 1.25rem 1.25rem; }
-.sh-related-name { font-size:.9375rem; font-weight:600; color:var(--text); margin-bottom:.4rem; line-height:1.3; }
-.sh-related-desc { font-size:.8rem; color:var(--muted); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 
-/* ── RESPONSIVE ── */
-@media (max-width:1200px) {
-    .sh-coverage-header-row { flex-direction:column; align-items:flex-start; gap:2rem; }
+/* Rating / Stats */
+.pd-stats {
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+    font-size: 0.9rem;
 }
-@media (max-width:1024px) {
-    .sh-layout { grid-template-columns:1fr; gap:2.5rem; }
-    .sh-sidebar-card { position:static; }
-    .sh-adv-cards,.sh-app-grid,.sh-stats-grid,.sh-related-grid { grid-template-columns:repeat(2,1fr); }
-    .sh-cities-grid { grid-template-columns:repeat(3,1fr); }
-    .sh-adv-header-desc { text-align:left; max-width:none; }
+.pd-stars { color: #F59E0B; display: flex; align-items: center; gap: 4px; font-weight: 700; }
+.pd-stat-divider { width: 1px; height: 16px; background: var(--border-1); }
+
+/* Price Box */
+.pd-price-box {
+    background: linear-gradient(135deg, #F0F9FF, #ffffff);
+    border: 1px solid rgba(14,165,233,0.15);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
 }
-@media (max-width:640px) {
-    .sh-hero { padding:5rem 1rem 0.75rem; }
-    .sh-hero-inner { padding:0 .25rem; }
-    .sh-layout { padding:1.75rem 1rem 3rem; }
-    .sh-adv-section,.sh-app-section,.sh-coverage-section,.sh-related { padding:3.5rem 1rem; }
-    .sh-adv-cards,.sh-app-grid,.sh-related-grid { grid-template-columns:1fr; }
-    .sh-stats-grid { grid-template-columns:repeat(2,1fr); gap:1rem; }
-    .sh-stat-val { font-size:2.5rem; }
-    .sh-cities-grid { grid-template-columns:repeat(2,1fr); }
-    .sh-glass-box { padding:1.75rem 1rem; margin-top:3rem; }
-    .sh-coverage-section { padding:4rem 1rem; }
-    .sh-adv-header { flex-direction:column; align-items:flex-start; }
-    .sh-h1 { font-size:1.75rem; }
-    .sh-short-desc { font-size:.9rem; }
+.pd-price-current {
+    font-size: 2.5rem; font-weight: 900; color: var(--accent-dark); line-height: 1;
+    letter-spacing: -0.02em;
+}
+.pd-price-old {
+    font-size: 1.15rem; text-decoration: line-through; color: var(--text-muted);
+}
+.pd-badge-discount {
+    background: #EF4444; color: #fff; font-size: 0.75rem; font-weight: 800;
+    padding: 0.35rem 0.65rem; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+/* Options / QTY */
+.pd-qty-wrap {
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;
+    background: var(--bg-surface); padding: 1rem; border-radius: 16px; border: 1px solid var(--border-1);
+}
+.pd-qty-ctrl {
+    display: flex; align-items: center;
+    border: 1px solid var(--border-1);
+    border-radius: 10px; overflow: hidden;
+    background: var(--bg-base); box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.pd-qty-btn {
+    width: 40px; height: 40px;
+    border: none; background: transparent; cursor: pointer;
+    font-size: 1.25rem; color: var(--text-muted);
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s;
+}
+.pd-qty-btn:hover { background: #F1F5F9; color: var(--text-main); }
+.pd-qty-input {
+    width: 50px; height: 40px; border: none; text-align: center;
+    font-size: 1.05rem; font-weight: 700; color: var(--text-main);
+    border-left: 1px solid var(--border-1); border-right: 1px solid var(--border-1);
+}
+
+/* Action Buttons */
+.pd-actions {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+}
+.pd-btn {
+    padding: 1rem 1.5rem; border-radius: 14px; font-weight: 700; font-size: 1rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1); text-decoration: none; border: none;
+}
+.pd-btn-outline {
+    background: #F0F9FF; color: var(--accent-dark); border: 1.5px solid rgba(14,165,233,0.3);
+}
+.pd-btn-outline:hover {
+    background: #E0F2FE; border-color: var(--accent); transform: translateY(-2px);
+}
+.pd-btn-primary {
+    background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(14,165,233,0.25);
+}
+.pd-btn-primary:hover {
+    transform: translateY(-2px); box-shadow: 0 12px 32px rgba(14,165,233,0.35);
+}
+.pd-btn:disabled {
+    opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important;
+}
+
+/* Bottom Content */
+.pd-bottom-layout {
+    max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 4rem;
+    display: grid; grid-template-columns: 1fr 320px; gap: 3rem;
+}
+
+.pd-section-title {
+    font-size: 1.25rem; font-weight: 800; color: var(--text-main);
+    margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.pd-section-title::before {
+    content:''; display:block; width:5px; height:20px; background:var(--accent); border-radius:4px;
+}
+
+.pd-specs-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-bottom: 2.5rem; }
+.pd-specs-table td { padding: 1rem 0; border-bottom: 1px solid var(--border-1); }
+.pd-specs-table td:first-child { width: 160px; color: var(--text-muted); }
+.pd-specs-table td:last-child { color: var(--text-main); font-weight: 600; }
+
+.pd-content {
+    font-size: 1rem; color: var(--text-muted); line-height: 1.8;
+}
+.pd-content h2, .pd-content h3 { color: var(--text-main); font-weight: 800; margin-top: 2rem; margin-bottom: 1rem; }
+.pd-content ul { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+.pd-content p { margin-bottom: 1.25rem; }
+
+/* Mobile Sticky Action Bar */
+.pd-mobile-actions { display: none; }
+
+@media (max-width: 1024px) {
+    .pd-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .pd-bottom-layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+    .pd-layout { padding: 1rem 1rem 2rem; gap: 1.5rem; }
+    .pd-bottom-layout { padding: 0 1rem 6rem; }
+    .pd-title { font-size: 1.5rem; }
+    .pd-price-current { font-size: 1.75rem; }
+    .pd-card { padding: 1.25rem; }
+    .pd-price-box { padding: 1.25rem; }
+    
+    /* Hide desktop actions */
+    .pd-desktop-actions { display: none; }
+    
+    .pd-mobile-actions {
+        display: flex; align-items: center; gap: 0.75rem;
+        position: fixed; bottom: 0; left: 0; right: 0;
+        background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        padding: 1rem; border-top: 1px solid var(--border-1);
+        box-shadow: 0 -4px 24px rgba(0,0,0,0.06); z-index: 50;
+    }
+    .pd-mobile-actions .pd-btn { flex: 1; padding: 0.875rem; font-size: 0.95rem; border-radius: 12px; }
 }
 </style>
 
-{{-- ═══ BREADCRUMB ONLY ═══ --}}
-<section class="sh-hero">
-    <div class="sh-hero-inner">
-        <nav class="sh-breadcrumb" aria-label="Breadcrumb">
-            <a href="{{ route_locale('home') }}">Beranda</a>
-            <span class="sh-breadcrumb-sep">›</span>
-            <a href="{{ route_locale('products') }}">Produk &amp; Layanan</a>
-            <span class="sh-breadcrumb-sep">›</span>
-            <span class="sh-breadcrumb-current">{{ $service->name }}</span>
-        </nav>
-    </div>
-</section>
+{{-- BREADCRUMB --}}
+<div class="pd-breadcrumb">
+    <a href="{{ route_locale('home') }}">Beranda</a>
+    <span>›</span>
+    <a href="{{ route_locale('products') }}">Produk &amp; Layanan</a>
+    <span>›</span>
+    <span>{{ $service->name }}</span>
+</div>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
-
-{{-- ═══ DETAIL LAYOUT ═══ --}}
-<section class="sh-layout">
-    {{-- LEFT: Gallery --}}
-    <div style="min-width:0;overflow:hidden;width:100%;">
+{{-- TOP SECTION --}}
+<section class="pd-layout">
+    {{-- Left: Gallery --}}
+    <div>
         @php
             $imgs = [];
             if ($service->image) $imgs[] = asset('storage/'.$service->image);
@@ -505,329 +273,289 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
             }
         @endphp
 
-        <div class="sh-gallery">
-            <div class="sh-swiper-main swiper" id="sh-swiper-main">
-                <div class="swiper-wrapper">
-                    @foreach($imgs as $img)
-                        <div class="swiper-slide">
-                            <a href="{{ $img }}" class="glightbox" data-gallery="gallery">
-                                <img src="{{ $img }}" alt="{{ $service->name }}">
-                            </a>
-                        </div>
-                    @endforeach
+        <div class="pd-gallery-main swiper" id="pd-swiper-main">
+            <div class="swiper-wrapper">
+                @foreach($imgs as $img)
+                <div class="swiper-slide">
+                    <a href="{{ $img }}" class="glightbox" data-gallery="product-gallery">
+                        <img src="{{ $img }}" alt="{{ $service->name }}" loading="lazy">
+                    </a>
                 </div>
-                @if(count($imgs) > 1)
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                @endif
+                @endforeach
             </div>
-
             @if(count($imgs) > 1)
-                <div class="sh-swiper-thumbs swiper" id="sh-swiper-thumbs">
-                    <div class="swiper-wrapper">
-                        @foreach($imgs as $img)
-                            <div class="swiper-slide"><img src="{{ $img }}" alt="thumb"></div>
-                        @endforeach
-                    </div>
-                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
             @endif
         </div>
+
+        @if(count($imgs) > 1)
+        <div class="swiper pd-thumbs" id="pd-swiper-thumbs">
+            <div class="swiper-wrapper">
+                @foreach($imgs as $img)
+                <div class="swiper-slide pd-thumb-item">
+                    <img src="{{ $img }}" alt="thumb" loading="lazy">
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
     </div>
 
-    {{-- RIGHT: Product Info, Price, Add to Cart --}}
-    <aside>
-        <h1 style="font-size:1.5rem;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:0.5rem;">{{ $service->name }}</h1>
+    {{-- Right: Product Info --}}
+    <div>
+        <h1 class="pd-title">{{ $service->name }}</h1>
         
         @if($service->rating > 0 || $service->sold_count > 0)
-        <div class="sh-rating-row">
+        <div class="pd-stats">
             @if($service->rating > 0)
-            <div class="sh-rating-stars">
-                <span style="color:#EE4D2D;font-weight:500;margin-right:4px;">{{ number_format($service->rating, 1) }}</span>
-                @for($i=1; $i<=5; $i++)
-                    @if($i <= floor($service->rating))
-                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    @elseif($i == ceil($service->rating) && fmod($service->rating, 1) > 0)
-                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><defs><linearGradient id="half-{{$i}}"><stop offset="50%" stop-color="currentColor"/><stop offset="50%" stop-color="#E2E8F0"/></linearGradient></defs><path fill="url(#half-{{$i}})" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    @else
-                        <svg width="14" height="14" fill="#E2E8F0" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    @endif
-                @endfor
+            <div class="pd-stars">
+                <span>{{ number_format($service->rating, 1) }}</span>
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
             @endif
-
             @if($service->rating > 0 && $service->sold_count > 0)
-                <div class="sh-rating-divider"></div>
+                <div class="pd-stat-divider"></div>
             @endif
-
             @if($service->sold_count > 0)
-            <div>
-                <span style="font-weight:500;">{{ $service->sold_count >= 1000 ? number_format($service->sold_count/1000, 1, ',', '').'RB' : $service->sold_count }}</span>
-                <span style="color:var(--muted)">Terjual</span>
+            <div style="color:var(--text-muted);">
+                Terjual <span style="font-weight:700; color:var(--text-main);">{{ $service->sold_count >= 1000 ? number_format($service->sold_count/1000, 1, ',', '').'RB' : $service->sold_count }}</span>
             </div>
             @endif
         </div>
         @endif
 
         @if($service->short_desc)
-            <p class="sh-product-subdesc">{{ $service->short_desc }}</p>
+        <p class="pd-desc-short">{{ $service->short_desc }}</p>
         @endif
 
         @if($service->price > 0)
-            <div class="sh-price-box">
+            <div class="pd-price-box">
                 @if($service->sale_price > 0 && $service->sale_price < $service->price)
-                    <div style="display:flex;align-items:center;flex-wrap:wrap;">
-                        <span class="sh-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</span>
-                        <span class="sh-price-current">Rp{{ number_format($service->sale_price, 0, ',', '.') }}</span>
-                        <span style="margin-left:1rem;background:#FEE2E2;color:#EF4444;font-size:.7rem;font-weight:700;padding:2px 4px;border-radius:2px;">Diskon {{ round((($service->price - $service->sale_price)/$service->price)*100) }}%</span>
-                    </div>
+                    <div class="pd-price-current">Rp{{ number_format($service->sale_price, 0, ',', '.') }}</div>
+                    <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
+                    <div class="pd-badge-discount">Hemat {{ round((($service->price - $service->sale_price)/$service->price)*100) }}%</div>
                 @else
-                    <div class="sh-price-current">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
+                    <div class="pd-price-current">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
                 @endif
             </div>
 
-            <table class="sh-info-table" style="margin-bottom:1.5rem;">
-                <tr>
-                    <td>Pengiriman</td>
-                    <td>
-                        <div style="display:flex;align-items:flex-start;gap:8px;">
-                            <svg width="20" height="20" fill="none" stroke="#16A34A" stroke-width="2" viewBox="0 0 24 24" style="margin-top:2px;"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                            <div>
-                                <div style="color:#1E293B;">Garansi Tiba Tepat Waktu</div>
-                                <div style="font-size:.75rem;color:var(--muted);margin-top:4px;">Dapatkan voucher jika pesanan terlambat.</div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-
-            <form action="{{ route('cart.add') }}" method="POST">
+            <form action="{{ route('cart.add') }}" method="POST" id="form-add-to-cart">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $service->id }}">
                 
-                <table class="sh-info-table" style="margin-bottom:2rem; align-items:center;">
-                    <tr>
-                        <td style="vertical-align:middle;">Kuantitas</td>
-                        <td style="vertical-align:middle;">
-                            <div style="display:inline-flex; align-items:center; border:1px solid var(--border); border-radius:4px; overflow:hidden;">
-                                <button type="button" onclick="document.getElementById('qty').stepDown()" style="width:32px; height:32px; border:none; background:#fff; border-right:1px solid var(--border); cursor:pointer; color:var(--muted); font-size:1.1rem; line-height:1;">−</button>
-                <input type="number" id="qty" name="qty" value="{{ $service->min_order ?? 1 }}" min="{{ $service->min_order ?? 1 }}" 
-                    @if($service->type !== 'service' && $service->stock > 0) max="{{ $service->stock }}" @endif
-                    style="width:50px; height:32px; text-align:center; border:none; outline:none; font-weight:500; font-size:.9rem; color:var(--text);"
-                    @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
-                                <button type="button" onclick="document.getElementById('qty').stepUp()" style="width:32px; height:32px; border:none; background:#fff; border-left:1px solid var(--border); cursor:pointer; color:var(--muted); font-size:1.1rem; line-height:1;">+</button>
-                            </div>
-                            <span style="font-size:.875rem; color:var(--muted); margin-left:1rem;">
-                                @if($service->type === 'service')
-                                    Jasa / Layanan
-                                @elseif($service->stock > 0)
-                                    Tersisa {{ $service->stock }} buah
-                                @else
-                                    Stok Habis
-                                @endif
-                            </span>
-                        </td>
-                    </tr>
-                </table>
+                <div class="pd-qty-wrap">
+                    <span style="font-size:0.95rem; font-weight:700; color:var(--text-main);">Kuantitas:</span>
+                    <div class="pd-qty-ctrl">
+                        <button type="button" class="pd-qty-btn" onclick="document.getElementById('qty_input').stepDown()">−</button>
+                        <input type="number" id="qty_input" class="pd-qty-input" name="qty" 
+                               value="{{ $service->min_order ?? 1 }}" min="{{ $service->min_order ?? 1 }}"
+                               @if($service->type !== 'service' && $service->stock > 0) max="{{ $service->stock }}" @endif
+                               @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+                        <button type="button" class="pd-qty-btn" onclick="document.getElementById('qty_input').stepUp()">+</button>
+                    </div>
+                    <span style="font-size:0.9rem; color:var(--text-muted);">
+                        @if($service->type === 'service')
+                            Jasa / Layanan
+                        @elseif($service->stock > 0)
+                            Tersisa <b style="color:var(--text-main);">{{ $service->stock }}</b> buah
+                        @else
+                            <b style="color:#EF4444;">Stok Habis</b>
+                        @endif
+                    </span>
+                </div>
 
-                <div style="display:flex; gap:0.5rem;">
-                    <button type="submit" name="action" value="cart" style="flex:1; padding:.75rem; display:flex; align-items:center; justify-content:center; gap:0.5rem; background:#fff; color:var(--text); border:1px solid var(--border); border-radius:6px; font-weight:600; cursor:pointer; transition:background 0.2s;" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='#fff'" @if($service->type !== 'service' && $service->stock <= 0) disabled @endif title="Tambah ke Keranjang">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20a1 1 0 100-2 1 1 0 000 2zM20 20a1 1 0 100-2 1 1 0 000 2z"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
-                        Masukkan Keranjang
+                <div class="pd-actions pd-desktop-actions">
+                    <button type="submit" name="action" value="cart" class="pd-btn pd-btn-outline" 
+                            @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20a1 1 0 100-2 1 1 0 000 2zM20 20a1 1 0 100-2 1 1 0 000 2z"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+                        Keranjang
                     </button>
-                    <button type="submit" name="action" value="buy" style="flex:1; padding:.75rem; display:flex; align-items:center; justify-content:center; background:var(--accent); color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer; transition:background 0.2s;" onmouseover="this.style.background='var(--accent2)'" onmouseout="this.style.background='var(--accent)'" @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+                    <button type="submit" name="action" value="buy" class="pd-btn pd-btn-primary"
+                            @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
                         Beli Sekarang
                     </button>
                 </div>
             </form>
         @else
-            <div class="sh-price-box" style="background:#FFF8F1; border:1px solid #FFEDD5; margin-bottom:1.5rem;">
-                <div style="font-size:1.5rem; font-weight:700; color:#EA580C;">Konsultasi Gratis</div>
-                <div style="font-size:.875rem; color:#9A3412; margin-top:.25rem;">Tim ahli kami siap membantu Anda mendapatkan informasi lengkap dan penawaran terbaik.</div>
+            {{-- Non-ecommerce / Custom Service --}}
+            <div class="pd-price-box" style="background: linear-gradient(135deg, #FFF7ED, #ffffff); border-color: #FED7AA;">
+                <div class="pd-price-current" style="color: #EA580C; font-size:2rem;">Konsultasi Gratis</div>
+                <div style="font-size:1rem; color:#9A3412; width:100%;">Tim ahli kami siap memberikan penawaran terbaik untuk Anda.</div>
             </div>
             
-            <a href="javascript:void(0)" onclick="openOrderModal('Produk: {{ addslashes($service->name) }}')" style="width:100%; padding:.75rem; display:flex; align-items:center; justify-content:center; background:var(--accent); color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer; transition:background 0.2s; text-decoration:none; margin-top:0;" onmouseover="this.style.background='var(--accent2)'" onmouseout="this.style.background='var(--accent)'">
-                Konsultasi & Tanya
+            <a href="javascript:void(0)" onclick="openOrderModal('Produk: {{ addslashes($service->name) }}')" class="pd-btn pd-btn-primary" style="width:100%;">
+                Tanya via WhatsApp
             </a>
         @endif
-    </aside>
+    </div>
 </section>
 
-{{-- ═══ BOTTOM LAYOUT (Description, Specs, FAQ) ═══ --}}
-<section class="sh-bottom-section">
-    <div style="background:#fff; padding:2rem; border:1px solid var(--border); border-radius:4px; box-shadow:0 1px 1px rgba(0,0,0,.05);">
-        <div style="background:#FAFAFA; padding:1rem; font-size:1.1rem; font-weight:500; color:var(--text); margin-bottom:1.5rem;">
-            Spesifikasi Produk
-        </div>
-        
+{{-- BOTTOM CONTENT --}}
+<section class="pd-bottom-layout">
+    <div class="pd-card">
         @if(is_array($service->specifications) && count($service->specifications) > 0)
-        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:.875rem; color:var(--text); margin-bottom:2rem;">
-            <tbody>
+            <div class="pd-section-title">Spesifikasi Produk</div>
+            <table class="pd-specs-table">
                 @foreach($service->specifications as $spec)
                 <tr>
-                    <td style="padding:.5rem 0; width:150px; color:var(--muted);">{{ $spec['key'] }}</td>
-                    <td style="padding:.5rem 0;">{{ $spec['value'] }}</td>
+                    <td>{{ $spec['key'] }}</td>
+                    <td>{{ $spec['value'] }}</td>
                 </tr>
                 @endforeach
-            </tbody>
-        </table>
+            </table>
         @endif
 
-        <div style="background:#FAFAFA; padding:1rem; font-size:1.1rem; font-weight:500; color:var(--text); margin-bottom:1.5rem;">
-            Deskripsi Produk
-        </div>
-        <div class="sh-content" style="color:var(--text);">
+        <div class="pd-section-title">Deskripsi Produk</div>
+        <div class="pd-content">
             {!! $service->description ?? '<p>Belum ada deskripsi untuk produk ini.</p>' !!}
         </div>
 
-        {{-- FAQ Table --}}
         @php
-            $faqs = is_array($service->faqs) && !empty($service->faqs) ? $service->faqs : [
-                ['q' => 'Apakah Alat Rumah memerlukan listrik?', 'a' => 'Sama sekali tidak. Alat Rumah beroperasi 100% menggunakan tenaga angin dan perbedaan tekanan udara, sehingga bebas biaya listrik selamanya.'],
-                ['q' => 'Berapa lama garansi yang diberikan?', 'a' => 'Kami memberikan garansi resmi untuk produk Alat Rumah hingga 15 tahun, mencakup cacat pabrik dan performa putaran mesin.'],
-                ['q' => 'Apakah materialnya tahan karat?', 'a' => 'Ya, Alat Rumah terbuat dari material Alumunium atau Stainless Steel berkualitas tinggi yang tahan terhadap cuaca ekstrem dan karat.']
-            ];
+            $faqs = is_array($service->faqs) && !empty($service->faqs) ? $service->faqs : [];
         @endphp
         @if(count($faqs) > 0)
-        <div style="background:#FAFAFA; padding:1rem; font-size:1.1rem; font-weight:500; color:var(--text); margin:2rem 0 1.5rem;">
-            FAQ {{ $service->name }}
-        </div>
-        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:.875rem; color:var(--text);">
-            <tbody>
+            <div class="pd-section-title" style="margin-top: 3.5rem;">FAQ {{ $service->name }}</div>
+            <div style="display:flex; flex-direction:column; gap:1.25rem;">
                 @foreach($faqs as $f)
-                <tr>
-                    <td style="padding:.75rem 0; width:35%; font-weight:500; border-bottom:1px solid #F1F5F9;">{{ $f['q'] ?? '' }}</td>
-                    <td style="padding:.75rem 0; border-bottom:1px solid #F1F5F9; color:var(--muted);">{{ $f['a'] ?? '' }}</td>
-                </tr>
+                <div style="background:var(--bg-surface); padding:1.5rem; border-radius:16px; border:1px solid var(--border-1);">
+                    <div style="font-weight:800; color:var(--text-main); margin-bottom:0.75rem; font-size:1.05rem;">{{ $f['q'] ?? '' }}</div>
+                    <div style="font-size:0.95rem; color:var(--text-muted); line-height:1.7;">{{ $f['a'] ?? '' }}</div>
+                </div>
                 @endforeach
-            </tbody>
-        </table>
-        
-        {{-- JSON-LD FAQ Schema --}}
-        <script type="application/ld+json">
-        {
-          "@@context": "https://schema.org",
-          "@@type": "FAQPage",
-          "mainEntity": [
-            @foreach($faqs as $idx => $f)
+            </div>
+            
+            <script type="application/ld+json">
             {
-              "@@type": "Question",
-              "name": "{{ addslashes(strip_tags($f['q'] ?? '')) }}",
-              "acceptedAnswer": {
-                "@@type": "Answer",
-                "text": "{{ addslashes(strip_tags($f['a'] ?? '')) }}"
-              }
-            }{{ $idx < count($faqs) - 1 ? ',' : '' }}
-            @endforeach
-          ]
-        }
-        </script>
+              "@@context": "https://schema.org",
+              "@@type": "FAQPage",
+              "mainEntity": [
+                @foreach($faqs as $idx => $f)
+                {
+                  "@@type": "Question",
+                  "name": "{{ addslashes(strip_tags($f['q'] ?? '')) }}",
+                  "acceptedAnswer": {
+                    "@@type": "Answer",
+                    "text": "{{ addslashes(strip_tags($f['a'] ?? '')) }}"
+                  }
+                }{{ $idx < count($faqs) - 1 ? ',' : '' }}
+                @endforeach
+              ]
+            }
+            </script>
         @endif
+    </div>
 
-
+    {{-- SIDEBAR --}}
+    <div>
+        <div class="pd-card" style="position: sticky; top: 100px;">
+            <div class="pd-section-title" style="margin-bottom:1.5rem;">Jaminan Belanja</div>
+            
+            <div style="display:flex; align-items:flex-start; gap:14px; margin-bottom:1.25rem;">
+                <div style="width:42px; height:42px; background:#F0F9FF; color:var(--accent); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div>
+                    <div style="font-weight:800; font-size:0.95rem; color:var(--text-main); margin-bottom:0.25rem;">100% Original</div>
+                    <div style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">Produk asli dan bergaransi resmi.</div>
+                </div>
+            </div>
+            
+            <div style="display:flex; align-items:flex-start; gap:14px; margin-bottom:1.25rem;">
+                <div style="width:42px; height:42px; background:#F0F9FF; color:var(--accent); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                </div>
+                <div>
+                    <div style="font-weight:800; font-size:0.95rem; color:var(--text-main); margin-bottom:0.25rem;">Pengiriman Aman</div>
+                    <div style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">Tepat waktu dengan asuransi pengiriman.</div>
+                </div>
+            </div>
+            
             @if($service->brochure)
-            <a href="{{ asset('storage/'.$service->brochure) }}" target="_blank" class="sh-btn-outline" style="margin-top:1.5rem;">
-                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <a href="{{ asset('storage/'.$service->brochure) }}" target="_blank" class="pd-btn pd-btn-outline" style="margin-top:2rem; width:100%;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                 Unduh Brosur/Datasheet
             </a>
             @endif
         </div>
-    </aside>
+    </div>
 </section>
 
+{{-- MOBILE STICKY ACTION BAR --}}
+@if($service->price > 0)
+<div class="pd-mobile-actions">
+    <button type="button" onclick="document.querySelector('button[value=\'cart\']').click()" class="pd-btn pd-btn-outline" 
+            @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20a1 1 0 100-2 1 1 0 000 2zM20 20a1 1 0 100-2 1 1 0 000 2z"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+        Keranjang
+    </button>
+    <button type="button" onclick="document.querySelector('button[value=\'buy\']').click()" class="pd-btn pd-btn-primary"
+            @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
+        Beli Sekarang
+    </button>
+</div>
+@endif
 
-{{-- ════ MENGAPA ALATRUMAH.COM ════ --}}
-<style>
-    .ar-why { background:#fff; padding:5rem 0; }
-    .ar-why-inner { max-width:1200px; margin:0 auto; padding:0 1.5rem; }
-    .ar-why-header { text-align:center; margin-bottom:3rem; }
-    .ar-why-label { font-size:0.72rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:#0EA5E9; display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:0.75rem; }
-    .ar-why-title { font-size:clamp(1.75rem,3.5vw,2.75rem); font-weight:600; color:#0F172A; line-height:1.2; letter-spacing:-0.025em; }
-    .ar-why-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem; }
-    .ar-why-card { background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:20px; padding:1.75rem; display:flex; flex-direction:column; gap:0.75rem; transition:all 0.3s; }
-    .ar-why-card:hover { border-color:#0EA5E9; transform:translateY(-5px); box-shadow:0 16px 40px rgba(14,165,233,0.09); }
-    .ar-why-icon { width:46px; height:46px; background:#EFF6FF; border-radius:13px; display:flex; align-items:center; justify-content:center; color:#0EA5E9; }
-    .ar-why-card-title { font-size:0.9375rem; font-weight:700; color:#0F172A; }
-    .ar-why-card-desc { font-size:0.8125rem; color:#64748B; line-height:1.65; }
-    .ar-why-cta { text-align:center; margin-top:2.5rem; }
-    @media(max-width:768px) { .ar-why-grid { grid-template-columns:repeat(2,1fr); } }
-    @media(max-width:480px) { .ar-why-grid { grid-template-columns:1fr; } }
-</style>
-<section class="ar-why">
-    <div class="ar-why-inner">
-        <div class="ar-why-header">
-            <div class="ar-why-label">Mengapa AlatRumah.com</div>
-            <h2 class="ar-why-title">Toko Alat Rumah Tangga<br>Terpercaya di Surabaya</h2>
+{{-- ═══ MENGAPA ALATRUMAH.COM ═══ --}}
+<section style="background:var(--bg-base); padding:5rem 1.5rem; border-top:1px solid var(--border-1);">
+    <div style="max-width:1200px; margin:0 auto;">
+        <div style="text-align:center; margin-bottom:3.5rem;">
+            <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.15em; color:var(--accent); text-transform:uppercase; margin-bottom:0.75rem;">Mengapa Memilih Kami</div>
+            <h2 style="font-size:2.25rem; font-weight:900; color:var(--text-main); line-height:1.2; letter-spacing:-0.03em;">Toko Alat Rumah Tangga<br>Terpercaya di Surabaya</h2>
         </div>
-        <div class="ar-why-grid">
-            <div class="ar-why-card" data-aos="fade-up">
-                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg></div>
-                <div class="ar-why-card-title">Produk Berkualitas</div>
-                <div class="ar-why-card-desc">Semua produk tersertifikasi dan telah diuji kualitasnya. Garansi resmi dari produsen.</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1.5rem;">
+            <div class="pd-card" style="text-align:center; padding:2rem 1.5rem;">
+                <div style="width:56px; height:56px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                </div>
+                <div style="font-weight:800; margin-bottom:0.75rem; color:var(--text-main); font-size:1.1rem;">Produk Berkualitas</div>
+                <div style="font-size:0.9rem; color:var(--text-muted); line-height:1.6;">Semua produk tersertifikasi dan bergaransi resmi dari produsen.</div>
             </div>
-            <div class="ar-why-card" data-aos="fade-up" data-aos-delay="80">
-                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg></div>
-                <div class="ar-why-card-title">Pengiriman Cepat</div>
-                <div class="ar-why-card-desc">Dikirim ke seluruh Indonesia dari Surabaya. Proses packing aman, pesanan tiba tepat waktu.</div>
+            <div class="pd-card" style="text-align:center; padding:2rem 1.5rem;">
+                <div style="width:56px; height:56px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                </div>
+                <div style="font-weight:800; margin-bottom:0.75rem; color:var(--text-main); font-size:1.1rem;">Pengiriman Cepat</div>
+                <div style="font-size:0.9rem; color:var(--text-muted); line-height:1.6;">Dikirim ke seluruh Indonesia dengan aman dan tepat waktu.</div>
             </div>
-            <div class="ar-why-card" data-aos="fade-up" data-aos-delay="160">
-                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg></div>
-                <div class="ar-why-card-title">Harga Terbaik</div>
-                <div class="ar-why-card-desc">Harga kompetitif langsung dari distributor resmi. Promo dan diskon spesial setiap hari.</div>
+            <div class="pd-card" style="text-align:center; padding:2rem 1.5rem;">
+                <div style="width:56px; height:56px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                </div>
+                <div style="font-weight:800; margin-bottom:0.75rem; color:var(--text-main); font-size:1.1rem;">Harga Terbaik</div>
+                <div style="font-size:0.9rem; color:var(--text-muted); line-height:1.6;">Harga kompetitif langsung dari distributor resmi. Diskon setiap hari.</div>
             </div>
-            <div class="ar-why-card" data-aos="fade-up" data-aos-delay="240">
-                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></svg></div>
-                <div class="ar-why-card-title">Layanan CS Responsif</div>
-                <div class="ar-why-card-desc">Tim customer service kami siap membantu via WhatsApp, cepat dan ramah setiap hari.</div>
+            <div class="pd-card" style="text-align:center; padding:2rem 1.5rem;">
+                <div style="width:56px; height:56px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
+                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></svg>
+                </div>
+                <div style="font-weight:800; margin-bottom:0.75rem; color:var(--text-main); font-size:1.1rem;">CS Responsif</div>
+                <div style="font-size:0.9rem; color:var(--text-muted); line-height:1.6;">Tim customer service kami siap membantu via WhatsApp setiap saat.</div>
             </div>
-        </div>
-        <div class="ar-why-cta">
-            <a href="{{ route_locale('products') }}"
-                style="display:inline-flex;align-items:center;gap:0.5rem;background:#0EA5E9;color:#fff;padding:0.8rem 2rem;border-radius:50px;font-weight:700;font-size:0.9rem;text-decoration:none;box-shadow:0 4px 12px rgba(14,165,233,0.2);transition:all 0.3s;"
-                onmouseover="this.style.background='#0284C7';this.style.transform='translateY(-2px)'"
-                onmouseout="this.style.background='#0EA5E9';this.style.transform='translateY(0)'">
-                Belanja Sekarang
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-            </a>
         </div>
     </div>
 </section>
 
-{{-- ═══ TESTIMONI ═══ --}}
+{{-- TESTIMONIALS --}}
 @include('components.testimonials')
 
-{{-- ═══ RELATED ═══ --}}
+{{-- RELATED PRODUCTS --}}
 @if($related->count() > 0)
-<section class="sh-related">
-    <div class="sh-related-inner">
-        <div class="cv-section-label" style="margin-bottom:.75rem;">Produk Lainnya</div>
-        <h3 class="sh-related-title">Produk &amp; Layanan Lainnya</h3>
-        <div class="sh-related-grid">
+<section style="background:var(--bg-surface); padding:5rem 1.5rem; border-top:1px solid var(--border-1);">
+    <div style="max-width:1200px; margin:0 auto;">
+        <div style="font-size:1.75rem; font-weight:900; color:var(--text-main); margin-bottom:2.5rem; letter-spacing:-0.02em;">Produk &amp; Layanan Lainnya</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:1.5rem;">
             @foreach($related as $r)
-                <a href="{{ route_locale('products.show', $r->slug) }}" class="sh-related-card">
-                    <img src="{{ $r->image_url }}" alt="{{ $r->name }}" class="sh-related-img" loading="lazy">
-                    <div class="sh-related-body">
-                        <div class="sh-related-name">{{ $r->name }}</div>
-                        <p class="sh-related-desc">{{ $r->short_desc }}</p>
-                    </div>
+                <a href="{{ route_locale('products.show', $r->slug) }}" style="text-decoration:none; display:block;" class="pd-card pd-card-hover">
+                    <img src="{{ $r->image_url }}" alt="{{ $r->name }}" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; margin-bottom:1.25rem;" loading="lazy">
+                    <div style="font-weight:800; color:var(--text-main); font-size:1.1rem; margin-bottom:0.5rem; line-height:1.3;">{{ $r->name }}</div>
+                    <div style="font-size:0.9rem; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.6;">{{ $r->short_desc }}</div>
                 </a>
             @endforeach
         </div>
     </div>
 </section>
 @endif
-
-{{-- ═══ SEO AUTO TEXT (MINIMALIST) ═══ --}}
-<div style="background:var(--surface); padding:2rem 1.5rem; text-align:center; border-top:1px solid var(--border);">
-    <div style="max-width:1200px; margin:0 auto; font-size:0.75rem; color:var(--muted); line-height:1.6;">
-        @if($service->price > 0)
-            Jual {{ $service->name }} di Indonesia. Distributor, Supplier, Agen, {{ $service->name }}. Kami Menjual {{ $service->name }} terlengkap dengan harga termurah di Surabaya, Jawa Timur, Indonesia.
-        @else
-            Layanan {{ $service->name }} profesional dan terpercaya. Solusi terbaik untuk kebutuhan {{ $service->name }} Anda di Surabaya, Jawa Timur dan sekitarnya.
-        @endif
-    </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
@@ -837,18 +565,17 @@ document.addEventListener('DOMContentLoaded', function () {
         selector: '.glightbox',
         touchNavigation: true,
         loop: true,
-        autoplayVideos: true
     });
 
-    var thumbsEl = document.getElementById('sh-swiper-thumbs');
+    var thumbsEl = document.getElementById('pd-swiper-thumbs');
     if (thumbsEl) {
-        var swiperThumbs = new Swiper('#sh-swiper-thumbs', {
+        var swiperThumbs = new Swiper('#pd-swiper-thumbs', {
             spaceBetween: 8,
             slidesPerView: 'auto',
             freeMode: true,
             watchSlidesProgress: true,
         });
-        new Swiper('#sh-swiper-main', {
+        new Swiper('#pd-swiper-main', {
             spaceBetween: 0,
             navigation: {
                 nextEl: '.swiper-button-next',
@@ -857,8 +584,8 @@ document.addEventListener('DOMContentLoaded', function () {
             thumbs: { swiper: swiperThumbs },
         });
     } else {
-        var mainEl = document.getElementById('sh-swiper-main');
-        if (mainEl) new Swiper('#sh-swiper-main', { spaceBetween: 0 });
+        var mainEl = document.getElementById('pd-swiper-main');
+        if (mainEl) new Swiper('#pd-swiper-main', { spaceBetween: 0 });
     }
 });
 </script>
