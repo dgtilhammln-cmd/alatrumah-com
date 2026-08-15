@@ -295,16 +295,32 @@
 
     {{-- Existing saved gallery images --}}
     @if($s && is_array($s->gallery) && count($s->gallery) > 0)
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;">
+    <div id="gallery-saved-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;">
       @foreach($s->gallery as $g)
-      <div style="position:relative;border-radius:10px;overflow:hidden;border:1.5px solid #E4E7F0;">
+      <div class="gallery-saved-item" data-path="{{ $g }}" style="position:relative;border-radius:10px;overflow:hidden;border:1.5px solid #E4E7F0;transition:all .3s;">
         <img src="{{ asset('storage/'.$g) }}" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block;">
-        <label style="position:absolute;bottom:0;left:0;right:0;background:rgba(239,68,68,0.85);padding:.3rem;text-align:center;font-size:.68rem;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;gap:.25rem;font-weight:700;">
-          <input type="checkbox" name="delete_gallery[]" value="{{ $g }}" style="accent-color:#fff;"> Hapus
-        </label>
+        {{-- Trash button (AJAX delete) --}}
+        <button type="button"
+                onclick="deleteGalleryImage(this, '{{ $g }}', {{ $s->id }})"
+                title="Hapus foto ini"
+                style="position:absolute;top:.375rem;right:.375rem;width:32px;height:32px;background:rgba(239,68,68,0.92);border:none;border-radius:8px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(239,68,68,0.4);transition:all .2s;backdrop-filter:blur(4px);"
+                onmouseover="this.style.background='rgba(220,38,38,1)';this.style.transform='scale(1.1)'"
+                onmouseout="this.style.background='rgba(239,68,68,0.92)';this.style.transform='scale(1)'">
+          {{-- Trash icon --}}
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+            <line x1="10" y1="11" x2="10" y2="17"/>
+            <line x1="14" y1="11" x2="14" y2="17"/>
+          </svg>
+        </button>
+        {{-- Label badge --}}
+        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(15,23,42,0.55);padding:.25rem .5rem;font-size:.65rem;color:rgba(255,255,255,0.85);font-weight:600;backdrop-filter:blur(4px);">Tersimpan</div>
       </div>
       @endforeach
     </div>
+    @else
+    <div id="gallery-saved-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;"></div>
     @endif
 
     {{-- New gallery file previews (before save) --}}
@@ -326,7 +342,70 @@
 </div>
 </form>
 
+{{-- Toast notification --}}
+<div id="gallery-toast" style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;background:#0F172A;color:#fff;padding:.75rem 1.25rem;border-radius:12px;font-size:.82rem;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,0.3);display:flex;align-items:center;gap:.5rem;opacity:0;transition:opacity .3s;">
+  <span id="gallery-toast-icon">✅</span>
+  <span id="gallery-toast-msg">Foto berhasil dihapus.</span>
+</div>
+
 <script>
+/* ─── AJAX: Hapus foto gallery tersimpan ─────────────────────── */
+function deleteGalleryImage(btn, path, serviceId) {
+    if (!confirm('Hapus foto ini sekarang?\nTindakan tidak bisa dibatalkan.')) return;
+
+    // Loading state
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-dasharray="31.4" stroke-dashoffset="10"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur=".7s" repeatCount="indefinite"/></circle></svg>';
+
+    fetch('/admin/services/' + serviceId + '/gallery-image', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ path: path })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        if (data.ok) {
+            // Animasi hilang
+            var card = btn.closest('.gallery-saved-item');
+            card.style.transition = 'all .35s cubic-bezier(.4,0,.2,1)';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.8)';
+            setTimeout(function() { card.remove(); }, 360);
+            showGalleryToast('✅', 'Foto berhasil dihapus.');
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = trashIcon();
+            showGalleryToast('❌', data.message || 'Gagal menghapus foto.');
+        }
+    })
+    .catch(function() {
+        btn.disabled = false;
+        btn.innerHTML = trashIcon();
+        showGalleryToast('❌', 'Terjadi kesalahan. Coba lagi.');
+    });
+}
+
+function trashIcon() {
+    return '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>';
+}
+
+function showGalleryToast(icon, msg) {
+    var t = document.getElementById('gallery-toast');
+    document.getElementById('gallery-toast-icon').textContent = icon;
+    document.getElementById('gallery-toast-msg').textContent = msg;
+    t.style.display = 'flex';
+    t.style.opacity = '1';
+    setTimeout(function() {
+        t.style.opacity = '0';
+        setTimeout(function() { t.style.display = 'none'; }, 300);
+    }, 2800);
+}
+
+/* ─── Preview foto baru sebelum disimpan ─────────────────────── */
 function previewGalleryFiles(input) {
     var container = document.getElementById('gallery-new-previews');
     container.innerHTML = '';
@@ -334,12 +413,12 @@ function previewGalleryFiles(input) {
     Array.from(input.files).forEach(function(file, idx) {
         var url = URL.createObjectURL(file);
         var div = document.createElement('div');
-        div.style.cssText = 'position:relative;border-radius:10px;overflow:hidden;border:2px solid #8B5CF6;';
+        div.style.cssText = 'position:relative;border-radius:10px;overflow:hidden;border:2px solid #8B5CF6;transition:all .3s;';
         div.innerHTML = '<img src="' + url + '" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block;">'
-            + '<button type="button" onclick="removeGalleryFile(\''+input.id+'\', '+idx+')" style="position:absolute;top:.375rem;right:.375rem;width:28px;height:28px;background:rgba(239,68,68,0.95);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);">'
-            + '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>'
+            + '<button type="button" onclick="removeGalleryFile(\''+input.id+'\', '+idx+')" title="Batalkan foto ini" style="position:absolute;top:.375rem;right:.375rem;width:32px;height:32px;background:rgba(239,68,68,0.92);border:none;border-radius:8px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(239,68,68,0.4);">'
+            + '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>'
             + '</button>'
-            + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(139,92,246,0.85);padding:.3rem;font-size:.68rem;color:#fff;font-weight:700;text-align:center;">Baru</div>';
+            + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(139,92,246,0.85);padding:.25rem .5rem;font-size:.65rem;color:#fff;font-weight:700;text-align:center;">Baru</div>';
         container.appendChild(div);
     });
 }
@@ -352,6 +431,7 @@ function removeGalleryFile(inputId, indexToRemove) {
     input.files = dt.files;
     previewGalleryFiles(input);
 }
+
 
 
 var svcSlugManual = true; // edit mode: slug sudah ada

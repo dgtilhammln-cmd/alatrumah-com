@@ -239,6 +239,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/leads/{lead}',       [AdminLeadController::class, 'destroy'])->name('admin.leads.destroy');
 
         Route::patch('services/{service}/stock', [AdminServiceController::class, 'updateStock'])->name('admin.services.stock');
+        Route::delete('services/{service}/gallery-image', [AdminServiceController::class, 'deleteGalleryImage'])->name('admin.services.gallery.delete');
         Route::resource('services', AdminServiceController::class)->names([
             'index'   => 'admin.services.index',   'create'  => 'admin.services.create',
             'store'   => 'admin.services.store',    'show'    => 'admin.services.show',

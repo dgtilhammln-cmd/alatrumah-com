@@ -297,4 +297,34 @@ class AdminServiceController extends Controller
         Cache::forget('services_page_data');
         return back()->with('success', 'Stok berhasil diperbarui.');
     }
+
+    /**
+     * AJAX: Hapus satu foto dari gallery produk secara instan.
+     * DELETE /admin/services/{service}/gallery-image
+     * Body JSON: { "path": "services/gallery/xxx.webp" }
+     */
+    public function deleteGalleryImage(Request $request, Service $service)
+    {
+        $request->validate(['path' => 'required|string']);
+        $path = $request->input('path');
+
+        $gallery = is_array($service->gallery) ? $service->gallery : [];
+        $key = array_search($path, $gallery);
+
+        if ($key === false) {
+            return response()->json(['ok' => false, 'message' => 'Foto tidak ditemukan.'], 404);
+        }
+
+        // Hapus file dari storage
+        $this->deleteStorageFile($path);
+
+        // Hapus dari array dan simpan
+        unset($gallery[$key]);
+        $service->update(['gallery' => array_values($gallery)]);
+
+        Cache::forget('home_page_data');
+        Cache::forget('services_page_data');
+
+        return response()->json(['ok' => true, 'message' => 'Foto berhasil dihapus.']);
+    }
 }
