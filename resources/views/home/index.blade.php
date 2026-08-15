@@ -141,13 +141,13 @@
         .cv-hero-slider-col { 
             position: relative !important; 
             width: 100% !important; 
-            height: 0 !important;
-            padding-top: 50% !important; /* 2:1 ratio — same visual weight as desktop */
+            height: auto !important;
+            aspect-ratio: 2 / 1 !important;
             border-radius: 16px !important; 
             overflow: hidden !important; 
             box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
         }
-        /* The .swiper container must fill its parent (which uses padding-top trick) */
+        /* The .swiper container must fill its parent */
         .cv-hero-slider-col > .hero-swiper { 
             position: absolute !important; 
             top: 0 !important; left: 0 !important;
@@ -1117,9 +1117,11 @@
                     <div class="swiper hero-swiper">
                         <div class="swiper-wrapper">
                             @foreach($heroSlides as $slide)
-                                <a href="{{ $slide->button_url ?? '#' }}" class="swiper-slide hero-swiper-slide" data-bg-color="{{ $slide->bg_color ?? 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)' }}">
-                                    <img src="{{ asset('storage/' . $slide->image) }}" alt="{{ $slide->title }}" class="cv-hero-img-main" width="800" height="440" fetchpriority="high">
-                                </a>
+                                <div class="swiper-slide hero-swiper-slide" data-bg-color="{{ $slide->bg_color ?? 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)' }}">
+                                    <a href="{{ $slide->button_url ?? '#' }}" style="display:block; width:100%; height:100%; text-decoration:none;" aria-label="{{ $slide->title }}">
+                                        <img src="{{ asset('storage/' . $slide->image) }}" alt="{{ $slide->title }}" class="cv-hero-img-main" width="800" height="440" fetchpriority="high">
+                                    </a>
+                                </div>
                             @endforeach
                         </div>
                         <div class="swiper-pagination hero-swiper-pagination"></div>
@@ -1145,7 +1147,7 @@
                 @if(isset($utamaBanners) && $utamaBanners->count() > 0)
                     @php $utama = $utamaBanners->first(); @endphp
                     <a href="{{ $utama->button_url ?? route('products') }}" class="cv-hero-static-col">
-                        <img src="{{ asset('storage/' . $utama->image) }}" alt="{{ $utama->title }}" class="cv-hero-img-sec" loading="eager">
+                        <img src="{{ asset('storage/' . $utama->image) }}" alt="{{ $utama->title }}" class="cv-hero-img-sec" loading="lazy">
                     </a>
                 @elseif(!empty($settings['hero_secondary_image']))
                     <a href="{{ route('products') }}" class="cv-hero-static-col">
@@ -1197,7 +1199,7 @@
                 <div class="cv-usp-item">
                     <span class="cv-usp-icon">
                         @if($usp->icon_type === 'upload' && $usp->icon_value)
-                            <img src="{{ asset('storage/' . $usp->icon_value) }}" alt="{{ $usp->label }}" width="24" height="24" style="object-fit:contain;">
+                            <img src="{{ asset('storage/' . $usp->icon_value) }}" alt="{{ $usp->label }}" loading="lazy" width="24" height="24" style="object-fit:contain;">
                         @else
                             {{ $usp->icon_value }}
                         @endif
@@ -1222,7 +1224,7 @@
                         <a href="{{ $cat->url ?? route('products') }}" class="swiper-slide cv-cat-slide">
                             <div class="cv-cat-icon-wrap">
                                 @if($cat->icon_type === 'upload' && $cat->icon_value)
-                                    <img src="{{ asset('storage/' . $cat->icon_value) }}" alt="{{ $cat->name }}">
+                                    <img src="{{ asset('storage/' . $cat->icon_value) }}" alt="{{ $cat->name }}" loading="lazy">
                                 @else
                                     @php
                                         $icons = [
@@ -1411,6 +1413,7 @@
         overflow: hidden;
         position: relative;
         width: 200px;
+        min-height: 200px; /* Prevent CLS */
         flex-shrink: 0;
         display: flex;
         align-items: center;
@@ -1655,7 +1658,7 @@
         <div class="cv-promo-header" style="align-items:center;">
             <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
                 @if($promo->logo)
-                    <img src="{{ asset('storage/'.$promo->logo) }}" alt="{{ $promo->title }}" style="max-height:30px; object-fit:contain;">
+                    <img src="{{ asset('storage/'.$promo->logo) }}" alt="{{ $promo->title }}" loading="lazy" style="max-height:30px; object-fit:contain;">
                 @else
                     <div>
                         <div class="cv-promo-title">{{ $promo->title }}</div>
@@ -1684,7 +1687,7 @@
             {{-- Banner Left (Desktop Only) --}}
             <div class="cv-promo-banner-wrap desktop-only">
                 @if($promo->banner)
-                    <img src="{{ asset('storage/'.$promo->banner) }}" alt="{{ $promo->title }}" class="cv-promo-banner-img">
+                                <img src="{{ asset('storage/'.$promo->banner) }}" alt="{{ $promo->title }}" loading="lazy" class="cv-promo-banner-img">
                 @else
                     <div class="cv-promo-banner-placeholder">
                         <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
@@ -1700,7 +1703,7 @@
                         {{-- Banner Mobile (Inside Swiper) --}}
                         <div class="swiper-slide cv-promo-banner-wrap mobile-only">
                             @if($promo->banner)
-                                <img src="{{ asset('storage/'.$promo->banner) }}" alt="{{ $promo->title }}" class="cv-promo-banner-img">
+                                            <img src="{{ asset('storage/'.$promo->banner) }}" alt="{{ $promo->title }}" loading="lazy" class="cv-promo-banner-img">
                             @elseif($isFlashSale)
                                 <div class="cv-promo-banner-placeholder" style="background: linear-gradient(135deg, #ef4444, #f97316); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; width:100%; height:100%;">
                                     <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>

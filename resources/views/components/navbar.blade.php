@@ -636,7 +636,7 @@
         <div style="margin-bottom: 1.5rem;">
             <form action="{{ route('products') }}" method="GET" style="display:flex; background:#F1F5F9; border-radius:999px; padding:0.4rem 0.8rem; align-items:center;">
                 <input type="text" name="q" placeholder="Cari produk..." value="{{ request('q') }}" autocomplete="off" style="flex:1; border:none; background:transparent; outline:none; font-family:'Montserrat',sans-serif; font-size:0.9rem; padding:0.25rem;">
-                <button type="submit" style="background:none; border:none; color:#94A3B8; display:flex; align-items:center;">
+                <button type="submit" aria-label="Cari produk" style="background:none; border:none; color:#94A3B8; display:flex; align-items:center;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
                 </button>
             </form>
