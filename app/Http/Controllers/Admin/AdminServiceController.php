@@ -94,7 +94,7 @@ class AdminServiceController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            $v['image'] = $this->storeWebP($request->file('image'), 'services', 1200, 800);
+            $v['image'] = $this->storeWebP($request->file('image'), 'services', 1000, 1000);
             if (!$request->hasFile('og_image')) {
                 $v['og_image'] = $this->storeOgWebP($request->file('image'), 'services/og');
             }
@@ -212,7 +212,7 @@ class AdminServiceController extends Controller
 
         if ($request->hasFile('image')) {
             $this->deleteStorageFile($service->image);
-            $v['image'] = $this->storeWebP($request->file('image'), 'services', 1200, 800);
+            $v['image'] = $this->storeWebP($request->file('image'), 'services', 1000, 1000);
             if (!$request->hasFile('og_image') && !$service->og_image) {
                 $v['og_image'] = $this->storeOgWebP($request->file('image'), 'services/og');
             }

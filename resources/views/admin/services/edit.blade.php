@@ -257,7 +257,7 @@
   </div>
 
   {{-- Foto Utama --}}
-  @include('admin.partials.image-upload', ['item'=>$s,'field'=>'image','label'=>'Foto Utama Layanan'])
+  @include('admin.partials.image-upload', ['item'=>$s,'field'=>'image','label'=>'Foto Utama Layanan','aspectRatio'=>'1:1'])
 
   {{-- OG Image --}}
   @include('admin.partials.image-upload', ['item'=>$s,'field'=>'og_image','label'=>'OG Image (Share Preview)'])

@@ -1,13 +1,15 @@
 {{-- Shared Image Upload Partial --}}
 {{-- Usage: @include('admin.partials.image-upload', ['item'=>$item??null,'field'=>'image','label'=>'Foto Utama','required'=>true]) --}}
 @php
-  $imgField      = $field    ?? 'image';
-  $imgLabel      = $label    ?? 'Gambar';
-  $imgRequired   = $required ?? false;
-  $imgItem       = $item     ?? null;
+  $imgField      = $field       ?? 'image';
+  $imgLabel      = $label       ?? 'Gambar';
+  $imgRequired   = $required    ?? false;
+  $imgItem       = $item        ?? null;
   $imgPreviewId  = 'prev_'.Str::random(6);
   $imgInputId    = 'inp_'.Str::random(6);
   $currentSrc    = $imgItem && $imgItem->{$imgField} ? asset('storage/'.$imgItem->{$imgField}) : null;
+  // aspectRatio: '1:1' | '16:9' | '4:3' | 'free'  (default: 'free')
+  $imgAspectRatio = $aspectRatio ?? 'free';
 @endphp
 
 <div style="background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
@@ -69,6 +71,7 @@
 
   <input type="file" id="{{ $imgInputId }}" name="{{ $imgField }}" accept="image/*"
          {{ $imgRequired && !$imgItem ? 'required' : '' }}
+         data-aspect-ratio="{{ $imgAspectRatio }}"
          onchange="previewImgPremium(this,'{{ $imgPreviewId }}')"
          style="display:none;">
 
@@ -136,11 +139,15 @@ if (typeof window._imgUploadInit === 'undefined') {
         btnWrapper.appendChild(btnCancel); btnWrapper.appendChild(btnCrop);
         container.appendChild(title); container.appendChild(imgWrapper); container.appendChild(btnWrapper);
         modal.appendChild(container); document.body.appendChild(modal);
-        var cropper = new Cropper(imgToCrop, { aspectRatio: 16/9, viewMode: 2, autoCropArea: 1 });
+        var _ar = input.getAttribute('data-aspect-ratio') || 'free';
+        var _cropAR = _ar === '1:1' ? 1 : _ar === '16:9' ? 16/9 : _ar === '4:3' ? 4/3 : NaN;
+        var _w = _ar === '1:1' ? 1000 : _ar === '4:3' ? 1200 : 1200;
+        var _h = _ar === '1:1' ? 1000 : _ar === '4:3' ? 900  : 675;
+        var cropper = new Cropper(imgToCrop, { aspectRatio: _cropAR, viewMode: 2, autoCropArea: 1 });
         btnCancel.onclick = function() { input.value = ''; document.body.removeChild(modal); };
         btnCrop.onclick = function() {
             btnCrop.innerText = 'Menyimpan...';
-            cropper.getCroppedCanvas({ width:1200, height:675, imageSmoothingQuality:'high' }).toBlob(function(blob) {
+            cropper.getCroppedCanvas({ width:_w, height:_h, imageSmoothingQuality:'high' }).toBlob(function(blob) {
                 var dt = new DataTransfer();
                 dt.items.add(new File([blob], input.files[0].name, {type: input.files[0].type}));
                 input.files = dt.files;
