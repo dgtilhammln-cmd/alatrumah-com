@@ -998,6 +998,7 @@
         position: relative;
     }
     .cats-swiper { overflow: hidden; padding: 1rem 0; margin: -1rem 0; }
+    .cats-swiper .swiper-slide { width: auto !important; }
     .cv-cat-slide {
         display: flex !important;
         flex-direction: column;
@@ -1221,9 +1222,32 @@
             <div class="swiper cats-swiper hidden md:block" id="catsSwiperDesktop" style="width: 100%;">
                 <div class="swiper-wrapper">
                     @foreach($categoryItems as $cat)
-            				</div>
-                            <span class="cv-cat-name">{{ $cat->name }}</span>
-                        </a>
+                        <div class="swiper-slide">
+                            <a href="{{ $cat->url ?? route('products') }}" class="cv-cat-slide" aria-label="{{ $cat->name }}">
+                                <div class="cv-cat-icon-wrap">
+                                    @if($cat->icon_type === 'upload' && $cat->icon_value)
+                                        <img src="{{ asset('storage/' . $cat->icon_value) }}" alt="" loading="lazy" aria-hidden="true">
+                                    @else
+                                        @php
+                                            $icons = [
+                                                'home' => '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+                                                'box' => '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
+                                                'tool' => '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+                                                'truck' => '<rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+                                                'shopping-cart' => '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>',
+                                            ];
+                                            $svg = $icons[$cat->icon_value] ?? $icons['box'];
+                                        @endphp
+                                        <svg width="28" height="28" fill="none" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">{!! $svg !!}</svg>
+                                    @endif
+                                    
+                                    @if($cat->badge)
+                                        <span class="cv-cat-badge" style="background:{{ $cat->badge_color ?? '#ef4444' }}">{{ $cat->badge }}</span>
+                                    @endif
+                                </div>
+                                <span class="cv-cat-name">{{ $cat->name }}</span>
+                            </a>
+                        </div>
                     @endforeach
                 </div>
             </div>
