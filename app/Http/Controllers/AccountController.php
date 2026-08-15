@@ -155,6 +155,22 @@ class AccountController extends Controller
         return view('account.order-detail', compact('order', 'tracking'));
     }
 
+    public function completeOrder(\App\Models\Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($order->status->value !== 'shipped') {
+            return back()->with('error', 'Hanya pesanan yang sedang dikirim yang dapat diselesaikan.');
+        }
+
+        $order->update(['status' => \App\Enums\OrderStatus::Delivered]);
+
+        return back()->with('success', 'Pesanan telah dikonfirmasi selesai. Terima kasih telah berbelanja!');
+    }
+
+
     // ── Addresses ──
     public function addresses()
     {

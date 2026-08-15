@@ -74,8 +74,8 @@
                     
                     $firstItem = $order->items->first();
                     $productName = $firstItem && $firstItem->product ? $firstItem->product->name : 'Produk Dihapus';
-                    $productImg = $firstItem && $firstItem->product && $firstItem->product->primary_image 
-                        ? Storage::url($firstItem->product->primary_image) 
+                    $productImg = $firstItem && $firstItem->product 
+                        ? $firstItem->product->image_url 
                         : 'https://placehold.co/150x150/f1f5f9/94a3b8?text=No+Image';
                     $qty = $firstItem ? $firstItem->quantity : 0;
                     $otherCount = $order->items->count() - 1;

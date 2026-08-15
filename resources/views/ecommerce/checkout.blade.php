@@ -171,7 +171,8 @@ label:focus{outline:none !important;box-shadow:none !important;}
                                 @foreach($addresses as $addr)
                                     <option value="{{ $addr->id }}"
                                         data-city="{{ $addr->city }}"
-                                        data-province="{{ $addr->province }}">
+                                        data-province="{{ $addr->province }}"
+                                        data-full-address="{{ $addr->address }}, {{ $addr->district }}, {{ $addr->city }}, {{ $addr->province }}">
                                         {{ $addr->label }} - {{ $addr->receiver_name }} ({{ $addr->city }}, {{ $addr->province }})
                                     </option>
                                 @endforeach
@@ -1048,7 +1049,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
             // Format format dari blade: "Label - Nama (Kota, Prov)"
             const parts = opt.text.split('-');
             receiverName = parts.length > 1 ? parts[1].split('(')[0].trim() : opt.text;
-            addressText = opt.text;
+            addressText = opt.getAttribute('data-full-address') || opt.text;
         }
 
         let courierText = '';

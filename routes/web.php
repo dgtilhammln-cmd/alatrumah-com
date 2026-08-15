@@ -140,6 +140,7 @@ Route::middleware(['auth'])->prefix('akun')->name('account.')->group(function ()
     Route::post('/wishlist/toggle', [AccountController::class, 'toggleWishlist'])->name('wishlist.toggle');
     Route::get('/pesanan',   [AccountController::class, 'orders'])->name('orders');
     Route::get('/pesanan/{order}', [AccountController::class, 'showOrder'])->name('orders.show');
+    Route::post('/pesanan/{order}/selesai', [AccountController::class, 'completeOrder'])->name('orders.complete');
     Route::get('/alamat',    [AccountController::class, 'addresses'])->name('addresses');
     Route::post('/alamat',   [AccountController::class, 'storeAddress'])->name('addresses.store');
     Route::put('/alamat/{address}', [AccountController::class, 'updateAddress'])->name('addresses.update');

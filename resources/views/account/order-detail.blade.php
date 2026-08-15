@@ -89,7 +89,7 @@
                 @foreach($order->items as $item)
                 <div class="od-item">
                     @if($item->product && !empty($item->product->image))
-                        <img src="{{ asset('storage/'.$item->product->image) }}" class="od-item-img">
+                        <img src="{{ $item->product->image_url }}" class="od-item-img" onerror="this.src='https://placehold.co/150x150/f1f5f9/94a3b8?text=No+Image'">
                     @else
                         <div class="od-item-img"></div>
                     @endif
@@ -115,6 +115,19 @@
                     @else
                         <button disabled style="display: block; width: 100%; text-align: center; background: #94A3B8; color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: not-allowed;">Menunggu Info Ongkir</button>
                     @endif
+                </div>
+            @endif
+            @if($order->status->value === 'shipped')
+                <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem;">
+                    <div style="font-size: 0.9rem; font-weight: 700; color: #166534; margin-bottom: 0.5rem;">Pesanan Sedang Dikirim</div>
+                    <div style="font-size: 0.8rem; color: #15803D; margin-bottom: 1rem;">Jika pesanan sudah Anda terima dengan baik, silakan konfirmasi pesanan selesai.</div>
+                    
+                    <form action="{{ route('account.orders.complete', $order->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin pesanan sudah diterima dengan baik?');">
+                        @csrf
+                        <button type="submit" style="display: block; width: 100%; text-align: center; background: #059669; color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">
+                            Pesanan Diterima
+                        </button>
+                    </form>
                 </div>
             @endif
 
