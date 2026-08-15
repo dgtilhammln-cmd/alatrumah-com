@@ -43,7 +43,7 @@
 
 /* ── BREADCRUMB ── */
 .pd-breadcrumb {
-    padding: 2rem 1.5rem 0;
+    padding: 6rem 1.5rem 0; /* Ditambah agar tidak tertutup header */
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
@@ -132,7 +132,7 @@
     display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
 }
 .pd-price-current {
-    font-size: 2.5rem; font-weight: 900; color: var(--accent-dark); line-height: 1;
+    font-size: 1.85rem; font-weight: 900; color: var(--accent-dark); line-height: 1;
     letter-spacing: -0.02em;
 }
 .pd-price-old {
@@ -141,6 +141,47 @@
 .pd-badge-discount {
     background: #EF4444; color: #fff; font-size: 0.75rem; font-weight: 800;
     padding: 0.35rem 0.65rem; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+/* Vouchers */
+.pd-voucher-scroll {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+    scrollbar-width: none; /* Firefox */
+}
+.pd-voucher-scroll::-webkit-scrollbar { display: none; }
+.pd-voucher-card {
+    background: #ffffff;
+    border: 1px solid var(--border-1);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: max-content;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.pd-voucher-card:hover {
+    border-color: var(--accent);
+    background: #F0F9FF;
+}
+.pd-v-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+    color: #fff;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.9rem;
+}
+.pd-v-title {
+    font-size: 0.85rem; font-weight: 800; color: var(--text-main); line-height: 1.2;
+}
+.pd-v-desc {
+    font-size: 0.75rem; color: var(--text-muted);
 }
 
 /* Options / QTY */
@@ -338,6 +379,31 @@
                 @else
                     <div class="pd-price-current">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
                 @endif
+            </div>
+
+            {{-- Vouchers --}}
+            <div class="pd-voucher-scroll">
+                <div class="pd-voucher-card">
+                    <div class="pd-v-icon">%</div>
+                    <div>
+                        <div class="pd-v-title">Diskon 50RB</div>
+                        <div class="pd-v-desc">Min. belanja 300RB</div>
+                    </div>
+                </div>
+                <div class="pd-voucher-card">
+                    <div class="pd-v-icon">%</div>
+                    <div>
+                        <div class="pd-v-title">Diskon 10%</div>
+                        <div class="pd-v-desc">S/d 100RB</div>
+                    </div>
+                </div>
+                <div class="pd-voucher-card">
+                    <div class="pd-v-icon">Rp</div>
+                    <div>
+                        <div class="pd-v-title">Gratis Ongkir</div>
+                        <div class="pd-v-desc">S/d 20RB</div>
+                    </div>
+                </div>
             </div>
 
             <form action="{{ route('cart.add') }}" method="POST" id="form-add-to-cart">
