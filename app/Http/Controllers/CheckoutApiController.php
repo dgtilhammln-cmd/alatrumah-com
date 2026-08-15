@@ -181,8 +181,8 @@ class CheckoutApiController extends Controller
                                     ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
                                     ->timeout(5)
                                     ->withHeaders([
-                                        'Authorization' => 'Bearer ' . $apiKey,
-                                        'User-Agent'    => 'Mozilla/5.0',
+                                        'key'        => $apiKey,
+                                        'User-Agent' => 'Mozilla/5.0',
                                     ])
                                     ->get('https://rajaongkir.komerce.id/api/v1/destination/province');
                 }
@@ -249,8 +249,8 @@ class CheckoutApiController extends Controller
                                     ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
                                     ->timeout(8)
                                     ->withHeaders([
-                                        'Authorization' => 'Bearer ' . $apiKey,
-                                        'User-Agent'    => 'Mozilla/5.0',
+                                        'key'        => $apiKey,
+                                        'User-Agent' => 'Mozilla/5.0',
                                     ])
                                     ->get('https://rajaongkir.komerce.id/api/v1/destination/city/' . $provinceId);
                 }
@@ -350,8 +350,8 @@ class CheckoutApiController extends Controller
                                 ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
                                 ->timeout(12)
                                 ->withHeaders([
-                                    'Authorization' => 'Bearer ' . $apiKey,
-                                    'User-Agent'    => 'Mozilla/5.0'
+                                    'key'        => $apiKey,
+                                    'User-Agent' => 'Mozilla/5.0'
                                 ])
                                 ->asForm()
                                 ->post('https://rajaongkir.komerce.id/api/v1/calculate/domestic-cost', [

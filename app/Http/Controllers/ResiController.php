@@ -91,7 +91,7 @@ class ResiController extends Controller
                     ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
                     ->timeout(20)
                     ->withHeaders([
-                        'Authorization' => 'Bearer ' . $apiKey,
+                        'key'           => $apiKey,
                         'Content-Type'  => 'application/x-www-form-urlencoded',
                         'User-Agent'    => 'Mozilla/5.0',
                     ])
