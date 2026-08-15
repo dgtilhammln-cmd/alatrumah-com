@@ -96,15 +96,53 @@ class CheckoutApiController extends Controller
         ['city_id'=>'318','province_id'=>'11','province'=>'Jawa Timur','type'=>'Kabupaten','city_name'=>'Tulungagung','postal_code'=>'66211'],
     ];
 
-    private function getApiBase(): string
+    /**
+     * Mode aktif: 'sandbox' atau 'live'.
+     * Dikontrol dari Admin → API & Integrasi.
+     */
+    private function isLiveMode(): bool
     {
-        // Force Komerce API v1 since standard RajaOngkir is blocked by Hostinger/Cloudflare
-        return 'https://rajaongkir.komerce.id/api/v1';
+        return Setting::get('komerce_mode', 'sandbox') === 'live';
+    }
+
+    private function getTariffApiKey(): ?string
+    {
+        if ($this->isLiveMode()) {
+            return Setting::get('rajaongkir_api_key') ?: null;
+        }
+        return Setting::get('rajaongkir_api_key_sandbox') ?: Setting::get('rajaongkir_api_key') ?: null;
     }
 
     private function getApiKey(): ?string
     {
-        return Setting::get('rajaongkir_api_key') ?: null;
+        if ($this->isLiveMode()) {
+            return Setting::get('shipping_delivery_api_key') ?: Setting::get('rajaongkir_api_key') ?: null;
+        }
+        return Setting::get('shipping_delivery_api_key_sandbox') ?: Setting::get('rajaongkir_api_key_sandbox') ?: null;
+    }
+
+    /**
+     * Header untuk Tariff/Ongkir endpoints (gunakan Shipping Cost key).
+     */
+    private function getTariffHeaders(): array
+    {
+        return [
+            'x-api-key'  => $this->getTariffApiKey(),
+            'Accept'     => 'application/json',
+            'User-Agent' => 'Mozilla/5.0',
+        ];
+    }
+
+    /**
+     * Header untuk Order/AWB/Delivery endpoints (gunakan Shipping Delivery key).
+     */
+    private function getApiHeaders(): array
+    {
+        return [
+            'x-api-key'  => $this->getApiKey(),
+            'Accept'     => 'application/json',
+            'User-Agent' => 'Mozilla/5.0',
+        ];
     }
 
     // =========================================================
@@ -118,34 +156,54 @@ class CheckoutApiController extends Controller
             return response()->json($cached);
         }
 
-        $apiKey = $this->getApiKey();
+        $apiKey = $this->getTariffApiKey();
+        $isLive = $this->isLiveMode();
+
         if ($apiKey) {
             try {
-                $response = Http::withoutVerifying()
-                                ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
-                                ->timeout(5)
-                                ->withHeaders([
-                                    'Authorization' => 'Bearer ' . $apiKey,
-                                    'User-Agent' => 'Mozilla/5.0'
-                                ])
-                                ->get($this->getApiBase() . '/destination/province');
+                if ($isLive) {
+                    // LIVE: Komerce Shipping Cost API
+                    $response = Http::withoutVerifying()
+                                    ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
+                                    ->timeout(5)
+                                    ->withHeaders([
+                                        'x-api-key'  => $apiKey,
+                                        'Accept'     => 'application/json',
+                                        'User-Agent' => 'Mozilla/5.0',
+                                    ])
+                                    ->get('https://api.collaborator.komerce.id/tariff/api/v1/destination', [
+                                        'keyword' => '',
+                                        'type'    => 'province',
+                                    ]);
+                } else {
+                    // SANDBOX: Legacy RajaOngkir Komerce Proxy
+                    $response = Http::withoutVerifying()
+                                    ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
+                                    ->timeout(5)
+                                    ->withHeaders([
+                                        'Authorization' => 'Bearer ' . $apiKey,
+                                        'User-Agent'    => 'Mozilla/5.0',
+                                    ])
+                                    ->get('https://rajaongkir.komerce.id/api/v1/destination/province');
+                }
 
                 $json = $response->json();
-                
-                // Parse Komerce v1 structure and map to legacy RajaOngkir structure
-                if (isset($json['data']) && count($json['data']) > 0) {
+
+                if ($response->successful() && isset($json['data']) && count($json['data']) > 0) {
                     $results = array_map(function($item) {
                         return [
-                            'province_id' => $item['id'],
-                            'province' => $item['name']
+                            'province_id' => $item['id'] ?? $item['province_id'] ?? '',
+                            'province'    => $item['name'] ?? $item['province'] ?? '',
                         ];
                     }, $json['data']);
-                    
+
                     Cache::put('rajaongkir_provinces', $results, now()->addHours(24));
                     return response()->json($results);
                 }
+
+                Log::warning('[ONGKIR] Province API non-success', ['status' => $response->status(), 'body' => $response->body()]);
             } catch (\Exception $e) {
-                Log::warning('RajaOngkir Provinces API unreachable, using static data: ' . $e->getMessage());
+                Log::warning('Komerce Provinces API unreachable, using static data: ' . $e->getMessage());
             }
         }
 
@@ -165,35 +223,56 @@ class CheckoutApiController extends Controller
             return response()->json($cached);
         }
 
-        $apiKey = $this->getApiKey();
+        $apiKey = $this->getTariffApiKey();
+        $isLive = $this->isLiveMode();
+
         if ($apiKey) {
             try {
-                $response = Http::withoutVerifying()
-                                ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
-                                ->timeout(8)
-                                ->withHeaders([
-                                    'Authorization' => 'Bearer ' . $apiKey,
-                                    'User-Agent' => 'Mozilla/5.0'
-                                ])
-                                ->get($this->getApiBase() . '/destination/city/' . $provinceId);
+                if ($isLive) {
+                    // LIVE: Komerce Shipping Cost API
+                    $response = Http::withoutVerifying()
+                                    ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
+                                    ->timeout(8)
+                                    ->withHeaders([
+                                        'x-api-key'  => $apiKey,
+                                        'Accept'     => 'application/json',
+                                        'User-Agent' => 'Mozilla/5.0',
+                                    ])
+                                    ->get('https://api.collaborator.komerce.id/tariff/api/v1/destination', [
+                                        'keyword'     => '',
+                                        'province_id' => $provinceId,
+                                        'type'        => 'subdistrict',
+                                    ]);
+                } else {
+                    // SANDBOX: Legacy RajaOngkir Komerce Proxy
+                    $response = Http::withoutVerifying()
+                                    ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
+                                    ->timeout(8)
+                                    ->withHeaders([
+                                        'Authorization' => 'Bearer ' . $apiKey,
+                                        'User-Agent'    => 'Mozilla/5.0',
+                                    ])
+                                    ->get('https://rajaongkir.komerce.id/api/v1/destination/city/' . $provinceId);
+                }
 
                 $json = $response->json();
-                
-                // Parse Komerce v1 structure and map to legacy RajaOngkir structure
-                if (isset($json['data']) && count($json['data']) > 0) {
+
+                if ($response->successful() && isset($json['data']) && count($json['data']) > 0) {
                     $results = array_map(function($item) {
                         return [
-                            'city_id' => $item['id'],
-                            'city_name' => $item['name'],
-                            'type' => 'Kota/Kabupaten' // Komerce API doesn't distinguish type in the basic endpoint
+                            'city_id'   => $item['id'] ?? $item['subdistrict_id'] ?? $item['city_id'] ?? '',
+                            'city_name' => $item['name'] ?? $item['subdistrict_name'] ?? $item['city_name'] ?? '',
+                            'type'      => $item['type'] ?? 'Kota/Kabupaten',
                         ];
                     }, $json['data']);
-                    
+
                     Cache::put($cacheKey, $results, now()->addHours(24));
                     return response()->json($results);
                 }
+
+                Log::warning('[ONGKIR] Cities API non-success', ['province' => $provinceId, 'status' => $response->status(), 'body' => substr($response->body(), 0, 500)]);
             } catch (\Exception $e) {
-                Log::warning('RajaOngkir Cities API unreachable for province ' . $provinceId . ': ' . $e->getMessage());
+                Log::warning('Komerce Cities API unreachable for province ' . $provinceId . ': ' . $e->getMessage());
             }
         }
 
@@ -204,7 +283,7 @@ class CheckoutApiController extends Controller
 
         // For other provinces, return error with helpful message
         return response()->json([
-            'error' => 'Tidak dapat memuat daftar kota. Silakan coba lagi atau hubungi admin untuk konfirmasi ongkir manual.',
+            'error'       => 'Tidak dapat memuat daftar kota. Silakan coba lagi atau hubungi admin untuk konfirmasi ongkir manual.',
             'province_id' => $provinceId,
         ], 503);
     }
@@ -230,39 +309,58 @@ class CheckoutApiController extends Controller
             ]);
         }
 
-        $apiKey = $this->getApiKey();
+        $apiKey = $this->getTariffApiKey();
+        $isLive = $this->isLiveMode();
+
         if (!$apiKey) {
-            Log::error('[ONGKIR] API Key belum dikonfigurasi di settings.');
-            return response()->json(['error' => 'API Key belum dikonfigurasi. Silakan hubungi admin.'], 500);
+            Log::error('[ONGKIR] Tariff API Key (Shipping Cost) belum dikonfigurasi di settings.');
+            return response()->json(['error' => 'API Key ongkir belum dikonfigurasi. Silakan hubungi admin.'], 500);
         }
 
-        // 304 = Kota Surabaya (default benar untuk AlatRumah)
-        $origin  = (int) Setting::get('rajaongkir_origin_city', 304);
-        $apiBase = $this->getApiBase();
+        $origin = (int) Setting::get('rajaongkir_origin_city', 304); // 304 = Surabaya
 
         Log::info('[ONGKIR] Request dikirim', [
+            'mode'        => $isLive ? 'LIVE' : 'SANDBOX',
             'origin'      => $origin,
             'destination' => $request->destination,
             'weight'      => $request->weight,
             'courier'     => $request->courier,
-            'api_base'    => $apiBase,
         ]);
 
         try {
-            $response = Http::withoutVerifying()
-                            ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
-                            ->timeout(12)
-                            ->withHeaders([
-                                'Authorization' => 'Bearer ' . $apiKey,
-                                'User-Agent' => 'Mozilla/5.0'
-                            ])
-                            ->asForm()
-                            ->post($this->getApiBase() . '/calculate/domestic-cost', [
-                                'origin'      => $origin,
-                                'destination' => $request->destination,
-                                'weight'      => $request->weight,
-                                'courier'     => strtolower($request->courier),
-                            ]);
+            if ($isLive) {
+                // LIVE: Komerce Shipping Cost API (GET)
+                $response = Http::withoutVerifying()
+                                ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
+                                ->timeout(12)
+                                ->withHeaders([
+                                    'x-api-key'  => $apiKey,
+                                    'Accept'     => 'application/json',
+                                    'User-Agent' => 'Mozilla/5.0',
+                                ])
+                                ->get('https://api.collaborator.komerce.id/tariff/api/v1/calculate', [
+                                    'origin_id'      => $origin,
+                                    'destination_id' => $request->destination,
+                                    'weight'         => $request->weight,
+                                    'courier_code'   => strtolower($request->courier),
+                                ]);
+            } else {
+                // SANDBOX: Legacy RajaOngkir Komerce Proxy (POST form data)
+                $response = Http::withoutVerifying()
+                                ->withOptions(['curl' => [CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4]])
+                                ->timeout(12)
+                                ->withHeaders([
+                                    'Authorization' => 'Bearer ' . $apiKey,
+                                    'User-Agent'    => 'Mozilla/5.0'
+                                ])
+                                ->asForm()
+                                ->post('https://rajaongkir.komerce.id/api/v1/calculate/domestic-cost', [
+                                    'origin'      => $origin,
+                                    'destination' => $request->destination,
+                                    'weight'      => $request->weight,
+                                    'courier'     => strtolower($request->courier),
+                                ]);
+            }
 
             $statusCode = $response->status();
             $json       = $response->json();
