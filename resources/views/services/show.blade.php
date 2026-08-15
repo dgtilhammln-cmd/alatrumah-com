@@ -735,156 +735,67 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); -web
 </section>
 
 
-{{-- ═══ KEUNGGULAN ═══ --}}
-<section class="sh-adv-section" id="keunggulan">
-    <div class="sh-adv-inner">
-        <div class="sh-adv-header">
-            <div>
-                <div class="cv-section-label">KEUNGGULAN</div>
-                <h2 class="cv-section-title" style="margin-top:.75rem;">Mengapa Pilih<br>Alat Rumah?</h2>
-            </div>
-            <p class="sh-adv-header-desc">Hadir untuk memenuhi semua kebutuhan rumah tangga Anda dengan kualitas terbaik dan pelayanan terpercaya dari ahlinya.</p>
+{{-- ════ MENGAPA ALATRUMAH.COM ════ --}}
+<style>
+    .ar-why { background:#fff; padding:5rem 0; }
+    .ar-why-inner { max-width:1200px; margin:0 auto; padding:0 1.5rem; }
+    .ar-why-header { text-align:center; margin-bottom:3rem; }
+    .ar-why-label { font-size:0.72rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:#0EA5E9; display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:0.75rem; }
+    .ar-why-title { font-size:clamp(1.75rem,3.5vw,2.75rem); font-weight:600; color:#0F172A; line-height:1.2; letter-spacing:-0.025em; }
+    .ar-why-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem; }
+    .ar-why-card { background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:20px; padding:1.75rem; display:flex; flex-direction:column; gap:0.75rem; transition:all 0.3s; }
+    .ar-why-card:hover { border-color:#0EA5E9; transform:translateY(-5px); box-shadow:0 16px 40px rgba(14,165,233,0.09); }
+    .ar-why-icon { width:46px; height:46px; background:#EFF6FF; border-radius:13px; display:flex; align-items:center; justify-content:center; color:#0EA5E9; }
+    .ar-why-card-title { font-size:0.9375rem; font-weight:700; color:#0F172A; }
+    .ar-why-card-desc { font-size:0.8125rem; color:#64748B; line-height:1.65; }
+    .ar-why-cta { text-align:center; margin-top:2.5rem; }
+    @media(max-width:768px) { .ar-why-grid { grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:480px) { .ar-why-grid { grid-template-columns:1fr; } }
+</style>
+<section class="ar-why">
+    <div class="ar-why-inner">
+        <div class="ar-why-header">
+            <div class="ar-why-label">Mengapa AlatRumah.com</div>
+            <h2 class="ar-why-title">Toko Alat Rumah Tangga<br>Terpercaya di Surabaya</h2>
         </div>
-
-        <div class="sh-adv-cards">
-            {{-- Card 1: Produk Berkualitas --}}
-            <div class="sh-adv-card accent">
-                <div class="sh-adv-card-icon white-bg">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                </div>
-                <div class="sh-adv-title white" style="margin-top:auto;">Produk Premium</div>
-                <div class="sh-adv-desc white">Kami hanya menyediakan produk alat rumah tangga dengan kualitas terbaik dan brand terpercaya.</div>
+        <div class="ar-why-grid">
+            <div class="ar-why-card" data-aos="fade-up">
+                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg></div>
+                <div class="ar-why-card-title">Produk Berkualitas</div>
+                <div class="ar-why-card-desc">Semua produk tersertifikasi dan telah diuji kualitasnya. Garansi resmi dari produsen.</div>
             </div>
-            {{-- Card 2: Garansi Resmi --}}
-            <div class="sh-adv-card">
-                <div class="sh-adv-card-icon blue-bg">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                </div>
-                <div class="sh-adv-title" style="margin-top:auto;">Garansi Resmi</div>
-                <div class="sh-adv-desc">Setiap pembelian produk dilengkapi dengan garansi resmi untuk menjamin ketenangan Anda.</div>
+            <div class="ar-why-card" data-aos="fade-up" data-aos-delay="80">
+                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg></div>
+                <div class="ar-why-card-title">Pengiriman Cepat</div>
+                <div class="ar-why-card-desc">Dikirim ke seluruh Indonesia dari Surabaya. Proses packing aman, pesanan tiba tepat waktu.</div>
             </div>
-            {{-- Card 3: Teknisi --}}
-            <div class="sh-adv-card">
-                <div class="sh-adv-card-icon blue-bg">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 10-16 0"/></svg>
-                </div>
-                <div class="sh-adv-title" style="margin-top:auto;">Teknisi Profesional</div>
-                <div class="sh-adv-desc">Layanan instalasi dan perbaikan dilakukan oleh teknisi bersertifikat dan berpengalaman.</div>
+            <div class="ar-why-card" data-aos="fade-up" data-aos-delay="160">
+                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg></div>
+                <div class="ar-why-card-title">Harga Terbaik</div>
+                <div class="ar-why-card-desc">Harga kompetitif langsung dari distributor resmi. Promo dan diskon spesial setiap hari.</div>
             </div>
-            {{-- Card 4: Pengiriman --}}
-            <div class="sh-adv-card accent-dark">
-                <div class="sh-adv-card-icon dark-bg">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                </div>
-                <div class="sh-adv-title light" style="margin-top:auto;">Pengiriman Aman</div>
-                <div class="sh-adv-desc white">Proses pengiriman yang cepat, aman, dan berasuransi hingga sampai ke rumah Anda.</div>
+            <div class="ar-why-card" data-aos="fade-up" data-aos-delay="240">
+                <div class="ar-why-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></svg></div>
+                <div class="ar-why-card-title">Layanan CS Responsif</div>
+                <div class="ar-why-card-desc">Tim customer service kami siap membantu via WhatsApp, cepat dan ramah setiap hari.</div>
             </div>
-            {{-- Card 5: Layanan Purna Jual (span 2) --}}
-            <div class="sh-adv-card sh-adv-card-span-2" style="grid-column:span 2; flex-direction:row; gap:2rem; align-items:center;">
-                <div class="sh-adv-card-icon blue-bg" style="flex-shrink:0; width:56px; height:56px;">
-                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-                </div>
-                <div>
-                    <div class="sh-adv-title" style="font-size:1.125rem; margin-bottom:.5rem;">Layanan Purna Jual Terpadu</div>
-                    <div class="sh-adv-desc">Kami tidak hanya menjual, tetapi memastikan alat rumah Anda beroperasi optimal dengan layanan konsultasi dan customer service responsif 24/7.</div>
-                </div>
-            </div>
+        </div>
+        <div class="ar-why-cta">
+            <a href="{{ route_locale('products') }}"
+                style="display:inline-flex;align-items:center;gap:0.5rem;background:#0EA5E9;color:#fff;padding:0.8rem 2rem;border-radius:50px;font-weight:700;font-size:0.9rem;text-decoration:none;box-shadow:0 4px 12px rgba(14,165,233,0.2);transition:all 0.3s;"
+                onmouseover="this.style.background='#0284C7';this.style.transform='translateY(-2px)'"
+                onmouseout="this.style.background='#0EA5E9';this.style.transform='translateY(0)'">
+                Belanja Sekarang
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </a>
         </div>
     </div>
-    {{-- RIGHT SIDEBAR (Bottom) - Removed Grid for Full Width --}}
-    <style>
-        /* Force bottom section to be 1fr */
-        .sh-bottom-section { grid-template-columns: 1fr; }
-    </style>
 </section>
-
 
 {{-- ═══ TESTIMONI ═══ --}}
 @include('components.testimonials')
-
-{{-- ═══ MELAYANI SELURUH INDONESIA ═══ --}}
-<section class="sh-coverage-section" id="jangkauan">
-
-
-    <div class="sh-coverage-inner">
-        <div class="sh-coverage-header-row">
-            <h2 class="sh-coverage-title">Melayani<br>seluruh Indonesia</h2>
-
-            <div class="sh-stats-grid">
-                <div class="sh-stat-card">
-                    <div class="sh-stat-top">
-                        <span class="sh-stat-label">Berdiri Sejak</span>
-                        <svg class="sh-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22h20M12 2v20M5 22V10l7-8 7 8v12M8 14h8M8 18h8"/></svg>
-                    </div>
-                    <div class="sh-stat-val"><span class="count-up" data-target="{{ \App\Models\Setting::get('founding_year') ?? '2013' }}">0</span></div>
-                </div>
-                <div class="sh-stat-card">
-                    <div class="sh-stat-top">
-                        <span class="sh-stat-label">Klien Aktif</span>
-                        <svg class="sh-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100 8 4 4 0 000-8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-                    </div>
-                    <div class="sh-stat-val"><span class="count-up" data-target="500">0</span><span>+</span></div>
-                </div>
-                <div class="sh-stat-card">
-                    <div class="sh-stat-top">
-                        <span class="sh-stat-label">Kota Dilayani</span>
-                        <svg class="sh-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    </div>
-                    <div class="sh-stat-val"><span class="count-up" data-target="50">0</span><span>+</span></div>
-                </div>
-                <div class="sh-stat-card">
-                    <div class="sh-stat-top">
-                        <span class="sh-stat-label">Tahun Garansi</span>
-                        <svg class="sh-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
-                    </div>
-                    <div class="sh-stat-val"><span class="count-up" data-target="15">0</span><span>+</span></div>
-                </div>
-            </div>
-        </div>{{-- end sh-coverage-header-row --}}
-
-        {{-- MAP: from admin upload --}}
-        @php $coverageMap = \App\Models\Setting::get('coverage_map'); @endphp
-        @if($coverageMap)
-            <div style="position:relative; width:100%; margin-top:-6rem;">
-                <img src="{{ asset('storage/'.$coverageMap) }}" alt="Peta Jangkauan Indonesia"
-                     style="display:block; width:100%; height:auto;" loading="lazy">
-            </div>
-        @endif
-    </div>{{-- end sh-coverage-inner --}}
-    
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const counters = document.querySelectorAll('.count-up');
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    const el = entry.target;
-                    if (el.classList.contains('counted')) return;
-                    el.classList.add('counted');
-                    const target = +el.getAttribute('data-target');
-                    const duration = 2000;
-                    const frameRate = 30;
-                    const totalFrames = Math.round((duration / 1000) * frameRate);
-                    let frame = 0;
-                    const counter = setInterval(() => {
-                        frame++;
-                        const progress = frame / totalFrames;
-                        const easeOut = progress * (2 - progress);
-                        const current = Math.round(target * easeOut);
-                        el.innerText = current;
-                        if (frame === totalFrames) {
-                            clearInterval(counter);
-                            el.innerText = target;
-                        }
-                    }, 1000 / frameRate);
-                }
-            });
-        }, { threshold: 0.5 });
-        
-        counters.forEach(c => observer.observe(c));
-    });
-    </script>
-</section>
 
 {{-- ═══ RELATED ═══ --}}
 @if($related->count() > 0)
