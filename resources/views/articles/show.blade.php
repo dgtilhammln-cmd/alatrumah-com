@@ -123,12 +123,21 @@ a { text-decoration: none; color: inherit; }
     margin: 0 auto;
     padding: 0 1.5rem;
 }
-.ar-featured-img img {
-    width:100%; height:auto; max-width:100%;
-    border-radius:16px;
-    border:1px solid var(--c-border);
-    display:block;
+.ar-featured-img-wrap {
+    width: 100%;
+    aspect-ratio: 16 / 9;  /* Wajib landscape 1280x720 */
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid var(--c-border);
     margin-top: 2.5rem;
+    background: var(--c-surface);
+}
+.ar-featured-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;       /* Potong otomatis, isi penuh */
+    object-position: center; /* Fokus ke tengah gambar */
+    display: block;
 }
 
 /* ════ BODY LAYOUT ════ */
@@ -394,6 +403,7 @@ a { text-decoration: none; color: inherit; }
     .ar-related-grid { grid-template-columns:1fr; }
     .ar-related-header { flex-direction:column; align-items:flex-start; }
     .ar-featured-img { padding:0 1rem; }
+    .ar-featured-img-wrap { border-radius:12px; margin-top:1.5rem; }
     .ar-cta-box { padding:2rem 1.25rem; }
 }
 </style>
@@ -452,12 +462,14 @@ a { text-decoration: none; color: inherit; }
     </div>
 </section>
 
-{{-- ════ FEATURED IMAGE ════ --}}
+{{-- ════ FEATURED IMAGE — Landscape 16:9 (1280×720) ════ --}}
 @if($article->image)
 <div class="ar-featured-img">
-    <img src="{{ asset('storage/' . $article->image) }}"
-         alt="{{ $trans?->thumbnail_alt ?? ($article->alt_text ?? ($trans?->title ?? $article->title)) }}"
-         loading="eager">
+    <div class="ar-featured-img-wrap">
+        <img src="{{ asset('storage/' . $article->image) }}"
+             alt="{{ $trans?->thumbnail_alt ?? ($article->alt_text ?? ($trans?->title ?? $article->title)) }}"
+             loading="eager">
+    </div>
 </div>
 @endif
 
