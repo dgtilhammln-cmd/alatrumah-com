@@ -64,7 +64,7 @@ class AccountController extends Controller
     public function orders()
     {
         $user   = Auth::user();
-        $orders = $user->orders()->with(['items.product', 'payment', 'shipment'])->latest()->paginate(10);
+        $orders = $user->orders()->with(['items.product', 'payment', 'shipment'])->latest()->get();
         return view('account.orders', compact('user', 'orders'));
     }
 
@@ -102,24 +102,40 @@ class AccountController extends Controller
                     ];
                     $courierCode = $courierCodeMap[$rawCourier] ?? $rawCourier;
 
-                    $baseUrl = 'https://rajaongkir.komerce.id/api/v1';
-                    $trackUrl = $baseUrl . '/track/waybill?awb=' . urlencode($order->shipment->tracking_number) . '&courier=' . urlencode($courierCode);
-                    $response = \Illuminate\Support\Facades\Http::withoutVerifying()
-                        ->timeout(10)
-                        ->withHeaders(['Authorization' => 'Bearer ' . $apiKey])
-                        ->post($trackUrl);
+                    $mode = \App\Models\Setting::get('komerce_mode', 'sandbox');
+                    $isLive = ($mode === 'live');
+
+                    if ($isLive) {
+                        $baseUrl = 'https://api.collaborator.komerce.id';
+                        $trackUrl = $baseUrl . '/order/api/v1/orders/history-airway-bill';
+                        $response = \Illuminate\Support\Facades\Http::withoutVerifying()
+                            ->timeout(10)
+                            ->withHeaders(['x-api-key' => $apiKey, 'Accept' => 'application/json'])
+                            ->get($trackUrl, [
+                                'awb' => $order->shipment->tracking_number,
+                                'courier' => $courierCode,
+                            ]);
+                    } else {
+                        $baseUrl = 'https://rajaongkir.komerce.id/api/v1';
+                        $trackUrl = $baseUrl . '/track/waybill?awb=' . urlencode($order->shipment->tracking_number) . '&courier=' . urlencode($courierCode);
+                        $response = \Illuminate\Support\Facades\Http::withoutVerifying()
+                            ->timeout(10)
+                            ->withHeaders(['key' => $apiKey, 'Accept' => 'application/json', 'Content-Type' => 'application/x-www-form-urlencoded'])
+                            ->post($trackUrl);
+                    }
                     $json = $response->json();
                     $meta = $json['meta'] ?? [];
                     $data = $json['data'] ?? null;
-                    if ($data && ($meta['code'] ?? 0) == 200) {
-                        $manifest = $data['manifest'] ?? [];
+                    if ($data) {
+                        $manifest = $data['manifest'] ?? $data['history'] ?? [];
                         $delivery = $data['delivery_status'] ?? [];
+                        $summary  = $data['summary'] ?? $data;
                         $tracking = [
-                            'status'   => $delivery['status'] ?? ($data['summary']['status'] ?? ''),
+                            'status'   => $delivery['status'] ?? ($summary['status'] ?? ''),
                             'manifest' => array_map(fn($m) => [
-                                'date'  => ($m['manifest_date'] ?? '') . ' ' . ($m['manifest_time'] ?? ''),
-                                'desc'  => $m['manifest_description'] ?? '-',
-                                'city'  => $m['city_name'] ?? '',
+                                'date'  => ($m['manifest_date'] ?? $m['date'] ?? '') . ' ' . ($m['manifest_time'] ?? $m['time'] ?? ''),
+                                'desc'  => trim($m['manifest_description'] ?? $m['description'] ?? '-'),
+                                'city'  => $m['city_name'] ?? $m['location'] ?? '',
                             ], $manifest),
                         ];
                     }

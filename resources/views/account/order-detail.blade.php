@@ -28,13 +28,39 @@
 .summary-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--c-muted); margin-bottom: 0.5rem; }
 .summary-row.total { font-size: 1.1rem; font-weight: 800; color: var(--c-accent); margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--c-border); }
 
-.timeline { position: relative; padding-left: 1.5rem; }
-.timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: #E2E8F0; }
-.tl-item { position: relative; margin-bottom: 1.5rem; }
-.tl-item::before { content: ''; position: absolute; left: -1.8rem; top: 0.2rem; width: 12px; height: 12px; border-radius: 50%; background: var(--c-accent); border: 2px solid #fff; box-shadow: 0 0 0 2px var(--c-accent); }
-.tl-date { font-size: 0.75rem; color: var(--c-muted); margin-bottom: 0.25rem; font-weight: 600; }
-.tl-desc { font-size: 0.9rem; color: var(--c-text); }
-.tl-city { font-size: 0.8rem; color: var(--c-muted); margin-top: 0.25rem; }
+/* Shopee-style Tracking & Address Card */
+.tr-card { background: #fff; border: 1px solid var(--c-border); border-radius: 12px; display: flex; overflow: hidden; margin-bottom: 1.5rem; }
+.tr-left { width: 35%; padding: 1.5rem; border-right: 1px solid var(--c-border); background: #FAFAFA; }
+.tr-right { width: 65%; padding: 1.5rem; position: relative; }
+
+.tr-title { font-size: 1.1rem; font-weight: 700; color: var(--c-text); margin-bottom: 1.25rem; }
+.tr-addr-name { font-weight: 700; color: var(--c-text); margin-bottom: 0.5rem; font-size: 0.95rem; }
+.tr-addr-phone { color: var(--c-muted); margin-bottom: 0.5rem; font-size: 0.9rem; }
+.tr-addr-text { color: var(--c-text); font-size: 0.9rem; line-height: 1.5; }
+
+.tr-courier-info { position: absolute; top: 1.5rem; right: 1.5rem; text-align: right; }
+.tr-courier-name { font-weight: 700; color: var(--c-muted); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.1rem; }
+.tr-courier-awb { font-size: 0.85rem; color: var(--c-muted); letter-spacing: 0.05em; }
+
+.tr-timeline { margin-top: 2rem; position: relative; padding-left: 1.5rem; }
+.tr-timeline::before { content: ''; position: absolute; left: 0.6rem; top: 0.5rem; bottom: 0; width: 1px; background: #E2E8F0; }
+
+.tr-tl-item { position: relative; margin-bottom: 1.25rem; display: flex; gap: 1rem; align-items: flex-start; }
+.tr-tl-item:last-child { margin-bottom: 0; }
+.tr-tl-icon { position: absolute; left: -1.5rem; top: 0.1rem; width: 1.2rem; height: 1.2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #fff; }
+.tr-tl-icon.active { background: #10B981; color: #fff; left: -1.75rem; width: 1.7rem; height: 1.7rem; top: -0.1rem; border: 2px solid #fff; box-shadow: 0 0 0 1px #10B981; }
+.tr-tl-icon.truck { background: #fff; color: #94A3B8; border: 1px solid #CBD5E1; }
+.tr-tl-icon.dot { background: #CBD5E1; width: 0.6rem; height: 0.6rem; left: -1.2rem; top: 0.4rem; border: none; }
+
+.tr-tl-content { flex: 1; }
+.tr-tl-time { font-size: 0.8rem; color: var(--c-muted); margin-bottom: 0.1rem; font-weight: 500; }
+.tr-tl-time.active { color: #10B981; }
+.tr-tl-desc { font-size: 0.9rem; color: var(--c-text); line-height: 1.4; }
+.tr-tl-desc.active { color: #10B981; font-weight: 600; }
+.tr-tl-city { font-size: 0.8rem; color: var(--c-muted); margin-top: 0.2rem; }
+
+.tr-tl-more { display: inline-block; margin-top: 1rem; color: #0284C7; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
+
 </style>
 
 <div class="mb-4">
@@ -76,51 +102,8 @@
                 @endforeach
             </div>
 
-            @if($order->shipment)
-            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--c-text);">Informasi Pengiriman</h3>
-            <div style="background: #F8FAFC; padding: 1.25rem; border-radius: 10px; border: 1px solid #E2E8F0; margin-bottom: 2rem;">
-                <div style="margin-bottom: 1rem; display: flex; justify-content: space-between;">
-                    <div>
-                        <div style="font-size: 0.8rem; color: var(--c-muted);">Kurir</div>
-                        <div style="font-weight: 700; color: var(--c-text);">{{ strtoupper($order->shipment->courier_name) }} {{ strtoupper($order->shipment->courier_service ?? '') }}</div>
-                    </div>
-                    @if($order->shipment->tracking_number)
-                    <div style="text-align: right;">
-                        <div style="font-size: 0.8rem; color: var(--c-muted);">No. Resi</div>
-                        <div style="font-weight: 700; color: var(--c-accent); font-family: monospace; font-size: 1.1rem;">{{ $order->shipment->tracking_number }}</div>
-                        <a href="{{ route('cek-resi', ['awb' => $order->shipment->tracking_number, 'courier' => $order->shipment->courier_name]) }}" style="display:inline-block; margin-top:0.3rem; background:var(--c-accent); color:#fff; font-size:0.75rem; padding:0.3rem 0.6rem; border-radius:6px; text-decoration:none; font-weight:600;">Lacak di Cek Resi &rarr;</a>
-                    </div>
-                    @endif
-                </div>
-
-                @if($tracking && !empty($tracking['manifest']))
-                    <div style="margin-top: 1.5rem; border-top: 1px dashed #CBD5E1; padding-top: 1.5rem;">
-                        <div class="timeline">
-                            @foreach($tracking['manifest'] as $tl)
-                            <div class="tl-item">
-                                <div class="tl-date">{{ $tl['date'] }}</div>
-                                <div class="tl-desc">{{ $tl['desc'] }}</div>
-                                @if(!empty($tl['city']))
-                                <div class="tl-city">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:inline-block; vertical-align:middle; margin-right:2px; color:var(--c-accent);"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-8-4.5-8-11a8 8 0 1 1 16 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg>
-                                    {{ $tl['city'] }}
-                                </div>
-                                @endif
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                @elseif($order->shipment->tracking_number)
-                    <div style="font-size: 0.85rem; color: var(--c-muted); text-align: center; padding: 1rem 0;">
-                        Tracking belum tersedia dari ekspedisi. Coba beberapa saat lagi.
-                    </div>
-                @else
-                    <div style="font-size: 0.85rem; color: var(--c-muted); text-align: center; padding: 1rem 0;">
-                        Nomor resi belum diinput oleh admin.
-                    </div>
-                @endif
             </div>
-            @endif
+
 
         </div>
 
@@ -167,25 +150,100 @@
                 </div>
             </div>
 
-            <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: var(--c-text);">Alamat Pengiriman</h3>
-            <div style="background: var(--c-surface); padding: 1rem; border-radius: 10px; font-size: 0.85rem; color: var(--c-text); line-height: 1.5;">
-                <div style="font-weight: 700; margin-bottom: 0.25rem;">{{ $order->shipping_address['receiver_name'] ?? '-' }}</div>
-                <div style="color: var(--c-muted); margin-bottom: 0.5rem;">{{ $order->shipping_address['phone'] ?? '-' }}</div>
-                <div>{{ $order->shipping_address['full_address'] ?? '-' }}</div>
-                <div style="color: var(--c-muted); margin-top: 0.5rem;">
-                    {{ $order->shipping_address['district'] ?? '' }}, {{ $order->shipping_address['city'] ?? '' }}<br>
-                    {{ $order->shipping_address['province'] ?? '' }} {{ $order->shipping_address['postal_code'] ?? '' }}
-                </div>
             </div>
+
             
         </div>
 
     </div>
 </div>
 
+<div class="tr-card">
+    <div class="tr-left">
+        <h3 class="tr-title">Alamat Pengiriman</h3>
+        <div class="tr-addr-name">{{ $order->shipping_address['receiver_name'] ?? '-' }}</div>
+        <div class="tr-addr-phone">{{ $order->shipping_address['phone'] ?? '-' }}</div>
+        <div class="tr-addr-text">
+            {{ $order->shipping_address['full_address'] ?? '-' }}<br>
+            {{ $order->shipping_address['district'] ?? '' }}, {{ $order->shipping_address['city'] ?? '' }}<br>
+            {{ $order->shipping_address['province'] ?? '' }} {{ $order->shipping_address['postal_code'] ?? '' }}
+        </div>
+    </div>
+    
+    <div class="tr-right">
+        @if($order->shipment)
+        <div class="tr-courier-info">
+            <div class="tr-courier-name">{{ strtoupper($order->shipment->courier_name) }} {{ strtoupper($order->shipment->courier_service ?? '') }}</div>
+            <div class="tr-courier-awb">{{ $order->shipment->tracking_number ?? 'Resi belum diinput' }}</div>
+        </div>
+
+        @if($tracking && !empty($tracking['manifest']))
+            <div class="tr-timeline">
+                @php
+                    $manifests = array_reverse($tracking['manifest']);
+                    $limit = 3;
+                    $hasMore = count($manifests) > $limit;
+                    $shown = array_slice($manifests, 0, $limit);
+                    $hidden = array_slice($manifests, $limit);
+                @endphp
+
+                @foreach($shown as $index => $tl)
+                <div class="tr-tl-item">
+                    @if($index === 0)
+                        <div class="tr-tl-icon active">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                    @elseif($index === 1)
+                        <div class="tr-tl-icon truck">
+                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                        </div>
+                    @else
+                        <div class="tr-tl-icon dot"></div>
+                    @endif
+
+                    <div class="tr-tl-content">
+                        <div class="tr-tl-time {{ $index === 0 ? 'active' : '' }}">{{ $tl['date'] }}</div>
+                        <div class="tr-tl-desc {{ $index === 0 ? 'active' : '' }}">{{ $tl['desc'] }}</div>
+                        @if(!empty($tl['city']))
+                        <div class="tr-tl-city">{{ $tl['city'] }}</div>
+                        @endif
+                    </div>
+                </div>
+                @endforeach
+
+                @if($hasMore)
+                <div id="hiddenTimeline" style="display:none;">
+                    @foreach($hidden as $index => $tl)
+                    <div class="tr-tl-item">
+                        <div class="tr-tl-icon dot"></div>
+                        <div class="tr-tl-content">
+                            <div class="tr-tl-time">{{ $tl['date'] }}</div>
+                            <div class="tr-tl-desc">{{ $tl['desc'] }}</div>
+                            @if(!empty($tl['city']))
+                            <div class="tr-tl-city">{{ $tl['city'] }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                <a class="tr-tl-more" id="showMoreBtn" onclick="document.getElementById('hiddenTimeline').style.display='block'; this.style.display='none';">Lihat Lainnya</a>
+                @endif
+            </div>
+        @elseif($order->shipment->tracking_number)
+            <div style="margin-top:4rem; color:var(--c-muted); text-align:center;">Tracking belum tersedia atau masih diproses ekspedisi.</div>
+        @endif
+        
+        @endif
+    </div>
+</div>
+
 <style>
 @media(max-width: 768px) {
     .od-body { grid-template-columns: 1fr !important; }
+    .tr-card { flex-direction: column; }
+    .tr-left, .tr-right { width: 100%; border-right: none; }
+    .tr-left { border-bottom: 1px solid var(--c-border); }
+    .tr-courier-info { position: static; text-align: left; margin-bottom: 1rem; }
 }
 </style>
 @endsection
