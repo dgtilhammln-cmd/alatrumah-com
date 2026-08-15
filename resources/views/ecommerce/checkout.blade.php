@@ -871,15 +871,24 @@ label:focus{outline:none !important;box-shadow:none !important;}
             .then(data => {
                 if (data && data.address) {
                     status.style.color = '#16A34A';
-                    status.innerText = '✓ Lokasi berhasil ditemukan! Provinsi & Kota diisi otomatis.';
+                    status.innerText = '✓ Lokasi ditemukan! Provinsi, Kota & Kecamatan diisi otomatis. Harap isi Alamat Lengkap secara manual.';
                     
                     const addr = data.address;
                     
-                    // Fill address detail
-                    document.getElementById('new_addr_full').value = data.display_name;
+                    // Isi Kode Pos & Kecamatan otomatis dari GPS
                     if (addr.postcode) document.getElementById('new_addr_postal').value = addr.postcode;
                     if (addr.village || addr.suburb || addr.town)
                         document.getElementById('district_name').value = addr.village || addr.suburb || addr.town || '';
+
+                    // TIDAK isi alamat lengkap — user harus isi sendiri
+                    const fullAddrField = document.getElementById('new_addr_full');
+                    if (fullAddrField) {
+                        fullAddrField.value = '';
+                        fullAddrField.placeholder = '⚠ Wajib isi manual: Nama jalan, nomor rumah, RT/RW, dll.';
+                        fullAddrField.style.borderColor = '#F59E0B';
+                        fullAddrField.style.boxShadow = '0 0 0 3px rgba(245,158,11,0.2)';
+                        setTimeout(() => fullAddrField.focus(), 400);
+                    }
 
                     // Auto-select Province from dropdown
                     const rawProv = addr.state || '';
