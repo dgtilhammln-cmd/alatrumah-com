@@ -101,13 +101,9 @@
                 </div>
                 @endforeach
             </div>
+            </div> <!-- END KIRI -->
 
-            </div>
-
-
-        </div>
-
-        {{-- KANAN: RINGKASAN & ALAMAT --}}
+        {{-- KANAN: RINGKASAN --}}
         <div>
             @if($order->status->value === 'pending' && $order->payment && $order->payment->status->value === 'pending')
                 <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem;">
@@ -148,15 +144,9 @@
                     <span>Total Belanja</span>
                     <span>Rp {{ number_format($order->total, 0, ',', '.') }}</span>
                 </div>
-            </div>
-
-            </div>
-
-            
-        </div>
-
-    </div>
-</div>
+            </div> <!-- END KANAN -->
+    </div> <!-- END od-body -->
+</div> <!-- END od-card -->
 
 <div class="tr-card">
     <div class="tr-left">
