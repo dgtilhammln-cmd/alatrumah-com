@@ -40,19 +40,41 @@ class AdminSettingsController extends Controller
         foreach ($request->allFiles() as $key => $file) {
             if (!$file->isValid()) continue;
 
-            // Handle favicon separately (ico/png/svg, with unique timestamp to bust browser cache)
+            // Handle favicon separately — convert to PNG via GD for max compatibility
             if ($key === 'favicon') {
-                $ext = $file->getClientOriginalExtension();
-                $filename = 'favicon_' . time() . '.' . $ext;
-                $path = 'settings/' . $filename;
-                $file->storeAs('public/settings', $filename);
-                // Also copy to root public directory for direct access
-                try {
-                    copy($file->getRealPath(), public_path('favicon.ico'));
-                } catch (\Exception $e) {}
+                $ext      = strtolower($file->getClientOriginalExtension());
+                $realPath = $file->getRealPath();
+
+                // Always save as PNG for browser favicon compatibility (unless SVG)
+                if ($ext === 'svg') {
+                    $filename = 'favicon_' . time() . '.svg';
+                    $path     = 'settings/' . $filename;
+                    Storage::disk('public')->put($path, file_get_contents($realPath));
+                } else {
+                    // Convert to PNG via GD
+                    $img = $this->gdLoad($file);
+                    ob_start();
+                    imagepng($img, null, 9);
+                    $pngData = ob_get_clean();
+                    imagedestroy($img);
+
+                    $filename = 'favicon_' . time() . '.png';
+                    $path     = 'settings/' . $filename;
+                    Storage::disk('public')->put($path, $pngData);
+
+                    // Copy PNG to public_html root as favicon.ico (browsers accept PNG too)
+                    $storedFullPath = storage_path('app/public/' . $path);
+                    $publicHtmlPath = base_path('public_html/favicon.ico');
+                    $publicPath     = public_path('favicon.ico');
+                    try { copy($storedFullPath, $publicHtmlPath); } catch (\Exception $e) {}
+                    try { copy($storedFullPath, $publicPath); } catch (\Exception $e) {}
+                }
+
+                Setting::clearCache();
                 Setting::set($key, $path, 'image');
                 continue;
             }
+
 
             // Handle compro (PDF/Doc) separately
             if ($key === 'compro') {

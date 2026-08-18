@@ -445,9 +445,9 @@
             </form>
         @else
             {{-- Non-ecommerce / Custom Service --}}
-            <div class="pd-price-box" style="background: linear-gradient(135deg, #FFF7ED, #ffffff); border-color: #FED7AA;">
-                <div class="pd-price-current" style="color: #EA580C; font-size:2rem;">Konsultasi Gratis</div>
-                <div style="font-size:1rem; color:#9A3412; width:100%;">Tim ahli kami siap memberikan penawaran terbaik untuk Anda.</div>
+            <div class="pd-price-box" style="background: linear-gradient(135deg, #EFF6FF, #ffffff); border-color: #BFDBFE;">
+                <div class="pd-price-current" style="color: #2563EB; font-size:2rem;">Konsultasi Gratis</div>
+                <div style="font-size:1rem; color:#1E3A8A; width:100%;">Tim ahli kami siap memberikan penawaran terbaik untuk Anda.</div>
             </div>
             
             <a href="javascript:void(0)" onclick="openOrderModal('Produk: {{ addslashes($service->name) }}')" class="pd-btn pd-btn-primary" style="width:100%;">

@@ -40,13 +40,13 @@ class AdminAnalyticsController extends Controller
 
     public function data(Request $request)
     {
-        $period = $request->input('period', '30');
+        $period = $request->input('period', '365');
         $from   = match($period) {
             '7'      => now()->subDays(6)->startOfDay(),
             '30'     => now()->subDays(29)->startOfDay(),
             '365'    => now()->subDays(364)->startOfDay(),
             'custom' => \Carbon\Carbon::parse($request->input('from'))->startOfDay(),
-            default  => now()->subDays(29)->startOfDay(),
+            default  => now()->subDays(364)->startOfDay(),
         };
         $to = $period === 'custom'
             ? \Carbon\Carbon::parse($request->input('to'))->endOfDay()

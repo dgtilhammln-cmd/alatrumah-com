@@ -11,8 +11,9 @@
     if (!empty($adminFavicon)) {
         $favPath = ltrim($adminFavicon, '/');
         $adminFaviconUrl = asset('storage/' . $favPath) . '?v=' . md5($adminFavicon);
-        $favExt  = pathinfo($favPath, PATHINFO_EXTENSION);
-        $adminFavType = $favExt === 'png' ? 'image/png' : ($favExt === 'svg' ? 'image/svg+xml' : 'image/x-icon');
+        $favExt  = strtolower(pathinfo($favPath, PATHINFO_EXTENSION));
+        $favTypeMap = ['png' => 'image/png', 'svg' => 'image/svg+xml', 'webp' => 'image/webp', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg'];
+        $adminFavType = $favTypeMap[$favExt] ?? 'image/x-icon';
     } else {
         $adminFaviconUrl = asset('favicon.ico') . '?v=1';
         $adminFavType = 'image/x-icon';
@@ -50,9 +51,12 @@
 }
 body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text1); min-height: 100vh; display: flex; }
 
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: #0EA5E9; border-radius: 4px; }
+/* ── Global Scrollbar (content area) ── */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: #EEF2FF; border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #1B6FE8, #1254C0); border-radius: 10px; border: 1.5px solid #EEF2FF; }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #1254C0, #0E3E96); }
+* { scrollbar-width: thin; scrollbar-color: #1B6FE8 #EEF2FF; }
 /* ═══════ SIDEBAR PREMIUM BLUE ═══════ */
 #sidebar{
   width:240px;height:100vh;
@@ -74,10 +78,11 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
 .sb-search input:focus{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35)}
 .sb-search input::placeholder{color:rgba(255,255,255,.45)}
 /* Nav */
-.sb-nav{flex:1;padding:.25rem 0;overflow-y:auto}
-.sb-nav::-webkit-scrollbar{width:3px}
-.sb-nav::-webkit-scrollbar-track{background:transparent}
-.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:10px}
+.sb-nav{flex:1;padding:.25rem 0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.35) transparent;}
+.sb-nav::-webkit-scrollbar{width:5px}
+.sb-nav::-webkit-scrollbar-track{background:rgba(0,0,0,.12);border-radius:10px;margin:4px 0}
+.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.35);border-radius:10px;border:1px solid rgba(255,255,255,.08)}
+.sb-nav::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.55)}
 .sb-sec{font-size:.575rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.4);padding:.875rem 1.375rem .3rem}
 /* Inactive link */
 .sb-link{

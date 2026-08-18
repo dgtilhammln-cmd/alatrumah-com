@@ -46,8 +46,8 @@
   </div>
 
   {{-- TABLE CARD (LIST VIEW) --}}
-  <div id="view-list" class="view-container" style="background:#fff;border-radius:24px;box-shadow:0 2px 20px rgba(0,0,0,0.04);overflow:hidden;display:block;">
-    <table style="width:100%;border-collapse:collapse;">
+  <div id="view-list" class="view-container" style="background:#fff;border-radius:24px;box-shadow:0 2px 20px rgba(0,0,0,0.04);overflow-x:auto;display:block;">
+    <table style="width:100%;border-collapse:collapse;min-width:1000px;">
       <thead>
         <tr style="background:#F8FAFC;">
           <th
@@ -110,7 +110,12 @@
               </form>
             </td>
             <td style="padding:1.25rem 1.5rem;text-align:center;">
-              <span style="font-size:.875rem;font-weight:700;color:#334155;">{{ $s->order }}</span>
+              <form action="{{ route('admin.services.order', $s->id) }}" method="POST" style="margin:0;">
+                @csrf
+                @method('PATCH')
+                <input type="number" name="order" value="{{ $s->order }}" min="0" onchange="this.form.submit()" 
+                       style="width:60px;padding:.375rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.875rem;font-weight:700;color:#334155;outline:none;background:transparent;">
+              </form>
             </td>
             <td style="padding:1.25rem 1.5rem;text-align:center;">
               @if($s->is_active)
@@ -200,7 +205,14 @@
                    <form action="{{ route('admin.services.stock', $s->id) }}" method="POST" style="margin:0;">
                        @csrf @method('PATCH')
                        <input type="number" name="stock" value="{{ $s->stock }}" min="0" onchange="this.form.submit()" 
-                              style="width:60px;padding:.25rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.85rem;font-weight:700;color:{{ $s->stock > 0 ? '#10B981' : '#EF4444' }};outline:none;background:#F8FAFC;">
+                              style="width:50px;padding:.25rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.85rem;font-weight:700;color:{{ $s->stock > 0 ? '#10B981' : '#EF4444' }};outline:none;background:#F8FAFC;">
+                   </form>
+                   
+                   <span style="font-size:.75rem;color:#94A3B8;font-weight:700;margin-left:.25rem;">URT:</span>
+                   <form action="{{ route('admin.services.order', $s->id) }}" method="POST" style="margin:0;">
+                       @csrf @method('PATCH')
+                       <input type="number" name="order" value="{{ $s->order }}" min="0" onchange="this.form.submit()" 
+                              style="width:50px;padding:.25rem;border:1px solid #E2E8F0;border-radius:6px;text-align:center;font-family:'Montserrat',sans-serif;font-size:.85rem;font-weight:700;color:#334155;outline:none;background:#F8FAFC;">
                    </form>
                 </div>
                 <div style="display:flex;gap:.375rem;">

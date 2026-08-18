@@ -238,6 +238,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/leads/{lead}/notes',   [AdminLeadController::class, 'updateNote'])->name('admin.leads.notes');
         Route::delete('/leads/{lead}',       [AdminLeadController::class, 'destroy'])->name('admin.leads.destroy');
 
+        Route::patch('services/{service}/order', [AdminServiceController::class, 'updateOrder'])->name('admin.services.order');
         Route::patch('services/{service}/stock', [AdminServiceController::class, 'updateStock'])->name('admin.services.stock');
         Route::delete('services/{service}/gallery-image', [AdminServiceController::class, 'deleteGalleryImage'])->name('admin.services.gallery.delete');
         Route::resource('services', AdminServiceController::class)->names([

@@ -18,6 +18,16 @@
 <form method="POST" action="{{ $s ? route('admin.services.update',$s) : route('admin.services.store') }}" enctype="multipart/form-data" id="svc-form">
 @csrf @if($s) @method('PUT') @endif
 
+@if($errors->any())
+  <div style="background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;color:#991B1B;font-size:.875rem;line-height:1.6;">
+    <strong style="display:block;margin-bottom:.5rem;">⚠️ DOUBLE CEK DIBUTUHKAN:</strong>
+    <ul style="margin:0;padding-left:1.25rem;">
+      @foreach($errors->all() as $error)
+        <li style="margin-bottom:.25rem;">{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
+@endif
 <div id="validation-alert" style="display:none;background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;color:#991B1B;font-size:.875rem;line-height:1.6;"></div>
 
 <div style="display:grid;grid-template-columns:1fr 340px;gap:1.75rem;align-items:start;">
@@ -66,8 +76,8 @@
   {{-- Rich Text Editor --}}
   <div style="background:#fff;border-radius:20px;box-shadow:0 2px 20px rgba(0,0,0,0.04);overflow:hidden;">
     <div style="padding:1.25rem 1.75rem;border-bottom:1px solid #F1F5F9;display:flex;align-items:center;gap:.625rem;">
-      <div style="width:32px;height:32px;background:rgba(139,92,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-        <svg width="16" height="16" fill="none" stroke="#8B5CF6" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <div style="width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="16" height="16" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       </div>
       <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Deskripsi Lengkap</h3>
     </div>
@@ -79,15 +89,15 @@
   {{-- Spesifikasi Produk --}}
   <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04); margin-bottom:1.5rem;">
     <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.5rem;">
-      <div style="width:32px;height:32px;background:rgba(20,184,166,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-        <svg width="16" height="16" fill="none" stroke="#14B8A6" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+      <div style="width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="16" height="16" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
       </div>
       <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Data E-Commerce / Harga</h3>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.125rem;">
       <div style="grid-column: span 2;">
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Kategori</label>
-        <select name="product_category_id" style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+        <select name="product_category_id" required style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
           <option value="">- Tanpa Kategori -</option>
           @foreach($categories as $cat)
             <option value="{{ $cat->id }}" {{ old('product_category_id', $s?->product_category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -142,8 +152,8 @@
   <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
       <div style="display:flex;align-items:center;gap:.625rem;">
-        <div style="width:32px;height:32px;background:rgba(245,158,11,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-          <svg width="16" height="16" fill="none" stroke="#F59E0B" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <div style="width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <svg width="16" height="16" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
         </div>
         <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Spesifikasi Produk</h3>
       </div>
@@ -175,12 +185,12 @@
   <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
       <div style="display:flex;align-items:center;gap:.625rem;">
-        <div style="width:32px;height:32px;background:rgba(16,185,129,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-          <svg width="16" height="16" fill="none" stroke="#10B981" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div style="width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <svg width="16" height="16" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </div>
         <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Tanya Jawab (FAQ)</h3>
       </div>
-      <button type="button" onclick="addFaq()" style="display:inline-flex;align-items:center;gap:.375rem;font-size:.78rem;font-weight:700;color:#10B981;background:rgba(16,185,129,0.08);border:none;border-radius:8px;padding:.4rem .875rem;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='rgba(16,185,129,0.15)'" onmouseout="this.style.background='rgba(16,185,129,0.08)'">
+      <button type="button" onclick="addFaq()" style="display:inline-flex;align-items:center;gap:.375rem;font-size:.78rem;font-weight:700;color:#3B82F6;background:rgba(59,130,246,0.08);border:none;border-radius:8px;padding:.4rem .875rem;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='rgba(59,130,246,0.15)'" onmouseout="this.style.background='rgba(59,130,246,0.08)'">
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Tambah FAQ
       </button>
@@ -218,8 +228,8 @@
   {{-- Status & Urutan --}}
   <div style="background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
     <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.25rem;">
-      <div style="width:32px;height:32px;background:rgba(16,185,129,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-        <svg width="16" height="16" fill="none" stroke="#10B981" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <div style="width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="16" height="16" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
       <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Status Publikasi</h3>
     </div>
@@ -256,8 +266,8 @@
   {{-- Brosur --}}
   <div style="background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
     <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.25rem;">
-      <div style="width:32px;height:32px;background:rgba(239,68,68,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-        <svg width="16" height="16" fill="none" stroke="#EF4444" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <div style="width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="16" height="16" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       </div>
       <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">File Brosur</h3>
     </div>
@@ -273,8 +283,8 @@
   {{-- Gallery --}}
   <div style="background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
     <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.125rem;">
-      <div style="width:28px;height:28px;background:rgba(139,92,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-        <svg width="14" height="14" fill="none" stroke="#8B5CF6" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <div style="width:28px;height:28px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="14" height="14" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
       </div>
       <h3 style="font-size:.8rem;font-weight:800;color:#1E293B;margin:0;">Foto Gallery</h3>
     </div>
@@ -284,7 +294,7 @@
 
     {{-- Upload trigger --}}
     <label style="display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1rem;border:2px dashed #E4E7F0;border-radius:12px;cursor:pointer;transition:all .2s;text-align:center;"
-           onmouseover="this.style.borderColor='#8B5CF6';this.style.background='#FAFAFF'"
+           onmouseover="this.style.borderColor='#3B82F6';this.style.background='#F8FAFF'"
            onmouseout="this.style.borderColor='#E4E7F0';this.style.background='transparent'">
       <svg width="22" height="22" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
       <span style="font-size:.78rem;color:#64748B;font-weight:600;">Upload Foto Gallery</span>
@@ -297,6 +307,21 @@
 </div>
 </div>
 </form>
+
+{{-- CONFIRMATION MODAL --}}
+<div id="confirmModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);z-index:9999;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;">
+  <div style="background:#fff;border-radius:24px;width:90%;max-width:400px;padding:2rem;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.1);transform:scale(0.95);transition:transform 0.2s;" id="confirmModalBox">
+    <div style="width:64px;height:64px;background:rgba(59,130,246,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+      <svg width="32" height="32" fill="none" stroke="#3B82F6" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+    <h3 style="font-size:1.25rem;font-weight:800;color:#1E293B;margin:0 0 .5rem;">Cek Kembali Data Anda</h3>
+    <p style="font-size:.9rem;color:#64748B;margin:0 0 1.5rem;line-height:1.5;">Apakah Anda yakin semua data (kategori, harga, spek produk, FAQ, dan foto) sudah terisi dengan benar sesuai tema?</p>
+    <div style="display:flex;gap:.75rem;">
+      <button type="button" onclick="closeConfirmModal()" style="flex:1;padding:.75rem;background:#F1F5F9;color:#64748B;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='#E2E8F0'" onmouseout="this.style.background='#F1F5F9'">Cek Lagi</button>
+      <button type="button" onclick="submitRealForm()" style="flex:1;padding:.75rem;background:#3B82F6;color:#fff;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:background .2s;box-shadow:0 4px 12px rgba(59,130,246,0.3);" onmouseover="this.style.background='#2563EB'" onmouseout="this.style.background='#3B82F6'">Ya, Simpan</button>
+    </div>
+  </div>
+</div>
 
 <script>
 function previewGalleryFiles(input) {
@@ -311,7 +336,7 @@ function previewGalleryFiles(input) {
             + '<button type="button" onclick="removeGalleryFile(\''+input.id+'\', '+idx+')" style="position:absolute;top:.375rem;right:.375rem;width:28px;height:28px;background:rgba(239,68,68,0.95);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);">'
             + '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>'
             + '</button>'
-            + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(139,92,246,0.85);padding:.3rem;font-size:.68rem;color:#fff;font-weight:700;text-align:center;">Baru</div>';
+            + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(59,130,246,0.85);padding:.3rem;font-size:.68rem;color:#fff;font-weight:700;text-align:center;">Baru</div>';
         container.appendChild(div);
     });
 }
@@ -333,7 +358,10 @@ function svcAutoSlug() {
   document.getElementById('svc-slug').value = document.getElementById('svc-name').value.toLowerCase().replace(/[^a-z0-9\s\-]/g,'').trim().replace(/\s+/g,'-');
 }
 
+let isConfirmed = false;
 document.getElementById('svc-form').addEventListener('submit', function(e) {
+  if(isConfirmed) return true;
+
   // Sync hidden textareas
   document.querySelectorAll('textarea[style*="display:none"]').forEach(t => t.style.display='block');
 
@@ -341,6 +369,9 @@ document.getElementById('svc-form').addEventListener('submit', function(e) {
   const errors = [];
   const name = document.getElementById('svc-name').value.trim();
   if (!name) errors.push('❌  Nama Layanan wajib diisi.');
+
+  const category = document.querySelector('select[name="product_category_id"]').value;
+  if (!category) errors.push('❌  Kategori wajib dipilih.');
 
   const desc = document.querySelector('textarea[name="description"]');
   if (desc && desc.value.trim().length < 20) errors.push('❌  Deskripsi Lengkap minimal 20 karakter.');
@@ -354,7 +385,29 @@ document.getElementById('svc-form').addEventListener('submit', function(e) {
     box.scrollIntoView({ behavior: 'smooth', block: 'start' });
     return false;
   }
+
+  e.preventDefault();
+  const modal = document.getElementById('confirmModal');
+  const box = document.getElementById('confirmModalBox');
+  modal.style.display = 'flex';
+  setTimeout(() => {
+    modal.style.opacity = '1';
+    box.style.transform = 'scale(1)';
+  }, 10);
 });
+
+function closeConfirmModal() {
+  const modal = document.getElementById('confirmModal');
+  const box = document.getElementById('confirmModalBox');
+  modal.style.opacity = '0';
+  box.style.transform = 'scale(0.95)';
+  setTimeout(() => { modal.style.display = 'none'; }, 200);
+}
+
+function submitRealForm() {
+  isConfirmed = true;
+  document.getElementById('svc-form').submit();
+}
 
 function updateToggle(chk) {
   const track = document.getElementById('toggle-track');

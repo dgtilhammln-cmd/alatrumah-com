@@ -46,6 +46,8 @@
 <title>{{ $autoTitle }}</title>
 <meta name="description" content="{{ $autoDesc }}">
 <meta name="keywords" content="{{ $autoKeywords }}">
+<meta name="author" content="{{ $siteName }}">
+<meta name="publisher" content="{{ $siteName }}">
 <meta name="robots" content="{{ $seoData['robots'] ?? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' }}">
 <link rel="canonical" href="{{ $canonical }}">
 

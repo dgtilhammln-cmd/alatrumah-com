@@ -38,7 +38,7 @@ class AdminServiceController extends Controller
             $request->merge(['rating' => str_replace(',', '.', $request->rating)]);
         }
 
-        $v = $request->validate([
+        $rules = [
             'name'          => 'required|max:200',
             'slug'          => 'nullable|max:200|regex:/^[a-z0-9\-]*$/',
             'short_desc'    => 'nullable|max:500',
@@ -46,32 +46,52 @@ class AdminServiceController extends Controller
             'icon'          => 'nullable|max:50',
             'order'         => 'nullable|integer|min:0',
             'is_active'     => 'boolean',
-            'meta_title'    => 'nullable|max:70',
-            'meta_desc'     => 'nullable|max:165',
-            'meta_keywords' => 'nullable|max:500',
+            'meta_title'    => 'required|max:70',
+            'meta_desc'     => 'required|max:165',
+            'meta_keywords' => 'required|max:500',
             'image'         => 'nullable|image|max:5120',
             'brochure'      => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
             'og_image'      => 'nullable|image|max:5120',
             'gallery_images.*' => 'nullable|image|max:5120',
-            'spec_keys'     => 'nullable|array',
-            'spec_keys.*'   => 'nullable|string|max:255',
-            'spec_values'   => 'nullable|array',
-            'spec_values.*' => 'nullable|string|max:1000',
-            'faq_qs'        => 'nullable|array',
-            'faq_qs.*'      => 'nullable|string|max:500',
-            'faq_as'        => 'nullable|array',
-            'faq_as.*'      => 'nullable|string|max:2000',
+            'spec_keys'     => 'required|array|min:1',
+            'spec_keys.0'   => 'required|string|max:255',
+            'spec_values'   => 'required|array|min:1',
+            'spec_values.0' => 'required|string|max:1000',
+            'faq_qs'        => 'required|array|min:1',
+            'faq_qs.0'      => 'required|string|max:500',
+            'faq_as'        => 'required|array|min:1',
+            'faq_as.0'      => 'required|string|max:2000',
             // E-commerce fields
             'price'         => 'nullable|numeric|min:0',
             'sale_price'    => 'nullable|numeric|min:0',
-            'stock'         => 'nullable|integer|min:0',
+            'stock'         => 'required|integer|min:0',
             'min_order'     => 'nullable|integer|min:1',
             'weight'        => 'nullable|integer|min:0',
             'sku'           => 'nullable|string|max:100',
-            'rating'        => 'nullable|numeric|min:0|max:5',
-            'sold_count'    => 'nullable|integer|min:0',
-            'product_category_id' => 'nullable|integer|exists:category_items,id',
-        ]);
+            'rating'        => 'required|numeric|min:0|max:5',
+            'sold_count'    => 'required|integer|min:0',
+            'product_category_id' => 'required|integer|exists:category_items,id',
+        ];
+        
+        $messages = [
+            'product_category_id.required' => '⚠️ DOUBLE CEK: Kategori produk WAJIB dipilih!',
+            'stock.required' => '⚠️ DOUBLE CEK: Stok WAJIB diisi!',
+            'rating.required' => '⚠️ DOUBLE CEK: Rating Bintang WAJIB diisi!',
+            'sold_count.required' => '⚠️ DOUBLE CEK: Jumlah Terjual WAJIB diisi!',
+            'spec_keys.required' => '⚠️ DOUBLE CEK: Spesifikasi Produk WAJIB diisi (Minimal 1)!',
+            'spec_keys.0.required' => '⚠️ DOUBLE CEK: Baris pertama Spesifikasi Produk tidak boleh kosong!',
+            'spec_values.required' => '⚠️ DOUBLE CEK: Nilai Spesifikasi Produk WAJIB diisi!',
+            'spec_values.0.required' => '⚠️ DOUBLE CEK: Baris pertama Nilai Spesifikasi tidak boleh kosong!',
+            'faq_qs.required' => '⚠️ DOUBLE CEK: Pertanyaan FAQ WAJIB diisi (Minimal 1)!',
+            'faq_qs.0.required' => '⚠️ DOUBLE CEK: Baris pertama Pertanyaan FAQ tidak boleh kosong!',
+            'faq_as.required' => '⚠️ DOUBLE CEK: Jawaban FAQ WAJIB diisi!',
+            'faq_as.0.required' => '⚠️ DOUBLE CEK: Baris pertama Jawaban FAQ tidak boleh kosong!',
+            'meta_title.required' => '⚠️ DOUBLE CEK: Meta Title (SEO Settings) WAJIB diisi!',
+            'meta_desc.required' => '⚠️ DOUBLE CEK: Meta Description (SEO Settings) WAJIB diisi!',
+            'meta_keywords.required' => '⚠️ DOUBLE CEK: Meta Keywords (SEO Settings) WAJIB diisi!',
+        ];
+
+        $v = $request->validate($rules, $messages);
 
         // Slug
         $slug = Str::slug(!empty($v['slug']) ? $v['slug'] : $v['name']);
@@ -80,8 +100,13 @@ class AdminServiceController extends Controller
         $v['slug'] = $slug;
 
         $v['is_active'] = $request->boolean('is_active', true);
-        // Order otomatis: produk baru selalu di atas (urutan = 0 = paling atas, atau pakai timestamp)
-        $v['order']     = empty($v['order']) ? 0 : (int)$v['order'];
+        // Order otomatis: produk baru otomatis ke urutan paling terakhir (max + 1)
+        if (!isset($v['order']) || $v['order'] === '') {
+            $maxOrder = \App\Models\Service::max('order');
+            $v['order'] = $maxOrder !== null ? $maxOrder + 1 : 0;
+        } else {
+            $v['order'] = (int)$v['order'];
+        }
 
         if (empty($v['meta_title'])) $v['meta_title'] = $v['name'].' | Alatrumah.com';
         if (empty($v['meta_desc'])) {
@@ -137,6 +162,15 @@ class AdminServiceController extends Controller
         }
         $v['faqs'] = $faqs;
 
+        // E-commerce fields defaults
+        $v['price']         = $v['price'] ?? 0;
+        $v['sale_price']    = $v['sale_price'] ?? 0;
+        $v['stock']         = $v['stock'] ?? 0;
+        $v['min_order']     = $v['min_order'] ?? 1;
+        $v['weight']        = $v['weight'] ?? 0;
+        $v['sold_count']    = $v['sold_count'] ?? 0;
+        $v['rating']        = $v['rating'] ?? 0;
+
         Service::create($v);
         Cache::forget('home_page_data');
         Cache::forget('services_page_data');
@@ -154,7 +188,7 @@ class AdminServiceController extends Controller
             $request->merge(['rating' => str_replace(',', '.', $request->rating)]);
         }
         
-        $v = $request->validate([
+        $rules = [
             'name'          => 'required|max:200',
             'slug'          => 'nullable|max:200|regex:/^[a-z0-9\-]*$/',
             'short_desc'    => 'nullable|max:500',
@@ -162,32 +196,52 @@ class AdminServiceController extends Controller
             'icon'          => 'nullable|max:50',
             'order'         => 'nullable|integer|min:0',
             'is_active'     => 'boolean',
-            'meta_title'    => 'nullable|max:70',
-            'meta_desc'     => 'nullable|max:165',
-            'meta_keywords' => 'nullable|max:500',
+            'meta_title'    => 'required|max:70',
+            'meta_desc'     => 'required|max:165',
+            'meta_keywords' => 'required|max:500',
             'image'         => 'nullable|image|max:5120',
             'brochure'      => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
             'og_image'      => 'nullable|image|max:5120',
             'gallery_images.*' => 'nullable|image|max:5120',
-            'spec_keys'     => 'nullable|array',
-            'spec_keys.*'   => 'nullable|string|max:255',
-            'spec_values'   => 'nullable|array',
-            'spec_values.*' => 'nullable|string|max:1000',
-            'faq_qs'        => 'nullable|array',
-            'faq_qs.*'      => 'nullable|string|max:500',
-            'faq_as'        => 'nullable|array',
-            'faq_as.*'      => 'nullable|string|max:2000',
+            'spec_keys'     => 'required|array|min:1',
+            'spec_keys.0'   => 'required|string|max:255',
+            'spec_values'   => 'required|array|min:1',
+            'spec_values.0' => 'required|string|max:1000',
+            'faq_qs'        => 'required|array|min:1',
+            'faq_qs.0'      => 'required|string|max:500',
+            'faq_as'        => 'required|array|min:1',
+            'faq_as.0'      => 'required|string|max:2000',
             // E-commerce fields
             'price'         => 'nullable|numeric|min:0',
             'sale_price'    => 'nullable|numeric|min:0',
-            'stock'         => 'nullable|integer|min:0',
+            'stock'         => 'required|integer|min:0',
             'min_order'     => 'nullable|integer|min:1',
             'weight'        => 'nullable|integer|min:0',
             'sku'           => 'nullable|string|max:100',
-            'rating'        => 'nullable|numeric|min:0|max:5',
-            'sold_count'    => 'nullable|integer|min:0',
-            'product_category_id' => 'nullable|integer|exists:category_items,id',
-        ]);
+            'rating'        => 'required|numeric|min:0|max:5',
+            'sold_count'    => 'required|integer|min:0',
+            'product_category_id' => 'required|integer|exists:category_items,id',
+        ];
+        
+        $messages = [
+            'product_category_id.required' => '⚠️ DOUBLE CEK: Kategori produk WAJIB dipilih!',
+            'stock.required' => '⚠️ DOUBLE CEK: Stok WAJIB diisi!',
+            'rating.required' => '⚠️ DOUBLE CEK: Rating Bintang WAJIB diisi!',
+            'sold_count.required' => '⚠️ DOUBLE CEK: Jumlah Terjual WAJIB diisi!',
+            'spec_keys.required' => '⚠️ DOUBLE CEK: Spesifikasi Produk WAJIB diisi (Minimal 1)!',
+            'spec_keys.0.required' => '⚠️ DOUBLE CEK: Baris pertama Spesifikasi Produk tidak boleh kosong!',
+            'spec_values.required' => '⚠️ DOUBLE CEK: Nilai Spesifikasi Produk WAJIB diisi!',
+            'spec_values.0.required' => '⚠️ DOUBLE CEK: Baris pertama Nilai Spesifikasi tidak boleh kosong!',
+            'faq_qs.required' => '⚠️ DOUBLE CEK: Pertanyaan FAQ WAJIB diisi (Minimal 1)!',
+            'faq_qs.0.required' => '⚠️ DOUBLE CEK: Baris pertama Pertanyaan FAQ tidak boleh kosong!',
+            'faq_as.required' => '⚠️ DOUBLE CEK: Jawaban FAQ WAJIB diisi!',
+            'faq_as.0.required' => '⚠️ DOUBLE CEK: Baris pertama Jawaban FAQ tidak boleh kosong!',
+            'meta_title.required' => '⚠️ DOUBLE CEK: Meta Title (SEO Settings) WAJIB diisi!',
+            'meta_desc.required' => '⚠️ DOUBLE CEK: Meta Description (SEO Settings) WAJIB diisi!',
+            'meta_keywords.required' => '⚠️ DOUBLE CEK: Meta Keywords (SEO Settings) WAJIB diisi!',
+        ];
+
+        $v = $request->validate($rules, $messages);
 
         // Slug update
         if (!empty($v['slug'])) {
@@ -267,6 +321,15 @@ class AdminServiceController extends Controller
         }
         $v['faqs'] = $faqs;
 
+        // E-commerce fields defaults
+        $v['price']         = $v['price'] ?? 0;
+        $v['sale_price']    = $v['sale_price'] ?? 0;
+        $v['stock']         = $v['stock'] ?? 0;
+        $v['min_order']     = $v['min_order'] ?? 1;
+        $v['weight']        = $v['weight'] ?? 0;
+        $v['sold_count']    = $v['sold_count'] ?? 0;
+        $v['rating']        = $v['rating'] ?? 0;
+
         $service->update($v);
         Cache::forget('home_page_data');
         Cache::forget('services_page_data');
@@ -296,6 +359,15 @@ class AdminServiceController extends Controller
         Cache::forget('home_page_data');
         Cache::forget('services_page_data');
         return back()->with('success', 'Stok berhasil diperbarui.');
+    }
+
+    public function updateOrder(Request $request, Service $service)
+    {
+        $request->validate(['order' => 'required|integer|min:0']);
+        $service->update(['order' => $request->order]);
+        Cache::forget('home_page_data');
+        Cache::forget('services_page_data');
+        return back()->with('success', 'Urutan berhasil diperbarui.');
     }
 
     /**

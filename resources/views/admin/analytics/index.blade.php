@@ -176,6 +176,26 @@
 let chart = null;
 let currentPeriod = '30';
 
+function setStatsLoading() {
+    ['stat-pageview','stat-users','stat-sold','stat-net'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.innerHTML = '<span style="display:inline-block;width:48px;height:18px;background:#E2E8F0;border-radius:6px;animation:pulse-dot 1.2s infinite;"></span>'; }
+    });
+    const g = document.getElementById('stat-gross');
+    if (g) g.textContent = 'Kotor: memuat...';
+}
+
+function setStatsError() {
+    ['stat-pageview','stat-users','stat-sold'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '0';
+    });
+    const n = document.getElementById('stat-net');
+    if (n) n.textContent = 'Rp 0';
+    const g = document.getElementById('stat-gross');
+    if (g) g.textContent = 'Kotor: Rp 0';
+}
+
 async function loadCustomData() {
     const from = document.getElementById('date-from').value;
     const to = document.getElementById('date-to').value;
@@ -188,9 +208,16 @@ async function loadCustomData() {
         btn.style.color = 'var(--text3)';
     });
 
-    const res  = await fetch('/admin/analytics/data?period=custom&from=' + from + '&to=' + to);
-    const data = await res.json();
-    renderData(data);
+    setStatsLoading();
+    try {
+        const res  = await fetch('/admin/analytics/data?period=custom&from=' + from + '&to=' + to);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        renderData(data);
+    } catch(e) {
+        console.error('Analytics fetch error:', e);
+        setStatsError();
+    }
 }
 
 async function loadData(period) {
@@ -202,9 +229,16 @@ async function loadData(period) {
         btn.style.color = p === period ? '#3B82F6' : 'var(--text3)';
     });
 
-    const res  = await fetch('/admin/analytics/data?period=' + period);
-    const data = await res.json();
-    renderData(data);
+    setStatsLoading();
+    try {
+        const res  = await fetch('/admin/analytics/data?period=' + period);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        renderData(data);
+    } catch(e) {
+        console.error('Analytics fetch error:', e);
+        setStatsError();
+    }
 }
 
 function renderData(data) {

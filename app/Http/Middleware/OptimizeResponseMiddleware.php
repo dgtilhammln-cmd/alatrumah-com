@@ -16,6 +16,13 @@ class OptimizeResponseMiddleware
     {
         $response = $next($request);
 
+        // Add X-Robots-Tag header for SEO compliance
+        if (method_exists($response, 'header')) {
+            $response->header('X-Robots-Tag', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+        } else if (isset($response->headers)) {
+            $response->headers->set('X-Robots-Tag', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+        }
+
         // Only minify text/html responses (not JSON, files, redirects)
         $contentType = $response->headers->get('Content-Type', '');
         if (

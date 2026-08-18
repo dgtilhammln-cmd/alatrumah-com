@@ -15,8 +15,9 @@
         if (!empty($layoutSettings['favicon'])) {
             $favPath = ltrim($layoutSettings['favicon'], '/');
             $favicon = asset('storage/' . $favPath) . '?v=' . $favVer;
-            $favExt  = pathinfo($favPath, PATHINFO_EXTENSION);
-            $favType = $favExt === 'png' ? 'image/png' : ($favExt === 'svg' ? 'image/svg+xml' : 'image/x-icon');
+            $favExt  = strtolower(pathinfo($favPath, PATHINFO_EXTENSION));
+            $favTypeMap = ['png' => 'image/png', 'svg' => 'image/svg+xml', 'webp' => 'image/webp', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg'];
+            $favType = $favTypeMap[$favExt] ?? 'image/x-icon';
         } else {
             $favicon = asset('favicon.ico') . '?v=' . $favVer;
             $favType = 'image/x-icon';
