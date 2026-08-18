@@ -12,21 +12,24 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --blue-50:  #EFF6FF;
-      --blue-100: #DBEAFE;
-      --blue-400: #60A5FA;
-      --blue-500: #3B82F6;
-      --blue-600: #2563EB;
-      --blue-700: #1D4ED8;
-      --blue-900: #1E3A8A;
-      --slate-50:  #F8FAFC;
-      --slate-100: #F1F5F9;
-      --slate-200: #E2E8F0;
-      --slate-300: #CBD5E1;
-      --slate-400: #94A3B8;
-      --slate-500: #64748B;
-      --slate-700: #334155;
-      --slate-900: #0F172A;
+      --green-50:   #F0FDF4;
+      --green-100:  #DCFCE7;
+      --green-200:  #BBF7D0;
+      --green-400:  #4ADE80;
+      --green-500:  #22C55E;
+      --green-600:  #16A34A;
+      --green-700:  #15803D;
+      --green-800:  #166534;
+      --green-900:  #14532D;
+      --green-950:  #052E16;
+      --slate-50:   #F8FAFC;
+      --slate-100:  #F1F5F9;
+      --slate-200:  #E2E8F0;
+      --slate-300:  #CBD5E1;
+      --slate-400:  #94A3B8;
+      --slate-500:  #64748B;
+      --slate-700:  #334155;
+      --slate-900:  #0F172A;
     }
 
     html, body {
@@ -46,10 +49,10 @@
       width: 100vw;
     }
 
-    /* ─── LEFT PANEL — dark blue brand side ─── */
+    /* ─── LEFT PANEL — dark green brand side ─── */
     .panel-left {
       position: relative;
-      background: linear-gradient(155deg, #0F172A 0%, #1E3A8A 60%, #1D4ED8 100%);
+      background: linear-gradient(155deg, #052E16 0%, #14532D 55%, #166534 100%);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -63,7 +66,7 @@
       position: absolute;
       width: 500px; height: 500px;
       border-radius: 50%;
-      border: 1px solid rgba(96,165,250,0.12);
+      border: 1px solid rgba(74,222,128,0.1);
       top: -120px; right: -120px;
     }
     .panel-left::after {
@@ -71,39 +74,30 @@
       position: absolute;
       width: 340px; height: 340px;
       border-radius: 50%;
-      border: 1px solid rgba(96,165,250,0.08);
+      border: 1px solid rgba(74,222,128,0.06);
       bottom: -80px; left: -80px;
     }
     .deco-ring {
       position: absolute;
       width: 220px; height: 220px;
       border-radius: 50%;
-      border: 1px solid rgba(96,165,250,0.06);
+      border: 1px solid rgba(74,222,128,0.05);
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
     }
 
-    /* Brand logo top */
+    /* Brand logo top — menggunakan logohvm.png asli */
     .brand {
       position: relative;
       z-index: 2;
-      display: flex;
-      align-items: center;
-      gap: .75rem;
     }
-    .brand-icon {
-      width: 36px; height: 36px;
-      background: rgba(96,165,250,0.15);
-      border: 1px solid rgba(96,165,250,0.3);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .brand-name {
-      font-size: .8rem;
-      font-weight: 500;
-      color: rgba(255,255,255,0.6);
-      letter-spacing: .1em;
-      text-transform: uppercase;
+    .brand-logo {
+      display: block;
+      height: 38px;        /* tinggi tetap */
+      width: auto;         /* lebar menyesuaikan proporsi asli */
+      max-width: 160px;
+      object-fit: contain;
+      object-position: left center;
     }
 
     /* Main left content */
@@ -117,8 +111,8 @@
       display: inline-flex;
       align-items: center;
       gap: .5rem;
-      background: rgba(96,165,250,0.1);
-      border: 1px solid rgba(96,165,250,0.25);
+      background: rgba(74,222,128,0.08);
+      border: 1px solid rgba(74,222,128,0.2);
       border-radius: 100px;
       padding: .375rem 1rem;
       margin-bottom: 2rem;
@@ -136,7 +130,7 @@
     .status-text {
       font-size: .65rem;
       font-weight: 500;
-      color: rgba(255,255,255,0.55);
+      color: rgba(255,255,255,0.5);
       letter-spacing: .1em;
       text-transform: uppercase;
     }
@@ -152,14 +146,14 @@
     }
     .headline strong {
       font-weight: 600;
-      color: var(--blue-400);
+      color: var(--green-400);
     }
 
     /* Subtext */
     .subtext {
       font-size: .875rem;
       font-weight: 300;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255,255,255,0.4);
       line-height: 1.8;
       max-width: 380px;
     }
@@ -173,13 +167,13 @@
       display: flex;
       align-items: center;
       gap: .625rem;
-      border-top: 1px solid rgba(255,255,255,0.07);
+      border-top: 1px solid rgba(255,255,255,0.06);
       padding-top: 1.5rem;
     }
     .lic-info-text {
       font-size: .72rem;
       font-weight: 300;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.28);
       line-height: 1.6;
     }
 
@@ -199,8 +193,8 @@
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(22,163,74,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(22,163,74,0.04) 1px, transparent 1px);
       background-size: 32px 32px;
       pointer-events: none;
     }
@@ -211,7 +205,7 @@
     .step-label {
       font-size: .65rem;
       font-weight: 500;
-      color: var(--blue-500);
+      color: var(--green-600);
       letter-spacing: .12em;
       text-transform: uppercase;
       margin-bottom: 1.25rem;
@@ -223,7 +217,7 @@
       content: '';
       display: block;
       width: 24px; height: 1px;
-      background: var(--blue-400);
+      background: var(--green-500);
     }
 
     /* Right headline */
@@ -235,7 +229,7 @@
       letter-spacing: -.025em;
       margin-bottom: .875rem;
     }
-    .right-h2 span { font-weight: 600; color: var(--blue-600); }
+    .right-h2 span { font-weight: 600; color: var(--green-700); }
 
     .right-desc {
       font-size: .825rem;
@@ -246,24 +240,13 @@
       max-width: 400px;
     }
 
-    /* Contact block */
+    /* Contact block — tanpa avatar icon */
     .contact-block {
       background: #fff;
       border: 1px solid var(--slate-200);
       border-radius: 16px;
-      padding: 1.5rem;
+      padding: 1.25rem 1.5rem;
       margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-    .contact-avatar {
-      width: 48px; height: 48px;
-      background: var(--blue-50);
-      border: 1px solid var(--blue-100);
-      border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
     }
     .contact-info-label {
       font-size: .65rem;
@@ -271,19 +254,19 @@
       color: var(--slate-400);
       letter-spacing: .07em;
       text-transform: uppercase;
-      margin-bottom: .2rem;
+      margin-bottom: .25rem;
     }
     .contact-info-val {
-      font-size: .925rem;
+      font-size: 1rem;
       font-weight: 600;
       color: var(--slate-900);
       letter-spacing: -.01em;
     }
     .contact-info-sub {
-      font-size: .75rem;
+      font-size: .775rem;
       font-weight: 300;
       color: var(--slate-400);
-      margin-top: .15rem;
+      margin-top: .2rem;
     }
 
     /* WA Button */
@@ -294,7 +277,7 @@
       gap: .75rem;
       width: 100%;
       padding: 1rem 1.5rem;
-      background: linear-gradient(135deg, #22C55E, #16A34A);
+      background: linear-gradient(135deg, #22C55E, #15803D);
       color: #fff;
       font-family: 'Montserrat', sans-serif;
       font-size: .875rem;
@@ -305,11 +288,11 @@
       text-decoration: none;
       cursor: pointer;
       transition: all .25s cubic-bezier(.4,0,.2,1);
-      box-shadow: 0 4px 20px rgba(34,197,94,0.2);
+      box-shadow: 0 4px 20px rgba(22,163,74,0.2);
     }
     .wa-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(34,197,94,0.3);
+      box-shadow: 0 8px 30px rgba(22,163,74,0.35);
     }
     .wa-btn svg { flex-shrink: 0; }
 
@@ -350,9 +333,9 @@
       transition: all .2s;
     }
     .phone-cta:hover {
-      border-color: var(--blue-400);
-      color: var(--blue-600);
-      background: var(--blue-50);
+      border-color: var(--green-500);
+      color: var(--green-700);
+      background: var(--green-50);
     }
 
     /* Footer */
@@ -364,30 +347,21 @@
       font-weight: 300;
       color: var(--slate-400);
     }
-    .right-footer a { color: var(--blue-500); text-decoration: none; font-weight: 400; }
+    .right-footer a { color: var(--green-600); text-decoration: none; font-weight: 400; }
     .right-footer a:hover { text-decoration: underline; }
+    .right-footer .code-tag { color: var(--green-600); }
 
     /* ─── MOBILE ─── */
     @media (max-width: 768px) {
       html, body { overflow: auto; }
-
       .layout {
         grid-template-columns: 1fr;
         height: auto;
         min-height: 100vh;
       }
-
-      .panel-left {
-        padding: 2.5rem 2rem;
-        min-height: 45vh;
-      }
-
+      .panel-left { padding: 2.5rem 2rem; min-height: 42vh; }
       .headline { font-size: 2rem; }
-
-      .panel-right {
-        padding: 2.5rem 1.75rem;
-      }
-
+      .panel-right { padding: 2.5rem 1.75rem; }
       .right-h2 { font-size: 1.375rem; }
     }
   </style>
@@ -400,14 +374,13 @@
   <div class="panel-left">
     <div class="deco-ring"></div>
 
-    <!-- Brand -->
+    <!-- Logo HVM asli — proporsional, tidak diubah ukurannya -->
     <div class="brand">
-      <div class="brand-icon">
-        <svg width="18" height="18" fill="none" stroke="rgba(96,165,250,0.9)" stroke-width="1.5" viewBox="0 0 24 24">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-        </svg>
-      </div>
-      <span class="brand-name">HVM Digital</span>
+      <img
+        src="/logohvm.png"
+        alt="HVM Digital"
+        class="brand-logo"
+      >
     </div>
 
     <!-- Main content -->
@@ -432,11 +405,11 @@
     <!-- Left footer -->
     <div class="left-footer">
       <div class="lic-info">
-        <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" viewBox="0 0 24 24">
+        <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" viewBox="0 0 24 24">
           <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
         </svg>
         <span class="lic-info-text">
-          Layanan beroperasi normal setelah perpanjangan dikonfirmasi oleh tim kami.
+          Layanan aktif kembali setelah perpanjangan dikonfirmasi oleh tim kami.
         </span>
       </div>
     </div>
@@ -458,18 +431,11 @@
         website Anda akan aktif kembali dalam waktu singkat.
       </p>
 
-      <!-- Contact Info -->
+      <!-- Contact Info — tanpa avatar icon -->
       <div class="contact-block">
-        <div class="contact-avatar">
-          <svg width="22" height="22" fill="none" stroke="var(--blue-500)" stroke-width="1.5" viewBox="0 0 24 24">
-            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-          </svg>
-        </div>
-        <div>
-          <div class="contact-info-label">Hubungi Tim Kami</div>
-          <div class="contact-info-val">HVM Digital</div>
-          <div class="contact-info-sub">Layanan Perpanjangan Website Profesional</div>
-        </div>
+        <div class="contact-info-label">Hubungi Tim Kami</div>
+        <div class="contact-info-val">HVM Digital</div>
+        <div class="contact-info-sub">Layanan Perpanjangan Website Profesional</div>
       </div>
 
       <!-- WhatsApp Button -->
@@ -496,7 +462,7 @@
         Powered by <a href="https://hvmdigital.id" target="_blank" rel="noopener">HVM Digital</a>
         &mdash; Jasa Pembuatan & Perawatan Website Profesional
         <span style="margin: 0 .375rem; color: var(--slate-300);">·</span>
-        <span style="color: var(--blue-400);">503 Service Unavailable</span>
+        <span class="code-tag">503 Service Unavailable</span>
       </div>
 
     </div>
