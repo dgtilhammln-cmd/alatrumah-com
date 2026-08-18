@@ -93,13 +93,10 @@
     }
     .nav-logo-img-wrap {
         height: 38px; width: auto;
-        border-radius: 999px;
-        overflow: hidden;
-        background: transparent;
         display: flex; align-items: center; justify-content: center;
         flex-shrink: 0;
     }
-    .nav-logo-img-wrap img { width: auto; height: 100%; object-fit: contain; border-radius: 0; }
+    .nav-logo-img-wrap img { width: auto; height: 100%; object-fit: contain; }
     
     /* ── Menu Links Pill ── */
     .nav-pill-menu {

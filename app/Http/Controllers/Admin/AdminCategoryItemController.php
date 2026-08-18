@@ -26,7 +26,7 @@ class AdminCategoryItemController extends Controller
             'icon_type'  => 'required|in:icon,upload',
             'icon_value' => 'nullable|string|max:50',
             'icon_file'  => 'nullable|image|max:1024',
-            'name'       => 'required|string|max:100',
+            'name'       => 'required|string|max:100|unique:category_items,name',
             'url'        => 'nullable|string|max:255',
             'badge'      => 'nullable|string|max:20',
             'badge_color'=> 'nullable|string|max:7',
@@ -64,7 +64,7 @@ class AdminCategoryItemController extends Controller
             'icon_type'  => 'required|in:icon,upload',
             'icon_value' => 'nullable|string|max:50',
             'icon_file'  => 'nullable|image|max:1024',
-            'name'       => 'required|string|max:100',
+            'name'       => 'required|string|max:100|unique:category_items,name,' . $categoryItem->id,
         ]);
 
         $iconValue = $categoryItem->icon_value;
