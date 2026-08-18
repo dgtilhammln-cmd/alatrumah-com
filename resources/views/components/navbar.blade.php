@@ -408,22 +408,40 @@
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
                 </button>
             </form>
-            {{-- Search Dropdown (History & Recommendations) --}}
+            {{-- Search Dropdown (History & Dynamic Recommendations based on views/popularity) --}}
+            @php
+                $popularProducts = \Illuminate\Support\Facades\Cache::remember('popular_search_products', 600, function() {
+                    return \App\Models\Service::where('is_active', true)
+                        ->orderByDesc('views_count')
+                        ->orderByDesc('sold_count')
+                        ->orderBy('order')
+                        ->take(5)
+                        ->get(['id', 'name', 'slug', 'views_count']);
+                });
+            @endphp
             <div class="search-dropdown">
-                <div class="search-dropdown-title">Pencarian Populer</div>
+                <div class="search-dropdown-title" style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>Pencarian Populer</span>
+                    <span style="font-size:0.65rem; color:#94A3B8; font-weight:500;">Paling Banyak Dilihat</span>
+                </div>
                 <div style="display:flex; flex-direction:column; gap:0.25rem;">
-                    <a href="{{ route('products', ['q' => 'Panci Set']) }}" class="search-hist-item">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                        Panci Set Stainless
-                    </a>
-                    <a href="{{ route('products', ['q' => 'Sapu']) }}" class="search-hist-item">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                        Sapu Lantai Microfiber
-                    </a>
-                    <a href="{{ route('products', ['q' => 'Rak Piring']) }}" class="search-hist-item">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                        Rak Piring Anti Karat
-                    </a>
+                    @forelse($popularProducts as $pop)
+                        <a href="{{ route('products', ['q' => $pop->name]) }}" class="search-hist-item">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                            <span style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $pop->name }}</span>
+                            @if($pop->views_count > 0)
+                                <span style="font-size:0.65rem; color:#94A3B8; font-weight:600; margin-left:auto; display:flex; align-items:center; gap:3px;">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    {{ number_format($pop->views_count, 0, ',', '.') }}
+                                </span>
+                            @endif
+                        </a>
+                    @empty
+                        <a href="{{ route('products', ['q' => 'Peralatan Rumah']) }}" class="search-hist-item">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+                            <span>Semua Produk Alat Rumah</span>
+                        </a>
+                    @endforelse
                 </div>
             </div>
         </div>
