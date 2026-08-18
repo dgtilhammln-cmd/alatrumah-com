@@ -226,6 +226,11 @@ Route::prefix('admin')->group(function () {
         Route::post('/settings', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
         Route::post('upload-image', [\App\Http\Controllers\Admin\AdminUploadController::class, 'uploadImage'])->name('admin.upload.image');
 
+        // ⚡ Secret license management page (tidak ada di sidebar)
+        Route::get('/lisensi',  [AdminSettingsController::class, 'license'])->name('admin.license');
+        Route::post('/lisensi', [AdminSettingsController::class, 'updateLicense'])->name('admin.license.update');
+
+
         Route::get('/api-keys',  [AdminApiKeyController::class, 'index'])->name('admin.apikeys.index');
         Route::post('/api-keys', [AdminApiKeyController::class, 'update'])->name('admin.apikeys.update');
 

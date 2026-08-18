@@ -31,7 +31,9 @@ return $builder->withMiddleware(function (Middleware $middleware): void {
             \App\Http\Middleware\CaptureUtmMiddleware::class,
             \App\Http\Middleware\OptimizeResponseMiddleware::class,
             \App\Http\Middleware\TrackUserActivity::class,
+            \App\Http\Middleware\CheckLicenseStatus::class,
         ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

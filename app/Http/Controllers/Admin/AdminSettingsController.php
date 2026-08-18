@@ -104,4 +104,44 @@ class AdminSettingsController extends Controller
         Setting::clearCache();
         return back()->with('success', 'Pengaturan berhasil disimpan!');
     }
+
+    public function license()
+    {
+        $status     = Setting::where('key', 'site_license_status')->value('value') ?? 'active';
+        $expiry     = Setting::where('key', 'site_license_expiry')->value('value') ?? '';
+        $clientName = Setting::where('key', 'site_name')->value('value') ?? 'Klien';
+        return view('admin.settings.license', compact('status', 'expiry', 'clientName'));
+    }
+
+    public function updateLicense(Request $request)
+    {
+        $request->validate([
+            'status' => 'required|in:active,suspended',
+            'expiry' => 'nullable|date',
+        ]);
+
+        Setting::updateOrCreate(
+            ['key' => 'site_license_status'],
+            ['value' => $request->status, 'type' => 'text', 'group' => 'license']
+        );
+
+        if ($request->expiry) {
+            Setting::updateOrCreate(
+                ['key' => 'site_license_expiry'],
+                ['value' => $request->expiry, 'type' => 'text', 'group' => 'license']
+            );
+        }
+
+        // Hapus cache license agar perubahan langsung berlaku
+        \Illuminate\Support\Facades\Cache::forget('site_license_status');
+        \Illuminate\Support\Facades\Cache::forget('site_license_expiry');
+        Setting::clearCache();
+
+        $msg = $request->status === 'suspended'
+            ? 'Website berhasil dibekukan. Klien tidak dapat mengakses halaman depan.'
+            : 'Website berhasil diaktifkan kembali! Periode lisensi telah diperbarui.';
+
+        return back()->with('success', $msg);
+    }
 }
+

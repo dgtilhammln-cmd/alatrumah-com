@@ -81,7 +81,15 @@ $adminName = str_ireplace('Cyclevent', 'Alat Rumah', session('admin_name', 'Admi
         </span>
         <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #ECFDF5; border: 1px solid #A7F3D0; color: #059669; font-size: 0.75rem; font-weight: 700; padding: 0.375rem 0.875rem; border-radius: 100px;">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Lisensi Aktif Sampai Dengan 8 Jul 2027
+          @php
+            $licExpiry = \App\Models\Setting::where('key','site_license_expiry')->value('value');
+            $licStatus = \App\Models\Setting::where('key','site_license_status')->value('value') ?? 'active';
+          @endphp
+          @if($licExpiry)
+            Lisensi {{ $licStatus === 'active' ? 'Aktif' : 'Dibekukan' }} Sampai Dengan {{ \Carbon\Carbon::parse($licExpiry)->locale('id')->isoFormat('D MMM YYYY') }}
+          @else
+            Lisensi Aktif Sampai Dengan 8 Jul 2027
+          @endif
         </span>
       </div>
     </div>
