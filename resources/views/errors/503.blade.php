@@ -55,6 +55,7 @@
       background: linear-gradient(155deg, #052E16 0%, #14532D 55%, #166534 100%);
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       padding: 3.5rem 4rem;
       overflow: hidden;
     }
