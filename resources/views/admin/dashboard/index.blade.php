@@ -14,7 +14,6 @@ elseif ($hour < 15) { $greeting = 'siang'; }
 elseif ($hour < 18) { $greeting = 'sore'; }
 else { $greeting = 'malam'; }
 
-@php
 $quotes = [
     "Pertumbuhan berawal dari tekad untuk terus melangkah, satu pencapaian setiap harinya.",
     "Setiap tantangan adalah anak tangga menuju kesuksesan perusahaan yang lebih besar.",
