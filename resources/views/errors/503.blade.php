@@ -55,7 +55,6 @@
       background: linear-gradient(155deg, #052E16 0%, #14532D 55%, #166534 100%);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       padding: 3.5rem 4rem;
       overflow: hidden;
     }
@@ -104,6 +103,8 @@
     .left-main {
       position: relative;
       z-index: 2;
+      margin-top: 4rem;
+      margin-bottom: auto; /* Push footer down, keep content slightly up */
     }
 
     /* Status badge */
@@ -389,17 +390,6 @@
         <span class="status-dot"></span>
         <span class="status-text">Pembaruan Layanan</span>
       </div>
-
-      <h1 class="headline">
-        Layanan<br>
-        sedang dalam<br>
-        <strong>pembaruan.</strong>
-      </h1>
-
-      <p class="subtext">
-        Website Anda saat ini dalam proses pembaruan untuk memberikan pengalaman yang lebih baik.
-        Tim kami siap membantu Anda melanjutkan layanan.
-      </p>
     </div>
 
     <!-- Left footer -->
