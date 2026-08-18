@@ -122,9 +122,9 @@
                     <div style="font-size: 0.9rem; font-weight: 700; color: #166534; margin-bottom: 0.5rem;">Pesanan Sedang Dikirim</div>
                     <div style="font-size: 0.8rem; color: #15803D; margin-bottom: 1rem;">Jika pesanan sudah Anda terima dengan baik, silakan konfirmasi pesanan selesai.</div>
                     
-                    <form action="{{ route('account.orders.complete', $order->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin pesanan sudah diterima dengan baik?');">
+                    <form id="complete-order-form" action="{{ route('account.orders.complete', $order->id) }}" method="POST" onsubmit="event.preventDefault(); openConfirmModal();">
                         @csrf
-                        <button type="submit" style="display: block; width: 100%; text-align: center; background: #059669; color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">
+                        <button type="button" onclick="openConfirmModal()" style="display: block; width: 100%; text-align: center; background: #059669; color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">
                             Pesanan Diterima
                         </button>
                     </form>
@@ -249,6 +249,43 @@
         @endif
     </div>
 </div>
+
+{{-- Custom Confirm Modal --}}
+<div id="confirmModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center;padding:1rem;opacity:0;transition:opacity .2s;">
+    <div id="confirmModalBox" style="background:#fff;border-radius:20px;padding:2rem;width:100%;max-width:400px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.1);transform:scale(0.95);transition:transform .2s;">
+        <div style="width:64px;height:64px;background:rgba(59,130,246,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+            <svg width="32" height="32" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h3 style="font-size:1.25rem;font-weight:800;color:#1E293B;margin:0 0 .5rem;">Konfirmasi Pesanan</h3>
+        <p style="font-size:.9rem;color:#64748B;margin:0 0 2rem;line-height:1.5;">Apakah Anda yakin pesanan sudah diterima dengan baik?</p>
+        <div style="display:flex;gap:1rem;">
+            <button type="button" onclick="closeConfirmModal()" style="flex:1;padding:.75rem;background:#F1F5F9;color:#64748B;border:none;border-radius:12px;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='#E2E8F0';this.style.color='#475569'" onmouseout="this.style.background='#F1F5F9';this.style.color='#64748B'">Batal</button>
+            <button type="button" onclick="submitCompleteOrder()" style="flex:1;padding:.75rem;background:#3B82F6;color:#fff;border:none;border-radius:12px;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='#2563EB'" onmouseout="this.style.background='#3B82F6'">Ya, Diterima</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function openConfirmModal() {
+    const modal = document.getElementById('confirmModal');
+    const box = document.getElementById('confirmModalBox');
+    modal.style.display = 'flex';
+    setTimeout(() => {
+        modal.style.opacity = '1';
+        box.style.transform = 'scale(1)';
+    }, 10);
+}
+function closeConfirmModal() {
+    const modal = document.getElementById('confirmModal');
+    const box = document.getElementById('confirmModalBox');
+    modal.style.opacity = '0';
+    box.style.transform = 'scale(0.95)';
+    setTimeout(() => { modal.style.display = 'none'; }, 200);
+}
+function submitCompleteOrder() {
+    document.getElementById('complete-order-form').submit();
+}
+</script>
 
 <style>
 @media(max-width: 768px) {
