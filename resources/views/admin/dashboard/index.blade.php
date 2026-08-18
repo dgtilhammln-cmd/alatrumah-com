@@ -51,25 +51,48 @@ $dailyQuote = $quotes[$dayOfYear % count($quotes)];
 $adminName = session('admin_name', 'Administrator');
 @endphp
 
-{{-- Welcome Box --}}
-<div style="background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%); border-radius: 20px; padding: 2rem 2.5rem; margin-bottom: 2rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);">
-  <!-- Decorative Background -->
-  <div style="position: absolute; top: -50px; right: -50px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); border-radius: 50%;"></div>
-  <div style="position: absolute; bottom: -80px; left: -20px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+{{-- Welcome & Company Header --}}
+<div style="background: #ffffff; border: 1px solid #E2E8F0; border-radius: 20px; padding: 1.5rem; margin-bottom: 2rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
   
-  <div style="flex: 1; min-width: 250px; position: relative; z-index: 1;">
-    <h2 style="font-size: 1.75rem; font-weight: 700; color: #ffffff; margin: 0 0 0.5rem; letter-spacing: -0.02em;">
-      Selamat {{ ucfirst($greeting) }}, {{ $adminName }}!
-    </h2>
-    <p style="font-size: 0.95rem; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6; max-width: 600px; font-weight: 400;">
-      "{{ $dailyQuote }}"
-    </p>
+  {{-- Left: Logo and Info --}}
+  <div style="display: flex; align-items: center; gap: 1.25rem;">
+    {{-- Logo Box --}}
+    <div style="width: 80px; height: 80px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; display: flex; align-items: center; justify-content: center; padding: 0.5rem; flex-shrink: 0;">
+      @php $adminLogo = \App\Models\Setting::get('logo'); @endphp
+      @if($adminLogo)
+        <img src="{{ asset('storage/'.$adminLogo) }}" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+      @else
+        <svg width="40" height="40" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+      @endif
+    </div>
+
+    {{-- Text Info --}}
+    <div>
+      <h2 style="font-size: 1.5rem; font-weight: 800; color: #0F172A; margin: 0 0 0.25rem; letter-spacing: -0.02em;">
+        Alat Rumah
+      </h2>
+      <div style="font-size: 0.85rem; color: #94A3B8; margin-bottom: 0.75rem; font-weight: 500;">
+        Dashboard Admin — {{ now()->timezone('Asia/Jakarta')->translatedFormat('l, d F Y') }}
+      </div>
+      <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+        <span style="display: inline-flex; align-items: center; gap: 0.375rem; background: #EFF6FF; border: 1px solid #BFDBFE; color: #2563EB; font-size: 0.75rem; font-weight: 700; padding: 0.375rem 0.875rem; border-radius: 100px;">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          HVM Digital
+        </span>
+        <span style="display: inline-flex; align-items: center; gap: 0.375rem; background: #ECFDF5; border: 1px solid #A7F3D0; color: #059669; font-size: 0.75rem; font-weight: 700; padding: 0.375rem 0.875rem; border-radius: 100px;">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Aktif s/d 8 Jul 2027
+        </span>
+      </div>
+    </div>
   </div>
 
-  <!-- Realtime Widget -->
-  <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 16px; padding: 1.25rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 200px; position: relative; z-index: 1; border: 1px solid rgba(255,255,255,0.2);">
-    <div id="realtime-time" style="font-family: 'Montserrat', sans-serif; font-size: 2rem; font-weight: 600; color: #fff; letter-spacing: 0.05em; font-variant-numeric: tabular-nums;">00:00:00</div>
-    <div id="realtime-date" style="font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.25rem;">HARI, 00 BLN 0000</div>
+  {{-- Right: Welcome or Live Clock --}}
+  <div style="text-align: right; padding-left: 1.5rem; border-left: 1px dashed #E2E8F0;">
+    <div style="font-size: 0.85rem; color: #64748B; font-weight: 600; margin-bottom: 0.25rem;">Selamat {{ ucfirst($greeting) }},</div>
+    <div style="font-size: 1.125rem; font-weight: 800; color: #0F172A; letter-spacing: -0.01em;">{{ $adminName }}</div>
+    <div id="realtime-time" style="font-family: 'Montserrat', monospace; font-size: 1.5rem; font-weight: 800; color: #3B82F6; margin-top: 0.5rem; font-variant-numeric: tabular-nums;">00:00:00</div>
+    <div id="realtime-date" style="display:none;"></div>
   </div>
 </div>
 
