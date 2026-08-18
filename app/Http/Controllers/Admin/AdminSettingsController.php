@@ -40,10 +40,12 @@ class AdminSettingsController extends Controller
         foreach ($request->allFiles() as $key => $file) {
             if (!$file->isValid()) continue;
 
-            // Handle favicon separately (ico/png, no WebP conversion)
+            // Handle favicon separately (ico/png/svg, with unique timestamp to bust browser cache)
             if ($key === 'favicon') {
-                $path = 'settings/favicon.' . $file->getClientOriginalExtension();
-                $file->storeAs('public', $path);
+                $ext = $file->getClientOriginalExtension();
+                $filename = 'favicon_' . time() . '.' . $ext;
+                $path = 'settings/' . $filename;
+                $file->storeAs('public/settings', $filename);
                 // Also copy to root public directory for direct access
                 try {
                     copy($file->getRealPath(), public_path('favicon.ico'));
@@ -61,7 +63,8 @@ class AdminSettingsController extends Controller
             }
 
             if ($key === 'logo') {
-                $path = $this->storeWebP($file, 'settings', 400, 200, 90);
+                // NO AUTO-CROP: preserve 100% full logo aspect ratio!
+                $path = $this->storeWebPNoCrop($file, 'settings', 1600, 800, 95);
                 Setting::set($key, $path, 'image');
                 continue;
             }

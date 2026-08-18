@@ -124,7 +124,20 @@ trait HandlesImageUpload
     }
 
     /**
-     * Store uploaded image as square WebP (for avatars/logos)
+     * Store uploaded image as WebP preserving original aspect ratio (NO cropping - for logos, icons, banners)
+     */
+    protected function storeWebPNoCrop(UploadedFile $file, string $folder, int $maxW = 1600, int $maxH = 800, int $quality = 95): string
+    {
+        $img      = $this->gdLoad($file);
+        $img      = $this->gdScaleDown($img, $maxW, $maxH);
+        $webp     = $this->gdEncodeWebP($img, $quality);
+        $filename = $folder . '/' . Str::random(16) . '.webp';
+        Storage::disk('public')->put($filename, $webp);
+        return $filename;
+    }
+
+    /**
+     * Store uploaded image as square WebP (for avatars)
      */
     protected function storeWebPSquare(UploadedFile $file, string $folder, int $size = 200, int $quality = 88): string
     {

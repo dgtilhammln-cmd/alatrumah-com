@@ -10,11 +10,11 @@
     // Resolve favicon
     if (!empty($adminFavicon)) {
         $favPath = ltrim($adminFavicon, '/');
-        $adminFaviconUrl = asset('storage/' . $favPath);
+        $adminFaviconUrl = asset('storage/' . $favPath) . '?v=' . md5($adminFavicon);
         $favExt  = pathinfo($favPath, PATHINFO_EXTENSION);
         $adminFavType = $favExt === 'png' ? 'image/png' : ($favExt === 'svg' ? 'image/svg+xml' : 'image/x-icon');
     } else {
-        $adminFaviconUrl = asset('favicon.ico');
+        $adminFaviconUrl = asset('favicon.ico') . '?v=1';
         $adminFavType = 'image/x-icon';
     }
 @endphp

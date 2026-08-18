@@ -36,7 +36,7 @@ class AdminClientController extends Controller
         $validated['is_active'] = $request->boolean('is_active', true);
 
         if ($request->hasFile('logo')) {
-            $validated['logo'] = $this->storeWebP($request->file('logo'), 'clients', 400, 200);
+            $validated['logo'] = $this->storeWebPNoCrop($request->file('logo'), 'clients', 600, 300);
         }
 
         Client::create($validated);
@@ -64,7 +64,7 @@ class AdminClientController extends Controller
 
         if ($request->hasFile('logo')) {
             $this->deleteStorageFile($client->logo);
-            $validated['logo'] = $this->storeWebP($request->file('logo'), 'clients', 400, 200);
+            $validated['logo'] = $this->storeWebPNoCrop($request->file('logo'), 'clients', 600, 300);
         }
 
         $client->update($validated);
