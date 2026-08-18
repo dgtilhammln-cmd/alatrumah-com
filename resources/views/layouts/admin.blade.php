@@ -64,7 +64,8 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
 }
 /* Logo area */
 .sb-logo{padding:1.5rem 1.25rem 1.25rem;display:flex;align-items:center;gap:.75rem}
-.sb-logo-badge{width:38px;height:38px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.15);padding:4px}
+.sb-logo-badge{min-width:38px;max-width:100px;height:38px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.15);padding:4px 8px}
+.sb-logo-badge img{height:100%;width:auto;max-width:100%;object-fit:contain}
 .sb-logo-text{font-size:.9rem;font-weight:800;color:#fff;line-height:1.15;letter-spacing:-.01em}
 .sb-logo-sub{font-size:.65rem;color:rgba(255,255,255,.6);font-weight:500;margin-top:1px}
 /* Search */
@@ -239,14 +240,14 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
   <div class="sb-logo">
     <div class="sb-logo-badge">
       @if($adminLogo)
-        <img src="{{ asset('storage/'.$adminLogo) }}" alt="Logo" style="width:30px;height:30px;object-fit:contain;border-radius:6px;">
+        <img src="{{ asset('storage/'.$adminLogo) }}" alt="Logo" style="height:28px;width:auto;max-width:100%;object-fit:contain;border-radius:4px;">
       @else
         <svg width="22" height="22" fill="none" stroke="#1B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
       @endif
     </div>
     <div>
       <div class="sb-logo-text">Alat Rumah</div>
-      <div class="sb-logo-sub">{{ session('admin_name','Administrator') }}</div>
+      <div class="sb-logo-sub">{{ str_ireplace('Cyclevent', 'Alat Rumah', session('admin_name', 'Admin Alat Rumah')) }}</div>
     </div>
   </div>
 

@@ -84,19 +84,31 @@
 
     /* ── Logo Pill ── */
     .nav-pill-logo {
-        padding: 0.25rem 0.5rem;
+        padding: 0.35rem 1.35rem;
         height: 50px;
+        width: auto;
         text-decoration: none;
         gap: 0.75rem;
         animation: navDropIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
         animation-delay: 0.05s;
-    }
-    .nav-logo-img-wrap {
-        height: 38px; width: auto;
-        display: flex; align-items: center; justify-content: center;
         flex-shrink: 0;
     }
-    .nav-logo-img-wrap img { width: auto; height: 100%; object-fit: contain; }
+    .nav-logo-img-wrap {
+        height: 38px;
+        width: auto;
+        max-width: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .nav-logo-img-wrap img {
+        width: auto;
+        height: 100%;
+        max-width: none;
+        object-fit: contain;
+        display: block;
+    }
     
     /* ── Menu Links Pill ── */
     .nav-pill-menu {
@@ -332,9 +344,9 @@
         }
 
         /* Show logo pill on mobile */
-        .nav-pill-logo { grid-area: logo; padding: 0 !important; margin-right: 0 !important; height: 32px !important; }
-        .nav-logo-img-wrap { height: 32px; display: flex; align-items: center; }
-        .nav-logo-img-wrap img { height: 100%; width: auto; object-fit: contain; }
+        .nav-pill-logo { grid-area: logo; padding: 0 0.85rem !important; margin-right: 0 !important; height: 38px !important; width: auto !important; max-width: none !important; }
+        .nav-logo-img-wrap { height: 32px; width: auto; max-width: none; display: flex; align-items: center; }
+        .nav-logo-img-wrap img { height: 100%; width: auto; max-width: none; object-fit: contain; }
         
         /* Actions pill */
         .nav-pill-actions { grid-area: actions; padding: 0 !important; height: 32px !important; justify-content: flex-end; }
