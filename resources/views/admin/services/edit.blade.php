@@ -120,28 +120,28 @@
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
       <div>
-        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Stok</label>
-        <input type="number" name="stock" value="{{ old('stock',$s->stock ?? 0) }}" min="0"
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Stok <span style="color:#EF4444;">*</span></label>
+        <input type="number" name="stock" value="{{ old('stock',$s?->stock ?? 0) }}" min="0" required
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Minimum Order</label>
-        <input type="number" name="min_order" value="{{ old('min_order',$s->min_order ?? 1) }}" min="1"
+        <input type="number" name="min_order" value="{{ old('min_order',$s?->min_order ?? 1) }}" min="1"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Berat (Gram)</label>
-        <input type="number" name="weight" value="{{ old('weight',$s->weight ?? 0) }}" min="0"
+        <input type="number" name="weight" value="{{ old('weight',$s?->weight ?? 0) }}" min="0"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
       <div>
-        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Rating Bintang</label>
-        <input type="number" step="0.1" name="rating" value="{{ old('rating', $service->rating ?? 0) }}" min="0" max="5" placeholder="Cth: 4.8"
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Rating Bintang <span style="color:#EF4444;">*</span></label>
+        <input type="number" step="0.1" name="rating" value="{{ old('rating', $s?->rating ?? 0) }}" min="0" max="5" placeholder="Cth: 4.8" required
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
       <div>
-        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Jumlah Terjual</label>
-        <input type="number" name="sold_count" value="{{ old('sold_count', $service->sold_count ?? 0) }}" min="0" placeholder="Cth: 1200"
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Jumlah Terjual <span style="color:#EF4444;">*</span></label>
+        <input type="number" name="sold_count" value="{{ old('sold_count', $s?->sold_count ?? 0) }}" min="0" placeholder="Cth: 1200" required
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
       <div style="grid-column:1 / -1;">
@@ -482,6 +482,48 @@ document.getElementById('svc-form').addEventListener('submit', function(e) {
 
   const desc = document.querySelector('textarea[name="description"]');
   if (desc && desc.value.trim().length < 20) errors.push('❌  Deskripsi Lengkap minimal 20 karakter.');
+
+  const stock = document.querySelector('input[name="stock"]');
+  if (!stock || stock.value === '') errors.push('❌  Stok wajib diisi.');
+
+  const rating = document.querySelector('input[name="rating"]');
+  if (!rating || rating.value === '') errors.push('❌  Rating Bintang wajib diisi.');
+
+  const soldCount = document.querySelector('input[name="sold_count"]');
+  if (!soldCount || soldCount.value === '') errors.push('❌  Jumlah Terjual wajib diisi.');
+
+  const specKeys = document.querySelectorAll('input[name="spec_keys[]"]');
+  const specValues = document.querySelectorAll('input[name="spec_values[]"]');
+  if (specKeys.length === 0) {
+    errors.push('❌  Spesifikasi Produk minimal harus ada 1 baris.');
+  } else {
+    let specValid = false;
+    for (let i = 0; i < specKeys.length; i++) {
+      if (specKeys[i].value.trim() !== '' && specValues[i].value.trim() !== '') { specValid = true; break; }
+    }
+    if (!specValid) errors.push('❌  Spesifikasi Produk wajib diisi (Label & Nilai minimal 1 baris).');
+  }
+
+  const faqQs = document.querySelectorAll('input[name="faq_qs[]"]');
+  const faqAs = document.querySelectorAll('textarea[name="faq_as[]"]');
+  if (faqQs.length === 0) {
+    errors.push('❌  Tanya Jawab (FAQ) minimal harus ada 1 baris.');
+  } else {
+    let faqValid = false;
+    for (let i = 0; i < faqQs.length; i++) {
+      if (faqQs[i].value.trim() !== '' && faqAs[i].value.trim() !== '') { faqValid = true; break; }
+    }
+    if (!faqValid) errors.push('❌  Tanya Jawab (FAQ) wajib diisi (Pertanyaan & Jawaban minimal 1 baris).');
+  }
+
+  const metaTitle = document.querySelector('input[name="meta_title"]');
+  if (!metaTitle || metaTitle.value.trim() === '') errors.push('❌  Meta Title (SEO Settings) wajib diisi.');
+
+  const metaDesc = document.querySelector('textarea[name="meta_desc"]');
+  if (!metaDesc || metaDesc.value.trim() === '') errors.push('❌  Meta Description (SEO Settings) wajib diisi.');
+
+  const metaKeywords = document.querySelector('input[name="meta_keywords"]');
+  if (!metaKeywords || metaKeywords.value.trim() === '') errors.push('❌  Meta Keywords (SEO Settings) wajib diisi.');
 
   if (errors.length > 0) {
     e.preventDefault();
