@@ -27,10 +27,6 @@
         <p style="font-size:0.8rem; color:#64748B;">Kelola alamat pengiriman Anda</p>
     </div>
     <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-        <button type="button" class="btn-add-addr" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem; background:#F8FAFC; color:#0EA5E9; border:1px solid #0EA5E9; cursor:pointer;" onclick="document.getElementById('addAddrModal').classList.add('active')">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Tambah Alamat
-        </button>
         <a href="{{ route('cart.index') }}" class="btn-add-addr" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem;">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
             via Checkout
@@ -68,7 +64,6 @@
                 @else
                 <span style="flex:2;"></span>
                 @endif
-                <button type="button" class="btn-addr-del" style="flex:1;background:#F1F5F9;color:#0F172A;border:1px solid #E2E8F0;" data-addr="{{ $addr->toJson() }}" onclick="openEditModal(JSON.parse(this.dataset.addr))">Edit</button>
                 <form method="POST" action="{{ route('account.addresses.destroy', $addr) }}" style="flex:1;" onsubmit="return confirm('Hapus alamat ini?')">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn-addr-del" style="width:100%;">Hapus</button>
@@ -83,10 +78,10 @@
             <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             <h3>Belum ada alamat</h3>
             <p style="margin-bottom:1.5rem;">Silakan tambahkan alamat pengiriman pertama Anda.</p>
-            <button type="button" class="btn-add-addr" style="margin:0 auto; cursor:pointer; display:inline-flex; align-items:center; gap:0.4rem;" onclick="document.getElementById('addAddrModal').classList.add('active')">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Tambah Alamat
-            </button>
+            <a href="{{ route('cart.index') }}" class="btn-add-addr" style="margin:0 auto; display:inline-flex; align-items:center; gap:0.4rem; text-decoration:none;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+                Tambah via Checkout
+            </a>
         </div>
     </div>
 @endif
