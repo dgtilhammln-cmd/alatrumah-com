@@ -267,19 +267,61 @@ body { background-color: #F8FAFC !important; }
                                 }
                             }
 
+                            function showPayLaterPopup(redirectUrl) {
+                                const overlay = document.createElement('div');
+                                overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);z-index:99999;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s ease;backdrop-filter:blur(4px);padding:1rem;';
+                                
+                                const modal = document.createElement('div');
+                                modal.style.cssText = 'background:#fff;border-radius:24px;width:100%;max-width:400px;padding:2rem 1.5rem;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.2);transform:scale(0.9);transition:transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);';
+                                
+                                modal.innerHTML = `
+                                    <div style="width:64px;height:64px;background:rgba(59,130,246,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+                                        <svg width="32" height="32" fill="none" stroke="#3B82F6" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                    </div>
+                                    <h3 style="font-size:1.25rem;font-weight:800;color:#1E293B;margin:0 0 .75rem;">Bayar Nanti?</h3>
+                                    <p style="font-size:.9rem;color:#64748B;margin:0 0 1.5rem;line-height:1.6;">Jika bayar nanti, Anda akan diarahkan ke halaman pesanan. Anda bisa melakukan pembayaran dan memantau status pesanan di sana.</p>
+                                    <div style="display:flex;flex-direction:column;gap:.75rem;">
+                                        <button id="btn-lanjut-pesanan" style="width:100%;padding:1rem;background:#3B82F6;color:#fff;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:background 0.2s;font-size:.95rem;box-shadow:0 4px 12px rgba(59,130,246,0.25);">Lanjutkan ke Pesanan</button>
+                                        <button id="btn-batal-bayar" style="width:100%;padding:1rem;background:#F1F5F9;color:#475569;font-weight:600;border:none;border-radius:12px;cursor:pointer;transition:background 0.2s;font-size:.95rem;">Kembali untuk Bayar Langsung</button>
+                                    </div>
+                                `;
+
+                                overlay.appendChild(modal);
+                                document.body.appendChild(overlay);
+
+                                document.getElementById('btn-lanjut-pesanan').onclick = () => {
+                                    window.location.href = redirectUrl;
+                                };
+
+                                document.getElementById('btn-batal-bayar').onclick = () => {
+                                    overlay.style.opacity = '0';
+                                    modal.style.transform = 'scale(0.9)';
+                                    setTimeout(() => document.body.removeChild(overlay), 300);
+                                };
+
+                                // Trigger animation
+                                requestAnimationFrame(() => {
+                                    overlay.style.opacity = '1';
+                                    modal.style.transform = 'scale(1)';
+                                });
+                            }
+
                             function launchSnapPay() {
                                 const btn = document.getElementById('pay-button');
                                 btn.disabled = true;
-                                btn.innerHTML = '⏳ &nbsp;Memuat Pembayaran...';
+                                btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Memuat Pembayaran...';
 
                                 snap.pay('{{ $order->payment->midtrans_token }}', {
                                     onSuccess: function(result) {
-                                        btn.innerHTML = '✅ &nbsp;Pembayaran Berhasil!';
+                                        btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Pembayaran Berhasil!';
                                         btn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
                                         showPremiumPopup('Pembayaran Berhasil!', 'Terima kasih, pembayaran Anda telah kami terima.', true, "{{ route('account.orders') }}");
                                     },
                                     onPending: function(result) {
-                                        btn.innerHTML = '✅ &nbsp;Pesanan Dibuat!';
+                                        btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Pesanan Dibuat!';
                                         showPremiumPopup('Pesanan Dibuat!', 'Anda akan diarahkan ke halaman pesanan untuk melihat status.', true, "{{ route('account.orders') }}");
                                     },
                                     onError: function(result) {
@@ -296,9 +338,9 @@ body { background-color: #F8FAFC !important; }
                         </script>
 
                         <div>
-                            <a href="{{ route('account.orders') }}" class="btn-secondary-link">
+                            <button type="button" onclick="showPayLaterPopup('{{ route('account.orders') }}')" class="btn-secondary-link" style="background:transparent;border:none;cursor:pointer;width:100%;font-size:.95rem;padding:.5rem;">
                                 Bayar nanti &rarr; Lihat Pesanan
-                            </a>
+                            </button>
                         </div>
                     @else
                         <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;font-size:0.9rem;color:#B91C1C;">
