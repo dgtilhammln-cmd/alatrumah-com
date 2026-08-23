@@ -491,24 +491,7 @@
                 @endforeach
             </div>
             
-            <script type="application/ld+json">
-            {
-              "@@context": "https://schema.org",
-              "@@type": "FAQPage",
-              "mainEntity": [
-                @foreach($faqs as $idx => $f)
-                {
-                  "@@type": "Question",
-                  "name": "{{ addslashes(strip_tags($f['q'] ?? '')) }}",
-                  "acceptedAnswer": {
-                    "@@type": "Answer",
-                    "text": "{{ addslashes(strip_tags($f['a'] ?? '')) }}"
-                  }
-                }{{ $idx < count($faqs) - 1 ? ',' : '' }}
-                @endforeach
-              ]
-            }
-            </script>
+{{-- FAQPage schema dikelola oleh controller dan SEO component --}}
         @endif
     </div>
 

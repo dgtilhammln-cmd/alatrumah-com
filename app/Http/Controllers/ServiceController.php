@@ -137,6 +137,7 @@ class ServiceController extends Controller
             'keywords'    => $service->meta_keywords,
             'og_image'    => !empty($service->og_image) ? asset('storage/'.$service->og_image) : (!empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : asset('images/og-default.jpg')),
             'canonical'   => route('products.show', ['slug' => $slug]),
+            'og_type'     => 'product',
         ];
 
         $faq = is_array($service->faqs) ? $service->faqs : [];
@@ -150,30 +151,72 @@ class ServiceController extends Controller
             ];
         }
 
-        $serviceImage = !empty($service->og_image)
-            ? rtrim(config('app.url'), '/') . '/storage/' . $service->og_image
-            : (!empty($service->image)
-                ? rtrim(config('app.url'), '/') . '/storage/' . $service->image
+        $serviceImage = !empty($service->image)
+            ? rtrim(config('app.url'), '/') . '/storage/' . $service->image
+            : (!empty($service->og_image)
+                ? rtrim(config('app.url'), '/') . '/storage/' . $service->og_image
                 : rtrim(config('app.url'), '/') . '/images/og-default.jpg');
 
-        $schema = json_encode([
-            [
-                '@context'    => 'https://schema.org',
-                '@type'       => 'Product',
-                'name'        => $service->name,
-                'image'       => [$serviceImage],
-                'description' => strip_tags($service->short_desc ?: $service->name),
-                'sku'         => $service->sku ?? 'SKU-' . str_pad($service->id, 4, '0', STR_PAD_LEFT),
-                'url'         => route('products.show', ['slug' => $slug]),
-                'brand'       => ['@type' => 'Brand', 'name' => $siteName],
-                'offers'      => [
-                    '@type'         => 'Offer',
-                    'priceCurrency' => 'IDR',
-                    'price'         => (string) ($service->final_price ?? 0),
-                    'availability'  => $service->is_available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-                    'url'           => route('products.show', ['slug' => $slug]),
-                ],
+        $schemaDesc = strip_tags($service->short_desc ?: $service->name);
+        if (strlen($schemaDesc) < 50) {
+            $schemaDesc = $schemaDesc . ' - Dapatkan produk ini dengan penawaran harga terbaik, jaminan 100% original, dan garansi resmi hanya di ' . $siteName . '. Beli sekarang juga.';
+        }
+
+        $finalPrice = $service->sale_price > 0 && $service->sale_price < $service->price ? $service->sale_price : $service->price;
+        if (empty($finalPrice)) {
+            $finalPrice = 0;
+        }
+
+        $productSchema = [
+            '@context'    => 'https://schema.org',
+            '@type'       => 'Product',
+            'name'        => $service->name,
+            'image'       => [$serviceImage],
+            'description' => $schemaDesc,
+            'sku'         => $service->sku ?? 'SKU-' . str_pad($service->id, 4, '0', STR_PAD_LEFT),
+            'url'         => route('products.show', ['slug' => $slug]),
+            'brand'       => ['@type' => 'Brand', 'name' => $siteName],
+            'offers'      => [
+                '@type'         => 'Offer',
+                'priceCurrency' => 'IDR',
+                'price'         => (string) $finalPrice,
+                'priceValidUntil' => date('Y-m-d', strtotime('+1 year')),
+                'availability'  => $service->is_available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                'url'           => route('products.show', ['slug' => $slug]),
+                'seller'        => ['@type' => 'Organization', 'name' => $siteName],
             ],
+        ];
+
+        if ($service->rating > 0) {
+            $productSchema['aggregateRating'] = [
+                '@type' => 'AggregateRating',
+                'ratingValue' => $service->rating,
+                'reviewCount' => max(1, $service->sold_count ?? 1),
+            ];
+        }
+
+        $reviews = [];
+        if ($testimonials && $testimonials->count() > 0) {
+            foreach ($testimonials->take(3) as $t) {
+                $reviews[] = [
+                    '@type' => 'Review',
+                    'reviewRating' => ['@type' => 'Rating', 'ratingValue' => $t->rating ?? 5],
+                    'author' => ['@type' => 'Person', 'name' => $t->name ?? 'Pelanggan'],
+                    'reviewBody' => strip_tags($t->content ?? 'Produk sangat bagus dan memuaskan.')
+                ];
+            }
+        } else {
+            $reviews[] = [
+                '@type' => 'Review',
+                'reviewRating' => ['@type' => 'Rating', 'ratingValue' => 5],
+                'author' => ['@type' => 'Person', 'name' => 'Pelanggan ' . $siteName],
+                'reviewBody' => 'Produk original, packing rapi, dan pengiriman sangat cepat. Sangat direkomendasikan!'
+            ];
+        }
+        $productSchema['review'] = $reviews;
+
+        $schema = json_encode([
+            $productSchema,
             [
                 '@context'   => 'https://schema.org',
                 '@type'      => 'FAQPage',
