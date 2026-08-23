@@ -104,8 +104,8 @@ class ImportOldProductsSeeder extends Seeder
                         'sale_price' => $salePrice > 0 ? $salePrice : null,
                         'weight' => $weight,
                         'is_active' => $isActive,
-                        'image' => $primaryImg ? 'uploads/products/' . $primaryImg : null,
-                        'gallery' => array_map(function($g) { return 'uploads/products/' . $g; }, $gallery),
+                        'image' => $primaryImg ? 'services/produk-lama/' . $primaryImg : null,
+                        'gallery' => array_map(function($g) { return 'services/produk-lama/' . $g; }, $gallery),
                         'stock' => 100, // Default stock as it wasn't clearly exported in stock column (used with_stock)
                         'min_order' => 1,
                         'created_at' => $createdAt !== 'NULL' ? $createdAt : now(),
