@@ -22,11 +22,18 @@ class AdminCategoryItemController extends Controller
 
     public function store(Request $request)
     {
+        // Case-insensitive unique check
+        $nameLower = strtolower(trim($request->name));
+        $exists = CategoryItem::whereRaw('LOWER(name) = ?', [$nameLower])->exists();
+        if ($exists) {
+            return back()->withErrors(['name' => 'Kategori ini sudah ada (cek huruf kapital/kecil).'])->withInput();
+        }
+
         $request->validate([
             'icon_type'  => 'required|in:icon,upload',
             'icon_value' => 'nullable|string|max:50',
             'icon_file'  => 'nullable|image|max:1024',
-            'name'       => 'required|string|max:100|unique:category_items,name',
+            'name'       => 'required|string|max:100',
             'url'        => 'nullable|string|max:255',
             'badge'      => 'nullable|string|max:20',
             'badge_color'=> 'nullable|string|max:7',
@@ -60,11 +67,18 @@ class AdminCategoryItemController extends Controller
 
     public function update(Request $request, CategoryItem $categoryItem)
     {
+        // Case-insensitive unique check
+        $nameLower = strtolower(trim($request->name));
+        $exists = CategoryItem::whereRaw('LOWER(name) = ?', [$nameLower])->where('id', '!=', $categoryItem->id)->exists();
+        if ($exists) {
+            return back()->withErrors(['name' => 'Kategori ini sudah ada (cek huruf kapital/kecil).'])->withInput();
+        }
+
         $request->validate([
             'icon_type'  => 'required|in:icon,upload',
             'icon_value' => 'nullable|string|max:50',
             'icon_file'  => 'nullable|image|max:1024',
-            'name'       => 'required|string|max:100|unique:category_items,name,' . $categoryItem->id,
+            'name'       => 'required|string|max:100',
         ]);
 
         $iconValue = $categoryItem->icon_value;
