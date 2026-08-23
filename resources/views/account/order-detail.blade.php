@@ -167,9 +167,24 @@
         <div class="tr-addr-name">{{ $order->shipping_address['receiver_name'] ?? '-' }}</div>
         <div class="tr-addr-phone">{{ $order->shipping_address['phone'] ?? '-' }}</div>
         <div class="tr-addr-text">
-            {{ $order->shipping_address['full_address'] ?? '-' }}<br>
-            {{ $order->shipping_address['district'] ?? '' }}, {{ $order->shipping_address['city'] ?? '' }}<br>
-            {{ $order->shipping_address['province'] ?? '' }} {{ $order->shipping_address['postal_code'] ?? '' }}
+            @php
+                $sa = $order->shipping_address ?? [];
+            @endphp
+            @if(!empty($sa['full_address']))
+                <div>{{ $sa['full_address'] }}</div>
+            @endif
+            @if(!empty($sa['village']))
+                <div>Kel. {{ $sa['village'] }}</div>
+            @endif
+            @if(!empty($sa['district']))
+                <div>Kec. {{ $sa['district'] }}</div>
+            @endif
+            @if(!empty($sa['city']) || !empty($sa['province']))
+                <div>{{ $sa['city'] ?? '' }}{{ !empty($sa['city']) && !empty($sa['province']) ? ', ' : '' }}{{ $sa['province'] ?? '' }}</div>
+            @endif
+            @if(!empty($sa['postal_code']))
+                <div>Kode Pos: {{ $sa['postal_code'] }}</div>
+            @endif
         </div>
     </div>
     

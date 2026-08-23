@@ -88,6 +88,7 @@ class Address extends Model
             'province'      => $this->province,
             'city'          => $this->city,
             'district'      => $this->district,
+            'village'       => $this->village,
             'postal_code'   => $this->postal_code,
             'full_address'  => $this->full_address,
             'latitude'      => $this->latitude,

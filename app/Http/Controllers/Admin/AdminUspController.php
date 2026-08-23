@@ -17,7 +17,8 @@ class AdminUspController extends Controller
 
     public function create()
     {
-        return view('admin.usp.form');
+        $nextOrder = (UspItem::max('sort_order') ?? -1) + 1;
+        return view('admin.usp.form', compact('nextOrder'));
     }
 
     public function store(Request $request)
@@ -42,7 +43,7 @@ class AdminUspController extends Controller
             'icon_type'  => $data['icon_type'],
             'icon_value' => $iconValue,
             'label'      => $data['label'],
-            'sort_order' => $request->input('sort_order', 0),
+            'sort_order' => $request->input('sort_order', (UspItem::max('sort_order') ?? -1) + 1),
             'is_active'  => $request->boolean('is_active', true),
         ]);
 

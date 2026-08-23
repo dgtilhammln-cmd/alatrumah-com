@@ -17,7 +17,8 @@ class AdminCategoryItemController extends Controller
 
     public function create()
     {
-        return view('admin.category-items.form');
+        $nextOrder = (CategoryItem::max('sort_order') ?? -1) + 1;
+        return view('admin.category-items.form', compact('nextOrder'));
     }
 
     public function store(Request $request)
@@ -53,7 +54,7 @@ class AdminCategoryItemController extends Controller
             'url'         => $request->url,
             'badge'       => $request->badge,
             'badge_color' => $request->badge_color,
-            'sort_order'  => $request->input('sort_order', 0),
+            'sort_order'  => $request->input('sort_order', (CategoryItem::max('sort_order') ?? -1) + 1),
             'is_active'   => $request->boolean('is_active', true),
         ]);
 

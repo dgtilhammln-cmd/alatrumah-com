@@ -22,7 +22,8 @@ class AdminPromoSectionController extends Controller
         $services    = Service::active()->ordered()->get();
         $categories  = CategoryItem::active()->get();
         $selectedIds = [];
-        return view('admin.promo-sections.form', compact('services', 'categories', 'selectedIds'));
+        $nextOrder   = (PromoSection::max('sort_order') ?? -1) + 1;
+        return view('admin.promo-sections.form', compact('services', 'categories', 'selectedIds', 'nextOrder'));
     }
 
     public function store(Request $request)
@@ -52,7 +53,7 @@ class AdminPromoSectionController extends Controller
             $data['logo'] = $request->file('logo')->store('promo-logos', 'public');
         }
         $data['is_active']   = $request->boolean('is_active', true);
-        $data['sort_order']  = $data['sort_order'] ?? 0;
+        $data['sort_order']  = $data['sort_order'] ?? ((PromoSection::max('sort_order') ?? -1) + 1);
 
         // Reset category_id if not category type
         if ($data['selection_type'] !== 'category') {
@@ -120,7 +121,7 @@ class AdminPromoSectionController extends Controller
             $data['logo'] = $request->file('logo')->store('promo-logos', 'public');
         }
         $data['is_active']  = $request->boolean('is_active', true);
-        $data['sort_order'] = $data['sort_order'] ?? 0;
+        $data['sort_order'] = $data['sort_order'] ?? $promoSection->sort_order;
 
         if ($data['selection_type'] !== 'category') {
             $data['category_id'] = null;

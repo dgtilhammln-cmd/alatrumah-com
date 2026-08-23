@@ -128,7 +128,7 @@
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
         <div>
           <label style="font-size:.8rem;font-weight:700;color:#64748B;display:block;margin-bottom:.5rem;">URUTAN</label>
-          <input type="number" name="sort_order" value="{{ old('sort_order', $item->sort_order ?? 0) }}" style="width:100%;padding:.75rem 1rem;border:1.5px solid #E2E8F0;border-radius:12px;font-size:.875rem;outline:none;box-sizing:border-box;">
+          <input type="number" name="sort_order" value="{{ old('sort_order', $item->sort_order ?? $nextOrder ?? 0) }}" style="width:100%;padding:.75rem 1rem;border:1.5px solid #E2E8F0;border-radius:12px;font-size:.875rem;outline:none;box-sizing:border-box;">
         </div>
         <div>
           <label style="font-size:.8rem;font-weight:700;color:#64748B;display:block;margin-bottom:.5rem;">STATUS</label>

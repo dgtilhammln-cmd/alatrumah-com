@@ -179,7 +179,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
                                     <option value="{{ $addr->id }}"
                                         data-city="{{ $addr->city }}"
                                         data-province="{{ $addr->province }}"
-                                        data-full-address="{{ $addr->address }}, {{ $addr->district }}, {{ $addr->city }}, {{ $addr->province }}">
+                                        data-full-address="{{ $addr->full_address }}, {{ $addr->village ? $addr->village . ', ' : '' }}{{ $addr->district }}, {{ $addr->city }}, {{ $addr->province }} {{ $addr->postal_code }}">
                                         {{ $addr->label }} - {{ $addr->receiver_name }} ({{ $addr->city }}, {{ $addr->province }})
                                     </option>
                                 @endforeach
@@ -1050,8 +1050,10 @@ label:focus{outline:none !important;box-shadow:none !important;}
             const prov = document.getElementById('province_name')?.value || '';
             const city = document.getElementById('city_name')?.value || '';
             const dist = document.getElementById('district_name')?.value || '';
+            const vill = document.getElementById('new_addr_village')?.value || '';
+            const post = document.getElementById('new_addr_postal')?.value || '';
             const full = document.getElementById('new_addr_full')?.value || '';
-            addressText = `${full}, ${dist}, ${city}, ${prov}`;
+            addressText = `${full}, ${vill ? vill + ', ' : ''}${dist}, ${city}, ${prov} ${post}`;
         } else {
             // Saved Address
             const opt = select.options[select.selectedIndex];
