@@ -408,33 +408,7 @@ label:focus{outline:none !important;box-shadow:none !important;}
                         </button>
                     </div>
 
-                    {{-- ====== VOUCHER MODAL ====== --}}
-                    <div id="voucher-modal-overlay" onclick="closeVoucherModal()" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);z-index:99998;backdrop-filter:blur(4px);opacity:0;transition:opacity 0.3s ease;"></div>
-                    <div id="voucher-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);width:92%;max-width:420px;z-index:99999;background:#fff;border-radius:20px;max-height:75vh;overflow:hidden;flex-direction:column;opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);">
-                        {{-- Header --}}
-                        <div style="padding:1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F1F5F9;background:#F8FAFC;">
-                            <div style="display:flex;align-items:center;gap:0.5rem;font-size:1.1rem;font-weight:800;color:#0F172A;">
-                                <svg width="20" height="20" fill="none" stroke="#0EA5E9" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
-                                Pilih Voucher
-                            </div>
-                            <button type="button" onclick="closeVoucherModal()" style="background:#E2E8F0;border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:#475569;transition:background 0.2s;" onmouseover="this.style.background='#CBD5E1'" onmouseout="this.style.background='#E2E8F0'">✕</button>
-                        </div>
-                        {{-- Manual Input --}}
-                        <div style="padding:1rem 1.25rem;border-bottom:1px solid #F1F5F9;">
-                            <div style="display:flex;gap:0.5rem;">
-                                <input type="text" id="voucher-manual-input" placeholder="Masukkan kode voucher..." style="flex:1;border:1.5px solid #E2E8F0;border-radius:10px;padding:0.65rem 1rem;font-size:0.9rem;font-family:var(--font);outline:none;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
-                                <button type="button" onclick="applyManualVoucher()" style="background:linear-gradient(135deg,#0EA5E9,#0284C7);color:#fff;border:none;border-radius:10px;padding:0.65rem 1.25rem;font-weight:700;font-size:0.875rem;cursor:pointer;white-space:nowrap;">Pakai</button>
-                            </div>
-                            <div id="voucher-manual-msg" style="font-size:0.78rem;margin-top:0.4rem;display:none;"></div>
-                        </div>
-                        {{-- List --}}
-                        <div style="overflow-y:auto;flex:1;padding:0.75rem 1.25rem 2rem;" id="voucher-list-container">
-                            <div style="font-size:0.75rem;color:#94A3B8;font-weight:600;margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.5px;">Voucher Tersedia</div>
-                            <div id="voucher-list">
-                                <div style="text-align:center;padding:2rem;color:#94A3B8;font-size:0.875rem;">Memuat voucher...</div>
-                            </div>
-                        </div>
-                    </div>
+
 
                     <div class="checkout-sticky-footer" style="margin-top: 1.5rem;">
                         <div class="summary-total" style="margin-top:0; padding-top:1rem;">
@@ -452,6 +426,34 @@ label:focus{outline:none !important;box-shadow:none !important;}
             </div>
         </div>
     </form>
+</div>
+
+{{-- ====== VOUCHER MODAL ====== --}}
+<div id="voucher-modal-overlay" onclick="closeVoucherModal()" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);z-index:999998;backdrop-filter:blur(4px);opacity:0;transition:opacity 0.3s ease;"></div>
+<div id="voucher-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);width:92%;max-width:420px;z-index:999999;background:#fff;border-radius:20px;max-height:75vh;overflow:hidden;flex-direction:column;opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);">
+    {{-- Header --}}
+    <div style="padding:1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F1F5F9;background:#F8FAFC;">
+        <div style="display:flex;align-items:center;gap:0.5rem;font-size:1.1rem;font-weight:800;color:#0F172A;">
+            <svg width="20" height="20" fill="none" stroke="#0EA5E9" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+            Pilih Voucher
+        </div>
+        <button type="button" onclick="closeVoucherModal()" style="background:#E2E8F0;border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:#475569;transition:background 0.2s;" onmouseover="this.style.background='#CBD5E1'" onmouseout="this.style.background='#E2E8F0'">✕</button>
+    </div>
+    {{-- Manual Input --}}
+    <div style="padding:1rem 1.25rem;border-bottom:1px solid #F1F5F9;">
+        <div style="display:flex;gap:0.5rem;">
+            <input type="text" id="voucher-manual-input" placeholder="Masukkan kode voucher..." style="flex:1;border:1.5px solid #E2E8F0;border-radius:10px;padding:0.65rem 1rem;font-size:0.9rem;font-family:var(--font);outline:none;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
+            <button type="button" onclick="applyManualVoucher()" style="background:linear-gradient(135deg,#0EA5E9,#0284C7);color:#fff;border:none;border-radius:10px;padding:0.65rem 1.25rem;font-weight:700;font-size:0.875rem;cursor:pointer;white-space:nowrap;">Pakai</button>
+        </div>
+        <div id="voucher-manual-msg" style="font-size:0.78rem;margin-top:0.4rem;display:none;"></div>
+    </div>
+    {{-- List --}}
+    <div style="overflow-y:auto;flex:1;padding:0.75rem 1.25rem 2rem;" id="voucher-list-container">
+        <div style="font-size:0.75rem;color:#94A3B8;font-weight:600;margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.5px;">Voucher Tersedia</div>
+        <div id="voucher-list">
+            <div style="text-align:center;padding:2rem;color:#94A3B8;font-size:0.875rem;">Memuat voucher...</div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -1245,7 +1247,13 @@ label:focus{outline:none !important;box-shadow:none !important;}
             const opacity = v.eligible ? '1' : '0.5';
             const cursor  = v.eligible ? 'pointer' : 'default';
             const bgCard  = v.eligible ? '#fff' : '#F8FAFC';
-            const hint    = v.already_used ? '⚠️ Sudah digunakan' : (!v.eligible ? '⚠️ Belum memenuhi syarat' : '');
+            
+            let hint = '';
+            if (v.already_used) {
+                hint = '⚠️ Sudah digunakan';
+            } else if (!v.eligible) {
+                hint = v.shortage_fmt ? `⚠️ Belum memenuhi syarat. Tambah belanja ${v.shortage_fmt} lagi.` : '⚠️ Belum memenuhi syarat';
+            }
 
             html += `
             <div onclick="${v.eligible ? `selectVoucher('${v.code}', '${v.estimated_discount_fmt || ''}', ${v.estimated_discount})` : ''}"

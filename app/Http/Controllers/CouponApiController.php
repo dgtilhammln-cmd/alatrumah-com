@@ -63,6 +63,9 @@ class CouponApiController extends Controller
                     ? 'Min. belanja Rp ' . number_format($c->min_purchase, 0, ',', '.')
                     : 'Tanpa min. belanja';
 
+                $shortage = !$eligible ? (float)$c->min_purchase - $subtotal : 0;
+                $shortageFormatted = $shortage > 0 ? 'Rp ' . number_format($shortage, 0, ',', '.') : null;
+
                 $maxDiscountFormatted = $c->max_discount
                     ? 'Maks. Rp ' . number_format($c->max_discount, 0, ',', '.')
                     : null;
@@ -83,6 +86,7 @@ class CouponApiController extends Controller
                     'remaining'             => $remaining,
                     'eligible'              => $eligible && !$alreadyUsed,
                     'already_used'          => $alreadyUsed,
+                    'shortage_fmt'          => $shortageFormatted,
                     'estimated_discount'    => $estimatedDiscount,
                     'estimated_discount_fmt'=> $estimatedDiscount > 0 ? 'Hemat Rp ' . number_format($estimatedDiscount, 0, ',', '.') : null,
                 ];
