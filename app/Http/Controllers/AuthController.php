@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
@@ -62,13 +63,12 @@ class AuthController extends Controller
             'name'     => 'required|string|max:100',
             'email'    => 'required|email|unique:users,email',
             'phone'    => 'nullable|string|max:20',
-            'password' => 'required|min:6|confirmed',
+            'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()->symbols()],
         ], [
             'name.required'      => 'Nama wajib diisi.',
             'email.required'     => 'Email wajib diisi.',
             'email.unique'       => 'Email sudah terdaftar.',
             'password.required'  => 'Kata sandi wajib diisi.',
-            'password.min'       => 'Kata sandi minimal 6 karakter.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
         ]);
 

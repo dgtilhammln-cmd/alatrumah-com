@@ -54,10 +54,17 @@
             <label class="form-label" for="password">Kata Sandi <span>*</span></label>
             <div class="input-wrap">
                 <input type="password" id="password" name="password" class="form-input {{ $errors->has('password') ? 'is-invalid' : '' }}"
-                       placeholder="Minimal 6 karakter" autocomplete="new-password">
+                       placeholder="Minimal 8 karakter" autocomplete="new-password" oninput="checkPasswordStrength(this.value)">
                 <span class="input-icon" onclick="togglePwd('password', this)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 </span>
+            </div>
+            <div id="pwd-reqs" style="margin-top:0.5rem;font-size:0.75rem;color:#64748B;line-height:1.4;">
+                <div style="font-weight:600;margin-bottom:0.25rem;">Kata sandi harus mengandung:</div>
+                <div id="req-len" style="display:flex;align-items:center;gap:0.3rem;"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg> Minimal 8 karakter</div>
+                <div id="req-let" style="display:flex;align-items:center;gap:0.3rem;"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg> Huruf</div>
+                <div id="req-num" style="display:flex;align-items:center;gap:0.3rem;"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg> Angka</div>
+                <div id="req-sym" style="display:flex;align-items:center;gap:0.3rem;"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg> Simbol (misal: !@#$%)</div>
             </div>
         </div>
 
@@ -127,6 +134,21 @@ function prevStep() {
     // Remove required to prevent HTML5 validation error when hidden
     document.getElementById('password').required = false;
     document.getElementById('password_confirmation').required = false;
+}
+function updateReq(id, isValid, text) {
+    const el = document.getElementById(id);
+    const iconPass = '<svg width="12" height="12" fill="none" stroke="#10B981" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5"/></svg>';
+    const iconWait = '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>';
+    
+    el.style.color = isValid ? '#10B981' : '#64748B';
+    el.innerHTML = (isValid ? iconPass : iconWait) + ' ' + text;
+}
+
+function checkPasswordStrength(pwd) {
+    updateReq('req-len', pwd.length >= 8, 'Minimal 8 karakter');
+    updateReq('req-let', /[a-zA-Z]/.test(pwd), 'Huruf');
+    updateReq('req-num', /[0-9]/.test(pwd), 'Angka');
+    updateReq('req-sym', /[^a-zA-Z0-9]/.test(pwd), 'Simbol (misal: !@#$%)');
 }
 </script>
 @endsection

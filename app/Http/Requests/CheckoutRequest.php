@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Services\CartService;
+use Illuminate\Validation\Rules\Password;
 
 class CheckoutRequest extends FormRequest
 {
@@ -27,7 +28,7 @@ class CheckoutRequest extends FormRequest
             $rules['guest_name']     = 'required|string|max:255';
             $rules['guest_email']    = 'required|email|unique:users,email';
             $rules['guest_phone']    = 'required|string|min:9|max:20';
-            $rules['guest_password'] = 'required|string|min:6';
+            $rules['guest_password'] = ['required', 'string', Password::min(8)->letters()->numbers()->symbols()];
         }
 
         if ($summary['has_physical_product']) {
