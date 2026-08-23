@@ -216,6 +216,57 @@ body { background-color: #F8FAFC !important; }
                             data-client-key="{{ config('midtrans.client_key') }}"></script>
 
                         <script>
+                            function showPremiumPopup(title, message, isSuccess = true, redirectUrl = null) {
+                                const overlay = document.createElement('div');
+                                overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);z-index:99999;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s ease;backdrop-filter:blur(4px);';
+                                
+                                const modal = document.createElement('div');
+                                modal.style.cssText = 'background:#fff;border-radius:24px;width:90%;max-width:400px;padding:2rem;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.2);transform:scale(0.9);transition:transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);';
+                                
+                                const iconColor = isSuccess ? '#10B981' : '#EF4444';
+                                const iconBg = isSuccess ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)';
+                                const iconSvg = isSuccess 
+                                    ? '<svg width="32" height="32" fill="none" stroke="'+iconColor+'" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>'
+                                    : '<svg width="32" height="32" fill="none" stroke="'+iconColor+'" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>';
+
+                                modal.innerHTML = `
+                                    <div style="width:64px;height:64px;background:${iconBg};border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+                                        ${iconSvg}
+                                    </div>
+                                    <h3 style="font-size:1.25rem;font-weight:800;color:#1E293B;margin:0 0 .5rem;">${title}</h3>
+                                    <p style="font-size:.9rem;color:#64748B;margin:0 0 1.5rem;line-height:1.5;">${message}</p>
+                                `;
+
+                                if (!redirectUrl) {
+                                    const btn = document.createElement('button');
+                                    btn.innerHTML = 'Tutup';
+                                    btn.style.cssText = 'width:100%;padding:.875rem;background:#F1F5F9;color:#64748B;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:background 0.2s;';
+                                    btn.onmouseover = () => btn.style.background = '#E2E8F0';
+                                    btn.onmouseout = () => btn.style.background = '#F1F5F9';
+                                    btn.onclick = () => {
+                                        overlay.style.opacity = '0';
+                                        modal.style.transform = 'scale(0.9)';
+                                        setTimeout(() => document.body.removeChild(overlay), 300);
+                                    };
+                                    modal.appendChild(btn);
+                                }
+
+                                overlay.appendChild(modal);
+                                document.body.appendChild(overlay);
+
+                                // Trigger animation
+                                requestAnimationFrame(() => {
+                                    overlay.style.opacity = '1';
+                                    modal.style.transform = 'scale(1)';
+                                });
+
+                                if (redirectUrl) {
+                                    setTimeout(() => {
+                                        window.location.href = redirectUrl;
+                                    }, 2000);
+                                }
+                            }
+
                             function launchSnapPay() {
                                 const btn = document.getElementById('pay-button');
                                 btn.disabled = true;
@@ -225,19 +276,16 @@ body { background-color: #F8FAFC !important; }
                                     onSuccess: function(result) {
                                         btn.innerHTML = '✅ &nbsp;Pembayaran Berhasil!';
                                         btn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
-                                        setTimeout(() => {
-                                            window.location.href = "{{ route('account.orders') }}";
-                                        }, 1500);
+                                        showPremiumPopup('Pembayaran Berhasil!', 'Terima kasih, pembayaran Anda telah kami terima.', true, "{{ route('account.orders') }}");
                                     },
                                     onPending: function(result) {
-                                        btn.disabled = false;
-                                        btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Bayar Sekarang';
-                                        alert('Pembayaran menunggu konfirmasi. Cek email Anda untuk instruksi selanjutnya.');
+                                        btn.innerHTML = '✅ &nbsp;Pesanan Dibuat!';
+                                        showPremiumPopup('Pesanan Dibuat!', 'Anda akan diarahkan ke halaman pesanan untuk melihat status.', true, "{{ route('account.orders') }}");
                                     },
                                     onError: function(result) {
                                         btn.disabled = false;
                                         btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:8px;vertical-align:-4px;"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Coba Lagi';
-                                        alert('Pembayaran gagal. Silakan coba metode pembayaran lain.');
+                                        showPremiumPopup('Pembayaran Gagal', 'Silakan coba metode pembayaran lain atau hubungi admin.', false);
                                     },
                                     onClose: function() {
                                         btn.disabled = false;
