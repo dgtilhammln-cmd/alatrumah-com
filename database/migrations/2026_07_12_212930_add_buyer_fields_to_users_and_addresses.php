@@ -18,9 +18,11 @@ return new class extends Migration
             $table->string('google_id')->nullable()->after('avatar')->index();
         });
 
-        Schema::table('addresses', function (Blueprint $table) {
-            $table->string('village')->nullable()->after('district');
-        });
+        if (Schema::hasTable('addresses') && !Schema::hasColumn('addresses', 'village')) {
+            Schema::table('addresses', function (Blueprint $table) {
+                $table->string('village')->nullable()->after('district');
+            });
+        }
     }
 
     /**
@@ -32,8 +34,10 @@ return new class extends Migration
             $table->dropColumn(['username', 'phone', 'avatar', 'google_id']);
         });
 
-        Schema::table('addresses', function (Blueprint $table) {
-            $table->dropColumn('village');
-        });
+        if (Schema::hasTable('addresses') && Schema::hasColumn('addresses', 'village')) {
+            Schema::table('addresses', function (Blueprint $table) {
+                $table->dropColumn('village');
+            });
+        }
     }
 };
