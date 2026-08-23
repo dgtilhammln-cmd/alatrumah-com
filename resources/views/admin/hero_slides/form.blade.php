@@ -32,12 +32,12 @@
                 <div>
                     <label class="form-label">Deskripsi</label>
                     <textarea name="description" class="form-input" rows="3" placeholder="Sirkulasi maksimal untuk membuang hawa panas...">{{ old('description', $slide->description ?? '') }}</textarea>
-                    <p style="font-size:.7rem;color:rgba(255,255,255,.25);margin:.375rem 0 0;">Maks. 500 karakter.</p>
+                    <p style="font-size:.7rem;color:var(--text3);margin:.375rem 0 0;">Maks. 500 karakter.</p>
                 </div>
                 <div>
                     <label class="form-label">Ikon (Nama SVG / Kode)</label>
                     <input type="text" name="icon" value="{{ old('icon', $slide->icon ?? '') }}" class="form-input" placeholder="building | home | truck | coffee">
-                    <p style="font-size:.7rem;color:rgba(255,255,255,.25);margin:.375rem 0 0;">Pilih: building, home, truck, coffee, activity, shield, clock, star</p>
+                    <p style="font-size:.7rem;color:var(--text3);margin:.375rem 0 0;">Pilih: building, home, truck, coffee, activity, shield, clock, star</p>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
                 <button type="button" id="btnRemoveImage" style="margin-top:0.5rem; display:inline-flex; align-items:center; gap:0.3rem; background:none; border:none; color:#f87171; font-size:0.75rem; cursor:pointer; text-decoration:underline;"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path></svg>Hapus & Ganti Gambar</button>
             </div>
             
-            <p style="font-size:.7rem;color:rgba(255,255,255,.4);margin:.5rem 0 0;">Upload gambar dengan rasio sesuai posisi (Hero: 16:7 | Banner Kanan: 4:3). Gambar akan disimpan sesuai aslinya.</p>
+            <p style="font-size:.7rem;color:var(--text3);margin:.5rem 0 0;">Upload gambar dengan rasio sesuai posisi (Hero: 16:7 | Banner Kanan: 4:3). Gambar akan disimpan sesuai aslinya.</p>
         </div>
 
         {{-- Button --}}
@@ -91,7 +91,7 @@
                 <div style="display:flex;align-items:flex-end;gap:.5rem;padding-bottom:.5rem;">
                     <input type="hidden" name="is_active" value="0">
                     <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $slide->is_active ?? true) ? 'checked' : '' }} style="accent-color:#38BDF8;width:16px;height:16px;">
-                    <label for="is_active" style="font-size:.875rem;color:#D4D4D8;">Tampilkan di homepage</label>
+                    <label for="is_active" style="font-size:.875rem;color:var(--text2);">Tampilkan di homepage</label>
                 </div>
             </div>
         </div>

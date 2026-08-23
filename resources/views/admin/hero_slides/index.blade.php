@@ -20,16 +20,16 @@
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:.4rem;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
         Warna Background Oval (Hero Slider)
     </h3>
-    <p style="font-size:.75rem;color:rgba(255,255,255,.35);margin:0 0 1rem;">Warna ini akan digunakan sebagai latar belakang oval di belakang hero slider. Anda bisa pilih warna solid atau isi manual dengan gradient CSS.</p>
+    <p style="font-size:.75rem;color:var(--text3);margin:0 0 1rem;">Warna ini akan digunakan sebagai latar belakang oval di belakang hero slider. Anda bisa pilih warna solid atau isi manual dengan gradient CSS.</p>
     <form action="{{ route('admin.settings.update') }}" method="POST" style="display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap;">
         @csrf
         <div style="flex:1;min-width:200px;">
-            <label style="font-size:.7rem;font-weight:600;color:rgba(255,255,255,.5);display:block;margin-bottom:.5rem;">Warna / Gradient CSS</label>
+            <label style="font-size:.7rem;font-weight:600;color:var(--text2);display:block;margin-bottom:.5rem;">Warna / Gradient CSS</label>
             <div style="display:flex;gap:.5rem;align-items:center;">
-                <input type="color" id="colorPicker" value="#1e3a8a" style="width:42px;height:42px;border-radius:8px;border:none;cursor:pointer;padding:2px;background:transparent;" title="Pilih warna solid" onchange="document.getElementById('gradientInput').value = this.value;">
+                <input type="color" id="colorPicker" value="#1e3a8a" style="width:42px;height:42px;border-radius:8px;border:1px solid var(--border);cursor:pointer;padding:2px;background:transparent;" title="Pilih warna solid" onchange="document.getElementById('gradientInput').value = this.value;">
                 <input type="text" name="hero_oval_gradient" id="gradientInput" class="form-input" value="{{ \App\Models\Setting::get('hero_oval_gradient', 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)') }}" placeholder="linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)" style="flex:1;">
             </div>
-            <p style="font-size:.68rem;color:rgba(255,255,255,.25);margin:.35rem 0 0;">Klik picker untuk warna solid, atau ketik manual untuk gradient. Contoh: <code style="color:#38BDF8;">linear-gradient(135deg, #1e3a8a, #3b82f6)</code></p>
+            <p style="font-size:.68rem;color:var(--text3);margin:.35rem 0 0;">Klik picker untuk warna solid, atau ketik manual untuk gradient. Contoh: <code style="color:#38BDF8;">linear-gradient(135deg, #1e3a8a, #3b82f6)</code></p>
         </div>
         <button type="submit" class="btn-primary" style="height:42px;padding:0 1.5rem;white-space:nowrap;flex-shrink:0;">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right:.35rem;"><polyline points="20 6 9 17 4 12"/></svg>
@@ -39,7 +39,7 @@
 </div>
 
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
-    <p style="font-size:.875rem;color:rgba(255,255,255,.45);margin:0;">Total Banner: {{ $slides->count() }}</p>
+    <p style="font-size:.875rem;color:var(--text3);margin:0;">Total Banner: {{ $slides->count() }}</p>
     <a href="{{ route('admin.hero_slides.create') }}" class="btn-primary">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
         Tambah Banner
@@ -48,47 +48,47 @@
 
 @if($slides->isEmpty())
 <div class="admin-card" style="text-align:center;padding:3rem;">
-    <p style="color:rgba(255,255,255,.3);font-size:.9rem;">Belum ada slide. Klik "Tambah Slide" untuk membuat yang pertama.</p>
+    <p style="color:var(--text3);font-size:.9rem;">Belum ada slide. Klik "Tambah Slide" untuk membuat yang pertama.</p>
 </div>
 @else
 <div style="display:flex;flex-direction:column;gap:1rem;">
     @foreach($slides as $slide)
     <div class="admin-card" style="display:flex;align-items:center;gap:1.5rem;">
         {{-- Thumbnail --}}
-        <div style="width:100px;height:70px;border-radius:8px;overflow:hidden;flex-shrink:0;background:#1a1a1f;">
+        <div style="width:100px;height:70px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--bg3);border:1px solid var(--border);">
             @if($slide->image)
                 <img src="{{ asset('storage/'.$slide->image) }}" style="width:100%;height:100%;object-fit:cover;" alt="{{ $slide->title }}">
             @else
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-size:.7rem;">No Image</div>
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:.7rem;">No Image</div>
             @endif
         </div>
         {{-- Info --}}
         <div style="flex:1;">
-            <div style="font-size:.875rem;font-weight:600;color:#fff;margin-bottom:.25rem;">{{ $slide->title }}</div>
-            <div style="font-size:.75rem;color:rgba(255,255,255,.4);line-height:1.4;">{{ Str::limit($slide->description, 80) }}</div>
+            <div style="font-size:.875rem;font-weight:700;color:var(--text1);margin-bottom:.25rem;">{{ $slide->title }}</div>
+            <div style="font-size:.75rem;color:var(--text2);line-height:1.4;">{{ Str::limit($slide->description, 80) }}</div>
             <div style="display:flex;gap:.75rem;margin-top:.5rem;align-items:center;">
                 @if($slide->button_text)
                     <span style="font-size:.7rem;background:rgba(56,189,248,.1);color:#38BDF8;padding:.2rem .6rem;border-radius:4px;">{{ $slide->button_text }}</span>
                 @endif
                 @if($slide->button_url)
-                    <span style="font-size:.7rem;color:rgba(255,255,255,.3);">→ {{ Str::limit($slide->button_url, 40) }}</span>
+                    <span style="font-size:.7rem;color:var(--text3);">→ {{ Str::limit($slide->button_url, 40) }}</span>
                 @endif
             </div>
         </div>
         {{-- Order --}}
         <div style="text-align:center;flex-shrink:0;">
-            <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:.25rem;">Urutan</div>
-            <div style="font-size:1.25rem;font-weight:700;color:#fff;">{{ $slide->order }}</div>
+            <div style="font-size:.7rem;color:var(--text3);margin-bottom:.25rem;">Urutan</div>
+            <div style="font-size:1.25rem;font-weight:800;color:var(--text1);">{{ $slide->order }}</div>
         </div>
         {{-- Position --}}
         <div style="flex-shrink:0; width:130px; text-align:center;">
-            <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:.35rem;">Posisi</div>
+            <div style="font-size:.7rem;color:var(--text3);margin-bottom:.35rem;">Posisi</div>
             @php
                 $posLabel = match($slide->position ?? 'hero') {
                     'hero'    => ['label'=>'Hero Slider', 'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>', 'color'=>'rgba(56,189,248,.15)', 'text'=>'#38BDF8'],
                     'utama'   => ['label'=>'Kanan Atas',  'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>', 'color'=>'rgba(16,185,129,.15)',  'text'=>'#34d399'],
                     'samping' => ['label'=>'Kanan Bawah', 'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="7" y1="7" x2="17" y2="17"></line><polyline points="17 7 17 17 7 17"></polyline></svg>', 'color'=>'rgba(245,158,11,.15)', 'text'=>'#fbbf24'],
-                    default   => ['label'=>$slide->position,'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>','color'=>'rgba(255,255,255,.07)','text'=>'#999'],
+                    default   => ['label'=>$slide->position,'icon'=>'<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>','color'=>'var(--bg3)','text'=>'var(--text3)'],
                 };
             @endphp
             <span style="font-size:.7rem;padding:.3rem .6rem;border-radius:6px;background:{{ $posLabel['color'] }};color:{{ $posLabel['text'] }};font-weight:600;display:inline-flex;align-items:center;gap:.3rem;">
@@ -97,7 +97,7 @@
         </div>
         {{-- Status --}}
         <div style="flex-shrink:0;">
-            <span style="font-size:.7rem;padding:.3rem .75rem;border-radius:20px;{{ $slide->is_active ? 'background:rgba(16,185,129,.15);color:#34d399;' : 'background:rgba(255,255,255,.05);color:rgba(255,255,255,.3);' }}">
+            <span style="font-size:.7rem;padding:.3rem .75rem;border-radius:20px;font-weight:600;{{ $slide->is_active ? 'background:rgba(16,185,129,.1);color:#10B981;' : 'background:var(--bg3);color:var(--text3);' }}">
                 {{ $slide->is_active ? 'Aktif' : 'Nonaktif' }}
             </span>
         </div>
