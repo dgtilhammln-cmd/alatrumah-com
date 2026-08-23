@@ -305,36 +305,32 @@
 
     {{-- Existing saved gallery images --}}
     @if($s && is_array($s->gallery) && count($s->gallery) > 0)
-    <div id="gallery-saved-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;">
+    <div id="gallery-saved-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(80px, 1fr));gap:.5rem;margin-bottom:1rem;">
       @foreach($s->gallery as $g)
-      <div class="gallery-saved-item" data-path="{{ $g }}" style="position:relative;border-radius:10px;overflow:hidden;border:1.5px solid #E4E7F0;transition:all .3s;">
-        <img src="{{ asset('storage/'.$g) }}" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block;">
+      <div class="gallery-saved-item" data-path="{{ $g }}" style="position:relative;border-radius:8px;overflow:hidden;border:1.5px solid #E4E7F0;aspect-ratio:1/1;">
+        <img src="{{ asset('storage/'.$g) }}" style="width:100%;height:100%;object-fit:cover;display:block;">
         {{-- Trash button (AJAX delete) --}}
         <button type="button"
                 onclick="deleteGalleryImage(this, '{{ $g }}', {{ $s->id }})"
                 title="Hapus foto ini"
-                style="position:absolute;top:.375rem;right:.375rem;width:32px;height:32px;background:rgba(239,68,68,0.92);border:none;border-radius:8px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(239,68,68,0.4);transition:all .2s;backdrop-filter:blur(4px);"
-                onmouseover="this.style.background='rgba(220,38,38,1)';this.style.transform='scale(1.1)'"
-                onmouseout="this.style.background='rgba(239,68,68,0.92)';this.style.transform='scale(1)'">
+                style="position:absolute;top:4px;right:4px;width:20px;height:20px;background:rgba(239,68,68,0.92);border:none;border-radius:4px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(239,68,68,0.4);padding:0;">
           {{-- Trash icon --}}
-          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <polyline points="3 6 5 6 21 6"/>
-            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-            <line x1="10" y1="11" x2="10" y2="17"/>
-            <line x1="14" y1="11" x2="14" y2="17"/>
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
         {{-- Label badge --}}
-        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(15,23,42,0.55);padding:.25rem .5rem;font-size:.65rem;color:rgba(255,255,255,0.85);font-weight:600;backdrop-filter:blur(4px);">Tersimpan</div>
+        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(15,23,42,0.55);padding:.15rem;font-size:.6rem;color:rgba(255,255,255,0.85);font-weight:600;text-align:center;">Tersimpan</div>
       </div>
       @endforeach
     </div>
     @else
-    <div id="gallery-saved-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;"></div>
+    <div id="gallery-saved-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(80px, 1fr));gap:.5rem;margin-bottom:1rem;"></div>
     @endif
 
     {{-- New gallery file previews (before save) --}}
-    <div id="gallery-new-previews" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem;"></div>
+    <div id="gallery-new-previews" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(80px, 1fr));gap:.5rem;margin-bottom:.75rem;"></div>
 
     {{-- Upload trigger --}}
     <label style="display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1rem;border:2px dashed #E4E7F0;border-radius:12px;cursor:pointer;transition:all .2s;text-align:center;"
@@ -438,10 +434,10 @@ function previewGalleryFiles(input) {
     Array.from(input.files).forEach(function(file, idx) {
         var url = URL.createObjectURL(file);
         var div = document.createElement('div');
-        div.style.cssText = 'position:relative;border-radius:10px;overflow:hidden;border:2px solid #8B5CF6;transition:all .3s;';
-        div.innerHTML = '<img src="' + url + '" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block;">'
-            + '<button type="button" onclick="removeGalleryFile(\''+input.id+'\', '+idx+')" title="Batalkan foto ini" style="position:absolute;top:.375rem;right:.375rem;width:32px;height:32px;background:rgba(239,68,68,0.92);border:none;border-radius:8px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(239,68,68,0.4);">'
-            + '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>'
+        div.style.cssText = 'position:relative;border-radius:8px;overflow:hidden;border:1.5px solid #8B5CF6;aspect-ratio:1/1;';
+        div.innerHTML = '<img src="' + url + '" style="width:100%;height:100%;object-fit:cover;display:block;">'
+            + '<button type="button" onclick="removeGalleryFile(\''+input.id+'\', '+idx+')" style="position:absolute;top:4px;right:4px;width:20px;height:20px;background:rgba(239,68,68,0.95);border:none;border-radius:4px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.3);padding:0;">'
+            + '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
             + '</button>'
             + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(59,130,246,0.85);padding:.25rem .5rem;font-size:.65rem;color:#fff;font-weight:700;text-align:center;">Baru</div>';
         container.appendChild(div);
