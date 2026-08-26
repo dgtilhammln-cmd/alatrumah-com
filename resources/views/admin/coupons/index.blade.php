@@ -49,7 +49,7 @@
             
             <td style="padding:1.25rem 1.5rem;">
               <div style="font-size:0.9rem;font-weight:700;color:#059669;margin-bottom:0.15rem;">
-                @if($c->type === 'percentage') Diskon {{ (int)$c->value }}% @else Potongan Rp {{ number_format($c->value,0,',','.') }} @endif
+                @if($c->type === \App\Enums\CouponType::Percentage || $c->type->value === 'percentage') Diskon {{ (int)$c->value }}% @else Potongan Rp {{ number_format($c->value,0,',','.') }} @endif
               </div>
               <div style="font-size:0.75rem;color:#64748B;">
                 Min: Rp {{ number_format($c->min_purchase,0,',','.') }} 
