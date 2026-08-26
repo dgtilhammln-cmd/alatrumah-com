@@ -268,10 +268,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
       Dashboard
     </a>
-    <a href="{{ route('admin.analytics') }}" class="sb-link {{ request()->routeIs('admin.analytics*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      Analytics
-    </a>
+
 
     <div class="sb-sec">Konten</div>
     <a href="{{ route('admin.services.index') }}" class="sb-link {{ request()->routeIs('admin.services*') ? 'active' : '' }}">
