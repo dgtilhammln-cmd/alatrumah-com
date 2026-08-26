@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
-use App\Models\CategoryItem;
+use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
@@ -28,7 +28,7 @@ class AdminServiceController extends Controller
     }
 
     public function create() { 
-        $categories = CategoryItem::where('is_active', true)->orderBy('sort_order')->get();
+        $categories = ProductCategory::active()->ordered()->get();
         return view('admin.services.create', compact('categories')); 
     }
 
@@ -70,7 +70,7 @@ class AdminServiceController extends Controller
             'sku'           => 'nullable|string|max:100',
             'rating'        => 'required|numeric|min:0|max:5',
             'sold_count'    => 'required|integer|min:0',
-            'product_category_id' => 'required|integer|exists:category_items,id',
+            'product_category_id' => 'required|integer|exists:product_categories,id',
         ];
         
         $messages = [
@@ -178,7 +178,7 @@ class AdminServiceController extends Controller
     }
 
     public function edit(Service $service) { 
-        $categories = CategoryItem::where('is_active', true)->orderBy('sort_order')->get();
+        $categories = ProductCategory::active()->ordered()->get();
         return view('admin.services.edit', compact('service', 'categories')); 
     }
 
@@ -220,7 +220,7 @@ class AdminServiceController extends Controller
             'sku'           => 'nullable|string|max:100',
             'rating'        => 'required|numeric|min:0|max:5',
             'sold_count'    => 'required|integer|min:0',
-            'product_category_id' => 'required|integer|exists:category_items,id',
+            'product_category_id' => 'required|integer|exists:product_categories,id',
         ];
         
         $messages = [
