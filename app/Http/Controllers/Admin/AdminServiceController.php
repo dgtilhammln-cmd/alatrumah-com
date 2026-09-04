@@ -108,7 +108,12 @@ class AdminServiceController extends Controller
             $v['order'] = (int)$v['order'];
         }
 
-        if (empty($v['meta_title'])) $v['meta_title'] = $v['name'].' | Alatrumah.com';
+        $isProd = (isset($v['price']) && $v['price'] > 0) || ($v['type'] ?? '') === 'product';
+        if (empty($v['meta_title'])) {
+            $v['meta_title'] = ($isProd ? 'Jual ' : '') . $v['name'] . ' | Alatrumah.com';
+        } elseif ($isProd && !preg_match('/^jual\s+/i', $v['meta_title'])) {
+            $v['meta_title'] = 'Jual ' . $v['meta_title'];
+        }
         if (empty($v['meta_desc'])) {
             if (isset($v['price']) && $v['price'] > 0) {
                 $v['meta_desc'] = "Jual {$v['name']} di Indonesia. Distributor, Supplier, Agen, {$v['name']}. Kami Menjual {$v['name']} terlengkap dengan harga termurah di Surabaya, Jawa Timur, Indonesia.";
@@ -254,7 +259,12 @@ class AdminServiceController extends Controller
         $v['is_active'] = $request->boolean('is_active', true);
         $v['order']     = $v['order'] ?? $service->order;
 
-        if (empty($v['meta_title'])) $v['meta_title'] = $v['name'].' | Alatrumah.com';
+        $isProd = (isset($v['price']) && $v['price'] > 0) || ($v['type'] ?? '') === 'product' || ($service->price > 0);
+        if (empty($v['meta_title'])) {
+            $v['meta_title'] = ($isProd ? 'Jual ' : '') . $v['name'] . ' | Alatrumah.com';
+        } elseif ($isProd && !preg_match('/^jual\s+/i', $v['meta_title'])) {
+            $v['meta_title'] = 'Jual ' . $v['meta_title'];
+        }
         if (empty($v['meta_desc'])) {
             if (isset($v['price']) && $v['price'] > 0) {
                 $v['meta_desc'] = "Jual {$v['name']} di Indonesia. Distributor, Supplier, Agen, {$v['name']}. Kami Menjual {$v['name']} terlengkap dengan harga termurah di Surabaya, Jawa Timur, Indonesia.";

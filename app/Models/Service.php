@@ -193,7 +193,14 @@ class Service extends Model
     }
     public function getMetaTitleAttribute($v): string
     {
-        return $v ?: $this->name . ' | Alatrumah.com';
+        $raw = $v ?: ($this->name . ' | Alatrumah.com');
+        $isProduct = ($this->price > 0 || $this->type === 'product');
+        if ($isProduct) {
+            if (!preg_match('/^jual\s+/i', $raw)) {
+                return 'Jual ' . $raw;
+            }
+        }
+        return $raw;
     }
     public function getMetaDescAttribute($v): string
     {

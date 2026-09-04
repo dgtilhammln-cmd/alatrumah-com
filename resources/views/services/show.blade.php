@@ -276,16 +276,43 @@
 .pd-specs-table td:first-child { width: 130px; color: var(--text-muted); }
 .pd-specs-table td:last-child { color: var(--text-main); font-weight: 600; }
 
-.pd-content {
-    font-size: 0.9rem; color: var(--text-muted); line-height: 1.7;
+.pd-related-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
 }
-.pd-content h2, .pd-content h3 { color: var(--text-main); font-weight: 800; margin-top: 1.5rem; margin-bottom: 0.75rem; font-family: 'Montserrat', sans-serif; }
-.pd-content ul { padding-left: 1.15rem; margin-bottom: 0.875rem; }
-.pd-content p { margin-bottom: 0.875rem; }
+.pd-related-card {
+    padding: 1.25rem;
+}
+.pd-related-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 0.75rem;
+}
+.pd-related-title {
+    font-weight: 800;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+    font-family: 'Montserrat', sans-serif;
+}
+.pd-related-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+}
 
 @media (max-width: 1024px) {
     .pd-layout { grid-template-columns: 1fr; gap: 1.25rem; }
     .pd-bottom-layout { grid-template-columns: 1fr; gap: 1.5rem; }
+    .pd-related-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -311,6 +338,21 @@
     .pd-specs-table td:last-child { font-size: 0.8rem; }
     .pd-actions { gap: 0.5rem; }
     .pd-btn { padding: 0.75rem 0.875rem; font-size: 0.85rem; border-radius: 10px; }
+    
+    .pd-related-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.625rem !important;
+    }
+    .pd-related-card {
+        padding: 0.75rem !important;
+        border-radius: 12px !important;
+    }
+    .pd-related-title {
+        font-size: 0.85rem !important;
+    }
+    .pd-related-desc {
+        font-size: 0.75rem !important;
+    }
 }
 </style>
 
@@ -595,15 +637,17 @@
 
 {{-- RELATED PRODUCTS --}}
 @if($related->count() > 0)
-<section style="background:var(--bg-surface); padding:3.5rem 1.5rem; border-top:1px solid var(--border-1);">
+<section style="background:var(--bg-surface); padding:2.5rem 1rem; border-top:1px solid var(--border-1);">
     <div style="max-width:1200px; margin:0 auto;">
-        <div style="font-size:1.35rem; font-weight:900; color:var(--text-main); margin-bottom:1.75rem; letter-spacing:-0.02em; font-family:'Montserrat',sans-serif;">Produk &amp; Layanan Lainnya</div>
-        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:1rem;">
+        <div style="font-size:1.25rem; font-weight:900; color:var(--text-main); margin-bottom:1.25rem; letter-spacing:-0.02em; font-family:'Montserrat',sans-serif;">Produk &amp; Layanan Lainnya</div>
+        <div class="pd-related-grid">
             @foreach($related as $r)
-                <a href="{{ route_locale('products.show', $r->slug) }}" style="text-decoration:none; display:block;" class="pd-card pd-card-hover">
-                    <img src="{{ $r->image_url }}" alt="{{ $r->name }}" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:10px; margin-bottom:0.875rem;" loading="lazy">
-                    <div style="font-weight:800; color:var(--text-main); font-size:0.95rem; margin-bottom:0.25rem; line-height:1.3; font-family:'Montserrat',sans-serif;">{{ $r->name }}</div>
-                    <div style="font-size:0.8rem; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.4;">{{ $r->short_desc }}</div>
+                <a href="{{ route_locale('products.show', $r->slug) }}" style="text-decoration:none; display:block;" class="pd-card pd-card-hover pd-related-card">
+                    <img src="{{ $r->image_url }}" alt="{{ $r->name }}" class="pd-related-img" loading="lazy">
+                    <div class="pd-related-title">{{ $r->name }}</div>
+                    @if($r->short_desc)
+                    <div class="pd-related-desc">{{ $r->short_desc }}</div>
+                    @endif
                 </a>
             @endforeach
         </div>
