@@ -16,13 +16,30 @@
     --accent-dark: #0284C7;
 }
 
+/* ── BREADCRUMB ── */
+.pd-breadcrumb {
+    padding: 1.25rem 1.5rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+}
+.pd-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: 0.2s; }
+.pd-breadcrumb a:hover { color: var(--accent); }
+.pd-breadcrumb span { color: var(--text-main); font-weight: 600; }
+
 .pd-layout {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1.5rem 1.5rem 3rem;
+    padding: 1.25rem 1.5rem 3rem;
     display: grid;
-    grid-template-columns: 420px 1fr;
-    gap: 3rem;
+    grid-template-columns: 440px 1fr;
+    gap: 2.5rem;
     align-items: start;
 }
 
@@ -31,7 +48,7 @@
     border: 1px solid var(--border-1);
     border-radius: 20px;
     padding: 1.75rem;
-    box-shadow: 0 16px 40px rgba(14,165,233,0.03);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.03);
     transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
@@ -41,83 +58,82 @@
     box-shadow: 0 16px 40px rgba(14,165,233,0.1);
 }
 
-/* ── BREADCRUMB ── */
-.pd-breadcrumb {
-    padding: 6rem 1.5rem 0; /* Ditambah agar tidak tertutup header */
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--text-muted);
-}
-.pd-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: 0.2s; }
-.pd-breadcrumb a:hover { color: var(--accent); }
-.pd-breadcrumb span { color: var(--text-main); font-weight: 600; }
-
-/* ── GALLERY ── */
+/* ── GALLERY (CRITICAL FIX FOR SWIPER COLLAPSE) ── */
 .pd-gallery-main {
     width: 100%;
     aspect-ratio: 1/1;
     border-radius: 20px;
     overflow: hidden;
     background: var(--bg-surface);
-    border: 1px solid var(--border-1);
-    margin-bottom: 1rem;
+    border: 1.5px solid var(--border-1);
+    margin-bottom: 0.75rem;
     position: relative;
 }
+.pd-gallery-main .swiper-wrapper,
+.pd-gallery-main .swiper-slide {
+    width: 100% !important;
+    height: 100% !important;
+}
+.pd-gallery-main .swiper-slide a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
 .pd-gallery-main img {
-    width: 100%; height: 100%; object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 .pd-gallery-main .swiper-button-next,
 .pd-gallery-main .swiper-button-prev {
     color: var(--text-main);
-    background: rgba(255,255,255,0.95);
+    background: rgba(255,255,255,0.92);
     width: 36px; height: 36px;
     border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 .pd-gallery-main .swiper-button-next::after,
 .pd-gallery-main .swiper-button-prev::after { font-size: 14px; font-weight: 800; }
 
 .pd-thumbs {
-    display: flex; gap: 0.5rem;
+    display: flex; gap: 0.5rem; width: 100%; overflow: hidden;
 }
 .pd-thumb-item {
     width: 65px; height: 65px;
     border-radius: 12px; overflow: hidden;
     border: 2px solid transparent;
-    cursor: pointer; opacity: 0.5; transition: 0.2s;
+    cursor: pointer; opacity: 0.6; transition: 0.2s;
+    flex-shrink: 0;
 }
 .pd-thumb-item.swiper-slide-thumb-active {
     opacity: 1; border-color: var(--accent);
 }
 .pd-thumb-item img {
-    width: 100%; height: 100%; object-fit: cover;
+    width: 100%; height: 100%; object-fit: cover; display: block;
 }
 
 /* ── INFO ── */
 .pd-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 800;
     color: var(--text-main);
-    line-height: 1.25;
+    line-height: 1.3;
     margin-bottom: 0.75rem;
     letter-spacing: -0.02em;
+    font-family: 'Montserrat', sans-serif;
 }
 .pd-desc-short {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: var(--text-muted);
     line-height: 1.6;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
 
 /* Rating / Stats */
 .pd-stats {
-    display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
-    font-size: 0.9rem;
+    display: flex; align-items: center; gap: 0.875rem; margin-bottom: 1.25rem;
+    font-size: 0.875rem; flex-wrap: wrap;
 }
 .pd-stars { color: #F59E0B; display: flex; align-items: center; gap: 4px; font-weight: 700; }
 .pd-stat-divider { width: 1px; height: 16px; background: var(--border-1); }
@@ -125,22 +141,22 @@
 /* Price Box */
 .pd-price-box {
     background: linear-gradient(135deg, #F0F9FF, #ffffff);
-    border: 1px solid rgba(14,165,233,0.15);
-    border-radius: 20px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    border: 1.5px solid rgba(14,165,233,0.18);
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 0.875rem; flex-wrap: wrap;
 }
 .pd-price-current {
-    font-size: 1.85rem; font-weight: 900; color: var(--accent-dark); line-height: 1;
-    letter-spacing: -0.02em;
+    font-size: 1.75rem; font-weight: 900; color: var(--accent-dark); line-height: 1;
+    letter-spacing: -0.02em; font-family: 'Montserrat', sans-serif;
 }
 .pd-price-old {
-    font-size: 1.15rem; text-decoration: line-through; color: var(--text-muted);
+    font-size: 1rem; text-decoration: line-through; color: var(--text-muted);
 }
 .pd-badge-discount {
-    background: #EF4444; color: #fff; font-size: 0.75rem; font-weight: 800;
-    padding: 0.35rem 0.65rem; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.05em;
+    background: #EF4444; color: #fff; font-size: 0.725rem; font-weight: 800;
+    padding: 0.25rem 0.5rem; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em;
 }
 
 /* Vouchers */
@@ -148,19 +164,19 @@
     display: flex;
     gap: 0.75rem;
     overflow-x: auto;
-    padding-bottom: 0.75rem;
-    margin-bottom: 1.5rem;
-    scrollbar-width: none; /* Firefox */
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.25rem;
+    scrollbar-width: none;
 }
 .pd-voucher-scroll::-webkit-scrollbar { display: none; }
 .pd-voucher-card {
     background: #ffffff;
-    border: 1px solid var(--border-1);
+    border: 1.5px solid var(--border-1);
     border-radius: 12px;
-    padding: 0.75rem 1rem;
+    padding: 0.625rem 0.875rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.625rem;
     min-width: max-content;
     cursor: pointer;
     transition: 0.2s;
@@ -170,67 +186,69 @@
     background: #F0F9FF;
 }
 .pd-v-icon {
-    width: 32px; height: 32px;
+    width: 30px; height: 30px;
     background: linear-gradient(135deg, #0EA5E9, #38BDF8);
     color: #fff;
     border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 0.9rem;
+    font-weight: 800; font-size: 0.85rem;
 }
 .pd-v-title {
-    font-size: 0.85rem; font-weight: 800; color: var(--text-main); line-height: 1.2;
+    font-size: 0.8rem; font-weight: 800; color: var(--text-main); line-height: 1.2;
 }
 .pd-v-desc {
-    font-size: 0.75rem; color: var(--text-muted);
+    font-size: 0.725rem; color: var(--text-muted);
 }
 
 /* Options / QTY */
 .pd-qty-wrap {
-    display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;
-    background: var(--bg-surface); padding: 1rem; border-radius: 16px; border: 1px solid var(--border-1);
+    display: flex; align-items: center; gap: 0.875rem; margin-bottom: 1.5rem;
+    background: var(--bg-surface); padding: 0.875rem 1rem; border-radius: 14px; border: 1.5px solid var(--border-1);
+    flex-wrap: wrap;
 }
 .pd-qty-ctrl {
     display: flex; align-items: center;
-    border: 1px solid var(--border-1);
+    border: 1.5px solid var(--border-1);
     border-radius: 10px; overflow: hidden;
     background: var(--bg-base); box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 .pd-qty-btn {
-    width: 40px; height: 40px;
+    width: 38px; height: 38px;
     border: none; background: transparent; cursor: pointer;
-    font-size: 1.25rem; color: var(--text-muted);
+    font-size: 1.15rem; color: var(--text-muted);
     display: flex; align-items: center; justify-content: center;
     transition: 0.2s;
 }
 .pd-qty-btn:hover { background: #F1F5F9; color: var(--text-main); }
 .pd-qty-input {
-    width: 50px; height: 40px; border: none; text-align: center;
-    font-size: 1.05rem; font-weight: 700; color: var(--text-main);
+    width: 48px; height: 38px; border: none; text-align: center;
+    font-size: 1rem; font-weight: 700; color: var(--text-main);
     border-left: 1px solid var(--border-1); border-right: 1px solid var(--border-1);
 }
 
 /* Action Buttons */
 .pd-actions {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem;
 }
 .pd-btn {
-    padding: 1rem 1.5rem; border-radius: 14px; font-weight: 700; font-size: 1rem;
+    padding: 0.875rem 1.25rem; border-radius: 14px; font-weight: 700; font-size: 0.95rem;
     cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
     transition: all 0.3s cubic-bezier(0.4,0,0.2,1); text-decoration: none; border: none;
+    font-family: 'Montserrat', sans-serif;
 }
 .pd-btn-outline {
-    background: #F0F9FF; color: var(--accent-dark); border: 1.5px solid rgba(14,165,233,0.3);
+    background: #F0F9FF; color: var(--accent-dark); border: 1.5px solid rgba(14,165,233,0.35);
 }
 .pd-btn-outline:hover {
     background: #E0F2FE; border-color: var(--accent); transform: translateY(-2px);
 }
 .pd-btn-primary {
-    background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+    background: linear-gradient(135deg, #0EA5E9, #0284C7);
     color: #fff;
-    box-shadow: 0 8px 24px rgba(14,165,233,0.25);
+    box-shadow: 0 6px 20px rgba(14,165,233,0.25);
 }
 .pd-btn-primary:hover {
-    transform: translateY(-2px); box-shadow: 0 12px 32px rgba(14,165,233,0.35);
+    transform: translateY(-2px); box-shadow: 0 10px 28px rgba(14,165,233,0.35);
 }
 .pd-btn:disabled {
     opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important;
@@ -239,56 +257,65 @@
 /* Bottom Content */
 .pd-bottom-layout {
     max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 4rem;
-    display: grid; grid-template-columns: 1fr 320px; gap: 3rem;
+    display: grid; grid-template-columns: 1fr 320px; gap: 2.5rem;
 }
 
 .pd-section-title {
-    font-size: 1.25rem; font-weight: 800; color: var(--text-main);
+    font-size: 1.15rem; font-weight: 800; color: var(--text-main);
     margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;
+    font-family: 'Montserrat', sans-serif;
 }
 .pd-section-title::before {
-    content:''; display:block; width:5px; height:20px; background:var(--accent); border-radius:4px;
+    content:''; display:block; width:4px; height:18px; background:var(--accent); border-radius:4px;
 }
 
-.pd-specs-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-bottom: 2.5rem; }
-.pd-specs-table td { padding: 1rem 0; border-bottom: 1px solid var(--border-1); }
-.pd-specs-table td:first-child { width: 160px; color: var(--text-muted); }
+.pd-specs-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 2rem; }
+.pd-specs-table td { padding: 0.875rem 0; border-bottom: 1px solid var(--border-1); }
+.pd-specs-table td:first-child { width: 140px; color: var(--text-muted); }
 .pd-specs-table td:last-child { color: var(--text-main); font-weight: 600; }
 
 .pd-content {
-    font-size: 1rem; color: var(--text-muted); line-height: 1.8;
+    font-size: 0.95rem; color: var(--text-muted); line-height: 1.75;
 }
-.pd-content h2, .pd-content h3 { color: var(--text-main); font-weight: 800; margin-top: 2rem; margin-bottom: 1rem; }
-.pd-content ul { padding-left: 1.5rem; margin-bottom: 1.25rem; }
-.pd-content p { margin-bottom: 1.25rem; }
+.pd-content h2, .pd-content h3 { color: var(--text-main); font-weight: 800; margin-top: 1.75rem; margin-bottom: 0.875rem; font-family: 'Montserrat', sans-serif; }
+.pd-content ul { padding-left: 1.25rem; margin-bottom: 1rem; }
+.pd-content p { margin-bottom: 1rem; }
 
 /* Mobile Sticky Action Bar */
 .pd-mobile-actions { display: none; }
 
 @media (max-width: 1024px) {
-    .pd-layout { grid-template-columns: 1fr; gap: 2rem; }
-    .pd-bottom-layout { grid-template-columns: 1fr; }
+    .pd-layout { grid-template-columns: 1fr; gap: 1.5rem; }
+    .pd-bottom-layout { grid-template-columns: 1fr; gap: 2rem; }
 }
 
 @media (max-width: 768px) {
-    .pd-layout { padding: 1rem 1rem 2rem; gap: 1.5rem; }
-    .pd-bottom-layout { padding: 0 1rem 6rem; }
-    .pd-title { font-size: 1.5rem; }
-    .pd-price-current { font-size: 1.75rem; }
-    .pd-card { padding: 1.25rem; }
-    .pd-price-box { padding: 1.25rem; }
+    .pd-breadcrumb {
+        padding: 0.75rem 1rem 0;
+        font-size: 0.75rem;
+    }
+    .pd-layout { padding: 0.875rem 1rem 2rem; gap: 1.25rem; }
+    .pd-bottom-layout { padding: 0 1rem 7rem; }
+    .pd-title { font-size: 1.35rem; }
+    .pd-price-current { font-size: 1.5rem; }
+    .pd-card { padding: 1.25rem; border-radius: 16px; }
+    .pd-price-box { padding: 1rem; border-radius: 14px; }
+    .pd-gallery-main { border-radius: 16px; margin-bottom: 0.5rem; }
+    .pd-thumb-item { width: 54px; height: 54px; border-radius: 10px; }
+    .pd-specs-table td:first-child { width: 110px; font-size: 0.85rem; }
+    .pd-specs-table td:last-child { font-size: 0.85rem; }
     
-    /* Hide desktop actions */
-    .pd-desktop-actions { display: none; }
+    /* Hide desktop actions on mobile */
+    .pd-desktop-actions { display: none !important; }
     
     .pd-mobile-actions {
-        display: flex; align-items: center; gap: 0.75rem;
+        display: flex; align-items: center; gap: 0.625rem;
         position: fixed; bottom: 0; left: 0; right: 0;
-        background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-        padding: 1rem; border-top: 1px solid var(--border-1);
-        box-shadow: 0 -4px 24px rgba(0,0,0,0.06); z-index: 50;
+        background: #ffffff;
+        padding: 0.75rem 1rem; border-top: 1px solid var(--border-1);
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 999;
     }
-    .pd-mobile-actions .pd-btn { flex: 1; padding: 0.875rem; font-size: 0.95rem; border-radius: 12px; }
+    .pd-mobile-actions .pd-btn { flex: 1; padding: 0.75rem; font-size: 0.9rem; border-radius: 12px; }
 }
 </style>
 
@@ -432,12 +459,12 @@
                 </div>
 
                 <div class="pd-actions pd-desktop-actions">
-                    <button type="submit" name="action" value="cart" class="pd-btn pd-btn-outline" 
+                    <button type="button" onclick="submitProductForm('cart')" class="pd-btn pd-btn-outline" 
                             @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
                         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20a1 1 0 100-2 1 1 0 000 2zM20 20a1 1 0 100-2 1 1 0 000 2z"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
                         Keranjang
                     </button>
-                    <button type="submit" name="action" value="buy" class="pd-btn pd-btn-primary"
+                    <button type="button" onclick="submitProductForm('buy')" class="pd-btn pd-btn-primary"
                             @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
                         Beli Sekarang
                     </button>
@@ -490,8 +517,6 @@
                 </div>
                 @endforeach
             </div>
-            
-{{-- FAQPage schema dikelola oleh controller dan SEO component --}}
         @endif
     </div>
 
@@ -533,12 +558,12 @@
 {{-- MOBILE STICKY ACTION BAR --}}
 @if($service->price > 0)
 <div class="pd-mobile-actions">
-    <button type="button" onclick="document.querySelector('button[value=\'cart\']').click()" class="pd-btn pd-btn-outline" 
+    <button type="button" onclick="submitProductForm('cart')" class="pd-btn pd-btn-outline" 
             @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20a1 1 0 100-2 1 1 0 000 2zM20 20a1 1 0 100-2 1 1 0 000 2z"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
         Keranjang
     </button>
-    <button type="button" onclick="document.querySelector('button[value=\'buy\']').click()" class="pd-btn pd-btn-primary"
+    <button type="button" onclick="submitProductForm('buy')" class="pd-btn pd-btn-primary"
             @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
         Beli Sekarang
     </button>
@@ -546,40 +571,40 @@
 @endif
 
 {{-- ═══ MENGAPA ALATRUMAH.COM ═══ --}}
-<section style="background:var(--bg-base); padding:5rem 1.5rem; border-top:1px solid var(--border-1);">
+<section style="background:var(--bg-base); padding:4rem 1.5rem; border-top:1px solid var(--border-1);">
     <div style="max-width:1200px; margin:0 auto;">
-        <div style="text-align:center; margin-bottom:3.5rem;">
-            <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.15em; color:var(--accent); text-transform:uppercase; margin-bottom:0.75rem;">Mengapa Memilih Kami</div>
-            <h2 style="font-size:2.25rem; font-weight:900; color:var(--text-main); line-height:1.2; letter-spacing:-0.03em;">Toko Alat Rumah Tangga<br>Terpercaya di Surabaya</h2>
+        <div style="text-align:center; margin-bottom:3rem;">
+            <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.15em; color:var(--accent); text-transform:uppercase; margin-bottom:0.5rem;">Mengapa Memilih Kami</div>
+            <h2 style="font-size:1.75rem; font-weight:900; color:var(--text-main); line-height:1.2; letter-spacing:-0.03em; font-family:'Montserrat',sans-serif;">Toko Alat Rumah Tangga<br>Terpercaya di Surabaya</h2>
         </div>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1.5rem;">
-            <div class="pd-card" style="text-align:center; padding:2rem 1.5rem;">
-                <div style="width:56px; height:56px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
-                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1.25rem;">
+            <div class="pd-card" style="text-align:center; padding:1.75rem 1.25rem;">
+                <div style="width:52px; height:52px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
+                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
                 </div>
-                <div style="font-weight:800; margin-bottom:0.75rem; color:var(--text-main); font-size:1.1rem;">Produk Berkualitas</div>
-                <div style="font-size:0.9rem; color:var(--text-muted); line-height:1.6;">Semua produk tersertifikasi dan bergaransi resmi dari produsen.</div>
+                <div style="font-weight:800; margin-bottom:0.5rem; color:var(--text-main); font-size:1rem; font-family:'Montserrat',sans-serif;">Produk Berkualitas</div>
+                <div style="font-size:0.875rem; color:var(--text-muted); line-height:1.6;">Semua produk tersertifikasi dan bergaransi resmi dari produsen.</div>
             </div>
-            <div class="pd-card" style="text-align:center; padding:2rem 1.5rem;">
-                <div style="width:56px; height:56px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
-                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+            <div class="pd-card" style="text-align:center; padding:1.75rem 1.25rem;">
+                <div style="width:52px; height:52px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
+                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                 </div>
-                <div style="font-weight:800; margin-bottom:0.75rem; color:var(--text-main); font-size:1.1rem;">Pengiriman Cepat</div>
-                <div style="font-size:0.9rem; color:var(--text-muted); line-height:1.6;">Dikirim ke seluruh Indonesia dengan aman dan tepat waktu.</div>
+                <div style="font-weight:800; margin-bottom:0.5rem; color:var(--text-main); font-size:1rem; font-family:'Montserrat',sans-serif;">Pengiriman Cepat</div>
+                <div style="font-size:0.875rem; color:var(--text-muted); line-height:1.6;">Dikirim ke seluruh Indonesia dengan aman dan tepat waktu.</div>
             </div>
-            <div class="pd-card" style="text-align:center; padding:2rem 1.5rem;">
-                <div style="width:56px; height:56px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
-                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+            <div class="pd-card" style="text-align:center; padding:1.75rem 1.25rem;">
+                <div style="width:52px; height:52px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
+                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
                 </div>
-                <div style="font-weight:800; margin-bottom:0.75rem; color:var(--text-main); font-size:1.1rem;">Harga Terbaik</div>
-                <div style="font-size:0.9rem; color:var(--text-muted); line-height:1.6;">Harga kompetitif langsung dari distributor resmi. Diskon setiap hari.</div>
+                <div style="font-weight:800; margin-bottom:0.5rem; color:var(--text-main); font-size:1rem; font-family:'Montserrat',sans-serif;">Harga Terbaik</div>
+                <div style="font-size:0.875rem; color:var(--text-muted); line-height:1.6;">Harga kompetitif langsung dari distributor resmi. Diskon setiap hari.</div>
             </div>
-            <div class="pd-card" style="text-align:center; padding:2rem 1.5rem;">
-                <div style="width:56px; height:56px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
-                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></svg>
+            <div class="pd-card" style="text-align:center; padding:1.75rem 1.25rem;">
+                <div style="width:52px; height:52px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
+                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></svg>
                 </div>
-                <div style="font-weight:800; margin-bottom:0.75rem; color:var(--text-main); font-size:1.1rem;">CS Responsif</div>
-                <div style="font-size:0.9rem; color:var(--text-muted); line-height:1.6;">Tim customer service kami siap membantu via WhatsApp setiap saat.</div>
+                <div style="font-weight:800; margin-bottom:0.5rem; color:var(--text-main); font-size:1rem; font-family:'Montserrat',sans-serif;">CS Responsif</div>
+                <div style="font-size:0.875rem; color:var(--text-muted); line-height:1.6;">Tim customer service kami siap membantu via WhatsApp setiap saat.</div>
             </div>
         </div>
     </div>
@@ -590,15 +615,15 @@
 
 {{-- RELATED PRODUCTS --}}
 @if($related->count() > 0)
-<section style="background:var(--bg-surface); padding:5rem 1.5rem; border-top:1px solid var(--border-1);">
+<section style="background:var(--bg-surface); padding:4rem 1.5rem; border-top:1px solid var(--border-1);">
     <div style="max-width:1200px; margin:0 auto;">
-        <div style="font-size:1.75rem; font-weight:900; color:var(--text-main); margin-bottom:2.5rem; letter-spacing:-0.02em;">Produk &amp; Layanan Lainnya</div>
-        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:1.5rem;">
+        <div style="font-size:1.5rem; font-weight:900; color:var(--text-main); margin-bottom:2rem; letter-spacing:-0.02em; font-family:'Montserrat',sans-serif;">Produk &amp; Layanan Lainnya</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:1.25rem;">
             @foreach($related as $r)
                 <a href="{{ route_locale('products.show', $r->slug) }}" style="text-decoration:none; display:block;" class="pd-card pd-card-hover">
-                    <img src="{{ $r->image_url }}" alt="{{ $r->name }}" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; margin-bottom:1.25rem;" loading="lazy">
-                    <div style="font-weight:800; color:var(--text-main); font-size:1.1rem; margin-bottom:0.5rem; line-height:1.3;">{{ $r->name }}</div>
-                    <div style="font-size:0.9rem; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.6;">{{ $r->short_desc }}</div>
+                    <img src="{{ $r->image_url }}" alt="{{ $r->name }}" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; margin-bottom:1rem;" loading="lazy">
+                    <div style="font-weight:800; color:var(--text-main); font-size:1rem; margin-bottom:0.35rem; line-height:1.3; font-family:'Montserrat',sans-serif;">{{ $r->name }}</div>
+                    <div style="font-size:0.85rem; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.5;">{{ $r->short_desc }}</div>
                 </a>
             @endforeach
         </div>
@@ -609,15 +634,32 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 <script>
+function submitProductForm(action) {
+    var form = document.getElementById('form-add-to-cart');
+    if (!form) return;
+    var input = document.getElementById('form-action-input');
+    if (!input) {
+        input = document.createElement('input');
+        input.type = 'hidden';
+        input.id = 'form-action-input';
+        input.name = 'action';
+        form.appendChild(input);
+    }
+    input.value = action;
+    form.submit();
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-    const lightbox = GLightbox({
-        selector: '.glightbox',
-        touchNavigation: true,
-        loop: true,
-    });
+    if (window.GLightbox) {
+        GLightbox({
+            selector: '.glightbox',
+            touchNavigation: true,
+            loop: true,
+        });
+    }
 
     var thumbsEl = document.getElementById('pd-swiper-thumbs');
-    if (thumbsEl) {
+    if (thumbsEl && window.Swiper) {
         var swiperThumbs = new Swiper('#pd-swiper-thumbs', {
             spaceBetween: 8,
             slidesPerView: 'auto',
@@ -632,7 +674,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             thumbs: { swiper: swiperThumbs },
         });
-    } else {
+    } else if (window.Swiper) {
         var mainEl = document.getElementById('pd-swiper-main');
         if (mainEl) new Swiper('#pd-swiper-main', { spaceBetween: 0 });
     }
