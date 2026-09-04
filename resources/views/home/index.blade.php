@@ -1831,7 +1831,190 @@
     </div>
     @endif
 
+    {{-- ════ ARTIKEL & TIPS TERBARU ════ --}}
+    @if(isset($articles) && $articles->count() > 0)
+    <section class="cv-home-articles-section" style="background: #F8FAFC; padding: 3.5rem 0 4rem; border-top: 1px solid #E2E8F0;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;" class="cv-articles-container">
+            <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <div style="display:inline-flex; align-items:center; gap:0.4rem; background:#E0F2FE; color:#0284C7; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; padding:0.25rem 0.65rem; border-radius:999px; margin-bottom:0.5rem;">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l5 5v11a2 2 0 0 1-2 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Edukasi & Tips Alat Rumah
+                    </div>
+                    <h2 style="font-family:'Montserrat',sans-serif; font-size:1.35rem; font-weight:800; color:#1E293B; letter-spacing:-0.02em; margin:0;">
+                        Artikel & Panduan Terbaru
+                    </h2>
+                    <div style="font-size:0.85rem; color:#64748B; margin-top:0.25rem;">
+                        Informasi menarik, inspirasi rumah tangga, dan panduan perawatan alat rumah Anda
+                    </div>
+                </div>
+                <a href="{{ route('articles.index') }}" style="font-size:0.825rem; font-weight:700; color:#0EA5E9; text-decoration:none; display:inline-flex; align-items:center; gap:0.35rem; white-space:nowrap; transition:all 0.2s;">
+                    Lihat Semua Artikel
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+            </div>
+
+            <div class="home-articles-grid">
+                @foreach($articles->take(3) as $article)
+                <a href="{{ route('articles.show', $article->slug) }}" class="home-article-card">
+                    <div class="home-article-thumb">
+                        @if($article->image)
+                            <img src="{{ asset('storage/'.$article->image) }}" alt="{{ $article->title }}" loading="lazy">
+                        @else
+                            <div class="home-article-no-img">
+                                <svg width="40" height="40" fill="none" stroke="#CBD5E1" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            </div>
+                        @endif
+                        @if($article->category)
+                        <span class="home-article-badge">{{ $article->category }}</span>
+                        @endif
+                    </div>
+                    <div class="home-article-body">
+                        <h3 class="home-article-title">{{ $article->title }}</h3>
+                        @if($article->excerpt)
+                        <p class="home-article-excerpt">{{ Str::limit(strip_tags($article->excerpt), 110) }}</p>
+                        @endif
+                        <div class="home-article-footer">
+                            <span style="display:inline-flex; align-items:center; gap:0.3rem;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                {{ $article->formatted_date }}
+                            </span>
+                            <span style="display:inline-flex; align-items:center; gap:0.25rem; font-weight:700; color:#0EA5E9;">
+                                Baca Artikel
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                            </span>
+                        </div>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
     <style>
+        /* ── Home Article Section Cards ── */
+        .home-articles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+        .home-article-card {
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 16px;
+            overflow: hidden;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            height: 100%;
+        }
+        .home-article-card:hover {
+            border-color: #0EA5E9;
+            transform: translateY(-6px);
+            box-shadow: 0 16px 36px rgba(14,165,233,0.15);
+        }
+        .home-article-thumb {
+            position: relative;
+            width: 100%;
+            height: 190px;
+            overflow: hidden;
+            background: #F1F5F9;
+        }
+        .home-article-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .home-article-card:hover .home-article-thumb img {
+            transform: scale(1.06);
+        }
+        .home-article-no-img {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F8FAFC;
+        }
+        .home-article-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(4px);
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+        .home-article-body {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .home-article-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.975rem;
+            font-weight: 700;
+            color: #1E293B;
+            line-height: 1.4;
+            margin: 0 0 0.5rem 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: color 0.2s;
+        }
+        .home-article-card:hover .home-article-title {
+            color: #0EA5E9;
+        }
+        .home-article-excerpt {
+            font-size: 0.8125rem;
+            color: #64748B;
+            line-height: 1.55;
+            margin: 0 0 1.25rem 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .home-article-footer {
+            margin-top: auto;
+            padding-top: 0.875rem;
+            border-top: 1px solid #F1F5F9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #94A3B8;
+        }
+        @media (max-width: 1024px) {
+            .home-articles-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 640px) {
+            .home-articles-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .cv-articles-container {
+                padding: 0 1rem !important;
+            }
+            .home-article-thumb {
+                height: 170px;
+            }
+        }
+
         /* ── Catalog Cards ── */
         .catalog-card {
             display: flex;

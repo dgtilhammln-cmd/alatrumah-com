@@ -21,7 +21,7 @@ class HomeController extends Controller
         $settings     = Setting::getAllAsArray();
         $products     = Service::active()->ordered()->limit(6)->get();
         $gallery      = GalleryProject::active()->ordered()->limit(8)->get();
-        $articles     = Article::published()->latest()->limit(3)->get();
+        $articles     = Article::published()->with('translations')->latest()->limit(3)->get();
         $clients      = Client::active()->ordered()->get();
         $testimonials = Testimonial::active()->ordered()->get()->unique('name');
         $wa           = WaSetting::primary();
