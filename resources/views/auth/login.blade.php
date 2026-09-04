@@ -17,7 +17,7 @@
     </div>
 @endif
 
-<form method="POST" action="{{ route('login.submit') }}">
+<form method="POST" action="{{ route('login.submit') }}" id="loginForm">
     @csrf
     <div class="form-group">
         <label class="form-label" for="email">Email <span>*</span></label>
@@ -40,10 +40,35 @@
         <label class="remember-label">
             <input type="checkbox" name="remember"> Ingat saya
         </label>
-        {{-- <a href="#" class="forgot-link">Lupa sandi?</a> --}}
+        <a href="javascript:void(0)" class="forgot-link" onclick="toggleResetForm()">Lupa sandi?</a>
     </div>
 
     <button type="submit" class="btn-primary">Masuk</button>
+</form>
+
+<form method="POST" action="#" id="resetForm" style="display: none;">
+    <p style="font-size: 0.9rem; color: #475569; margin-bottom: 1rem; line-height: 1.5;">Masukkan email Anda dan alasan reset password. Permintaan akan diteruskan ke admin via WhatsApp.</p>
+    <div class="form-group">
+        <label class="form-label" for="reset_email">Email <span>*</span></label>
+        <input type="email" id="reset_email" class="form-input" placeholder="contoh@email.com" required>
+    </div>
+    <div class="form-group">
+        <label class="form-label" for="reset_reason">Alasan Reset <span>*</span></label>
+        <textarea id="reset_reason" class="form-input" placeholder="Contoh: Saya lupa kata sandi saya" rows="3" required style="resize: vertical; font-family: inherit;"></textarea>
+    </div>
+    
+    @php
+        $wa = \App\Models\WaSetting::primary();
+        $waNumber = $wa ? preg_replace('/[^0-9]/', '', $wa->number) : '';
+        if (substr($waNumber, 0, 1) === '0') {
+            $waNumber = '62' . substr($waNumber, 1);
+        }
+    @endphp
+
+    <button type="button" class="btn-primary" onclick="sendResetWhatsApp('{{ $waNumber }}')">Kirim Permintaan ke WhatsApp</button>
+    <div style="text-align: center; margin-top: 1rem;">
+        <a href="javascript:void(0)" onclick="toggleResetForm()" style="color: #64748B; text-decoration: none; font-size: 0.85rem; font-weight: 500;">Batal & Kembali ke Login</a>
+    </div>
 </form>
 
 
@@ -52,6 +77,45 @@
 function togglePwd(id, el) {
     const inp = document.getElementById(id);
     inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function toggleResetForm() {
+    const loginForm = document.getElementById('loginForm');
+    const resetForm = document.getElementById('resetForm');
+    const title = document.querySelector('.auth-title');
+    const subtitle = document.querySelector('.auth-subtitle');
+    
+    if (loginForm.style.display === 'none') {
+        loginForm.style.display = 'block';
+        resetForm.style.display = 'none';
+        title.innerText = 'Selamat datang!';
+        subtitle.style.display = 'block';
+    } else {
+        loginForm.style.display = 'none';
+        resetForm.style.display = 'block';
+        title.innerText = 'Reset Kata Sandi';
+        subtitle.style.display = 'none';
+    }
+}
+
+function sendResetWhatsApp(waNumber) {
+    const email = document.getElementById('reset_email').value;
+    const reason = document.getElementById('reset_reason').value;
+    
+    if (!email || !reason) {
+        alert('Mohon lengkapi email dan alasan reset terlebih dahulu.');
+        return;
+    }
+    
+    if (!waNumber) {
+        alert('Nomor WhatsApp admin belum diatur sistem.');
+        return;
+    }
+    
+    const text = `Halo Admin Alat Rumah,%0A%0ASaya ingin mereset kata sandi akun saya.%0A%0A*Email:* ${email}%0A*Alasan:* ${reason}%0A%0AMohon bantuannya untuk mereset kata sandi saya. Terima kasih.`;
+    const waUrl = `https://wa.me/${waNumber}?text=${text}`;
+    
+    window.open(waUrl, '_blank');
 }
 </script>
 @endsection
