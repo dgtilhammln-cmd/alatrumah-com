@@ -18,12 +18,12 @@
 
 /* ── BREADCRUMB ── */
 .pd-breadcrumb {
-    padding: 1.25rem 1.5rem 0;
+    padding: 1rem 1.5rem 0;
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     font-size: 0.8rem;
     font-weight: 500;
     color: var(--text-muted);
@@ -36,37 +36,38 @@
 .pd-layout {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1.25rem 1.5rem 3rem;
+    padding: 1rem 1.5rem 2.5rem;
     display: grid;
-    grid-template-columns: 440px 1fr;
-    gap: 2.5rem;
+    grid-template-columns: 400px 1fr;
+    gap: 2rem;
     align-items: start;
 }
 
 .pd-card {
     background: var(--bg-base);
     border: 1px solid var(--border-1);
-    border-radius: 20px;
-    padding: 1.75rem;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.03);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
     transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
 .pd-card-hover:hover {
     border-color: var(--accent);
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(14,165,233,0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(14,165,233,0.08);
 }
 
-/* ── GALLERY (CRITICAL FIX FOR SWIPER COLLAPSE) ── */
+/* ── GALLERY (COMPACT & PROPORTIONAL) ── */
 .pd-gallery-main {
     width: 100%;
+    max-width: 400px;
     aspect-ratio: 1/1;
-    border-radius: 20px;
+    border-radius: 16px;
     overflow: hidden;
     background: var(--bg-surface);
-    border: 1.5px solid var(--border-1);
-    margin-bottom: 0.75rem;
+    border: 1px solid var(--border-1);
+    margin: 0 auto 0.75rem;
     position: relative;
 }
 .pd-gallery-main .swiper-wrapper,
@@ -88,20 +89,20 @@
 .pd-gallery-main .swiper-button-next,
 .pd-gallery-main .swiper-button-prev {
     color: var(--text-main);
-    background: rgba(255,255,255,0.92);
-    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.9);
+    width: 32px; height: 32px;
     border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 .pd-gallery-main .swiper-button-next::after,
-.pd-gallery-main .swiper-button-prev::after { font-size: 14px; font-weight: 800; }
+.pd-gallery-main .swiper-button-prev::after { font-size: 12px; font-weight: 800; }
 
 .pd-thumbs {
-    display: flex; gap: 0.5rem; width: 100%; overflow: hidden;
+    display: flex; gap: 0.5rem; width: 100%; max-width: 400px; margin: 0 auto; overflow: hidden;
 }
 .pd-thumb-item {
-    width: 65px; height: 65px;
-    border-radius: 12px; overflow: hidden;
+    width: 54px; height: 54px;
+    border-radius: 10px; overflow: hidden;
     border: 2px solid transparent;
     cursor: pointer; opacity: 0.6; transition: 0.2s;
     flex-shrink: 0;
@@ -115,68 +116,68 @@
 
 /* ── INFO ── */
 .pd-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: var(--text-main);
     line-height: 1.3;
-    margin-bottom: 0.75rem;
-    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
     font-family: 'Montserrat', sans-serif;
 }
 .pd-desc-short {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: var(--text-muted);
-    line-height: 1.6;
-    margin-bottom: 1.25rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
 }
 
 /* Rating / Stats */
 .pd-stats {
-    display: flex; align-items: center; gap: 0.875rem; margin-bottom: 1.25rem;
-    font-size: 0.875rem; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+    font-size: 0.85rem; flex-wrap: wrap;
 }
 .pd-stars { color: #F59E0B; display: flex; align-items: center; gap: 4px; font-weight: 700; }
-.pd-stat-divider { width: 1px; height: 16px; background: var(--border-1); }
+.pd-stat-divider { width: 1px; height: 14px; background: var(--border-1); }
 
 /* Price Box */
 .pd-price-box {
     background: linear-gradient(135deg, #F0F9FF, #ffffff);
-    border: 1.5px solid rgba(14,165,233,0.18);
-    border-radius: 16px;
-    padding: 1.25rem;
-    margin-bottom: 1.25rem;
-    display: flex; align-items: center; gap: 0.875rem; flex-wrap: wrap;
+    border: 1px solid rgba(14,165,233,0.18);
+    border-radius: 14px;
+    padding: 1rem 1.125rem;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
 }
 .pd-price-current {
-    font-size: 1.75rem; font-weight: 900; color: var(--accent-dark); line-height: 1;
-    letter-spacing: -0.02em; font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem; font-weight: 900; color: var(--accent-dark); line-height: 1;
+    letter-spacing: -0.01em; font-family: 'Montserrat', sans-serif;
 }
 .pd-price-old {
-    font-size: 1rem; text-decoration: line-through; color: var(--text-muted);
+    font-size: 0.9rem; text-decoration: line-through; color: var(--text-muted);
 }
 .pd-badge-discount {
-    background: #EF4444; color: #fff; font-size: 0.725rem; font-weight: 800;
-    padding: 0.25rem 0.5rem; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em;
+    background: #EF4444; color: #fff; font-size: 0.7rem; font-weight: 800;
+    padding: 0.2rem 0.45rem; border-radius: 6px; text-transform: uppercase;
 }
 
 /* Vouchers */
 .pd-voucher-scroll {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.5rem;
     overflow-x: auto;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.25rem;
+    padding-bottom: 0.35rem;
+    margin-bottom: 1rem;
     scrollbar-width: none;
 }
 .pd-voucher-scroll::-webkit-scrollbar { display: none; }
 .pd-voucher-card {
     background: #ffffff;
-    border: 1.5px solid var(--border-1);
-    border-radius: 12px;
-    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--border-1);
+    border-radius: 10px;
+    padding: 0.5rem 0.75rem;
     display: flex;
     align-items: center;
-    gap: 0.625rem;
+    gap: 0.5rem;
     min-width: max-content;
     cursor: pointer;
     transition: 0.2s;
@@ -186,69 +187,70 @@
     background: #F0F9FF;
 }
 .pd-v-icon {
-    width: 30px; height: 30px;
+    width: 26px; height: 26px;
     background: linear-gradient(135deg, #0EA5E9, #38BDF8);
     color: #fff;
-    border-radius: 8px;
+    border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 0.85rem;
+    font-weight: 800; font-size: 0.75rem;
 }
 .pd-v-title {
-    font-size: 0.8rem; font-weight: 800; color: var(--text-main); line-height: 1.2;
+    font-size: 0.75rem; font-weight: 800; color: var(--text-main); line-height: 1.2;
 }
 .pd-v-desc {
-    font-size: 0.725rem; color: var(--text-muted);
+    font-size: 0.675rem; color: var(--text-muted);
 }
 
 /* Options / QTY */
 .pd-qty-wrap {
-    display: flex; align-items: center; gap: 0.875rem; margin-bottom: 1.5rem;
-    background: var(--bg-surface); padding: 0.875rem 1rem; border-radius: 14px; border: 1.5px solid var(--border-1);
+    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;
+    background: var(--bg-surface); padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--border-1);
     flex-wrap: wrap;
 }
 .pd-qty-ctrl {
     display: flex; align-items: center;
-    border: 1.5px solid var(--border-1);
-    border-radius: 10px; overflow: hidden;
-    background: var(--bg-base); box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    border: 1px solid var(--border-1);
+    border-radius: 8px; overflow: hidden;
+    background: var(--bg-base);
 }
 .pd-qty-btn {
-    width: 38px; height: 38px;
+    width: 34px; height: 34px;
     border: none; background: transparent; cursor: pointer;
-    font-size: 1.15rem; color: var(--text-muted);
+    font-size: 1.1rem; color: var(--text-muted);
     display: flex; align-items: center; justify-content: center;
     transition: 0.2s;
 }
 .pd-qty-btn:hover { background: #F1F5F9; color: var(--text-main); }
 .pd-qty-input {
-    width: 48px; height: 38px; border: none; text-align: center;
-    font-size: 1rem; font-weight: 700; color: var(--text-main);
+    width: 42px; height: 34px; border: none; text-align: center;
+    font-size: 0.95rem; font-weight: 700; color: var(--text-main);
     border-left: 1px solid var(--border-1); border-right: 1px solid var(--border-1);
 }
 
 /* Action Buttons */
 .pd-actions {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem;
+    display: flex; gap: 0.75rem;
 }
 .pd-btn {
-    padding: 0.875rem 1.25rem; border-radius: 14px; font-weight: 700; font-size: 0.95rem;
-    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-    transition: all 0.3s cubic-bezier(0.4,0,0.2,1); text-decoration: none; border: none;
+    flex: 1;
+    padding: 0.85rem 1rem; border-radius: 12px; font-weight: 700; font-size: 0.9rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    transition: all 0.2s ease; text-decoration: none; border: none;
     font-family: 'Montserrat', sans-serif;
 }
 .pd-btn-outline {
     background: #F0F9FF; color: var(--accent-dark); border: 1.5px solid rgba(14,165,233,0.35);
 }
 .pd-btn-outline:hover {
-    background: #E0F2FE; border-color: var(--accent); transform: translateY(-2px);
+    background: #E0F2FE; border-color: var(--accent);
 }
 .pd-btn-primary {
     background: linear-gradient(135deg, #0EA5E9, #0284C7);
     color: #fff;
-    box-shadow: 0 6px 20px rgba(14,165,233,0.25);
+    box-shadow: 0 4px 14px rgba(14,165,233,0.25);
 }
 .pd-btn-primary:hover {
-    transform: translateY(-2px); box-shadow: 0 10px 28px rgba(14,165,233,0.35);
+    box-shadow: 0 6px 18px rgba(14,165,233,0.35);
 }
 .pd-btn:disabled {
     opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important;
@@ -256,66 +258,59 @@
 
 /* Bottom Content */
 .pd-bottom-layout {
-    max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 4rem;
-    display: grid; grid-template-columns: 1fr 320px; gap: 2.5rem;
+    max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 3rem;
+    display: grid; grid-template-columns: 1fr 300px; gap: 2rem;
 }
 
 .pd-section-title {
-    font-size: 1.15rem; font-weight: 800; color: var(--text-main);
-    margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;
+    font-size: 1.05rem; font-weight: 800; color: var(--text-main);
+    margin-bottom: 1rem; display: flex; align-items: center; gap: 0.4rem;
     font-family: 'Montserrat', sans-serif;
 }
 .pd-section-title::before {
-    content:''; display:block; width:4px; height:18px; background:var(--accent); border-radius:4px;
+    content:''; display:block; width:4px; height:16px; background:var(--accent); border-radius:4px;
 }
 
-.pd-specs-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 2rem; }
-.pd-specs-table td { padding: 0.875rem 0; border-bottom: 1px solid var(--border-1); }
-.pd-specs-table td:first-child { width: 140px; color: var(--text-muted); }
+.pd-specs-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; margin-bottom: 1.75rem; }
+.pd-specs-table td { padding: 0.75rem 0; border-bottom: 1px solid var(--border-1); }
+.pd-specs-table td:first-child { width: 130px; color: var(--text-muted); }
 .pd-specs-table td:last-child { color: var(--text-main); font-weight: 600; }
 
 .pd-content {
-    font-size: 0.95rem; color: var(--text-muted); line-height: 1.75;
+    font-size: 0.9rem; color: var(--text-muted); line-height: 1.7;
 }
-.pd-content h2, .pd-content h3 { color: var(--text-main); font-weight: 800; margin-top: 1.75rem; margin-bottom: 0.875rem; font-family: 'Montserrat', sans-serif; }
-.pd-content ul { padding-left: 1.25rem; margin-bottom: 1rem; }
-.pd-content p { margin-bottom: 1rem; }
-
-/* Mobile Sticky Action Bar */
-.pd-mobile-actions { display: none; }
+.pd-content h2, .pd-content h3 { color: var(--text-main); font-weight: 800; margin-top: 1.5rem; margin-bottom: 0.75rem; font-family: 'Montserrat', sans-serif; }
+.pd-content ul { padding-left: 1.15rem; margin-bottom: 0.875rem; }
+.pd-content p { margin-bottom: 0.875rem; }
 
 @media (max-width: 1024px) {
-    .pd-layout { grid-template-columns: 1fr; gap: 1.5rem; }
-    .pd-bottom-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .pd-layout { grid-template-columns: 1fr; gap: 1.25rem; }
+    .pd-bottom-layout { grid-template-columns: 1fr; gap: 1.5rem; }
 }
 
 @media (max-width: 768px) {
     .pd-breadcrumb {
-        padding: 0.75rem 1rem 0;
-        font-size: 0.75rem;
+        padding: 0.5rem 1rem 0;
+        font-size: 0.725rem;
     }
-    .pd-layout { padding: 0.875rem 1rem 2rem; gap: 1.25rem; }
-    .pd-bottom-layout { padding: 0 1rem 7rem; }
-    .pd-title { font-size: 1.35rem; }
-    .pd-price-current { font-size: 1.5rem; }
-    .pd-card { padding: 1.25rem; border-radius: 16px; }
-    .pd-price-box { padding: 1rem; border-radius: 14px; }
-    .pd-gallery-main { border-radius: 16px; margin-bottom: 0.5rem; }
-    .pd-thumb-item { width: 54px; height: 54px; border-radius: 10px; }
-    .pd-specs-table td:first-child { width: 110px; font-size: 0.85rem; }
-    .pd-specs-table td:last-child { font-size: 0.85rem; }
-    
-    /* Hide desktop actions on mobile */
-    .pd-desktop-actions { display: none !important; }
-    
-    .pd-mobile-actions {
-        display: flex; align-items: center; gap: 0.625rem;
-        position: fixed; bottom: 0; left: 0; right: 0;
-        background: #ffffff;
-        padding: 0.75rem 1rem; border-top: 1px solid var(--border-1);
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 999;
+    .pd-layout { padding: 0.75rem 1rem 1.5rem; gap: 1rem; }
+    .pd-bottom-layout { padding: 0 1rem 2.5rem; }
+    .pd-gallery-main {
+        max-width: 280px;
+        border-radius: 14px;
+        margin-bottom: 0.5rem;
     }
-    .pd-mobile-actions .pd-btn { flex: 1; padding: 0.75rem; font-size: 0.9rem; border-radius: 12px; }
+    .pd-thumbs { max-width: 280px; }
+    .pd-thumb-item { width: 44px; height: 44px; border-radius: 8px; }
+    .pd-title { font-size: 1.15rem; margin-bottom: 0.35rem; }
+    .pd-desc-short { font-size: 0.825rem; margin-bottom: 0.75rem; }
+    .pd-price-current { font-size: 1.35rem; }
+    .pd-card { padding: 1rem; border-radius: 14px; }
+    .pd-price-box { padding: 0.75rem 0.875rem; border-radius: 12px; margin-bottom: 0.75rem; }
+    .pd-specs-table td:first-child { width: 100px; font-size: 0.8rem; }
+    .pd-specs-table td:last-child { font-size: 0.8rem; }
+    .pd-actions { gap: 0.5rem; }
+    .pd-btn { padding: 0.75rem 0.875rem; font-size: 0.85rem; border-radius: 10px; }
 }
 </style>
 
@@ -379,7 +374,7 @@
             @if($service->rating > 0)
             <div class="pd-stars">
                 <span>{{ number_format($service->rating, 1) }}</span>
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
             @endif
             @if($service->rating > 0 && $service->sold_count > 0)
@@ -438,7 +433,7 @@
                 <input type="hidden" name="product_id" value="{{ $service->id }}">
                 
                 <div class="pd-qty-wrap">
-                    <span style="font-size:0.95rem; font-weight:700; color:var(--text-main);">Kuantitas:</span>
+                    <span style="font-size:0.875rem; font-weight:700; color:var(--text-main);">Kuantitas:</span>
                     <div class="pd-qty-ctrl">
                         <button type="button" class="pd-qty-btn" onclick="document.getElementById('qty_input').stepDown()">−</button>
                         <input type="number" id="qty_input" class="pd-qty-input" name="qty" 
@@ -447,7 +442,7 @@
                                @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
                         <button type="button" class="pd-qty-btn" onclick="document.getElementById('qty_input').stepUp()">+</button>
                     </div>
-                    <span style="font-size:0.9rem; color:var(--text-muted);">
+                    <span style="font-size:0.85rem; color:var(--text-muted);">
                         @if($service->type === 'service')
                             Jasa / Layanan
                         @elseif($service->stock > 0)
@@ -458,10 +453,10 @@
                     </span>
                 </div>
 
-                <div class="pd-actions pd-desktop-actions">
+                <div class="pd-actions">
                     <button type="button" onclick="submitProductForm('cart')" class="pd-btn pd-btn-outline" 
                             @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20a1 1 0 100-2 1 1 0 000 2zM20 20a1 1 0 100-2 1 1 0 000 2z"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20a1 1 0 100-2 1 1 0 000 2zM20 20a1 1 0 100-2 1 1 0 000 2z"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
                         Keranjang
                     </button>
                     <button type="button" onclick="submitProductForm('buy')" class="pd-btn pd-btn-primary"
@@ -473,8 +468,8 @@
         @else
             {{-- Non-ecommerce / Custom Service --}}
             <div class="pd-price-box" style="background: linear-gradient(135deg, #EFF6FF, #ffffff); border-color: #BFDBFE;">
-                <div class="pd-price-current" style="color: #2563EB; font-size:2rem;">Konsultasi Gratis</div>
-                <div style="font-size:1rem; color:#1E3A8A; width:100%;">Tim ahli kami siap memberikan penawaran terbaik untuk Anda.</div>
+                <div class="pd-price-current" style="color: #2563EB; font-size:1.75rem;">Konsultasi Gratis</div>
+                <div style="font-size:0.9rem; color:#1E3A8A; width:100%;">Tim ahli kami siap memberikan penawaran terbaik untuk Anda.</div>
             </div>
             
             <a href="javascript:void(0)" onclick="openOrderModal('Produk: {{ addslashes($service->name) }}')" class="pd-btn pd-btn-primary" style="width:100%;">
@@ -508,12 +503,12 @@
             $faqs = is_array($service->faqs) && !empty($service->faqs) ? $service->faqs : [];
         @endphp
         @if(count($faqs) > 0)
-            <div class="pd-section-title" style="margin-top: 3.5rem;">FAQ {{ $service->name }}</div>
-            <div style="display:flex; flex-direction:column; gap:1.25rem;">
+            <div class="pd-section-title" style="margin-top: 2.5rem;">FAQ {{ $service->name }}</div>
+            <div style="display:flex; flex-direction:column; gap:1rem;">
                 @foreach($faqs as $f)
-                <div style="background:var(--bg-surface); padding:1.5rem; border-radius:16px; border:1px solid var(--border-1);">
-                    <div style="font-weight:800; color:var(--text-main); margin-bottom:0.75rem; font-size:1.05rem;">{{ $f['q'] ?? '' }}</div>
-                    <div style="font-size:0.95rem; color:var(--text-muted); line-height:1.7;">{{ $f['a'] ?? '' }}</div>
+                <div style="background:var(--bg-surface); padding:1.25rem; border-radius:14px; border:1px solid var(--border-1);">
+                    <div style="font-weight:800; color:var(--text-main); margin-bottom:0.5rem; font-size:0.95rem; font-family:'Montserrat',sans-serif;">{{ $f['q'] ?? '' }}</div>
+                    <div style="font-size:0.875rem; color:var(--text-muted); line-height:1.6;">{{ $f['a'] ?? '' }}</div>
                 </div>
                 @endforeach
             </div>
@@ -523,31 +518,31 @@
     {{-- SIDEBAR --}}
     <div>
         <div class="pd-card" style="position: sticky; top: 100px;">
-            <div class="pd-section-title" style="margin-bottom:1.5rem;">Jaminan Belanja</div>
+            <div class="pd-section-title" style="margin-bottom:1.25rem;">Jaminan Belanja</div>
             
-            <div style="display:flex; align-items:flex-start; gap:14px; margin-bottom:1.25rem;">
-                <div style="width:42px; height:42px; background:#F0F9FF; color:var(--accent); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:1rem;">
+                <div style="width:38px; height:38px; background:#F0F9FF; color:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
                 <div>
-                    <div style="font-weight:800; font-size:0.95rem; color:var(--text-main); margin-bottom:0.25rem;">100% Original</div>
-                    <div style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">Produk asli dan bergaransi resmi.</div>
+                    <div style="font-weight:800; font-size:0.9rem; color:var(--text-main); margin-bottom:0.15rem; font-family:'Montserrat',sans-serif;">100% Original</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Produk asli dan bergaransi resmi.</div>
                 </div>
             </div>
             
-            <div style="display:flex; align-items:flex-start; gap:14px; margin-bottom:1.25rem;">
-                <div style="width:42px; height:42px; background:#F0F9FF; color:var(--accent); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:1rem;">
+                <div style="width:38px; height:38px; background:#F0F9FF; color:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                 </div>
                 <div>
-                    <div style="font-weight:800; font-size:0.95rem; color:var(--text-main); margin-bottom:0.25rem;">Pengiriman Aman</div>
-                    <div style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">Tepat waktu dengan asuransi pengiriman.</div>
+                    <div style="font-weight:800; font-size:0.9rem; color:var(--text-main); margin-bottom:0.15rem; font-family:'Montserrat',sans-serif;">Pengiriman Aman</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">Tepat waktu dengan asuransi pengiriman.</div>
                 </div>
             </div>
             
             @if($service->brochure)
-            <a href="{{ asset('storage/'.$service->brochure) }}" target="_blank" class="pd-btn pd-btn-outline" style="margin-top:2rem; width:100%;">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <a href="{{ asset('storage/'.$service->brochure) }}" target="_blank" class="pd-btn pd-btn-outline" style="margin-top:1.5rem; width:100%;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                 Unduh Brosur/Datasheet
             </a>
             @endif
@@ -555,56 +550,41 @@
     </div>
 </section>
 
-{{-- MOBILE STICKY ACTION BAR --}}
-@if($service->price > 0)
-<div class="pd-mobile-actions">
-    <button type="button" onclick="submitProductForm('cart')" class="pd-btn pd-btn-outline" 
-            @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20a1 1 0 100-2 1 1 0 000 2zM20 20a1 1 0 100-2 1 1 0 000 2z"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
-        Keranjang
-    </button>
-    <button type="button" onclick="submitProductForm('buy')" class="pd-btn pd-btn-primary"
-            @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
-        Beli Sekarang
-    </button>
-</div>
-@endif
-
 {{-- ═══ MENGAPA ALATRUMAH.COM ═══ --}}
-<section style="background:var(--bg-base); padding:4rem 1.5rem; border-top:1px solid var(--border-1);">
+<section style="background:var(--bg-base); padding:3.5rem 1.5rem; border-top:1px solid var(--border-1);">
     <div style="max-width:1200px; margin:0 auto;">
-        <div style="text-align:center; margin-bottom:3rem;">
-            <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.15em; color:var(--accent); text-transform:uppercase; margin-bottom:0.5rem;">Mengapa Memilih Kami</div>
-            <h2 style="font-size:1.75rem; font-weight:900; color:var(--text-main); line-height:1.2; letter-spacing:-0.03em; font-family:'Montserrat',sans-serif;">Toko Alat Rumah Tangga<br>Terpercaya di Surabaya</h2>
+        <div style="text-align:center; margin-bottom:2.5rem;">
+            <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.15em; color:var(--accent); text-transform:uppercase; margin-bottom:0.4rem;">Mengapa Memilih Kami</div>
+            <h2 style="font-size:1.5rem; font-weight:900; color:var(--text-main); line-height:1.2; letter-spacing:-0.03em; font-family:'Montserrat',sans-serif;">Toko Alat Rumah Tangga<br>Terpercaya di Surabaya</h2>
         </div>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1.25rem;">
-            <div class="pd-card" style="text-align:center; padding:1.75rem 1.25rem;">
-                <div style="width:52px; height:52px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
-                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1.25rem;">
+            <div class="pd-card" style="text-align:center; padding:1.5rem 1rem;">
+                <div style="width:48px; height:48px; background:#F0F9FF; color:var(--accent); border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.875rem;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
                 </div>
-                <div style="font-weight:800; margin-bottom:0.5rem; color:var(--text-main); font-size:1rem; font-family:'Montserrat',sans-serif;">Produk Berkualitas</div>
-                <div style="font-size:0.875rem; color:var(--text-muted); line-height:1.6;">Semua produk tersertifikasi dan bergaransi resmi dari produsen.</div>
+                <div style="font-weight:800; margin-bottom:0.4rem; color:var(--text-main); font-size:0.95rem; font-family:'Montserrat',sans-serif;">Produk Berkualitas</div>
+                <div style="font-size:0.825rem; color:var(--text-muted); line-height:1.5;">Semua produk tersertifikasi dan bergaransi resmi dari produsen.</div>
             </div>
-            <div class="pd-card" style="text-align:center; padding:1.75rem 1.25rem;">
-                <div style="width:52px; height:52px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
-                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+            <div class="pd-card" style="text-align:center; padding:1.5rem 1rem;">
+                <div style="width:48px; height:48px; background:#F0F9FF; color:var(--accent); border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.875rem;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                 </div>
-                <div style="font-weight:800; margin-bottom:0.5rem; color:var(--text-main); font-size:1rem; font-family:'Montserrat',sans-serif;">Pengiriman Cepat</div>
-                <div style="font-size:0.875rem; color:var(--text-muted); line-height:1.6;">Dikirim ke seluruh Indonesia dengan aman dan tepat waktu.</div>
+                <div style="font-weight:800; margin-bottom:0.4rem; color:var(--text-main); font-size:0.95rem; font-family:'Montserrat',sans-serif;">Pengiriman Cepat</div>
+                <div style="font-size:0.825rem; color:var(--text-muted); line-height:1.5;">Dikirim ke seluruh Indonesia dengan aman dan tepat waktu.</div>
             </div>
-            <div class="pd-card" style="text-align:center; padding:1.75rem 1.25rem;">
-                <div style="width:52px; height:52px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
-                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+            <div class="pd-card" style="text-align:center; padding:1.5rem 1rem;">
+                <div style="width:48px; height:48px; background:#F0F9FF; color:var(--accent); border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.875rem;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
                 </div>
-                <div style="font-weight:800; margin-bottom:0.5rem; color:var(--text-main); font-size:1rem; font-family:'Montserrat',sans-serif;">Harga Terbaik</div>
-                <div style="font-size:0.875rem; color:var(--text-muted); line-height:1.6;">Harga kompetitif langsung dari distributor resmi. Diskon setiap hari.</div>
+                <div style="font-weight:800; margin-bottom:0.4rem; color:var(--text-main); font-size:0.95rem; font-family:'Montserrat',sans-serif;">Harga Terbaik</div>
+                <div style="font-size:0.825rem; color:var(--text-muted); line-height:1.5;">Harga kompetitif langsung dari distributor resmi. Diskon setiap hari.</div>
             </div>
-            <div class="pd-card" style="text-align:center; padding:1.75rem 1.25rem;">
-                <div style="width:52px; height:52px; background:#F0F9FF; color:var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
-                    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></svg>
+            <div class="pd-card" style="text-align:center; padding:1.5rem 1rem;">
+                <div style="width:48px; height:48px; background:#F0F9FF; color:var(--accent); border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.875rem;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></svg>
                 </div>
-                <div style="font-weight:800; margin-bottom:0.5rem; color:var(--text-main); font-size:1rem; font-family:'Montserrat',sans-serif;">CS Responsif</div>
-                <div style="font-size:0.875rem; color:var(--text-muted); line-height:1.6;">Tim customer service kami siap membantu via WhatsApp setiap saat.</div>
+                <div style="font-weight:800; margin-bottom:0.4rem; color:var(--text-main); font-size:0.95rem; font-family:'Montserrat',sans-serif;">CS Responsif</div>
+                <div style="font-size:0.825rem; color:var(--text-muted); line-height:1.5;">Tim customer service kami siap membantu via WhatsApp setiap saat.</div>
             </div>
         </div>
     </div>
@@ -615,15 +595,15 @@
 
 {{-- RELATED PRODUCTS --}}
 @if($related->count() > 0)
-<section style="background:var(--bg-surface); padding:4rem 1.5rem; border-top:1px solid var(--border-1);">
+<section style="background:var(--bg-surface); padding:3.5rem 1.5rem; border-top:1px solid var(--border-1);">
     <div style="max-width:1200px; margin:0 auto;">
-        <div style="font-size:1.5rem; font-weight:900; color:var(--text-main); margin-bottom:2rem; letter-spacing:-0.02em; font-family:'Montserrat',sans-serif;">Produk &amp; Layanan Lainnya</div>
-        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:1.25rem;">
+        <div style="font-size:1.35rem; font-weight:900; color:var(--text-main); margin-bottom:1.75rem; letter-spacing:-0.02em; font-family:'Montserrat',sans-serif;">Produk &amp; Layanan Lainnya</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:1rem;">
             @foreach($related as $r)
                 <a href="{{ route_locale('products.show', $r->slug) }}" style="text-decoration:none; display:block;" class="pd-card pd-card-hover">
-                    <img src="{{ $r->image_url }}" alt="{{ $r->name }}" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; margin-bottom:1rem;" loading="lazy">
-                    <div style="font-weight:800; color:var(--text-main); font-size:1rem; margin-bottom:0.35rem; line-height:1.3; font-family:'Montserrat',sans-serif;">{{ $r->name }}</div>
-                    <div style="font-size:0.85rem; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.5;">{{ $r->short_desc }}</div>
+                    <img src="{{ $r->image_url }}" alt="{{ $r->name }}" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:10px; margin-bottom:0.875rem;" loading="lazy">
+                    <div style="font-weight:800; color:var(--text-main); font-size:0.95rem; margin-bottom:0.25rem; line-height:1.3; font-family:'Montserrat',sans-serif;">{{ $r->name }}</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.4;">{{ $r->short_desc }}</div>
                 </a>
             @endforeach
         </div>
