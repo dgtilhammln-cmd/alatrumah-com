@@ -30,7 +30,7 @@ class ServiceController extends Controller
             $cats = array_filter(array_map('trim', $cats));
             if (!empty($cats)) {
                 $query->whereHas('category', function($q) use ($cats) {
-                    $q->whereIn('slug', $cats);
+                    $q->whereIn('url', $cats);
                 });
             }
         }
@@ -81,8 +81,8 @@ class ServiceController extends Controller
         $wa         = WaSetting::primary();
 
         // Categories with counts
-        $categories = \App\Models\ProductCategory::where('is_active', true)
-            ->orderBy('order')
+        $categories = \App\Models\CategoryItem::where('is_active', true)
+            ->orderBy('sort_order')
             ->withCount(['products' => function($q) { $q->where('is_active', true); }])
             ->get()
             ->map(function($cat) {

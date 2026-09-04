@@ -61,7 +61,7 @@ class Service extends Model
      */
     public function category(): BelongsTo
     {
-        return $this->belongsTo(ProductCategory::class, 'product_category_id');
+        return $this->belongsTo(CategoryItem::class, 'product_category_id');
     }
 
     /**

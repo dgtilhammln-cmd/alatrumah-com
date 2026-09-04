@@ -14,4 +14,9 @@ class CategoryItem extends Model
     {
         return $query->where('is_active', true)->orderBy('sort_order');
     }
+
+    public function products()
+    {
+        return $this->hasMany(Service::class, 'product_category_id');
+    }
 }
