@@ -1216,7 +1216,7 @@
     @if($categoryItems->count())
     <section class="cv-cats-section" aria-label="Kategori Produk">
         <div class="cv-cats-inner" style="flex-direction: column; align-items: flex-start; padding: 1rem 1.5rem 1.25rem;">
-            <h2 style="font-size:1.15rem; font-weight:600; color:#1E293B; margin:0 0 1rem 0; font-family:'Montserrat', sans-serif;">
+            <h2 style="font-family:'Montserrat',sans-serif; font-size:1.15rem; font-weight:700; color:#1E293B; margin:0 0 1rem 0;">
                 Kategori Pilihan
             </h2>
             <div class="swiper cats-swiper hidden md:block" id="catsSwiperDesktop" style="width: 100%;">
@@ -1766,7 +1766,7 @@
         </style>
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; border-top: none;">
             <div>
-                <h2 class="cv-rekomendasi-title" style="font-family:'Montserrat',sans-serif; font-size:1.125rem; font-weight:800; color:#1E293B; letter-spacing:-0.02em; margin:0 0 0.2rem;">Rekomendasi Untukmu</h2>
+                <h2 class="cv-rekomendasi-title" style="font-family:'Montserrat',sans-serif; font-size:1.15rem; font-weight:700; color:#1E293B; margin:0 0 0.2rem;">Rekomendasi Untukmu</h2>
                 <div class="cv-rekomendasi-subtitle" style="font-size:0.8rem; color:#64748B;">Temukan berbagai produk pilihan terbaik dari AlatRumah</div>
             </div>
             <a href="{{ route('products') }}" style="font-size:0.75rem; font-weight:600; color:#0EA5E9; text-decoration:none; white-space:nowrap;">Lihat Semua &rarr;</a>
@@ -1835,23 +1835,12 @@
     @if(isset($articles) && $articles->count() > 0)
     <section class="cv-home-articles-section" style="background: #F8FAFC; padding: 3.5rem 0 4rem; border-top: 1px solid #E2E8F0;">
         <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;" class="cv-articles-container">
-            <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; border-top: none;">
                 <div>
-                    <div style="display:inline-flex; align-items:center; gap:0.4rem; background:#E0F2FE; color:#0284C7; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; padding:0.25rem 0.65rem; border-radius:999px; margin-bottom:0.5rem;">
-                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l5 5v11a2 2 0 0 1-2 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-                        Edukasi & Tips Alat Rumah
-                    </div>
-                    <h2 style="font-family:'Montserrat',sans-serif; font-size:1.35rem; font-weight:800; color:#1E293B; letter-spacing:-0.02em; margin:0;">
-                        Artikel & Panduan Terbaru
-                    </h2>
-                    <div style="font-size:0.85rem; color:#64748B; margin-top:0.25rem;">
-                        Informasi menarik, inspirasi rumah tangga, dan panduan perawatan alat rumah Anda
-                    </div>
+                    <h2 style="font-family:'Montserrat',sans-serif; font-size:1.15rem; font-weight:700; color:#1E293B; margin:0 0 0.2rem;">Artikel & Panduan Terbaru</h2>
+                    <div style="font-size:0.8rem; color:#64748B;">Informasi menarik, inspirasi rumah tangga, dan panduan perawatan alat rumah Anda</div>
                 </div>
-                <a href="{{ route('articles') }}" style="font-size:0.825rem; font-weight:700; color:#0EA5E9; text-decoration:none; display:inline-flex; align-items:center; gap:0.35rem; white-space:nowrap; transition:all 0.2s;">
-                    Lihat Semua Artikel
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                </a>
+                <a href="{{ route('articles') }}" style="font-size:0.75rem; font-weight:600; color:#0EA5E9; text-decoration:none; white-space:nowrap;">Lihat Semua &rarr;</a>
             </div>
 
             <div class="home-articles-grid">
