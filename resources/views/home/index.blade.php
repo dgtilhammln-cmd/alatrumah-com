@@ -1848,7 +1848,7 @@
                         Informasi menarik, inspirasi rumah tangga, dan panduan perawatan alat rumah Anda
                     </div>
                 </div>
-                <a href="{{ route('articles.index') }}" style="font-size:0.825rem; font-weight:700; color:#0EA5E9; text-decoration:none; display:inline-flex; align-items:center; gap:0.35rem; white-space:nowrap; transition:all 0.2s;">
+                <a href="{{ route('articles') }}" style="font-size:0.825rem; font-weight:700; color:#0EA5E9; text-decoration:none; display:inline-flex; align-items:center; gap:0.35rem; white-space:nowrap; transition:all 0.2s;">
                     Lihat Semua Artikel
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
                 </a>

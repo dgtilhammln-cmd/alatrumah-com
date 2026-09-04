@@ -82,7 +82,7 @@
             onmouseover="this.style.background='#FAFBFF'" onmouseout="this.style.background='transparent'">
             <td style="padding:1.25rem 1.5rem;">
               <span
-                style="font-size:.8rem;font-weight:700;color:#CBD5E1;">{{ str_pad($s->order, 2, '0', STR_PAD_LEFT) }}</span>
+                style="font-size:.8rem;font-weight:700;color:#94A3B8;">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
             </td>
             <td style="padding:1.25rem 1.5rem;">
               <img src="{{ $s->image_url }}" alt="{{ $s->name }}"
