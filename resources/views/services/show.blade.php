@@ -309,6 +309,49 @@
     line-height: 1.4;
 }
 
+/* ── PRODUCT DESCRIPTION CONTENT ── */
+.pd-content {
+    color: #1E293B !important;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    font-family: 'Montserrat', sans-serif;
+}
+.pd-content p {
+    color: #334155 !important;
+    margin-bottom: 0.85rem;
+    line-height: 1.8;
+}
+.pd-content ul, .pd-content ol {
+    color: #334155 !important;
+    padding-left: 1.5rem;
+    margin-bottom: 0.85rem;
+}
+.pd-content li {
+    color: #334155 !important;
+    margin-bottom: 0.35rem;
+}
+.pd-content h1, .pd-content h2, .pd-content h3,
+.pd-content h4, .pd-content h5, .pd-content h6 {
+    color: #0F172A !important;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+.pd-content strong, .pd-content b {
+    color: #0F172A !important;
+    font-weight: 700;
+}
+.pd-content a {
+    color: #0EA5E9;
+    text-decoration: underline;
+}
+.pd-content table {
+    color: #334155 !important;
+}
+.pd-content td, .pd-content th {
+    color: #334155 !important;
+}
+
 @media (max-width: 1024px) {
     .pd-layout { grid-template-columns: 1fr; gap: 1.25rem; }
     .pd-bottom-layout { grid-template-columns: 1fr; gap: 1.5rem; }
