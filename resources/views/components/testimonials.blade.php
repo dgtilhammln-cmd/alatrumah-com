@@ -1,6 +1,32 @@
 @if(isset($testimonials) && $testimonials->count())
     {{-- ════ PREMIUM TESTIMONIALS CSS ════ --}}
     <style>
+    .cv-adv-section-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #0EA5E9;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .cv-adv-section-label::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #0EA5E9;
+    }
+    .cv-adv-section-title {
+        font-size: clamp(1.75rem, 3vw, 2.5rem);
+        font-weight: 700;
+        color: #0F172A !important;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
+        margin: 0;
+    }
     .cv-testi-premium {
         background: #F8FAFC;
         padding: 5rem 0;

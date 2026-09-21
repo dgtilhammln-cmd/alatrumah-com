@@ -20,7 +20,7 @@
 .pd-breadcrumb {
     padding: 1rem 1.5rem 0;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 5.5rem auto 0;
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -116,10 +116,10 @@
 
 /* ── INFO ── */
 .pd-title {
-    font-size: 1.5rem;
-    font-weight: 800;
+    font-size: 1.4rem;
+    font-weight: 600;
     color: var(--text-main);
-    line-height: 1.3;
+    line-height: 1.35;
     margin-bottom: 0.5rem;
     letter-spacing: -0.01em;
     font-family: 'Montserrat', sans-serif;
@@ -149,14 +149,14 @@
     display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
 }
 .pd-price-current {
-    font-size: 1.5rem; font-weight: 900; color: var(--accent-dark); line-height: 1;
+    font-size: 1.5rem; font-weight: 700; color: var(--accent-dark); line-height: 1;
     letter-spacing: -0.01em; font-family: 'Montserrat', sans-serif;
 }
 .pd-price-old {
     font-size: 0.9rem; text-decoration: line-through; color: var(--text-muted);
 }
 .pd-badge-discount {
-    background: #EF4444; color: #fff; font-size: 0.7rem; font-weight: 800;
+    background: #EF4444; color: #fff; font-size: 0.7rem; font-weight: 700;
     padding: 0.2rem 0.45rem; border-radius: 6px; text-transform: uppercase;
 }
 
@@ -192,10 +192,10 @@
     color: #fff;
     border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 0.75rem;
+    font-weight: 700; font-size: 0.75rem;
 }
 .pd-v-title {
-    font-size: 0.75rem; font-weight: 800; color: var(--text-main); line-height: 1.2;
+    font-size: 0.75rem; font-weight: 700; color: var(--text-main); line-height: 1.2;
 }
 .pd-v-desc {
     font-size: 0.675rem; color: var(--text-muted);
@@ -263,7 +263,7 @@
 }
 
 .pd-section-title {
-    font-size: 1.05rem; font-weight: 800; color: var(--text-main);
+    font-size: 1.05rem; font-weight: 700; color: var(--text-main);
     margin-bottom: 1rem; display: flex; align-items: center; gap: 0.4rem;
     font-family: 'Montserrat', sans-serif;
 }
@@ -292,7 +292,7 @@
     margin-bottom: 0.75rem;
 }
 .pd-related-title {
-    font-weight: 800;
+    font-weight: 600;
     color: var(--text-main);
     font-size: 0.95rem;
     margin-bottom: 0.25rem;
@@ -317,6 +317,7 @@
 
 @media (max-width: 768px) {
     .pd-breadcrumb {
+        margin-top: 0;
         padding: 0.5rem 1rem 0;
         font-size: 0.725rem;
     }
