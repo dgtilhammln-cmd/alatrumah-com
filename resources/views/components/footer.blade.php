@@ -438,7 +438,7 @@ www.alatrumah.com
                 @php
                     $footerPhone = $s['phone'] ?? '';
                     $footerPhoneClean = preg_replace('/[^0-9+]/', '', $footerPhone);
-                    $footerPhoneDisplay = $footerPhone ?: ($wa ? $wa->nomor_wa : '0812-9656-5757');
+                    $footerPhoneDisplay = $footerPhone ?: ($wa ? $wa->nomor_wa : '');
                     $footerPhoneClean = $footerPhoneClean ?: preg_replace('/[^0-9+]/', '', $footerPhoneDisplay);
                 @endphp
                 <a href="tel:{{ $footerPhoneClean }}" class="cv-footer-v2-social-btn" title="Telepon">
@@ -518,10 +518,14 @@ www.alatrumah.com
                     <span class="cv-footer-v2-contact-label">Telepon</span>
                     @php
                         $phoneVal = $s['phone'] ?? '';
-                        $phoneDisplay = $phoneVal ?: ($wa ? $wa->nomor_wa : '0812-9656-5757');
+                        $phoneDisplay = $phoneVal ?: ($wa ? $wa->nomor_wa : '');
                         $phoneClean = preg_replace('/[^0-9+]/', '', $phoneDisplay);
                     @endphp
+                    @if($phoneDisplay)
                     <a href="tel:{{ $phoneClean }}">{{ $phoneDisplay }}</a>
+                    @else
+                    <span style="color:#94A3B8;font-size:0.8rem;">-</span>
+                    @endif
                 </div>
             </div>
 
@@ -551,7 +555,7 @@ www.alatrumah.com
                         <a href="javascript:void(0)" onclick="openOrderModal('Footer WA')"
                             data-track="Footer WA">{{ $waDisplay }}</a>
                     @else
-                        <a href="javascript:void(0)" onclick="openOrderModal('Footer WA')">0812-9656-5757</a>
+                        {{-- Sembunyikan baris WA jika tidak ada nomor yang dikonfigurasi --}}
                     @endif
                 </div>
             </div>
