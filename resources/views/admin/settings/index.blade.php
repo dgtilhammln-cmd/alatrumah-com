@@ -719,7 +719,7 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         <div>
           <label class="form-label" for="s-phone">Nomor Telepon Kantor / Footer</label>
-          <input type="text" id="s-phone" class="form-input" value="{{ $settings['phone'] ?? '' }}" placeholder="Contoh: +62 812-1662-1307" oninput="var el=document.getElementById('s-phone-general');if(el)el.value=this.value;">
+          <input type="text" name="phone" id="s-phone" class="form-input" value="{{ $settings['phone'] ?? '' }}" placeholder="Contoh: +62 812-1662-1307" oninput="var el=document.getElementById('s-phone-general');if(el)el.value=this.value;">
           <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Tampil di footer &amp; halaman kontak</p>
         </div>
         <div>
