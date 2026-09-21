@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 
@@ -211,13 +211,10 @@ body { background: var(--cv-bg); color: var(--cv-text); }
 
         <div class="sv-label">Profil Perusahaan</div>
         <h1 class="sv-title">
-            Mitra Ventilasi Udara Terpercaya<br>
-            Sejak {{ \App\Models\Setting::get('founding_year') ?? '2013' }}
+            Toko Perlengkapan &amp; Alat Rumah Tangga Terpercaya
         </h1>
         <p class="sv-intro">
-            PT. Hiranatha Makmur Sukses dengan merek dagang "Alat Rumah" hadir untuk menjawab
-            kebutuhan sirkulasi udara bangunan industri dan komersial di seluruh Indonesia
-            dengan teknologi alat rumah non-electric terbaik.
+            AlatRumah.com hadir menyediakan berbagai produk peralatan rumah tangga, pertukangan, dan perlengkapan hunian berkualitas tinggi dengan harga terbaik dan layanan pengiriman ke seluruh wilayah Indonesia.
         </p>
     </div>
 </section>
@@ -228,26 +225,26 @@ body { background: var(--cv-bg); color: var(--cv-text); }
         <div class="cv-cards-grid">
             <div class="cv-card cv-card-gray" data-aos="fade-up">
                 <div class="cv-card-bg-pattern">
-                    <span class="cv-chip" style="top:10%;left:5%;">Tanpa Listrik</span>
-                    <span class="cv-chip" style="top:15%;left:45%;">Bebas Perawatan</span>
-                    <span class="cv-chip" style="top:12%;left:80%;">0 Watt</span>
-                    <span class="cv-chip" style="top:35%;left:15%;">Anti Karat</span>
-                    <span class="cv-chip" style="top:38%;left:50%;">Sejuk Alami</span>
-                    <span class="cv-chip" style="top:60%;left:5%;">Tahan Lama</span>
-                    <span class="cv-chip" style="top:65%;left:40%;">Efisien</span>
-                    <span class="cv-chip" style="top:62%;left:75%;">Hemat Biaya</span>
+                    <span class="cv-chip" style="top:10%;left:5%;">100% Original</span>
+                    <span class="cv-chip" style="top:15%;left:45%;">Garansi Resmi</span>
+                    <span class="cv-chip" style="top:12%;left:80%;">Harga Terbaik</span>
+                    <span class="cv-chip" style="top:35%;left:15%;">Pengiriman Cepat</span>
+                    <span class="cv-chip" style="top:38%;left:50%;">Produk Lengkap</span>
+                    <span class="cv-chip" style="top:60%;left:5%;">Bisa COD</span>
+                    <span class="cv-chip" style="top:65%;left:40%;">Layanan Terbaik</span>
+                    <span class="cv-chip" style="top:62%;left:75%;">Terpercaya</span>
                 </div>
                 <div class="cv-card-content push-bottom">
-                    <div class="cv-card-label">Continents</div>
-                    <div class="cv-card-value">20+</div>
+                    <div class="cv-card-label">Kategori Produk</div>
+                    <div class="cv-card-value">100+</div>
                 </div>
             </div>
 
             <div class="cv-card cv-card-accent" data-aos="fade-up" data-aos-delay="100">
                 <div class="cv-card-content">
-                    <div class="cv-card-label">Commitment to measurable</div>
+                    <div class="cv-card-label">Jaminan Kualitas</div>
                     <div class="cv-card-value">100%</div>
-                    <div class="cv-card-desc">Komitmen terhadap kualitas terukur 15 Tahun &rarr; "Garansi jangka panjang dengan material aluminium &amp; stainless steel premium."</div>
+                    <div class="cv-card-desc">Komitmen terhadap kepuasan pelanggan &rarr; "Produk asli bergaransi dengan pilihan merek terbaik untuk hunian Anda."</div>
                 </div>
             </div>
 
@@ -256,16 +253,16 @@ body { background: var(--cv-bg); color: var(--cv-text); }
                 <img src="{{ !empty($settings['about_image']) ? asset('storage/'.$settings['about_image']) : $aboutImgFallback }}" alt="Tim Alat Rumah" class="cv-card-img" loading="lazy">
                 <div class="cv-card-overlay"></div>
                 <div class="cv-card-content" style="justify-content: flex-end;">
-                    <div class="cv-card-value">120+</div>
-                    <div class="cv-card-desc">Mitra industri nasional yang berdedikasi membangun sistem ventilasi yang lebih cerdas dan lebih tahan lama.</div>
+                    <div class="cv-card-value">50k+</div>
+                    <div class="cv-card-desc">Pelanggan di seluruh wilayah Indonesia yang mempercayakan kebutuhan rumah tangga kepada AlatRumah.com.</div>
                 </div>
             </div>
 
             <div class="cv-card cv-card-gray" data-aos="fade-up" data-aos-delay="300">
                 <div class="cv-card-content">
-                    <div class="cv-card-label">Data Points</div>
-                    <div class="cv-card-value">520k+</div>
-                    <div class="cv-card-desc" style="margin-top:auto;">Unit alat rumah aktif bekerja 24 jam non-stop tanpa listrik.</div>
+                    <div class="cv-card-label">Pilihan Produk</div>
+                    <div class="cv-card-value">1.000+</div>
+                    <div class="cv-card-desc" style="margin-top:auto;">Koleksi alat rumah tangga dan peralatan pertukangan siap kirim.</div>
                 </div>
             </div>
         </div>
@@ -283,15 +280,15 @@ body { background: var(--cv-bg); color: var(--cv-text); }
             <div class="cv-card cv-card-gray" style="min-height:auto;" data-aos="fade-up">
                 <div class="cv-card-content">
                     <div class="cv-card-label" style="color:var(--cv-accent); font-weight:700;">Visi Perusahaan</div>
-                    <h3 style="font-size:1.5rem; font-weight:600; color:var(--cv-text); margin-bottom:1rem;">Menjadi Pelopor</h3>
-                    <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">{{ str_replace('Alat Rumah', 'Alat Rumah', $settings['visi'] ?? 'Menjadi pelopor penyedia sirkulasi udara hemat energi yang profesional dan terpercaya di Indonesia.') }}</p>
+                    <h3 style="font-size:1.5rem; font-weight:600; color:var(--cv-text); margin-bottom:1rem;">Menjadi Platform Terpercaya</h3>
+                    <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">{{ $settings['visi'] ?? 'Menjadi platform e-commerce pilihan utama di Indonesia untuk segala kebutuhan alat rumah tangga, peralatan pertukangan, dan perlengkapan hunian yang lengkap, terpercaya, dan terjangkau.' }}</p>
                 </div>
             </div>
             <div class="cv-card cv-card-gray" style="min-height:auto;" data-aos="fade-up" data-aos-delay="100">
                 <div class="cv-card-content">
                     <div class="cv-card-label" style="color:var(--cv-accent); font-weight:700;">Misi Perusahaan</div>
-                    <h3 style="font-size:1.5rem; font-weight:600; color:var(--cv-text); margin-bottom:1rem;">Solusi Menyeluruh</h3>
-                    <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">{{ str_replace('Alat Rumah', 'Alat Rumah', $settings['misi'] ?? 'Menciptakan solusi menyeluruh dengan kualitas terbaik dalam pengadaan alat rumah atap untuk meningkatkan efisiensi dan kenyamanan pelanggan.') }}</p>
+                    <h3 style="font-size:1.5rem; font-weight:600; color:var(--cv-text); margin-bottom:1rem;">Pelayanan &amp; Kualitas Terbaik</h3>
+                    <p style="font-size:0.9375rem; color:#475569; line-height:1.7; margin:0;">{{ $settings['misi'] ?? 'Menyediakan produk berkualitas tinggi dengan jaminan originalitas, memberikan pengalaman belanja yang aman dan praktis, serta menghadirkan layanan pelanggan yang cepat dan responsif.' }}</p>
                 </div>
             </div>
         </div>
@@ -504,83 +501,54 @@ body { background: var(--cv-bg); color: var(--cv-text); }
             <div class="cv-adv-header">
                 <div>
                     <div class="cv-adv-section-label">KEUNGGULAN</div>
-                    <h2 class="cv-adv-section-title">Mengapa Pilih<br>Alat Rumah?</h2>
+                    <h2 class="cv-adv-section-title">Mengapa Memilih<br>Alat Rumah?</h2>
                 </div>
                 <p style="max-width:320px;font-size:0.875rem;color:#64748B;line-height:1.65;text-align:right;">
-                    Didesain untuk iklim tropis Indonesia, dibuktikan oleh ratusan proyek dari Sabang sampai Merauke.
+                    Penyedia peralatan rumah tangga & pertukangan terpercaya dengan garansi resmi dan pengiriman ke seluruh Indonesia.
                 </p>
             </div>
 
             {{-- Premium Cards Grid --}}
             <div class="cv-adv-cards">
 
-                {{-- Card 1: Garansi — Blue Accent --}}
+                {{-- Card 1: 100% Original — Blue Accent --}}
                 <div class="cv-adv-card-v2 accent" data-aos="fade-up" data-aos-delay="0">
                     <div class="cv-adv-card-icon-wrap white-bg">
                         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     </div>
-                    <div class="cv-adv-card-num white">15+</div>
-                    <div class="cv-adv-card-title white">Garansi 15 Tahun</div>
-                    <div class="cv-adv-card-desc white">Garansi tidak berkarat & tidak rusak. Garansi instalasi 5 tahun dan sparepart 5 tahun.</div>
+                    <div class="cv-adv-card-num white">100%</div>
+                    <div class="cv-adv-card-title white">Produk Original</div>
+                    <div class="cv-adv-card-desc white">Seluruh produk dijamin 100% original dari produsen terpercaya dan bergaransi resmi.</div>
                 </div>
 
-                {{-- Card 2: 0 Watt —Gray --}}
+                {{-- Card 2: Harga Terbaik — Gray --}}
                 <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="80">
-                    <div class="cv-adv-card-icon-wrap blue-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    </div>
-                    <div class="cv-adv-card-num">0W</div>
-                    <div class="cv-adv-card-title">Tanpa Listrik</div>
-                    <div class="cv-adv-card-desc">Bertenaga sepenuhnya dari angin. Tidak ada tagihan listrik, nol risiko korsleting.</div>
-                </div>
-
-                {{-- Card 3: 24 Jam — Gray --}}
-                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="160">
-                    <div class="cv-adv-card-icon-wrap blue-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    </div>
-                    <div class="cv-adv-card-num">24/7</div>
-                    <div class="cv-adv-card-title">Non-Stop 365 Hari</div>
-                    <div class="cv-adv-card-desc">Bebas perawatan dan beroperasi 24 jam sehari, 365 hari setahun tanpa henti.</div>
-                </div>
-
-                {{-- Card 4: Kapasitas — Dark --}}
-                <div class="cv-adv-card-v2 accent-dark" data-aos="fade-up" data-aos-delay="240">
-                    <div class="cv-adv-card-icon-wrap dark-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                    </div>
-                    <div class="cv-adv-card-num blue">257</div>
-                    <div class="cv-adv-card-title light">Kapasitas Hisap Superior</div>
-                    <div class="cv-adv-card-desc white">Hingga 257,87 m³/menit — jauh lebih tinggi dari alat rumah tipe stasioner manapun.</div>
-                </div>
-
-                {{-- Card 5: Anti Hujan --}}
-                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="0">
                     <div class="cv-adv-card-icon-wrap blue-bg">
                         <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
                     </div>
-                    <div class="cv-adv-card-title" style="margin-top:auto;">100% Anti Tampias Hujan</div>
-                    <div class="cv-adv-card-desc">Desain khusus memastikan air hujan tidak masuk ke dalam bangunan dalam kondisi apapun.</div>
+                    <div class="cv-adv-card-num">Best</div>
+                    <div class="cv-adv-card-title">Harga Kompetitif</div>
+                    <div class="cv-adv-card-desc">Penawaran harga terbaik, promo berkala, dan diskon menarik setiap harinya.</div>
                 </div>
 
-                {{-- Card 6: Iklim Tropis --}}
-                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="80">
+                {{-- Card 3: Pengiriman Cepat — Gray --}}
+                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="160">
                     <div class="cv-adv-card-icon-wrap blue-bg">
-                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                     </div>
-                    <div class="cv-adv-card-title" style="margin-top:auto;">Cocok Iklim Tropis</div>
-                    <div class="cv-adv-card-desc">Dioptimalkan untuk kondisi panas dan lembab Indonesia, efektif bahkan di angin minimum.</div>
+                    <div class="cv-adv-card-num">Fast</div>
+                    <div class="cv-adv-card-title">Pengiriman Cepat</div>
+                    <div class="cv-adv-card-desc">Proses pengemasan aman dan pengiriman cepat ke seluruh wilayah di Indonesia.</div>
                 </div>
 
-                {{-- Card 7: Desain USA — spans 2 columns --}}
-                <div class="cv-adv-card-v2" data-aos="fade-up" data-aos-delay="160" style="grid-column: span 2; flex-direction: row; gap: 2rem; align-items: center;">
-                    <div class="cv-adv-card-icon-wrap blue-bg" style="flex-shrink:0; width:60px; height:60px;">
-                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                {{-- Card 4: CS Responsif — Dark Accent --}}
+                <div class="cv-adv-card-v2 accent-dark" data-aos="fade-up" data-aos-delay="240">
+                    <div class="cv-adv-card-icon-wrap dark-bg">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
                     </div>
-                    <div>
-                        <div class="cv-adv-card-title" style="font-size:1.125rem; margin-bottom:0.5rem;">Desain Konstruksi USA</div>
-                        <div class="cv-adv-card-desc">Mengikuti standar desain USA dengan powder coating pada rangka bola dan topi bola untuk ketahanan dan keawetan maksimal di iklim tropis yang ekstrem.</div>
-                    </div>
+                    <div class="cv-adv-card-num blue">24/7</div>
+                    <div class="cv-adv-card-title light">Layanan CS Responsif</div>
+                    <div class="cv-adv-card-desc white">Tim Customer Service siap membantu konsultasi produk & pertanyaan belanja Anda.</div>
                 </div>
 
             </div>
@@ -1386,45 +1354,4 @@ body { background: var(--cv-bg); color: var(--cv-text); }
         .cv-articles-grid-v2 { grid-template-columns: 1fr; }
     }
     </style>
-<section class="cv-cta-premium">
-        <div class="cv-cta-bg-glow"></div>
-        <div class="cv-cta-inner-v2" data-aos="zoom-in">
-            <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:#38BDF8; margin-bottom:1rem; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-                <span style="width:4px; height:4px; background:#38BDF8; border-radius:50%;"></span>
-                SIAP MULAI?
-            </div>
-            <h2 class="cv-cta-title-v2" style="margin-top:1rem;">Dapatkan Konsultasi Gratis<br>& Penawaran Terbaik</h2>
-            <p class="cv-cta-desc-v2">Tim teknis Alat Rumah siap membantu Anda memilih ukuran alat rumah yang tepat dan menghitung jumlah yang dibutuhkan untuk bangunan Anda.</p>
-            
-            <div class="cv-cta-buttons">
-                @if($wa)
-                    <a href="javascript:void(0)" onclick="openOrderModal('Bottom CTA WA')"
-                       class="cv-cta-btn-primary" data-track="Bottom CTA WA">
-                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                        Chat WhatsApp
-                    </a>
-                @endif
-                <a href="{{ route_locale('contact') }}" class="cv-cta-btn-outline">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-                    Form Konsultasi
-                </a>
-            </div>
-            
-            <div class="cv-cta-info">
-                <div class="cv-cta-info-item">
-                    <svg class="cv-cta-info-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.5 12.05a19.79 19.79 0 01-3.07-8.67A2 2 0 012.41 1.5h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.4a16 16 0 006.69 6.69l1.27-.76a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                    021-22523334
-                </div>
-                <div class="cv-cta-info-item">
-                    <svg class="cv-cta-info-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    Senin–Sabtu 08.00–18.00 WIB
-                </div>
-                <div class="cv-cta-info-item">
-                    <svg class="cv-cta-info-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    Kalideres, Jakarta Barat
-                </div>
-            </div>
-        </div>
-    </section>
-
 @endsection
