@@ -300,20 +300,31 @@
       <div style="width:28px;height:28px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
         <svg width="14" height="14" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
       </div>
-      <h3 style="font-size:.8rem;font-weight:800;color:#1E293B;margin:0;">Foto Gallery</h3>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.125rem;">
+      <div style="display:flex;align-items:center;gap:.625rem;">
+        <div style="width:28px;height:28px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <svg width="14" height="14" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <h3 style="font-size:.8rem;font-weight:800;color:#1E293B;margin:0;">Foto Gallery</h3>
+      </div>
+      <span id="gallery-count-badge" style="display:none;font-size:.7rem;font-weight:700;color:#3B82F6;background:rgba(59,130,246,0.1);padding:.2rem .6rem;border-radius:20px;"></span>
     </div>
+
+    {{-- Container hidden file inputs --}}
+    <div id="gallery-file-inputs"></div>
 
     {{-- Existing saved gallery images --}}
     @if($s && is_array($s->gallery) && count($s->gallery) > 0)
-    <div id="gallery-saved-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(80px, 1fr));gap:.5rem;margin-bottom:1rem;">
+    <div style="font-size:.72rem;font-weight:700;color:#64748B;margin-bottom:.4rem;">Foto Tersimpan saat ini:</div>
+    <div id="gallery-saved-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(85px, 1fr));gap:.625rem;margin-bottom:1rem;">
       @foreach($s->gallery as $g)
-      <div class="gallery-saved-item" data-path="{{ $g }}" style="position:relative;border-radius:8px;overflow:hidden;border:1.5px solid #E4E7F0;aspect-ratio:1/1;">
+      <div class="gallery-saved-item" data-path="{{ $g }}" style="position:relative;border-radius:10px;overflow:hidden;border:1.5px solid #E2E8F0;aspect-ratio:1/1;">
         <img src="{{ asset('storage/'.$g) }}" style="width:100%;height:100%;object-fit:cover;display:block;">
         {{-- Trash button (AJAX delete) --}}
         <button type="button"
                 onclick="deleteGalleryImage(this, '{{ $g }}', {{ $s->id }})"
                 title="Hapus foto ini"
-                style="position:absolute;top:4px;right:4px;width:20px;height:20px;background:rgba(239,68,68,0.92);border:none;border-radius:4px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(239,68,68,0.4);padding:0;">
+                style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(239,68,68,0.92);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(239,68,68,0.4);padding:0;">
           {{-- Trash icon --}}
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <line x1="18" y1="6" x2="6" y2="18"/>
@@ -321,27 +332,30 @@
           </svg>
         </button>
         {{-- Label badge --}}
-        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(15,23,42,0.55);padding:.15rem;font-size:.6rem;color:rgba(255,255,255,0.85);font-weight:600;text-align:center;">Tersimpan</div>
+        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(15,23,42,0.6);padding:.2rem .3rem;font-size:.62rem;color:rgba(255,255,255,0.9);font-weight:600;text-align:center;">Tersimpan</div>
       </div>
       @endforeach
     </div>
     @else
-    <div id="gallery-saved-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(80px, 1fr));gap:.5rem;margin-bottom:1rem;"></div>
+    <div id="gallery-saved-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(85px, 1fr));gap:.625rem;margin-bottom:1rem;"></div>
     @endif
 
     {{-- New gallery file previews (before save) --}}
-    <div id="gallery-new-previews" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(80px, 1fr));gap:.5rem;margin-bottom:.75rem;"></div>
+    <div id="gallery-new-previews" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(85px, 1fr));gap:.625rem;margin-bottom:.75rem;"></div>
 
-    {{-- Upload trigger --}}
-    <label style="display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1rem;border:2px dashed #E4E7F0;border-radius:12px;cursor:pointer;transition:all .2s;text-align:center;"
-           onmouseover="this.style.borderColor='#3B82F6';this.style.background='#F8FAFF'"
-           onmouseout="this.style.borderColor='#E4E7F0';this.style.background='transparent'">
-      <svg width="22" height="22" fill="none" stroke="#94A3B8" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      <span style="font-size:.78rem;color:#64748B;font-weight:600;">Upload Foto Gallery</span>
-      <span style="font-size:.7rem;color:#94A3B8;">Bisa pilih banyak file sekaligus</span>
-      <input type="file" name="gallery_images[]" id="galleryInput" multiple accept="image/*"
-             style="display:none;" onchange="previewGalleryFiles(this)">
-    </label>
+    {{-- Upload Actions --}}
+    <div style="display:flex;flex-direction:column;gap:.5rem;">
+      <button type="button" onclick="addGalleryFileSlot(true)" style="width:100%;padding:.75rem 1rem;background:#F0F9FF;color:#0284C7;border:1.5px dashed #0284C7;border-radius:12px;font-size:.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .2s;" onmouseover="this.style.background='#E0F2FE'" onmouseout="this.style.background='#F0F9FF'">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        + Tambah Foto Gallery (1 Per 1)
+      </button>
+
+      <button type="button" onclick="addGalleryFileSlot(false)" style="width:100%;padding:.5rem 1rem;background:#F8FAFC;color:#64748B;border:1px solid #E2E8F0;border-radius:10px;font-size:.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:all .2s;" onmouseover="this.style.background='#F1F5F9';this.style.color='#1E293B'" onmouseout="this.style.background='#F8FAFC';this.style.color='#64748B'">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Atau Pilih Banyak Foto Sekaligus
+      </button>
+    </div>
+    <p style="font-size:.68rem;color:#94A3B8;margin:.5rem 0 0;text-align:center;">Foto baru yang ditambah 1 per 1 akan terakumulasi &amp; tersimpan saat simpan produk.</p>
   </div>
 
 </div>
@@ -427,30 +441,92 @@ function showGalleryToast(icon, msg) {
 }
 
 /* ─── Preview foto baru sebelum disimpan ─────────────────────── */
-function previewGalleryFiles(input) {
-    var container = document.getElementById('gallery-new-previews');
-    container.innerHTML = '';
-    if (!input.files || input.files.length === 0) return;
-    Array.from(input.files).forEach(function(file, idx) {
-        var url = URL.createObjectURL(file);
-        var div = document.createElement('div');
-        div.style.cssText = 'position:relative;border-radius:8px;overflow:hidden;border:1.5px solid #8B5CF6;aspect-ratio:1/1;';
-        div.innerHTML = '<img src="' + url + '" style="width:100%;height:100%;object-fit:cover;display:block;">'
-            + '<button type="button" onclick="removeGalleryFile(\''+input.id+'\', '+idx+')" style="position:absolute;top:4px;right:4px;width:20px;height:20px;background:rgba(239,68,68,0.95);border:none;border-radius:4px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.3);padding:0;">'
-            + '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
-            + '</button>'
-            + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(59,130,246,0.85);padding:.25rem .5rem;font-size:.65rem;color:#fff;font-weight:700;text-align:center;">Baru</div>';
-        container.appendChild(div);
-    });
+var galleryFileCounter = 0;
+
+function addGalleryFileSlot(isSingle) {
+    var container = document.getElementById('gallery-file-inputs');
+    galleryFileCounter++;
+    var inputId = 'g-file-input-' + galleryFileCounter;
+
+    var newInput = document.createElement('input');
+    newInput.type = 'file';
+    newInput.name = 'gallery_images[]';
+    newInput.id = inputId;
+    newInput.accept = 'image/*';
+    if (!isSingle) {
+        newInput.multiple = true;
+    }
+    newInput.style.display = 'none';
+
+    newInput.onchange = function() {
+        if (!this.files || this.files.length === 0) {
+            newInput.remove();
+            return;
+        }
+        renderGalleryPreviews();
+    };
+
+    container.appendChild(newInput);
+    newInput.click();
 }
-function removeGalleryFile(inputId, indexToRemove) {
-    var input = document.getElementById(inputId);
-    var dt = new DataTransfer();
-    Array.from(input.files).forEach(function(file, idx) {
-        if (idx !== indexToRemove) dt.items.add(file);
+
+function renderGalleryPreviews() {
+    var previewsContainer = document.getElementById('gallery-new-previews');
+    previewsContainer.innerHTML = '';
+
+    var inputsContainer = document.getElementById('gallery-file-inputs');
+    var inputs = inputsContainer.querySelectorAll('input[type="file"]');
+    var totalFiles = 0;
+
+    inputs.forEach(function(input) {
+        if (input.files && input.files.length > 0) {
+            Array.from(input.files).forEach(function(file, fileIdx) {
+                totalFiles++;
+                var url = URL.createObjectURL(file);
+                var div = document.createElement('div');
+                div.style.cssText = 'position:relative;border-radius:10px;overflow:hidden;border:1.5px solid #3B82F6;aspect-ratio:1/1;background:#F8FAFC;box-shadow:0 2px 8px rgba(0,0,0,0.06);';
+                div.innerHTML = '<img src="' + url + '" style="width:100%;height:100%;object-fit:cover;display:block;">'
+                    + '<button type="button" onclick="removeSingleGalleryFile(\'' + input.id + '\', ' + fileIdx + ')" title="Hapus foto ini" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(239,68,68,0.95);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.3);padding:0;">'
+                    + '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+                    + '</button>'
+                    + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(15,23,42,0.75);padding:.2rem .3rem;font-size:.65rem;color:#fff;font-weight:700;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Foto #' + totalFiles + '</div>';
+                previewsContainer.appendChild(div);
+            });
+        }
     });
-    input.files = dt.files;
-    previewGalleryFiles(input);
+
+    var counterBadge = document.getElementById('gallery-count-badge');
+    if (counterBadge) {
+        if (totalFiles > 0) {
+            counterBadge.style.display = 'inline-block';
+            counterBadge.innerText = totalFiles + ' foto baru siap';
+        } else {
+            counterBadge.style.display = 'none';
+        }
+    }
+}
+
+function removeSingleGalleryFile(inputId, fileIndex) {
+    var input = document.getElementById(inputId);
+    if (!input) return;
+
+    if (input.files.length === 1) {
+        input.remove();
+    } else {
+        try {
+            var dt = new DataTransfer();
+            Array.from(input.files).forEach(function(file, idx) {
+                if (idx !== fileIndex) dt.items.add(file);
+            });
+            input.files = dt.files;
+        } catch(e) {
+            input.remove();
+        }
+        if (input.files.length === 0) {
+            input.remove();
+        }
+    }
+    renderGalleryPreviews();
 }
 
 

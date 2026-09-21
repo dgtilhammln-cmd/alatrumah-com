@@ -328,6 +328,11 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
       <div>
+        <label class="form-label" for="s-phone-general">📞 Nomor Telepon (Footer &amp; Kontak)</label>
+        <input type="text" name="phone" id="s-phone-general" class="form-input" value="{{ $settings['phone'] ?? '' }}" placeholder="Contoh: +62 812-1662-1307 atau 021-22523334" oninput="var el=document.getElementById('s-phone');if(el)el.value=this.value;">
+        <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Nomor telepon yang tampil di Footer &amp; halaman Kontak. (Jika kosong, footer memakai WA utama).</p>
+      </div>
+      <div>
         <label class="form-label" for="s-footer_desc">Deskripsi Footer</label>
         <input type="text" name="footer_desc" id="s-footer_desc" class="form-input" value="{{ $settings['footer_desc'] ?? '' }}" placeholder="Produsen dan Spesialis Alat Rumah...">
         <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Tampil di footer website sebagai deskripsi singkat perusahaan.</p>
@@ -713,9 +718,9 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <p style="font-size:.75rem;color:#94A3B8;margin-bottom:1.25rem;line-height:1.6;">Data di bawah ini akan tampil di <strong style="color:#475569;">Footer</strong>, halaman <strong style="color:#475569;">Kontak</strong>, dan <strong style="color:#475569;">Navbar</strong> website.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         <div>
-          <label class="form-label" for="s-phone">Nomor Telepon Kantor</label>
-          <input type="text" name="phone" id="s-phone" class="form-input" value="{{ $settings['phone'] ?? '' }}" placeholder="031-XXXXXXXX">
-          <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Tampil di footer & halaman kontak</p>
+          <label class="form-label" for="s-phone">Nomor Telepon Kantor / Footer</label>
+          <input type="text" id="s-phone" class="form-input" value="{{ $settings['phone'] ?? '' }}" placeholder="Contoh: +62 812-1662-1307" oninput="var el=document.getElementById('s-phone-general');if(el)el.value=this.value;">
+          <p style="font-size:.7rem;color:#94A3B8;margin:.375rem 0 0;">Tampil di footer &amp; halaman kontak</p>
         </div>
         <div>
           <label class="form-label" for="s-email">Email Perusahaan</label>
