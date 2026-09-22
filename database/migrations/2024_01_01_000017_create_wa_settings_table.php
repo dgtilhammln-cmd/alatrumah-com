@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('wa_settings', function (Blueprint $table) {
             $table->id();
             $table->string('label'); // "WA 1 - Layanan Utama"
-            $table->string('nomor_wa'); // 081331148731
+            $table->string('nomor_wa'); // 081216621307
             $table->text('template_pesan');
             $table->boolean('is_active')->default(true);
             $table->boolean('is_primary')->default(false);

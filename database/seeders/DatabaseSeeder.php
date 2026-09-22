@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
 
         // WA Settings
         WaSetting::insert([
-            ['label'=>'WA Utama - Konsultasi','nomor_wa'=>'081296565757','template_pesan'=>'Halo Alatrumah.com, saya ingin konsultasi mengenai [produk]. Mohon informasinya. Terima kasih.','is_active'=>1,'is_primary'=>1,'order'=>1,'created_at'=>now(),'updated_at'=>now()],
+            ['label'=>'WA Utama - Konsultasi','nomor_wa'=>'081216621307','template_pesan'=>'Halo Alatrumah.com, saya ingin konsultasi mengenai [produk]. Mohon informasinya. Terima kasih.','is_active'=>1,'is_primary'=>1,'order'=>1,'created_at'=>now(),'updated_at'=>now()],
         ]);
 
         // Settings
@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
             ['key'=>'stat_coverage','value'=>'Seluruh Indonesia','type'=>'text','group'=>'stats','label'=>'Jangkauan'],
             // Contact
             ['key'=>'phone','value'=>'021-22523334','type'=>'text','group'=>'contact','label'=>'Telepon'],
-            ['key'=>'wa1','value'=>'081296565757','type'=>'text','group'=>'contact','label'=>'WhatsApp Utama'],
+            ['key'=>'wa1','value'=>'081216621307','type'=>'text','group'=>'contact','label'=>'WhatsApp Utama'],
             ['key'=>'email','value'=>'Alatrumah.com.ventilator58@gmail.com','type'=>'text','group'=>'contact','label'=>'Email'],
             ['key'=>'address','value'=>'Jl. Kerukunan IX, Komp. Citra Garden 2 Blok G1 No.6, Kalideres, Jakarta Barat 11830','type'=>'text','group'=>'contact','label'=>'Alamat'],
             ['key'=>'maps_embed','value'=>'https://maps.google.com/maps?q=-6.1364,106.7028&output=embed','type'=>'text','group'=>'contact','label'=>'Maps Embed URL'],
