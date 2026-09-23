@@ -24,7 +24,7 @@ echo.
 echo [3/3] Pull terbaru di server Hostinger...
 :: CATATAN: Sesuaikan path 'domains/alatrumah.com' dengan path asli direktori project Anda di Hostinger.
 :: Jika project ada di folder utama domain, biasanya path-nya adalah 'domains/alatrumah.com'
-ssh -p 65002 u947770498@82.180.169.175 "cd domains/alatrumah.com && git pull origin main && php artisan migrate --force"
+ssh -p 65002 u947770498@82.180.169.175 "cd domains/alatrumah.com && git pull origin main && php artisan migrate --force && php artisan route:clear && php artisan config:clear && php artisan cache:clear"
 
 echo.
 echo ==========================================
