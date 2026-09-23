@@ -264,7 +264,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
   {{-- Navigation --}}
   <nav class="sb-nav" id="sb-nav">
     @php
-      $isSuper = session('admin_role') === 'super_admin';
+      $isSuper = session('admin_role') === 'super_admin' || is_null(session('admin_permissions'));
       $perms   = session('admin_permissions') ?? [];
     @endphp
     <div class="sb-sec">Main</div>

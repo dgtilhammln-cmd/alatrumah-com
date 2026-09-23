@@ -41,16 +41,16 @@ class User extends Authenticatable
      */
     public function isSuperAdmin(): bool
     {
-        return $this->role === 'super_admin';
+        return $this->role === 'super_admin' || ($this->role === 'admin' && is_null($this->admin_permissions));
     }
 
     /**
      * Cek apakah admin memiliki permission tertentu.
-     * Super admin selalu punya akses.
+     * Super admin atau admin baru (permissions null) selalu punya akses.
      */
     public function hasPermission(string $key): bool
     {
-        if ($this->isSuperAdmin()) {
+        if ($this->isSuperAdmin() || is_null($this->admin_permissions)) {
             return true;
         }
         $perms = $this->admin_permissions ?? [];

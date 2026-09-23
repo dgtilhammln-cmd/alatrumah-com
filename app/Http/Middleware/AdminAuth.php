@@ -24,8 +24,8 @@ class AdminAuth
         session([
             'admin_name'        => $user->name,
             'admin_email'       => $user->email,
-            'admin_role'        => $user->role,
-            'admin_permissions' => $user->admin_permissions ?? [],
+            'admin_role'        => $user->isSuperAdmin() ? 'super_admin' : $user->role,
+            'admin_permissions' => $user->admin_permissions,
         ]);
 
         return $next($request);
