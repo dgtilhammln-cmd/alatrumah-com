@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\AdminCourierController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminApiKeyController;
 use App\Http\Controllers\Admin\AdminPromoSectionController;
+use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AccountController;
 
@@ -215,6 +216,18 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware(['admin.auth'])->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
+        // Profil Mandiri Admin
+        Route::get('/profile', [AdminAccountController::class, 'profile'])->name('admin.profile');
+        Route::put('/profile', [AdminAccountController::class, 'updateProfile'])->name('admin.profile.update');
+
+        // Kelola Akun Admin (Super Admin)
+        Route::resource('accounts', AdminAccountController::class)->names([
+            'index'   => 'admin.accounts.index',   'create'  => 'admin.accounts.create',
+            'store'   => 'admin.accounts.store',   'show'    => 'admin.accounts.show',
+            'edit'    => 'admin.accounts.edit',    'update'  => 'admin.accounts.update',
+            'destroy' => 'admin.accounts.destroy',
+        ]);
 
         Route::get('/analytics',              [AdminAnalyticsController::class, 'index'])->name('admin.analytics');
         Route::get('/analytics/data',         [AdminAnalyticsController::class, 'data'])->name('admin.analytics.data');

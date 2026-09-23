@@ -28,16 +28,18 @@ class AdminAuthController extends Controller
         ]);
 
         $user = User::where('email', $request->email)
-            ->where('role', 'admin')
+            ->whereIn('role', ['admin', 'super_admin'])
             ->where('is_active', true)
             ->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
             session([
-                'admin_logged_in' => true,
-                'admin_id'        => $user->id,
-                'admin_name'      => $user->name,
-                'admin_email'     => $user->email,
+                'admin_logged_in'   => true,
+                'admin_id'          => $user->id,
+                'admin_name'        => $user->name,
+                'admin_email'       => $user->email,
+                'admin_role'        => $user->role,
+                'admin_permissions' => $user->admin_permissions ?? [],
             ]);
             return redirect()->route('admin.dashboard')->with('success', 'Selamat datang, ' . $user->name . '!');
         }
@@ -47,7 +49,7 @@ class AdminAuthController extends Controller
 
     public function logout(Request $request)
     {
-        session()->forget(['admin_logged_in', 'admin_id', 'admin_name', 'admin_email']);
+        session()->forget(['admin_logged_in', 'admin_id', 'admin_name', 'admin_email', 'admin_role', 'admin_permissions']);
         return redirect()->route('admin.login')->with('success', 'Berhasil logout.');
     }
 }

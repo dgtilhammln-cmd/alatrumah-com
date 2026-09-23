@@ -263,83 +263,132 @@ body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(
 
   {{-- Navigation --}}
   <nav class="sb-nav" id="sb-nav">
+    @php
+      $isSuper = session('admin_role') === 'super_admin';
+      $perms   = session('admin_permissions') ?? [];
+    @endphp
     <div class="sb-sec">Main</div>
+    @if($isSuper || in_array('dashboard', $perms))
     <a href="{{ route('admin.dashboard') }}" class="sb-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
       Dashboard
     </a>
-
+    @endif
 
     <div class="sb-sec">Konten</div>
+    @if($isSuper || in_array('products', $perms))
     <a href="{{ route('admin.services.index') }}" class="sb-link {{ request()->routeIs('admin.services*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
       Produk & Layanan
     </a>
+    @endif
 
+    @if($isSuper || in_array('articles', $perms))
     <a href="{{ route('admin.articles.index') }}" class="sb-link {{ request()->routeIs('admin.articles*') ? 'active' : '' }}">
       <div class="sb-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
       Artikel
     </a>
+    @endif
+
+    @if($isSuper || in_array('clients', $perms))
     <a href="{{ route('admin.clients.index') }}" class="sb-link {{ request()->routeIs('admin.clients*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
       Klien
     </a>
+    @endif
+
+    @if($isSuper || in_array('testimonials', $perms))
     <a href="{{ route('admin.testimonials.index') }}" class="sb-link {{ request()->routeIs('admin.testimonials*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
       Testimoni
     </a>
+    @endif
+
+    @if($isSuper || in_array('leads', $perms))
     @php $newLeads = \App\Models\Lead::where('status','new')->count(); @endphp
     <a href="{{ route('admin.leads.index') }}" class="sb-link {{ request()->routeIs('admin.leads*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
       Laporan Chat
       @if($newLeads > 0)<span class="sb-badge">{{ $newLeads }}</span>@endif
     </a>
+    @endif
+
+    @if($isSuper || in_array('hero_slides', $perms))
     <a href="{{ route('admin.hero_slides.index') }}" class="sb-link {{ request()->routeIs('admin.hero_slides*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
       Banner Hero
     </a>
+    @endif
 
     <div class="sb-sec">E-Commerce</div>
+    @if($isSuper || in_array('coupons', $perms))
     <a href="{{ route('admin.coupons.index') }}" class="sb-link {{ request()->routeIs('admin.coupons*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
       Kupon / Voucher
     </a>
+    @endif
+    @if($isSuper || in_array('couriers', $perms))
     <a href="{{ route('admin.couriers.index') }}" class="sb-link {{ request()->routeIs('admin.couriers*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
       Pengiriman / Kurir
     </a>
+    @endif
+    @if($isSuper || in_array('orders', $perms))
     <a href="{{ route('admin.orders.index') }}" class="sb-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
       Pesanan
     </a>
+    @endif
+    @if($isSuper || in_array('users', $perms))
     <a href="{{ route('admin.users.index') }}" class="sb-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 010 7.75"/></svg>
       Pengguna (Buyer)
     </a>
+    @endif
 
     <div class="sb-sec">Tampilan Beranda</div>
+    @if($isSuper || in_array('usp', $perms))
     <a href="{{ route('admin.usp.index') }}" class="sb-link {{ request()->routeIs('admin.usp*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
       USP Bar
     </a>
+    @endif
+    @if($isSuper || in_array('category_items', $perms))
     <a href="{{ route('admin.category-items.index') }}" class="sb-link {{ request()->routeIs('admin.category-items*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Kategori
     </a>
+    @endif
+    @if($isSuper || in_array('promo_sections', $perms))
     <a href="{{ route('admin.promo-sections.index') }}" class="sb-link {{ request()->routeIs('admin.promo-sections*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
       Promo & Deals
     </a>
+    @endif
 
     <div class="sb-sec">Pengaturan</div>
+    @if($isSuper || in_array('settings', $perms))
     <a href="{{ route('admin.settings') }}" class="sb-link {{ request()->routeIs('admin.settings*') || request()->routeIs('admin.wa*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
       Pengaturan
     </a>
+    @endif
+    @if($isSuper || in_array('apikeys', $perms))
     <a href="{{ route('admin.apikeys.index') }}" class="sb-link {{ request()->routeIs('admin.apikeys*') ? 'active' : '' }}">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
       API & Integrasi
     </a>
+    @endif
+    <a href="{{ route('admin.profile') }}" class="sb-link {{ request()->routeIs('admin.profile*') ? 'active' : '' }}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profil Saya
+    </a>
+    @if($isSuper)
+    <a href="{{ route('admin.accounts.index') }}" class="sb-link {{ request()->routeIs('admin.accounts*') ? 'active' : '' }}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      Kelola Akun Admin
+    </a>
+    @endif
 
     <div class="sb-sec">Aksi</div>
     <a href="{{ url('/') }}" target="_blank" class="sb-link">

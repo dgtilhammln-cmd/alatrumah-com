@@ -13,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    protected $fillable = ['name', 'email', 'password', 'username', 'phone', 'avatar', 'google_id', 'role', 'is_active'];
+    protected $fillable = ['name', 'email', 'password', 'username', 'phone', 'avatar', 'google_id', 'role', 'is_active', 'admin_permissions'];
     protected $hidden = ['password', 'remember_token'];
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -30,9 +30,31 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'email_verified_at'   => 'datetime',
+            'password'            => 'hashed',
+            'admin_permissions'   => 'array',
         ];
+    }
+
+    /**
+     * Apakah user ini super admin (akses penuh).
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
+    }
+
+    /**
+     * Cek apakah admin memiliki permission tertentu.
+     * Super admin selalu punya akses.
+     */
+    public function hasPermission(string $key): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+        $perms = $this->admin_permissions ?? [];
+        return in_array($key, $perms);
     }
 
     // =========================================================================
