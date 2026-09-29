@@ -549,6 +549,7 @@
                     </div>
                     @endforeach
                 </div>
+                @endif
 
                 <script>
                 (function() {
@@ -707,6 +708,7 @@
                         pendingAction = actionType || 'cart';
                         var modal = document.getElementById('variant-modal-overlay');
                         if (modal) {
+                            modal.style.pointerEvents = 'auto';
                             modal.style.display = 'flex';
                             requestAnimationFrame(function() {
                                 modal.style.opacity = '1';
@@ -729,7 +731,10 @@
                         if (modal) {
                             modal.style.opacity = '0';
                             document.getElementById('variant-modal-sheet').style.transform = 'translateY(100%)';
-                            setTimeout(function() { modal.style.display = 'none'; }, 300);
+                            setTimeout(function() {
+                                modal.style.display = 'none';
+                                modal.style.pointerEvents = 'none'; // restore — stop blocking clicks
+                            }, 300);
                         }
                     };
 
@@ -743,7 +748,7 @@
                     };
                 })();
                 </script>
-                @endif
+                {{-- END variant engine --}}
 
                 <div class="pd-qty-wrap">
                     <span style="font-size:0.875rem; font-weight:700; color:var(--text-main);">Kuantitas:</span>
@@ -782,7 +787,7 @@
             {{-- ══ VARIANT BOTTOM SHEET MODAL (Shopee-style) ══ --}}
             @if($vGroups->count() > 0)
             <div id="variant-modal-overlay"
-                 style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.55); z-index:9990; align-items:flex-end; justify-content:center; opacity:0; transition:opacity .28s; -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);">
+                 style="display:none; pointer-events:none; position:fixed; inset:0; background:rgba(15,23,42,0.55); z-index:9990; align-items:flex-end; justify-content:center; opacity:0; transition:opacity .28s; -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);">
                 <div id="variant-modal-sheet"
                      style="background:#fff; width:100%; max-width:520px; border-radius:24px 24px 0 0; padding:0; box-shadow:0 -8px 40px rgba(0,0,0,0.18); transform:translateY(100%); transition:transform .32s cubic-bezier(.32,1,.32,1); overflow:hidden;">
 
