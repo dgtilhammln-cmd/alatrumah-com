@@ -313,6 +313,35 @@
     <p style="font-size:.68rem;color:#94A3B8;margin:.5rem 0 0;text-align:center;">Foto yang ditambah 1 per 1 akan otomatis tersimpan &amp; terakumulasi.</p>
   </div>
 
+  {{-- ═══ VARIAN PRODUK ═══ --}}
+  <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);" id="variants-section">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <div style="display:flex;align-items:center;gap:.625rem;">
+        <div style="width:32px;height:32px;background:rgba(139,92,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <svg width="16" height="16" fill="none" stroke="#8B5CF6" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3h-8l-2 4h12l-2-4z"/></svg>
+        </div>
+        <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Varian Produk <span style="font-size:.75rem;font-weight:500;color:#94A3B8;">(Opsional)</span></h3>
+      </div>
+      <button type="button" onclick="addVariantGroup()" style="display:inline-flex;align-items:center;gap:.375rem;background:rgba(139,92,246,0.1);color:#7C3AED;border:none;padding:.5rem 1rem;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(139,92,246,0.2)'" onmouseout="this.style.background='rgba(139,92,246,0.1)'">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Tambah Grup Varian
+      </button>
+    </div>
+
+    <div style="background:#F8FAFC;border:1.5px dashed #E4E7F0;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;font-size:.8rem;color:#64748B;line-height:1.6;">
+      💡 <strong>Panduan Varian:</strong> Contoh untuk alat rumah:<br>
+      → <strong>Ukuran/Tipe:</strong> nilai: CV-45, CV-60, 12 Inch, 14 Inch<br>
+      → <strong>Merek:</strong> nilai: Bosch, Makita, Hitachi<br>
+      → <strong>Kapasitas:</strong> nilai: 1L, 2L, 5L — bisa set harga berbeda per nilai
+    </div>
+
+    <div id="variant-groups-container"></div>
+
+    <div id="variant-empty" style="text-align:center;padding:1.5rem;color:#94A3B8;font-size:.85rem;">
+      Belum ada varian. Klik <strong>Tambah Grup Varian</strong> untuk mulai.
+    </div>
+  </div>
+
 </div>
 </div>
 </form>
@@ -551,6 +580,89 @@ function addFaq() {
       <input type="text" name="faq_qs[]" placeholder="Pertanyaan?" style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;padding-right:2.5rem;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       <textarea name="faq_as[]" rows="2" placeholder="Jawaban lengkap..." style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'"></textarea>
     </div>`);
+}
+
+/* ─── Varian Produk ─────────────────────────────────── */
+var variantGroupCounter = 0;
+
+function addVariantGroup() {
+  const empty = document.getElementById('variant-empty');
+  if(empty) empty.style.display = 'none';
+
+  variantGroupCounter++;
+  const gid = variantGroupCounter;
+  const container = document.getElementById('variant-groups-container');
+
+  const html = `
+  <div class="variant-group" id="vg-${gid}" style="border:1.5px solid #E4E7F0;border-radius:14px;padding:1.25rem;margin-bottom:1rem;background:#FAFBFF;">
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;">
+      <div style="flex:1;">
+        <label style="display:block;font-size:.75rem;font-weight:700;color:#475569;margin-bottom:.35rem;">Nama Grup Varian *</label>
+        <input type="text" name="variant_options[${gid}][name]" placeholder="Contoh: Ukuran, Merek, Kapasitas, Tipe"
+          style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;"
+          onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'" required>
+      </div>
+      <button type="button" onclick="document.getElementById('vg-${gid}').remove(); checkVariantEmpty()" style="flex-shrink:0;margin-top:1.3rem;width:34px;height:34px;background:rgba(239,68,68,0.08);border:none;border-radius:8px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Hapus grup varian ini">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div style="font-size:.75rem;font-weight:700;color:#7C3AED;margin-bottom:.5rem;letter-spacing:.03em;">NILAI VARIAN</div>
+    <div class="variant-values-${gid}" style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.75rem;"></div>
+
+    <button type="button" onclick="addVariantValue(${gid})" style="width:100%;padding:.5rem;background:rgba(139,92,246,0.06);color:#7C3AED;border:1.5px dashed rgba(139,92,246,0.4);border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:all .2s;" onmouseover="this.style.background='rgba(139,92,246,0.12)'" onmouseout="this.style.background='rgba(139,92,246,0.06)'">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      + Tambah Nilai
+    </button>
+  </div>`;
+
+  container.insertAdjacentHTML('beforeend', html);
+  addVariantValue(gid);
+}
+
+var variantValueCounters = {};
+function addVariantValue(gid) {
+  variantValueCounters[gid] = (variantValueCounters[gid] || 0) + 1;
+  const vid = variantValueCounters[gid];
+  const container = document.querySelector('.variant-values-' + gid);
+
+  const html = `
+  <div class="variant-value-row" style="display:grid;grid-template-columns:1fr 160px 100px auto;gap:.5rem;align-items:center;">
+    <input type="text" name="variant_options[${gid}][values][${vid}][value]" placeholder="Nilai (contoh: CV-45, Bosch, 1 Liter)"
+      style="padding:.5rem .75rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
+      onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'" required>
+    <div style="position:relative;">
+      <span style="position:absolute;left:.6rem;top:50%;transform:translateY(-50%);font-size:.75rem;color:#94A3B8;font-weight:600;">Rp</span>
+      <input type="number" name="variant_options[${gid}][values][${vid}][price_adjustment]" placeholder="0" value="0" min="-999999999" step="1000"
+        style="width:100%;padding:.5rem .5rem .5rem 2.1rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
+        onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'"
+        title="Selisih harga dari harga dasar. Bisa negatif (diskon) atau positif (tambah).">
+    </div>
+    <input type="number" name="variant_options[${gid}][values][${vid}][stock]" placeholder="Stok" min="0"
+      style="width:100%;padding:.5rem .75rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
+      onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'"
+      title="Stok khusus varian ini. Kosongkan untuk pakai stok produk utama.">
+    <button type="button" onclick="this.closest('.variant-value-row').remove()" style="flex-shrink:0;width:30px;height:30px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 160px 100px auto;gap:.5rem;padding:0 0 .25rem;">
+    <div style="font-size:.65rem;color:#94A3B8;padding-left:.25rem;">Nama/Label Nilai</div>
+    <div style="font-size:.65rem;color:#94A3B8;padding-left:.25rem;">+/- Harga (dari harga dasar)</div>
+    <div style="font-size:.65rem;color:#94A3B8;padding-left:.25rem;">Stok (opsional)</div>
+    <div></div>
+  </div>`;
+
+  // Insert before the label row if exists, otherwise append
+  container.insertAdjacentHTML('beforeend', html);
+}
+
+function checkVariantEmpty() {
+  const container = document.getElementById('variant-groups-container');
+  const empty = document.getElementById('variant-empty');
+  if (container.querySelectorAll('.variant-group').length === 0) {
+    if(empty) empty.style.display = 'block';
+  }
 }
 </script>
 @endsection

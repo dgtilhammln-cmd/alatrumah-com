@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\Models\CategoryItem;
+use App\Models\ProductVariantOption;
+use App\Models\ProductVariantValue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
@@ -176,7 +178,9 @@ class AdminServiceController extends Controller
         $v['sold_count']    = $v['sold_count'] ?? 0;
         $v['rating']        = $v['rating'] ?? 0;
 
-        Service::create($v);
+        $svc = Service::create($v);
+        // Simpan varian produk
+        $this->syncVariants($svc, $request->input('variant_options', []));
         Cache::forget('home_page_data');
         Cache::forget('services_page_data');
         return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil ditambahkan.');
@@ -341,6 +345,8 @@ class AdminServiceController extends Controller
         $v['rating']        = $v['rating'] ?? 0;
 
         $service->update($v);
+        // Sinkronisasi varian produk
+        $this->syncVariants($service, $request->input('variant_options', []));
         Cache::forget('home_page_data');
         Cache::forget('services_page_data');
         return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil diperbarui.');
@@ -348,6 +354,12 @@ class AdminServiceController extends Controller
 
     public function destroy(Service $service)
     {
+        // Hapus varian (cascade via FK, tapi pastikan file/cache bersih)
+        $service->variantOptions()->each(function($opt) {
+            $opt->values()->delete();
+        });
+        $service->variantOptions()->delete();
+
         $this->deleteStorageFile($service->image);
         $this->deleteStorageFile($service->brochure);
         $this->deleteStorageFile($service->og_image);
@@ -408,5 +420,96 @@ class AdminServiceController extends Controller
         Cache::forget('services_page_data');
 
         return response()->json(['ok' => true, 'message' => 'Foto berhasil dihapus.']);
+    }
+
+    /**
+     * Sinkronisasi varian produk dari input form.
+     * Format input: variant_options[gid][name], variant_options[gid][values][vid][value|price_adjustment|stock]
+     * Untuk existing variants: ada key existing_id di level option & values
+     */
+    private function syncVariants(Service $service, array $variantData): void
+    {
+        if (empty($variantData)) {
+            // Hapus semua varian jika form dikirim kosong
+            // (jangan hapus jika form tidak ada sama sekali — gunakan isset di controller)
+            return;
+        }
+
+        $submittedOptionIds = [];
+
+        foreach ($variantData as $gid => $optionData) {
+            $optionName = trim($optionData['name'] ?? '');
+            if (empty($optionName)) continue;
+
+            $submittedValueIds = [];
+
+            // Existing option (has existing_id key)
+            if (!empty($optionData['existing_id'])) {
+                $option = ProductVariantOption::where('id', $optionData['existing_id'])
+                    ->where('product_id', $service->id)
+                    ->first();
+                if ($option) {
+                    $option->update(['name' => $optionName]);
+                    $submittedOptionIds[] = $option->id;
+                } else {
+                    $option = ProductVariantOption::create([
+                        'product_id' => $service->id,
+                        'name'       => $optionName,
+                    ]);
+                    $submittedOptionIds[] = $option->id;
+                }
+            } else {
+                // New option
+                $option = ProductVariantOption::create([
+                    'product_id' => $service->id,
+                    'name'       => $optionName,
+                ]);
+                $submittedOptionIds[] = $option->id;
+            }
+
+            // Sync values
+            foreach ($optionData['values'] ?? [] as $vid => $valData) {
+                $val = trim($valData['value'] ?? '');
+                if (empty($val)) continue;
+
+                $priceAdj = is_numeric($valData['price_adjustment'] ?? null) ? (float)$valData['price_adjustment'] : 0;
+                $stock    = is_numeric($valData['stock'] ?? null) && $valData['stock'] !== '' ? (int)$valData['stock'] : null;
+
+                if (!empty($valData['existing_id'])) {
+                    $vv = ProductVariantValue::where('id', $valData['existing_id'])
+                        ->where('variant_option_id', $option->id)
+                        ->first();
+                    if ($vv) {
+                        $vv->update(['value' => $val, 'price_adjustment' => $priceAdj, 'stock' => $stock]);
+                        $submittedValueIds[] = $vv->id;
+                    } else {
+                        $newVv = ProductVariantValue::create([
+                            'variant_option_id' => $option->id,
+                            'value'             => $val,
+                            'price_adjustment'  => $priceAdj,
+                            'stock'             => $stock,
+                        ]);
+                        $submittedValueIds[] = $newVv->id;
+                    }
+                } else {
+                    $newVv = ProductVariantValue::create([
+                        'variant_option_id' => $option->id,
+                        'value'             => $val,
+                        'price_adjustment'  => $priceAdj,
+                        'stock'             => $stock,
+                    ]);
+                    $submittedValueIds[] = $newVv->id;
+                }
+            }
+
+            // Delete removed values for this option
+            $option->values()->whereNotIn('id', $submittedValueIds)->delete();
+        }
+
+        // Delete removed option groups
+        $service->variantOptions()->whereNotIn('id', $submittedOptionIds)->each(function($opt) {
+            $opt->values()->delete();
+            $opt->delete();
+        });
     }
 }
