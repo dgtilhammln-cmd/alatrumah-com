@@ -59,9 +59,13 @@
     
     @php
         $wa = \App\Models\WaSetting::primary();
-        $waNumber = $wa ? preg_replace('/[^0-9]/', '', $wa->number) : '';
+        $rawNum = $wa ? ($wa->nomor_wa ?? $wa->phone_number ?? '') : '';
+        $waNumber = preg_replace('/[^0-9]/', '', $rawNum);
         if (substr($waNumber, 0, 1) === '0') {
             $waNumber = '62' . substr($waNumber, 1);
+        }
+        if (empty($waNumber)) {
+            $waNumber = '6281216621307';
         }
     @endphp
 
@@ -70,8 +74,6 @@
         <a href="javascript:void(0)" onclick="toggleResetForm()" style="color: #64748B; text-decoration: none; font-size: 0.85rem; font-weight: 500;">Batal & Kembali ke Login</a>
     </div>
 </form>
-
-
 
 <script>
 function togglePwd(id, el) {
@@ -107,13 +109,10 @@ function sendResetWhatsApp(waNumber) {
         return;
     }
     
-    if (!waNumber) {
-        alert('Nomor WhatsApp admin belum diatur sistem.');
-        return;
-    }
+    const targetNumber = waNumber || '6281216621307';
     
     const text = `Halo Admin Alat Rumah,%0A%0ASaya ingin mereset kata sandi akun saya.%0A%0A*Email:* ${email}%0A*Alasan:* ${reason}%0A%0AMohon bantuannya untuk mereset kata sandi saya. Terima kasih.`;
-    const waUrl = `https://wa.me/${waNumber}?text=${text}`;
+    const waUrl = `https://wa.me/${targetNumber}?text=${text}`;
     
     window.open(waUrl, '_blank');
 }
