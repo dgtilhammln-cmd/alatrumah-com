@@ -368,13 +368,13 @@
     .pd-layout { padding: 0.75rem 1rem 1.5rem; gap: 1.25rem; }
     .pd-bottom-layout { padding: 0 1rem 2.5rem; }
     .pd-gallery-main {
-        max-width: 100%;
+        max-width: 260px !important;
         width: 100%;
         aspect-ratio: 1/1;
-        border-radius: 16px;
-        margin-bottom: 0.75rem;
+        border-radius: 14px;
+        margin: 0 auto 0.75rem !important;
     }
-    .pd-thumbs { max-width: 100%; width: 100%; }
+    .pd-thumbs { max-width: 260px !important; width: 100%; margin: 0 auto; }
     .pd-thumb-item { width: 50px; height: 50px; border-radius: 10px; }
     .pd-title { font-size: 1.25rem; margin-bottom: 0.4rem; line-height: 1.3; }
     .pd-desc-short { font-size: 0.85rem; margin-bottom: 0.85rem; }

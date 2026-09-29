@@ -368,6 +368,11 @@ label:focus{outline:none !important;box-shadow:none !important;}
                                 @endif
                                 <div style="flex:1;">
                                     <div class="summary-title">{{ $item->product->name ?? 'Produk Telah Dihapus' }}</div>
+                                    @if($item->variantValue)
+                                        <div style="font-size:0.75rem; color:#0EA5E9; font-weight:700; margin-top:2px; display:inline-block; background:#F0F9FF; padding:2px 8px; border-radius:6px; border:1px solid #BAE6FD;">
+                                            Variasi: {{ $item->variantValue->variantOption ? $item->variantValue->variantOption->name . ': ' . $item->variantValue->value : $item->variantValue->value }}
+                                        </div>
+                                    @endif
                                     <div class="summary-meta">{{ $item->qty }} x Rp {{ number_format($item->unit_price, 0, ',', '.') }}</div>
                                     <div class="summary-price mt-1">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</div>
                                 </div>

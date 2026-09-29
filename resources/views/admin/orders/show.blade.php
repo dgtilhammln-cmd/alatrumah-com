@@ -142,6 +142,8 @@
                                         <div class="od-prod-title">{{ $item->product_name }}</div>
                                         @if($item->variant_name)
                                             <div class="od-prod-var">Variasi: {{ $item->variant_name }}</div>
+                                        @elseif($item->variantValue)
+                                            <div class="od-prod-var">Variasi: {{ $item->variantValue->variantOption ? $item->variantValue->variantOption->name . ': ' . $item->variantValue->value : $item->variantValue->value }}</div>
                                         @endif
                                     </div>
                                 </div>

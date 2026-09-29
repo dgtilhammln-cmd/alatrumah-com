@@ -117,7 +117,7 @@ body { background: var(--c-bg); font-family: var(--font); }
                 <div class="cart-item-body">
                     <div class="cart-item-name">{{ $item->product->name ?? 'Produk Telah Dihapus' }}</div>
                     @if($item->variantValue)
-                        <div class="cart-item-variant">Varian: {{ $item->variantValue->value }}</div>
+                        <div class="cart-item-variant">Variasi: {{ $item->variantValue->variantOption ? $item->variantValue->variantOption->name . ': ' . $item->variantValue->value : $item->variantValue->value }}</div>
                     @endif
                     <div class="cart-item-price">Rp {{ number_format($item->unit_price, 0, ',', '.') }}</div>
                     <div class="cart-item-footer">

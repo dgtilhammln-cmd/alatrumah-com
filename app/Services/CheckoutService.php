@@ -123,12 +123,19 @@ class CheckoutService
                 $product->reduceStock($cartItem->qty);
                 $product->addSoldCount($cartItem->qty);
 
+                $variantLabel = null;
+                if ($cartItem->variantValue) {
+                    $optName = $cartItem->variantValue->variantOption?->name;
+                    $valName = $cartItem->variantValue->value;
+                    $variantLabel = $optName ? "{$optName}: {$valName}" : $valName;
+                }
+
                 OrderItem::create([
                     'order_id'         => $order->id,
                     'product_id'       => $cartItem->product_id,
                     'variant_value_id' => $cartItem->variant_value_id,
                     'product_name'     => $product->name,
-                    'variant_name'     => $cartItem->variantValue?->value,
+                    'variant_name'     => $variantLabel,
                     'price'            => $cartItem->unit_price,
                     'qty'              => $cartItem->qty,
                     'subtotal'         => $cartItem->subtotal,

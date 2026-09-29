@@ -812,7 +812,9 @@
                                     <div class="o-item-info">
                                         <div class="o-item-title">{{ Str::limit($item->product_name, 50) }}</div>
                                         @if($item->variant_name)
-                                            <div class="o-item-var">Varian: {{ $item->variant_name }}</div>
+                                            <div class="o-item-var">Variasi: {{ $item->variant_name }}</div>
+                                        @elseif($item->variantValue)
+                                            <div class="o-item-var">Variasi: {{ $item->variantValue->variantOption ? $item->variantValue->variantOption->name . ': ' . $item->variantValue->value : $item->variantValue->value }}</div>
                                         @endif
                                         <div class="o-item-qty">Qty: {{ $item->qty }}</div>
                                     </div>
