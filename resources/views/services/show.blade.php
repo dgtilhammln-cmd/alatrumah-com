@@ -514,7 +514,7 @@
             </div>
             @endif
 
-            <form action="{{ route('cart.add') }}" method="POST" id="form-add-to-cart">
+            <form action="{{ route('cart.add') }}" method="POST" id="form-add-to-cart" onsubmit="return false;">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $service->id }}">
                 <input type="hidden" name="variant_value_id" id="selected_variant_id" value="">
@@ -527,7 +527,7 @@
                 @endphp
 
                 @if($vGroups->count() > 0)
-                <div class="pd-variants-box" style="margin: 1.25rem 0; padding: 1rem; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; transition: all .3s;">
+                <div class="pd-variants-box" id="variant-box" style="margin: 1.25rem 0; padding: 1rem; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; transition: border .2s, background .2s;">
                     @foreach($vGroups as $gIdx => $vGroup)
                     <div style="margin-bottom: 0.85rem;" class="variant-group-selector" data-group-id="{{ $vGroup->id }}" data-group-index="{{ $gIdx }}">
                         <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main, #1E293B); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
@@ -552,119 +552,117 @@
 
                 <script>
                 (function() {
-                    const combos = @json($vCombos);
-                    const basePrice = {{ $service->sale_price > 0 && $service->sale_price < $service->price ? $service->sale_price : $service->price }};
-                    const totalGroups = {{ $vGroups->count() }};
-                    let selectedVals = {};
+                    var HAS_VARIANTS = {{ $vGroups->count() > 0 ? 'true' : 'false' }};
+                    var TOTAL_GROUPS = {{ $vGroups->count() }};
+                    var combos       = @json($vCombos ?? []);
+                    var basePrice    = {{ ($service->sale_price > 0 && $service->sale_price < $service->price) ? $service->sale_price : ($service->price ?? 0) }};
+                    var selectedVals = {}; // { groupIndex: valId }
 
+                    /* --- Chip selection --- */
                     window.selectVariantChip = function(btn, groupIdx, valId) {
-                        const parent = btn.closest('.variant-group-selector');
-                        parent.querySelectorAll('.variant-chip-btn').forEach(b => {
+                        var parent = btn.closest('.variant-group-selector');
+                        parent.querySelectorAll('.variant-chip-btn').forEach(function(b) {
                             b.style.borderColor = '#CBD5E1';
-                            b.style.background = '#FFFFFF';
-                            b.style.color = '#334155';
+                            b.style.background  = '#FFFFFF';
+                            b.style.color       = '#334155';
                             b.classList.remove('active');
                         });
-
-                        btn.style.borderColor = 'var(--accent, #1B6FE8)';
-                        btn.style.background = 'rgba(27,111,232,0.08)';
-                        btn.style.color = 'var(--accent, #1B6FE8)';
+                        btn.style.borderColor = 'var(--accent,#1B6FE8)';
+                        btn.style.background  = 'rgba(27,111,232,0.09)';
+                        btn.style.color       = 'var(--accent,#1B6FE8)';
                         btn.classList.add('active');
-
                         parent.style.background = '';
-                        parent.style.padding = '';
+                        parent.style.padding    = '';
 
                         selectedVals[groupIdx] = valId;
                         document.getElementById('selected_variant_id').value = valId;
 
-                        const alertBox = document.getElementById('variant-warning-alert');
-                        if (alertBox && Object.keys(selectedVals).filter(k => selectedVals[k]).length >= totalGroups) {
-                            alertBox.style.display = 'none';
-                            const vBox = document.querySelector('.pd-variants-box');
-                            if (vBox) {
-                                vBox.style.border = '1.5px solid #E2E8F0';
-                                vBox.style.background = '#F8FAFC';
-                            }
+                        // Clear error state if all groups now selected
+                        var chosen = Object.keys(selectedVals).filter(function(k){ return selectedVals[k]; }).length;
+                        if (chosen >= TOTAL_GROUPS) {
+                            var box  = document.getElementById('variant-box');
+                            var warn = document.getElementById('variant-warning-alert');
+                            if (box)  { box.style.border = '1.5px solid #22C55E'; box.style.background = '#F0FFF4'; }
+                            if (warn) { warn.style.display = 'none'; }
                         }
 
-                        updateVariantPriceAndStock(basePrice, combos, selectedVals);
+                        updatePriceStock();
                     };
 
-                    function updateVariantPriceAndStock(baseP, comboList, selections) {
-                        const priceEl = document.querySelector('.pd-price-current');
-                        const stockEl = document.querySelector('.pd-qty-wrap b');
+                    function updatePriceStock() {
+                        var priceEl = document.querySelector('.pd-price-current');
+                        var stockEl = document.querySelector('.pd-qty-wrap b');
+                        if (!priceEl) return;
 
-                        if (comboList && comboList.length > 0) {
-                            const val1 = selections[0] || null;
-                            const val2 = selections[1] || null;
-
-                            const matched = comboList.find(c => 
-                                (c.option1_value_id == val1 && (!c.option2_value_id || c.option2_value_id == val2)) ||
-                                (c.option2_value_id == val1 && c.option1_value_id == val2)
-                            );
-
+                        if (combos && combos.length > 0) {
+                            var val1 = selectedVals[0] || null;
+                            var val2 = selectedVals[1] || null;
+                            var matched = combos.find(function(c) {
+                                return (c.option1_value_id == val1 && (!c.option2_value_id || c.option2_value_id == val2)) ||
+                                       (c.option2_value_id == val1 && c.option1_value_id == val2);
+                            });
                             if (matched && matched.price > 0) {
                                 priceEl.textContent = 'Rp' + new Intl.NumberFormat('id-ID').format(matched.price);
                                 document.getElementById('selected_combo_id').value = matched.id;
-                                if (stockEl && matched.stock !== null) {
-                                    stockEl.textContent = matched.stock;
-                                }
+                                if (stockEl && matched.stock != null) stockEl.textContent = matched.stock;
                                 return;
                             }
                         }
-
-                        let activeChip = document.querySelector('.variant-chip-btn.active');
-                        if (activeChip) {
-                            let adj = parseFloat(activeChip.getAttribute('data-price-adj') || 0);
-                            let newPrice = baseP + adj;
-                            if (newPrice > 0) {
-                                priceEl.textContent = 'Rp' + new Intl.NumberFormat('id-ID').format(newPrice);
-                            }
-                            let vStock = activeChip.getAttribute('data-val-stock');
-                            if (stockEl && vStock !== null && vStock !== '' && vStock !== 'null') {
-                                stockEl.textContent = vStock;
-                            }
+                        var chip = document.querySelector('.variant-chip-btn.active');
+                        if (chip) {
+                            var adj = parseFloat(chip.getAttribute('data-price-adj') || 0);
+                            var np  = basePrice + adj;
+                            if (np > 0) priceEl.textContent = 'Rp' + new Intl.NumberFormat('id-ID').format(np);
+                            var vs = chip.getAttribute('data-val-stock');
+                            if (stockEl && vs != null && vs !== '' && vs !== 'null') stockEl.textContent = vs;
                         }
                     }
 
+                    /* =========================================================
+                       MAIN GATEKEEPER — called by both buttons
+                       ========================================================= */
                     window.submitProductForm = function(actionType) {
-                        if (totalGroups > 0) {
-                            const selectedCount = Object.keys(selectedVals).filter(k => selectedVals[k]).length;
-                            if (selectedCount < totalGroups) {
-                                const variantBox = document.querySelector('.pd-variants-box');
-                                if (variantBox) {
-                                    variantBox.style.border = '2px solid #EF4444';
-                                    variantBox.style.background = '#FFF5F5';
-                                    variantBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        if (HAS_VARIANTS) {
+                            var selectedCount = 0;
+                            for (var k in selectedVals) {
+                                if (selectedVals.hasOwnProperty(k) && selectedVals[k]) selectedCount++;
+                            }
+
+                            if (selectedCount < TOTAL_GROUPS) {
+                                // Flash the variant box red
+                                var box = document.getElementById('variant-box');
+                                if (box) {
+                                    box.style.border     = '2px solid #EF4444';
+                                    box.style.background = '#FFF5F5';
+                                    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 }
 
-                                const selectors = document.querySelectorAll('.variant-group-selector');
-                                selectors.forEach((sel, idx) => {
+                                // Highlight each unselected group
+                                document.querySelectorAll('.variant-group-selector').forEach(function(sel, idx) {
                                     if (!selectedVals[idx]) {
-                                        sel.style.background = '#FEE2E2';
+                                        sel.style.background   = '#FEE2E2';
                                         sel.style.borderRadius = '8px';
-                                        sel.style.padding = '0.5rem';
-                                    } else {
-                                        sel.style.background = '';
-                                        sel.style.padding = '';
+                                        sel.style.padding      = '0.5rem';
                                     }
                                 });
 
-                                let alertBox = document.getElementById('variant-warning-alert');
-                                if (!alertBox && variantBox) {
-                                    alertBox = document.createElement('div');
-                                    alertBox.id = 'variant-warning-alert';
-                                    alertBox.style.cssText = 'background:#EF4444;color:#fff;padding:.6rem 1rem;border-radius:10px;font-size:.82rem;font-weight:700;margin-top:.75rem;display:flex;align-items:center;gap:.5rem;';
-                                    variantBox.appendChild(alertBox);
+                                // Show warning message
+                                var warn = document.getElementById('variant-warning-alert');
+                                if (warn) {
+                                    warn.style.display = 'flex';
+                                } else if (box) {
+                                    warn = document.createElement('div');
+                                    warn.id = 'variant-warning-alert';
+                                    warn.style.cssText = 'display:flex;background:#EF4444;color:#fff;padding:.6rem 1rem;border-radius:10px;font-size:.82rem;font-weight:700;margin-top:.75rem;align-items:center;gap:.5rem;';
+                                    warn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Silakan pilih variasi produk terlebih dahulu!';
+                                    box.appendChild(warn);
                                 }
-                                if (alertBox) {
-                                    alertBox.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Silakan pilih variasi produk terlebih dahulu!';
-                                    alertBox.style.display = 'flex';
-                                }
-                                return false;
+
+                                return; // ← STOP! Do NOT submit.
                             }
                         }
 
+                        // All good — submit the form
                         document.getElementById('form_action_input').value = actionType;
                         document.getElementById('form-add-to-cart').submit();
                     };

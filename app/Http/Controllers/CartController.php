@@ -29,6 +29,13 @@ class CartController extends Controller
             'qty'              => 'required|integer|min:1',
         ]);
 
+        // Server-side enforcement: produk dengan variasi wajib pilih variasi
+        $product = \App\Models\Service::findOrFail($request->product_id);
+        $hasVariants = $product->variantOptions()->exists();
+        if ($hasVariants && !$request->filled('variant_value_id')) {
+            return back()->with('error', 'Silakan pilih variasi produk terlebih dahulu.');
+        }
+
         try {
             $this->cartService->add(
                 $request->product_id,
