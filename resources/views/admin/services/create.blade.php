@@ -313,33 +313,65 @@
     <p style="font-size:.68rem;color:#94A3B8;margin:.5rem 0 0;text-align:center;">Foto yang ditambah 1 per 1 akan otomatis tersimpan &amp; terakumulasi.</p>
   </div>
 
-  {{-- ═══ VARIAN PRODUK ═══ --}}
+  {{-- ═══ VARIAN PRODUK (SHOPEE-STYLE) ═══ --}}
   <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);" id="variants-section">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
-      <div style="display:flex;align-items:center;gap:.625rem;">
-        <div style="width:32px;height:32px;background:rgba(139,92,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-          <svg width="16" height="16" fill="none" stroke="#8B5CF6" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3h-8l-2 4h12l-2-4z"/></svg>
-        </div>
-        <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Varian Produk <span style="font-size:.75rem;font-weight:500;color:#94A3B8;">(Opsional)</span></h3>
+
+    <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.25rem;">
+      <div style="width:32px;height:32px;background:rgba(139,92,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" fill="none" stroke="#8B5CF6" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3h-8l-2 4h12l-2-4z"/></svg>
       </div>
-      <button type="button" onclick="addVariantGroup()" style="display:inline-flex;align-items:center;gap:.375rem;background:rgba(139,92,246,0.1);color:#7C3AED;border:none;padding:.5rem 1rem;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(139,92,246,0.2)'" onmouseout="this.style.background='rgba(139,92,246,0.1)'">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Tambah Grup Varian
-      </button>
+      <div>
+        <h3 style="font-size:.9rem;font-weight:800;color:#1E293B;margin:0;line-height:1.2;">Varian Produk <span style="font-size:.75rem;font-weight:500;color:#94A3B8;">(Opsional)</span></h3>
+        <p style="font-size:.72rem;color:#94A3B8;margin:.1rem 0 0;">Maks. 2 variasi. Setiap kombinasi punya harga & stok tersendiri.</p>
+      </div>
     </div>
 
-    <div style="background:#F8FAFC;border:1.5px dashed #E4E7F0;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;font-size:.8rem;color:#64748B;line-height:1.6;">
-      💡 <strong>Panduan Varian:</strong> Contoh untuk alat rumah:<br>
-      → <strong>Ukuran/Tipe:</strong> nilai: CV-45, CV-60, 12 Inch, 14 Inch<br>
-      → <strong>Merek:</strong> nilai: Bosch, Makita, Hitachi<br>
-      → <strong>Kapasitas:</strong> nilai: 1L, 2L, 5L — bisa set harga berbeda per nilai
+    {{-- Variant Groups --}}
+    <div id="vg-list" style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:1rem;"></div>
+
+    {{-- Add variant group button (max 2) --}}
+    <button type="button" id="btn-add-vg" onclick="addVarGroup()"
+      style="display:inline-flex;align-items:center;gap:.35rem;background:#F8FAFC;color:#7C3AED;border:1.5px dashed rgba(139,92,246,0.45);padding:.5rem 1.1rem;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;"
+      onmouseover="this.style.background='rgba(139,92,246,0.06)'" onmouseout="this.style.background='#F8FAFC'">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      + Tambah Variasi
+    </button>
+
+    {{-- Combination Matrix Table --}}
+    <div id="combo-section" style="display:none;margin-top:1.5rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem;">
+        <div style="font-size:.8rem;font-weight:800;color:#1E293B;letter-spacing:.03em;">DAFTAR VARIASI</div>
+        <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
+          <span style="font-size:.72rem;color:#64748B;">Terapkan ke semua:</span>
+          <input type="number" id="bulk-price" placeholder="Harga" min="0" step="1000"
+            style="width:110px;padding:.35rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.78rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'">
+          <input type="number" id="bulk-stock" placeholder="Stok" min="0"
+            style="width:80px;padding:.35rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.78rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'">
+          <button type="button" onclick="applyBulk()"
+            style="padding:.35rem .8rem;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">
+            Terapkan
+          </button>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;border-radius:12px;border:1.5px solid #E4E7F0;">
+        <table style="width:100%;border-collapse:collapse;font-size:.8rem;" id="combo-table">
+          <thead>
+            <tr style="background:#F8FAFC;">
+              <th id="th-v1" style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;"></th>
+              <th id="th-v2" style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;display:none;"></th>
+              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;">Harga (Rp) *</th>
+              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;">Stok *</th>
+              <th style="padding:.6rem .75rpm;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:100px;">Kode SKU</th>
+            </tr>
+          </thead>
+          <tbody id="combo-tbody"></tbody>
+        </table>
+      </div>
     </div>
 
-    <div id="variant-groups-container"></div>
-
-    <div id="variant-empty" style="text-align:center;padding:1.5rem;color:#94A3B8;font-size:.85rem;">
-      Belum ada varian. Klik <strong>Tambah Grup Varian</strong> untuk mulai.
-    </div>
   </div>
 
 </div>
@@ -348,42 +380,325 @@
 
 {{-- CONFIRMATION MODAL --}}
 <div id="confirmModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);z-index:9999;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;">
-  <div style="background:#fff;border-radius:24px;width:90%;max-width:400px;padding:2rem;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.1);transform:scale(0.95);transition:transform 0.2s;" id="confirmModalBox">
-    <div style="width:64px;height:64px;background:rgba(59,130,246,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
-      <svg width="32" height="32" fill="none" stroke="#3B82F6" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-    </div>
-    <h3 style="font-size:1.25rem;font-weight:800;color:#1E293B;margin:0 0 .5rem;">Cek Kembali Data Anda</h3>
-    <p style="font-size:.9rem;color:#64748B;margin:0 0 1.5rem;line-height:1.5;">Apakah Anda yakin semua data (kategori, harga, spek produk, FAQ, dan foto) sudah terisi dengan benar sesuai tema?</p>
-    <div style="display:flex;gap:.75rem;">
-      <button type="button" onclick="closeConfirmModal()" style="flex:1;padding:.75rem;background:#F1F5F9;color:#64748B;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='#E2E8F0'" onmouseout="this.style.background='#F1F5F9'">Cek Lagi</button>
-      <button type="button" onclick="submitRealForm()" style="flex:1;padding:.75rem;background:#3B82F6;color:#fff;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:background .2s;box-shadow:0 4px 12px rgba(59,130,246,0.3);" onmouseover="this.style.background='#2563EB'" onmouseout="this.style.background='#3B82F6'">Ya, Simpan</button>
+  <div style="background:#fff;border-radius:20px;padding:2rem;max-width:420px;width:90%;box-shadow:0 25px 60px rgba(0,0,0,0.2);">
+    <div style="font-size:1.5rem;margin-bottom:.75rem;">⚠️</div>
+    <h3 style="font-size:1rem;font-weight:800;color:#1E293B;margin:0 0 .5rem;">Konfirmasi Simpan</h3>
+    <p id="confirmMsg" style="font-size:.875rem;color:#475569;margin:0 0 1.5rem;line-height:1.6;"></p>
+    <div style="display:flex;gap:.75rem;justify-content:flex-end;">
+      <button onclick="closeConfirm()" style="padding:.6rem 1.25rem;background:#F1F5F9;color:#475569;border:none;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;">Batal</button>
+      <button id="confirmOk" style="padding:.6rem 1.25rem;background:#3B82F6;color:#fff;border:none;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;">Simpan</button>
     </div>
   </div>
 </div>
 
 <script>
-var galleryFileCounter = 0;
+/* ═══════════════════════════════════════════════════════════
+   HELPER FUNCTIONS (Slug, Specs, FAQs)
+═══════════════════════════════════════════════════════════ */
+function generateSlug(v){return v.toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-');}
+function syncSlug(){
+  const n=document.getElementById('name_input'), s=document.getElementById('slug_input');
+  if(s&&!s.dataset.manual&&n) s.value=generateSlug(n.value);
+}
+function addSpecRow() {
+  const c=document.getElementById('specs-container');
+  const d=document.createElement('div');
+  d.className='spec-row';d.style.cssText='display:grid;grid-template-columns:1fr 2fr auto;gap:.5rem;align-items:center;';
+  d.innerHTML=`<input type="text" name="spec_keys[]" placeholder="Spesifikasi" style="padding:.5rem .75rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+  <input type="text" name="spec_values[]" placeholder="Nilai" style="padding:.5rem .75rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+  <button type="button" onclick="this.closest('.spec-row').remove()" style="width:30px;height:30px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>`;
+  c.appendChild(d);
+}
+function addFaqRow(){
+  const c=document.getElementById('faqs-container');
+  c.insertAdjacentHTML('beforeend',`<div style="background:#F8FAFC;border-radius:10px;padding:.875rem;border:1px solid #E4E7F0;position:relative;">
+    <button type="button" onclick="this.closest('div').remove()" style="position:absolute;top:.5rem;right:.5rem;width:26px;height:26px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div style="margin-bottom:.5rem;"><input type="text" name="faq_qs[]" placeholder="Pertanyaan?" style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;padding-right:2.5rem;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'"></div>
+    <textarea name="faq_as[]" rows="2" placeholder="Jawaban lengkap..." style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'"></textarea>
+  </div>`);
+}
 
-function addGalleryFileSlot(isSingle) {
-    var container = document.getElementById('gallery-file-inputs');
-    galleryFileCounter++;
-    var inputId = 'g-file-input-' + galleryFileCounter;
+/* ═══════════════════════════════════════════════════════════
+   GALLERY HELPERS
+═══════════════════════════════════════════════════════════ */
+function addGalleryFileSlot(single){
+  const c=document.getElementById('new-gallery-slots');
+  const input=document.createElement('input');
+  input.type='file';input.name='gallery_images[]';input.accept='image/*';
+  if(!single)input.multiple=true;
+  input.style.cssText='display:block;width:100%;font-size:.78rem;color:#475569;margin-bottom:.35rem;';
+  const wrap=document.createElement('div');
+  wrap.style.cssText='display:flex;align-items:center;gap:.5rem;';
+  const btn=document.createElement('button');
+  btn.type='button';btn.textContent='×';
+  btn.style.cssText='background:rgba(239,68,68,0.1);border:none;border-radius:6px;color:#EF4444;width:24px;height:24px;cursor:pointer;font-size:1rem;line-height:1;flex-shrink:0;';
+  btn.onclick=function(){wrap.remove();};
+  wrap.appendChild(input);wrap.appendChild(btn);
+  c.appendChild(wrap);
+}
 
-    var newInput = document.createElement('input');
-    newInput.type = 'file';
-    newInput.name = 'gallery_images[]';
-    newInput.id = inputId;
-    newInput.accept = 'image/*';
-    if (!isSingle) {
-        newInput.multiple = true;
+/* ═══════════════════════════════════════════════════════════
+   CONFIRM MODAL
+═══════════════════════════════════════════════════════════ */
+let confirmCallback=null;
+function showConfirm(msg,cb){
+  document.getElementById('confirmMsg').textContent=msg;
+  confirmCallback=cb;
+  const m=document.getElementById('confirmModal');
+  m.style.display='flex';
+  requestAnimationFrame(()=>m.style.opacity='1');
+}
+function closeConfirm(){
+  const m=document.getElementById('confirmModal');
+  m.style.opacity='0';
+  setTimeout(()=>m.style.display='none',200);
+}
+document.getElementById('confirmOk').onclick=function(){closeConfirm();if(confirmCallback)confirmCallback();};
+
+function submitProductForm(action){
+  const form=document.getElementById('product-form');
+  if(!form)return;
+  let hi=form.querySelector('input[name="submit_action"]');
+  if(!hi){hi=document.createElement('input');hi.type='hidden';hi.name='submit_action';form.appendChild(hi);}
+  hi.value=action;
+  const activeInputs=form.querySelectorAll('input[required]:not([disabled]),textarea[required]:not([disabled]),select[required]:not([disabled])');
+  let missing=[];
+  activeInputs.forEach(inp=>{if(!inp.value.trim())missing.push(inp.placeholder||inp.name);});
+  if(missing.length){
+    showConfirm('Beberapa field wajib belum diisi:\n- '+missing.slice(0,3).join('\n- ')+(missing.length>3?'\n... dan '+(missing.length-3)+' lainnya':''),()=>form.submit());
+    return;
+  }
+  form.submit();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   VARIAN SHOPEE-STYLE
+═══════════════════════════════════════════════════════════ */
+// State: max 2 variant groups
+// Each group: { gid, name, values:[{vid, label, existingId?}] }
+const VGS = []; // max 2 elements
+let _gidCounter = 0;
+let _vidCounter = 0;
+
+function addVarGroup() {
+  if (VGS.length >= 2) { alert('Maksimal 2 variasi.'); return; }
+  const gid = ++_gidCounter;
+  const idx  = VGS.length;
+  VGS.push({ gid, name: '', values: [], existingId: null });
+  renderAllGroups();
+  renderMatrix();
+}
+
+function removeVarGroup(gid) {
+  const idx = VGS.findIndex(g => g.gid === gid);
+  if (idx === -1) return;
+  VGS.splice(idx, 1);
+  renderAllGroups();
+  renderMatrix();
+}
+
+function onGroupNameChange(gid, val) {
+  const g = VGS.find(g => g.gid === gid);
+  if (g) { g.name = val; renderMatrix(); }
+}
+
+function addTagValue(gid) {
+  const g = VGS.find(g => g.gid === gid);
+  if (!g) return;
+  const inp = document.getElementById('tag-inp-' + gid);
+  const raw = (inp ? inp.value : '').trim();
+  if (!raw) return;
+  // Split by comma for bulk entry
+  const labels = raw.split(',').map(s => s.trim()).filter(Boolean);
+  labels.forEach(label => {
+    if (!g.values.find(v => v.label.toLowerCase() === label.toLowerCase())) {
+      g.values.push({ vid: ++_vidCounter, label, existingId: null });
     }
-    newInput.style.display = 'none';
+  });
+  if (inp) inp.value = '';
+  renderAllGroups();
+  renderMatrix();
+}
 
-    newInput.onchange = function() {
-        if (!this.files || this.files.length === 0) {
-            newInput.remove();
-            return;
-        }
+function removeTagValue(gid, vid) {
+  const g = VGS.find(g => g.gid === gid);
+  if (!g) return;
+  g.values = g.values.filter(v => v.vid !== vid);
+  renderAllGroups();
+  renderMatrix();
+}
+
+function renderAllGroups() {
+  const list = document.getElementById('vg-list');
+  list.innerHTML = '';
+  VGS.forEach((g, idx) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'border:1.5px solid #E4E7F0;border-radius:14px;padding:1rem 1.125rem;background:#FAFBFF;';
+    div.innerHTML = groupHTML(g, idx);
+    list.appendChild(div);
+    // Re-bind tag input enter key
+    const inp = div.querySelector('#tag-inp-' + g.gid);
+    if (inp) {
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addTagValue(g.gid); } });
+    }
+  });
+  // Show/hide add button
+  document.getElementById('btn-add-vg').style.display = VGS.length >= 2 ? 'none' : '';
+}
+
+function groupHTML(g, idx) {
+  const groupLabel = idx === 0 ? 'Variasi 1' : 'Variasi 2';
+  const placeholders = idx === 0
+    ? ['Warna, Tipe, Ukuran...', 'Merah, Biru, Hitam — pisah koma atau Enter']
+    : ['Model, Kapasitas...', 'S, M, L, XL — pisah koma atau Enter'];
+
+  const tagsHTML = g.values.map(v => `
+    <span style="display:inline-flex;align-items:center;gap:.3rem;background:#EDE9FE;color:#6D28D9;padding:.25rem .6rem;border-radius:20px;font-size:.75rem;font-weight:600;cursor:default;">
+      ${escHtml(v.label)}
+      <button type="button" onclick="removeTagValue(${g.gid},${v.vid})"
+        style="background:none;border:none;color:#7C3AED;cursor:pointer;padding:0;line-height:1;font-size:.9rem;display:flex;align-items:center;">&times;</button>
+    </span>`).join('');
+
+  // Hidden inputs for form submission (values)
+  const hiddenInputs = g.values.map(v => `
+    <input type="hidden" name="variant_options[g${g.gid}][values][]" value="${escHtml(v.label)}">
+    ${v.existingId ? `<input type="hidden" name="variant_options[g${g.gid}][existing_values][${v.vid}][existing_id]" value="${v.existingId}">` : ''}
+  `).join('');
+
+  return `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;">
+      <span style="font-size:.72rem;font-weight:800;color:#7C3AED;letter-spacing:.06em;text-transform:uppercase;">${groupLabel}</span>
+      <button type="button" onclick="removeVarGroup(${g.gid})"
+        style="width:26px;height:26px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div style="margin-bottom:.75rem;">
+      <label style="font-size:.72rem;font-weight:700;color:#64748B;display:block;margin-bottom:.35rem;">Nama Variasi *</label>
+      <input type="text" name="variant_options[g${g.gid}][name]"
+        ${g.existingId ? `data-existing="${g.existingId}"` : ''}
+        placeholder="${placeholders[0]}" value="${escHtml(g.name)}"
+        oninput="onGroupNameChange(${g.gid}, this.value)"
+        style="width:100%;padding:.5rem .75rem;border:1.5px solid #E4E7F0;border-radius:9px;font-size:.85rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;"
+        onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'">
+    </div>
+    <div style="margin-bottom:.6rem;">
+      <label style="font-size:.72rem;font-weight:700;color:#64748B;display:block;margin-bottom:.35rem;">Opsi Nilai *</label>
+      <div style="display:flex;gap:.4rem;align-items:center;">
+        <input id="tag-inp-${g.gid}" type="text" placeholder="${placeholders[1]}"
+          style="flex:1;padding:.5rem .75rem;border:1.5px solid #E4E7F0;border-radius:9px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
+          onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'">
+        <button type="button" onclick="addTagValue(${g.gid})"
+          style="padding:.5rem .85rem;background:#7C3AED;color:#fff;border:none;border-radius:9px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;">
+          + Tambah
+        </button>
+      </div>
+    </div>
+    <div id="tags-${g.gid}" style="display:flex;flex-wrap:wrap;gap:.35rem;min-height:20px;">
+      ${tagsHTML}
+    </div>
+    ${hiddenInputs}
+    ${g.existingId ? `<input type="hidden" name="variant_options[g${g.gid}][existing_id]" value="${g.existingId}">` : ''}
+  `;
+}
+
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── Matrix Table ── */
+function renderMatrix() {
+  const sec   = document.getElementById('combo-section');
+  const tbody = document.getElementById('combo-tbody');
+  const thV1  = document.getElementById('th-v1');
+  const thV2  = document.getElementById('th-v2');
+
+  const g1 = VGS[0];
+  const g2 = VGS[1] || null;
+
+  // Only show if at least 1 group with values
+  const hasData = g1 && g1.values.length > 0;
+  sec.style.display = hasData ? '' : 'none';
+  if (!hasData) return;
+
+  thV1.textContent = g1.name || 'Variasi 1';
+  if (g2 && g2.values.length > 0) {
+    thV2.style.display = '';
+    thV2.textContent = g2.name || 'Variasi 2';
+  } else {
+    thV2.style.display = 'none';
+  }
+
+  // Build rows: g1.values × (g2.values or [null])
+  const v2list = (g2 && g2.values.length > 0) ? g2.values : [null];
+  let rowIndex = 0;
+  let html = '';
+
+  g1.values.forEach(v1 => {
+    v2list.forEach(v2 => {
+      // Try to find existing combo data
+      const savedKey = `${v1.vid}_${v2 ? v2.vid : 'x'}`;
+      const saved = window._savedCombos && window._savedCombos[savedKey];
+      const price = saved ? saved.price : '';
+      const stock = saved ? saved.stock : '';
+      const sku   = saved ? saved.sku : '';
+      const combId = saved ? saved.id : '';
+
+      const isEven = rowIndex % 2 === 0;
+      html += `<tr style="background:${isEven ? '#fff' : '#FAFBFF'};" data-row="${rowIndex}">
+        <td style="padding:.55rem .75rem;color:#1E293B;font-weight:600;font-size:.8rem;white-space:nowrap;border-bottom:1px solid #F1F5F9;">
+          <span style="display:inline-block;background:#EDE9FE;color:#6D28D9;padding:.2rem .55rem;border-radius:20px;font-size:.73rem;">${escHtml(v1.label)}</span>
+        </td>
+        ${v2 ? `<td style="padding:.55rem .75rem;color:#1E293B;font-weight:600;font-size:.8rem;white-space:nowrap;border-bottom:1px solid #F1F5F9;">
+          <span style="display:inline-block;background:#E0F2FE;color:#0369A1;padding:.2rem .55rem;border-radius:20px;font-size:.73rem;">${escHtml(v2.label)}</span>
+        </td>` : ''}
+        <td style="padding:.4rem .75rem;border-bottom:1px solid #F1F5F9;">
+          <input type="number" name="variant_options[combinations][${rowIndex}][price]"
+            value="${escHtml(price)}" placeholder="0" min="0" step="500"
+            style="width:100%;min-width:110px;padding:.4rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'" required>
+        </td>
+        <td style="padding:.4rem .75rem;border-bottom:1px solid #F1F5F9;">
+          <input type="number" name="variant_options[combinations][${rowIndex}][stock]"
+            value="${escHtml(stock)}" placeholder="0" min="0"
+            style="width:100%;min-width:75px;padding:.4rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'" required>
+        </td>
+        <td style="padding:.4rem .75rem;border-bottom:1px solid #F1F5F9;">
+          <input type="text" name="variant_options[combinations][${rowIndex}][sku]"
+            value="${escHtml(sku)}" placeholder="Opsional"
+            style="width:100%;min-width:90px;padding:.4rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'">
+        </td>
+        <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_value_id]" value="${escHtml(v1.vid)}">
+        <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_label]" value="${escHtml(v1.label)}">
+        ${v2 ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][option2_value_id]" value="${escHtml(v2.vid)}">
+        <input type="hidden" name="variant_options[combinations][${rowIndex}][option2_label]" value="${escHtml(v2.label)}">` : ''}
+        ${combId ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][existing_combo_id]" value="${combId}">` : ''}
+      </tr>`;
+      rowIndex++;
+    });
+  });
+
+  tbody.innerHTML = html;
+}
+
+function applyBulk() {
+  const price = document.getElementById('bulk-price').value;
+  const stock = document.getElementById('bulk-stock').value;
+  const tbody = document.getElementById('combo-tbody');
+  if (price) tbody.querySelectorAll('input[name*="[price]"]').forEach(i => i.value = price);
+  if (stock) tbody.querySelectorAll('input[name*="[stock]"]').forEach(i => i.value = stock);
+}
+
+/* Saved combos for pre-fill on edit page */
+window._savedCombos = {};
+</script>
+@endsection
         renderGalleryPreviews();
     };
 
@@ -653,16 +968,6 @@ function addVariantValue(gid) {
     <div></div>
   </div>`;
 
-  // Insert before the label row if exists, otherwise append
-  container.insertAdjacentHTML('beforeend', html);
-}
-
-function checkVariantEmpty() {
-  const container = document.getElementById('variant-groups-container');
-  const empty = document.getElementById('variant-empty');
-  if (container.querySelectorAll('.variant-group').length === 0) {
-    if(empty) empty.style.display = 'block';
-  }
 }
 </script>
 @endsection

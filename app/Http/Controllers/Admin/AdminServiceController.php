@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Models\CategoryItem;
 use App\Models\ProductVariantOption;
 use App\Models\ProductVariantValue;
+use App\Models\ProductVariantCombination;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
@@ -429,87 +430,145 @@ class AdminServiceController extends Controller
      */
     private function syncVariants(Service $service, array $variantData): void
     {
+        // Jika tidak ada data varian sama sekali dikirim → bersihkan semua
         if (empty($variantData)) {
-            // Hapus semua varian jika form dikirim kosong
-            // (jangan hapus jika form tidak ada sama sekali — gunakan isset di controller)
+            $service->variantCombinations()->delete();
+            $service->variantOptions()->each(function ($opt) {
+                $opt->values()->delete();
+                $opt->delete();
+            });
             return;
         }
 
+        // ─── 1. Sync option groups & values ──────────────────────────────
         $submittedOptionIds = [];
+        $optionObjects      = []; // indeks 0 & 1 → ProductVariantOption
 
-        foreach ($variantData as $gid => $optionData) {
-            $optionName = trim($optionData['name'] ?? '');
-            if (empty($optionName)) continue;
+        $groups = array_values(array_filter($variantData, fn($g) => !empty(trim($g['name'] ?? ''))));
 
-            $submittedValueIds = [];
+        foreach ($groups as $idx => $optionData) {
+            $optionName = trim($optionData['name']);
 
-            // Existing option (has existing_id key)
             if (!empty($optionData['existing_id'])) {
                 $option = ProductVariantOption::where('id', $optionData['existing_id'])
                     ->where('product_id', $service->id)
                     ->first();
                 if ($option) {
                     $option->update(['name' => $optionName]);
-                    $submittedOptionIds[] = $option->id;
                 } else {
-                    $option = ProductVariantOption::create([
-                        'product_id' => $service->id,
-                        'name'       => $optionName,
-                    ]);
-                    $submittedOptionIds[] = $option->id;
+                    $option = ProductVariantOption::create(['product_id' => $service->id, 'name' => $optionName]);
                 }
             } else {
-                // New option
-                $option = ProductVariantOption::create([
-                    'product_id' => $service->id,
-                    'name'       => $optionName,
-                ]);
-                $submittedOptionIds[] = $option->id;
+                $option = ProductVariantOption::create(['product_id' => $service->id, 'name' => $optionName]);
             }
 
-            // Sync values
-            foreach ($optionData['values'] ?? [] as $vid => $valData) {
+            $submittedOptionIds[]  = $option->id;
+            $optionObjects[$idx]   = $option;
+
+            // Sync values per option
+            $submittedValueIds = [];
+            foreach ($optionData['values'] ?? [] as $valData) {
                 $val = trim($valData['value'] ?? '');
                 if (empty($val)) continue;
 
-                $priceAdj = is_numeric($valData['price_adjustment'] ?? null) ? (float)$valData['price_adjustment'] : 0;
-                $stock    = is_numeric($valData['stock'] ?? null) && $valData['stock'] !== '' ? (int)$valData['stock'] : null;
+                $sku = !empty($valData['sku']) ? trim($valData['sku']) : null;
 
                 if (!empty($valData['existing_id'])) {
                     $vv = ProductVariantValue::where('id', $valData['existing_id'])
-                        ->where('variant_option_id', $option->id)
-                        ->first();
+                        ->where('variant_option_id', $option->id)->first();
                     if ($vv) {
-                        $vv->update(['value' => $val, 'price_adjustment' => $priceAdj, 'stock' => $stock]);
+                        $vv->update(['value' => $val, 'sku' => $sku]);
                         $submittedValueIds[] = $vv->id;
                     } else {
-                        $newVv = ProductVariantValue::create([
+                        $vv = ProductVariantValue::create([
                             'variant_option_id' => $option->id,
-                            'value'             => $val,
-                            'price_adjustment'  => $priceAdj,
-                            'stock'             => $stock,
+                            'value' => $val,
+                            'sku'   => $sku,
+                            'price_adjustment' => 0,
                         ]);
-                        $submittedValueIds[] = $newVv->id;
+                        $submittedValueIds[] = $vv->id;
                     }
                 } else {
-                    $newVv = ProductVariantValue::create([
+                    $vv = ProductVariantValue::create([
                         'variant_option_id' => $option->id,
-                        'value'             => $val,
-                        'price_adjustment'  => $priceAdj,
-                        'stock'             => $stock,
+                        'value' => $val,
+                        'sku'   => $sku,
+                        'price_adjustment' => 0,
                     ]);
-                    $submittedValueIds[] = $newVv->id;
+                    $submittedValueIds[] = $vv->id;
                 }
             }
 
-            // Delete removed values for this option
+            // Hapus nilai yang sudah dihapus dari form
             $option->values()->whereNotIn('id', $submittedValueIds)->delete();
         }
 
-        // Delete removed option groups
-        $service->variantOptions()->whereNotIn('id', $submittedOptionIds)->each(function($opt) {
+        // Hapus option groups yang dihapus dari form
+        $service->variantOptions()->whereNotIn('id', $submittedOptionIds)->each(function ($opt) use ($service) {
+            // Hapus kombinasi yang terkait nilai dari option ini
+            $valueIds = $opt->values()->pluck('id')->toArray();
+            if ($valueIds) {
+                $service->variantCombinations()
+                    ->where(function ($q) use ($valueIds) {
+                        $q->whereIn('option1_value_id', $valueIds)
+                          ->orWhereIn('option2_value_id', $valueIds);
+                    })->delete();
+            }
             $opt->values()->delete();
             $opt->delete();
         });
+
+        // ─── 2. Sync kombinasi matrix ─────────────────────────────────────
+        $combinations = $variantData['combinations'] ?? [];
+        if (empty($combinations)) return;
+
+        $submittedCombinationIds = [];
+
+        foreach ($combinations as $comboData) {
+            $opt1ValueId = (int) ($comboData['option1_value_id'] ?? 0);
+            $opt2ValueId = !empty($comboData['option2_value_id']) ? (int) $comboData['option2_value_id'] : null;
+            $price       = is_numeric($comboData['price'] ?? null) ? (float) $comboData['price'] : 0;
+            $stock       = is_numeric($comboData['stock'] ?? null) ? (int) $comboData['stock'] : 0;
+            $sku         = !empty($comboData['sku']) ? trim($comboData['sku']) : null;
+
+            if ($opt1ValueId <= 0) continue;
+
+            // Pastikan value ini milik produk ini
+            $v1Exists = ProductVariantValue::where('id', $opt1ValueId)
+                ->whereHas('variantOption', fn($q) => $q->where('product_id', $service->id))
+                ->exists();
+            if (!$v1Exists) continue;
+
+            $existing = ProductVariantCombination::where('product_id', $service->id)
+                ->where('option1_value_id', $opt1ValueId)
+                ->where('option2_value_id', $opt2ValueId)
+                ->first();
+
+            if ($existing) {
+                $existing->update([
+                    'price'     => $price,
+                    'stock'     => $stock,
+                    'sku'       => $sku,
+                    'is_active' => true,
+                ]);
+                $submittedCombinationIds[] = $existing->id;
+            } else {
+                $combo = ProductVariantCombination::create([
+                    'product_id'       => $service->id,
+                    'option1_value_id' => $opt1ValueId,
+                    'option2_value_id' => $opt2ValueId,
+                    'price'            => $price,
+                    'stock'            => $stock,
+                    'sku'              => $sku,
+                    'is_active'        => true,
+                ]);
+                $submittedCombinationIds[] = $combo->id;
+            }
+        }
+
+        // Hapus kombinasi yang sudah tidak ada
+        $service->variantCombinations()
+            ->whereNotIn('id', $submittedCombinationIds)
+            ->delete();
     }
 }

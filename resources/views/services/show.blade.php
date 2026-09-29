@@ -517,6 +517,105 @@
             <form action="{{ route('cart.add') }}" method="POST" id="form-add-to-cart">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $service->id }}">
+                <input type="hidden" name="selected_variant_id" id="selected_variant_id" value="">
+                <input type="hidden" name="selected_combo_id" id="selected_combo_id" value="">
+
+                @php
+                    $vGroups = $service->variantOptions()->with('values')->get();
+                    $vCombos = $service->variantCombinations;
+                @endphp
+
+                @if($vGroups->count() > 0)
+                <div class="pd-variants-box" style="margin: 1.25rem 0; padding: 1rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px;">
+                    @foreach($vGroups as $gIdx => $vGroup)
+                    <div style="margin-bottom: 0.85rem;" class="variant-group-selector" data-group-id="{{ $vGroup->id }}" data-group-index="{{ $gIdx }}">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main, #1E293B); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+                            <svg width="14" height="14" fill="none" stroke="var(--accent, #1B6FE8)" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3h-8l-2 4h12l-2-4z"/></svg>
+                            Pilih {{ $vGroup->name }}:
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            @foreach($vGroup->values as $vVal)
+                            <button type="button" class="variant-chip-btn"
+                                data-val-id="{{ $vVal->id }}"
+                                data-price-adj="{{ $vVal->price_adjustment }}"
+                                data-val-stock="{{ $vVal->stock }}"
+                                onclick="selectVariantChip(this, {{ $gIdx }}, {{ $vVal->id }})"
+                                style="padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 600; border-radius: 8px; border: 1.5px solid #CBD5E1; background: #FFFFFF; color: #334155; cursor: pointer; transition: all 0.2s ease;">
+                                {{ $vVal->value }}
+                            </button>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+
+                <script>
+                (function() {
+                    const combos = @json($vCombos);
+                    const basePrice = {{ $service->sale_price > 0 && $service->sale_price < $service->price ? $service->sale_price : $service->price }};
+                    let selectedVals = {};
+
+                    window.selectVariantChip = function(btn, groupIdx, valId) {
+                        const parent = btn.closest('.variant-group-selector');
+                        parent.querySelectorAll('.variant-chip-btn').forEach(b => {
+                            b.style.borderColor = '#CBD5E1';
+                            b.style.background = '#FFFFFF';
+                            b.style.color = '#334155';
+                            b.classList.remove('active');
+                        });
+
+                        btn.style.borderColor = 'var(--accent, #1B6FE8)';
+                        btn.style.background = 'rgba(27,111,232,0.08)';
+                        btn.style.color = 'var(--accent, #1B6FE8)';
+                        btn.classList.add('active');
+
+                        selectedVals[groupIdx] = valId;
+                        document.getElementById('selected_variant_id').value = valId;
+
+                        // Check combination or adjustment
+                        updateVariantPriceAndStock(basePrice, combos, selectedVals);
+                    };
+
+                    function updateVariantPriceAndStock(baseP, comboList, selections) {
+                        const priceEl = document.querySelector('.pd-price-current');
+                        const stockEl = document.querySelector('.pd-qty-wrap b');
+
+                        if (comboList && comboList.length > 0) {
+                            const val1 = selections[0] || null;
+                            const val2 = selections[1] || null;
+
+                            const matched = comboList.find(c => 
+                                (c.option1_value_id == val1 && (!c.option2_value_id || c.option2_value_id == val2)) ||
+                                (c.option2_value_id == val1 && c.option1_value_id == val2)
+                            );
+
+                            if (matched && matched.price > 0) {
+                                priceEl.textContent = 'Rp' + new Intl.NumberFormat('id-ID').format(matched.price);
+                                document.getElementById('selected_combo_id').value = matched.id;
+                                if (stockEl && matched.stock !== null) {
+                                    stockEl.textContent = matched.stock;
+                                }
+                                return;
+                            }
+                        }
+
+                        // Single adjustment calculation
+                        let activeChip = document.querySelector('.variant-chip-btn.active');
+                        if (activeChip) {
+                            let adj = parseFloat(activeChip.getAttribute('data-price-adj') || 0);
+                            let newPrice = baseP + adj;
+                            if (newPrice > 0) {
+                                priceEl.textContent = 'Rp' + new Intl.NumberFormat('id-ID').format(newPrice);
+                            }
+                            let vStock = activeChip.getAttribute('data-val-stock');
+                            if (stockEl && vStock !== null && vStock !== '' && vStock !== 'null') {
+                                stockEl.textContent = vStock;
+                            }
+                        }
+                    }
+                })();
+                </script>
+                @endif
                 
                 <div class="pd-qty-wrap">
                     <span style="font-size:0.875rem; font-weight:700; color:var(--text-main);">Kuantitas:</span>

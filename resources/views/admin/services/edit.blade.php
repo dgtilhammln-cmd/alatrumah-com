@@ -355,29 +355,29 @@
         Atau Pilih Banyak Foto Sekaligus
       </button>
     </div>
-    <p style="font-size:.68rem;color:#94A3B8;margin:.5rem 0 0;text-align:center;">Foto baru yang ditambah 1 per 1 akan terakumulasi &amp; tersimpan saat simpan produk.</p>
-  </div>
-
-  {{-- ═══ VARIAN PRODUK ═══ --}}
+    <p style="font-size:.68rem;color:#94A3B8;margin:.5  {{-- ═══ VARIAN PRODUK (THEME BLUE) ═══ --}}
   <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);" id="variants-section">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
       <div style="display:flex;align-items:center;gap:.625rem;">
-        <div style="width:32px;height:32px;background:rgba(139,92,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-          <svg width="16" height="16" fill="none" stroke="#8B5CF6" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3h-8l-2 4h12l-2-4z"/></svg>
+        <div style="width:32px;height:32px;background:rgba(27,111,232,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <svg width="16" height="16" fill="none" stroke="#1B6FE8" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3h-8l-2 4h12l-2-4z"/></svg>
         </div>
         <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Varian Produk <span style="font-size:.75rem;font-weight:500;color:#94A3B8;">(Opsional)</span></h3>
       </div>
-      <button type="button" onclick="addVariantGroup()" style="display:inline-flex;align-items:center;gap:.375rem;background:rgba(139,92,246,0.1);color:#7C3AED;border:none;padding:.5rem 1rem;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(139,92,246,0.2)'" onmouseout="this.style.background='rgba(139,92,246,0.1)'">
+      <button type="button" onclick="addVariantGroup()" style="display:inline-flex;align-items:center;gap:.375rem;background:rgba(27,111,232,0.08);color:#1B6FE8;border:none;padding:.5rem 1rem;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(27,111,232,0.15)'" onmouseout="this.style.background='rgba(27,111,232,0.08)'">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Tambah Grup Varian
       </button>
     </div>
 
-    <div style="background:#F8FAFC;border:1.5px dashed #E4E7F0;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;font-size:.8rem;color:#64748B;line-height:1.6;">
-      💡 <strong>Panduan Varian:</strong> Contoh untuk alat rumah:<br>
-      → <strong>Ukuran/Tipe:</strong> nilai: CV-45, CV-60, 12 Inch, 14 Inch<br>
-      → <strong>Merek:</strong> nilai: Bosch, Makita, Hitachi<br>
-      → <strong>Kapasitas:</strong> nilai: 1L, 2L, 5L — bisa set harga berbeda per nilai
+    <div style="background:#F8FAFC;border:1.5px dashed #E2E8F0;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;font-size:.8rem;color:#64748B;line-height:1.6;display:flex;align-items:flex-start;gap:.6rem;">
+      <svg width="18" height="18" fill="none" stroke="#1B6FE8" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <strong>Panduan Varian:</strong> Contoh untuk produk alat rumah:<br>
+        • <strong>Ukuran/Tipe:</strong> nilai: CV-45, CV-60, 12 Inch, 14 Inch<br>
+        • <strong>Merek:</strong> nilai: Bosch, Makita, Hitachi<br>
+        • <strong>Kapasitas:</strong> nilai: 1L, 2L, 5L — bisa diatur selisih harga per nilai
+      </div>
     </div>
 
     {{-- Existing saved variants (pre-loaded) --}}
@@ -385,37 +385,37 @@
     <div id="variant-groups-container">
       @foreach($existingVariants as $vo)
       @php $gid = 'saved_' . $vo->id; @endphp
-      <div class="variant-group" id="vg-{{ $gid }}" style="border:1.5px solid #C4B5FD;border-radius:14px;padding:1.25rem;margin-bottom:1rem;background:#FAF5FF;">
+      <div class="variant-group" id="vg-{{ $gid }}" style="border:1.5px solid #CBD5E1;border-radius:14px;padding:1.25rem;margin-bottom:1rem;background:#F8FAFC;">
         <input type="hidden" name="variant_options[{{ $gid }}][existing_id]" value="{{ $vo->id }}">
         <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;">
           <div style="flex:1;">
             <label style="display:block;font-size:.75rem;font-weight:700;color:#475569;margin-bottom:.35rem;">Nama Grup Varian *</label>
             <input type="text" name="variant_options[{{ $gid }}][name]" value="{{ $vo->name }}"
-              style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #C4B5FD;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;"
-              onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#C4B5FD'" required>
+              style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E2E8F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;"
+              onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E2E8F0'" required>
           </div>
           <button type="button" onclick="document.getElementById('vg-{{ $gid }}').remove(); checkVariantEmpty()" style="flex-shrink:0;margin-top:1.3rem;width:34px;height:34px;background:rgba(239,68,68,0.08);border:none;border-radius:8px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Hapus grup varian ini">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
 
-        <div style="font-size:.75rem;font-weight:700;color:#7C3AED;margin-bottom:.5rem;letter-spacing:.03em;">NILAI VARIAN</div>
+        <div style="font-size:.75rem;font-weight:700;color:#1B6FE8;margin-bottom:.5rem;letter-spacing:.03em;">NILAI VARIAN</div>
         <div class="variant-values-{{ $gid }}" style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.75rem;">
           @foreach($vo->values as $vval)
           <div class="variant-value-row" style="display:grid;grid-template-columns:1fr 160px 100px auto;gap:.5rem;align-items:center;">
             <input type="hidden" name="variant_options[{{ $gid }}][values][existing_{{ $vval->id }}][existing_id]" value="{{ $vval->id }}">
             <input type="text" name="variant_options[{{ $gid }}][values][existing_{{ $vval->id }}][value]" value="{{ $vval->value }}"
-              style="padding:.5rem .75rem;background:#fff;border:1.5px solid #C4B5FD;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
-              onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#C4B5FD'" required>
+              style="padding:.5rem .75rem;background:#fff;border:1.5px solid #E2E8F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
+              onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E2E8F0'" required>
             <div style="position:relative;">
               <span style="position:absolute;left:.6rem;top:50%;transform:translateY(-50%);font-size:.75rem;color:#94A3B8;font-weight:600;">Rp</span>
               <input type="number" name="variant_options[{{ $gid }}][values][existing_{{ $vval->id }}][price_adjustment]" value="{{ $vval->price_adjustment }}" step="1000"
-                style="width:100%;padding:.5rem .5rem .5rem 2.1rem;background:#fff;border:1.5px solid #C4B5FD;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
-                onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#C4B5FD'">
+                style="width:100%;padding:.5rem .5rem .5rem 2.1rem;background:#fff;border:1.5px solid #E2E8F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
+                onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E2E8F0'">
             </div>
             <input type="number" name="variant_options[{{ $gid }}][values][existing_{{ $vval->id }}][stock]" value="{{ $vval->stock }}" min="0"
-              style="width:100%;padding:.5rem .75rem;background:#fff;border:1.5px solid #C4B5FD;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
-              onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#C4B5FD'">
+              style="width:100%;padding:.5rem .75rem;background:#fff;border:1.5px solid #E2E8F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
+              onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E2E8F0'">
             <button type="button" onclick="this.closest('.variant-value-row').remove()" style="flex-shrink:0;width:30px;height:30px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
               <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
@@ -423,7 +423,7 @@
           @endforeach
         </div>
 
-        <button type="button" onclick="addVariantValue('{{ $gid }}')" style="width:100%;padding:.5rem;background:rgba(139,92,246,0.06);color:#7C3AED;border:1.5px dashed rgba(139,92,246,0.4);border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:all .2s;">
+        <button type="button" onclick="addVariantValue('{{ $gid }}')" style="width:100%;padding:.5rem;background:rgba(27,111,232,0.06);color:#1B6FE8;border:1.5px dashed rgba(27,111,232,0.4);border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:all .2s;">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           + Tambah Nilai
         </button>

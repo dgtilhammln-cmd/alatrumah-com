@@ -73,6 +73,22 @@ class Service extends Model
     }
 
     /**
+     * Kombinasi varian Shopee-style (misal Merah×S, Merah×M, Biru×S).
+     */
+    public function variantCombinations(): HasMany
+    {
+        return $this->hasMany(ProductVariantCombination::class, 'product_id');
+    }
+
+    /**
+     * Apakah produk ini punya varian?
+     */
+    public function hasVariants(): bool
+    {
+        return $this->variantOptions()->exists();
+    }
+
+    /**
      * Semua item cart yang mengandung produk ini.
      */
     public function carts(): HasMany
