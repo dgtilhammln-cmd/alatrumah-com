@@ -558,7 +558,7 @@
                     var basePrice    = {{ ($service->sale_price > 0 && $service->sale_price < $service->price) ? $service->sale_price : ($service->price ?? 0) }};
                     var selectedVals = {}; // { groupIndex: valId }
 
-                    /* --- Chip selection --- */
+                    /* --- Chip selection (main page) --- */
                     window.selectVariantChip = function(btn, groupIdx, valId) {
                         var parent = btn.closest('.variant-group-selector');
                         parent.querySelectorAll('.variant-chip-btn').forEach(function(b) {
@@ -577,13 +577,71 @@
                         selectedVals[groupIdx] = valId;
                         document.getElementById('selected_variant_id').value = valId;
 
-                        // Clear error state if all groups now selected
-                        var chosen = Object.keys(selectedVals).filter(function(k){ return selectedVals[k]; }).length;
+                        // Sync modal chips too
+                        var modalChips = document.querySelectorAll('#vr-modal-body .modal-chip-btn[data-group-index="'+groupIdx+'"]');
+                        modalChips.forEach(function(mc) {
+                            mc.classList.remove('active');
+                            mc.style.borderColor = '#CBD5E1';
+                            mc.style.background  = '#fff';
+                            mc.style.color       = '#334155';
+                            if (mc.getAttribute('data-val-id') == valId) {
+                                mc.classList.add('active');
+                                mc.style.borderColor = 'var(--accent,#1B6FE8)';
+                                mc.style.background  = 'rgba(27,111,232,0.09)';
+                                mc.style.color       = 'var(--accent,#1B6FE8)';
+                            }
+                        });
+
+                        var chosen = 0;
+                        for (var k in selectedVals) { if (selectedVals[k]) chosen++; }
                         if (chosen >= TOTAL_GROUPS) {
                             var box  = document.getElementById('variant-box');
-                            var warn = document.getElementById('variant-warning-alert');
-                            if (box)  { box.style.border = '1.5px solid #22C55E'; box.style.background = '#F0FFF4'; }
-                            if (warn) { warn.style.display = 'none'; }
+                            if (box) { box.style.border = '1.5px solid #22C55E'; box.style.background = '#F0FFF4'; }
+                        }
+                        updatePriceStock();
+                    };
+
+                    /* --- Modal chip selection --- */
+                    window.selectModalChip = function(btn, groupIdx, valId) {
+                        var container = btn.closest('[data-modal-group]');
+                        container.querySelectorAll('.modal-chip-btn').forEach(function(b) {
+                            b.classList.remove('active');
+                            b.style.borderColor = '#CBD5E1';
+                            b.style.background  = '#fff';
+                            b.style.color       = '#334155';
+                        });
+                        btn.classList.add('active');
+                        btn.style.borderColor = 'var(--accent,#1B6FE8)';
+                        btn.style.background  = 'rgba(27,111,232,0.09)';
+                        btn.style.color       = 'var(--accent,#1B6FE8)';
+
+                        selectedVals[groupIdx] = valId;
+                        document.getElementById('selected_variant_id').value = valId;
+
+                        // Sync page chips
+                        var pageChips = document.querySelectorAll('#variant-box .variant-chip-btn');
+                        pageChips.forEach(function(pc) {
+                            if (parseInt(pc.closest('.variant-group-selector').getAttribute('data-group-index')) === groupIdx) {
+                                pc.classList.remove('active');
+                                pc.style.borderColor = '#CBD5E1';
+                                pc.style.background  = '#FFFFFF';
+                                pc.style.color       = '#334155';
+                                if (pc.getAttribute('data-val-id') == valId) {
+                                    pc.classList.add('active');
+                                    pc.style.borderColor = 'var(--accent,#1B6FE8)';
+                                    pc.style.background  = 'rgba(27,111,232,0.09)';
+                                    pc.style.color       = 'var(--accent,#1B6FE8)';
+                                }
+                            }
+                        });
+
+                        // Update modal confirm button state
+                        var chosen = 0;
+                        for (var k in selectedVals) { if (selectedVals[k]) chosen++; }
+                        var confirmBtn = document.getElementById('vr-modal-confirm');
+                        if (confirmBtn) {
+                            confirmBtn.style.opacity = chosen >= TOTAL_GROUPS ? '1' : '0.5';
+                            confirmBtn.disabled = chosen < TOTAL_GROUPS;
                         }
 
                         updatePriceStock();
@@ -619,7 +677,7 @@
                     }
 
                     /* =========================================================
-                       MAIN GATEKEEPER — called by both buttons
+                       MAIN GATEKEEPER — opens Shopee-style modal if not selected
                        ========================================================= */
                     window.submitProductForm = function(actionType) {
                         if (HAS_VARIANTS) {
@@ -629,41 +687,58 @@
                             }
 
                             if (selectedCount < TOTAL_GROUPS) {
-                                // Flash the variant box red
-                                var box = document.getElementById('variant-box');
-                                if (box) {
-                                    box.style.border     = '2px solid #EF4444';
-                                    box.style.background = '#FFF5F5';
-                                    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                }
-
-                                // Highlight each unselected group
-                                document.querySelectorAll('.variant-group-selector').forEach(function(sel, idx) {
-                                    if (!selectedVals[idx]) {
-                                        sel.style.background   = '#FEE2E2';
-                                        sel.style.borderRadius = '8px';
-                                        sel.style.padding      = '0.5rem';
-                                    }
-                                });
-
-                                // Show warning message
-                                var warn = document.getElementById('variant-warning-alert');
-                                if (warn) {
-                                    warn.style.display = 'flex';
-                                } else if (box) {
-                                    warn = document.createElement('div');
-                                    warn.id = 'variant-warning-alert';
-                                    warn.style.cssText = 'display:flex;background:#EF4444;color:#fff;padding:.6rem 1rem;border-radius:10px;font-size:.82rem;font-weight:700;margin-top:.75rem;align-items:center;gap:.5rem;';
-                                    warn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Silakan pilih variasi produk terlebih dahulu!';
-                                    box.appendChild(warn);
-                                }
-
-                                return; // ← STOP! Do NOT submit.
+                                // Open variant bottom sheet modal
+                                openVariantModal(actionType);
+                                return;
                             }
                         }
 
                         // All good — submit the form
                         document.getElementById('form_action_input').value = actionType;
+                        document.getElementById('form-add-to-cart').submit();
+                    };
+
+                    /* =========================================================
+                       VARIANT MODAL (Shopee bottom-sheet style)
+                       ========================================================= */
+                    var pendingAction = 'cart';
+
+                    window.openVariantModal = function(actionType) {
+                        pendingAction = actionType || 'cart';
+                        var modal = document.getElementById('variant-modal-overlay');
+                        if (modal) {
+                            modal.style.display = 'flex';
+                            requestAnimationFrame(function() {
+                                modal.style.opacity = '1';
+                                document.getElementById('variant-modal-sheet').style.transform = 'translateY(0)';
+                            });
+                        }
+                        // Update confirm button state
+                        var chosen = 0;
+                        for (var k in selectedVals) { if (selectedVals[k]) chosen++; }
+                        var confirmBtn = document.getElementById('vr-modal-confirm');
+                        if (confirmBtn) {
+                            confirmBtn.style.opacity = chosen >= TOTAL_GROUPS ? '1' : '0.5';
+                            confirmBtn.disabled = chosen < TOTAL_GROUPS;
+                            confirmBtn.textContent = actionType === 'buy' ? 'Beli Sekarang' : 'Tambah ke Keranjang';
+                        }
+                    };
+
+                    window.closeVariantModal = function() {
+                        var modal = document.getElementById('variant-modal-overlay');
+                        if (modal) {
+                            modal.style.opacity = '0';
+                            document.getElementById('variant-modal-sheet').style.transform = 'translateY(100%)';
+                            setTimeout(function() { modal.style.display = 'none'; }, 300);
+                        }
+                    };
+
+                    window.confirmVariantModal = function() {
+                        var chosen = 0;
+                        for (var k in selectedVals) { if (selectedVals[k]) chosen++; }
+                        if (chosen < TOTAL_GROUPS) return;
+                        closeVariantModal();
+                        document.getElementById('form_action_input').value = pendingAction;
                         document.getElementById('form-add-to-cart').submit();
                     };
                 })();
@@ -692,7 +767,7 @@
                 </div>
 
                 <div class="pd-actions">
-                    <button type="button" onclick="submitProductForm('cart')" class="pd-btn pd-btn-outline" 
+                    <button type="button" onclick="submitProductForm('cart')" class="pd-btn pd-btn-outline"
                             @if($service->type !== 'service' && $service->stock <= 0) disabled @endif>
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20a1 1 0 100-2 1 1 0 000 2zM20 20a1 1 0 100-2 1 1 0 000 2z"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
                         Keranjang
@@ -703,6 +778,77 @@
                     </button>
                 </div>
             </form>
+
+            {{-- ══ VARIANT BOTTOM SHEET MODAL (Shopee-style) ══ --}}
+            @if($vGroups->count() > 0)
+            <div id="variant-modal-overlay"
+                 style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.55); z-index:9990; align-items:flex-end; justify-content:center; opacity:0; transition:opacity .28s; -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);">
+                <div id="variant-modal-sheet"
+                     style="background:#fff; width:100%; max-width:520px; border-radius:24px 24px 0 0; padding:0; box-shadow:0 -8px 40px rgba(0,0,0,0.18); transform:translateY(100%); transition:transform .32s cubic-bezier(.32,1,.32,1); overflow:hidden;">
+
+                    {{-- Handle --}}
+                    <div style="display:flex; align-items:center; justify-content:center; padding:0.75rem 0 0;">
+                        <div style="width:40px; height:4px; background:#E2E8F0; border-radius:4px;"></div>
+                    </div>
+
+                    {{-- Header --}}
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem 0.75rem; border-bottom:1px solid #F1F5F9;">
+                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                            @if($service->image_url)
+                            <img src="{{ $service->image_url }}" alt="" style="width:52px; height:52px; border-radius:10px; object-fit:cover; border:1.5px solid #E2E8F0;">
+                            @endif
+                            <div>
+                                <div style="font-size:0.78rem; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.04em;">Pilih Variasi</div>
+                                <div style="font-size:0.95rem; font-weight:800; color:#1E293B; line-height:1.3; max-width:240px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $service->name }}</div>
+                            </div>
+                        </div>
+                        <button onclick="closeVariantModal()" style="width:34px; height:34px; background:#F1F5F9; border:none; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#64748B; flex-shrink:0; transition:background .2s;" onmouseover="this.style.background='#E2E8F0'" onmouseout="this.style.background='#F1F5F9'">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+
+                    {{-- Variant Groups --}}
+                    <div id="vr-modal-body" style="padding:1rem 1.25rem; max-height:55vh; overflow-y:auto;">
+                        @foreach($vGroups as $gIdx => $vGroup)
+                        <div data-modal-group="{{ $gIdx }}" style="margin-bottom:1.25rem;">
+                            <div style="font-size:0.8rem; font-weight:700; color:#475569; margin-bottom:0.6rem; display:flex; align-items:center; gap:0.35rem;">
+                                <svg width="13" height="13" fill="none" stroke="var(--accent,#1B6FE8)" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3h-8l-2 4h12l-2-4z"/></svg>
+                                {{ $vGroup->name }} <span style="color:#EF4444;">*</span>
+                            </div>
+                            <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+                                @foreach($vGroup->values as $vVal)
+                                <button type="button" class="modal-chip-btn"
+                                    data-group-index="{{ $gIdx }}"
+                                    data-val-id="{{ $vVal->id }}"
+                                    onclick="selectModalChip(this, {{ $gIdx }}, {{ $vVal->id }})"
+                                    style="padding:0.5rem 1.1rem; font-size:0.82rem; font-weight:600; border-radius:10px; border:1.5px solid #CBD5E1; background:#fff; color:#334155; cursor:pointer; transition:all 0.18s;">
+                                    {{ $vVal->value }}
+                                </button>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endforeach
+
+                        {{-- Warning if not all selected --}}
+                        <div id="modal-warn" style="display:none; font-size:0.78rem; font-weight:600; color:#EF4444; margin-top:0.25rem;">
+                            ⚠️ Mohon pilih semua variasi sebelum melanjutkan.
+                        </div>
+                    </div>
+
+                    {{-- Confirm Button --}}
+                    <div style="padding:1rem 1.25rem 1.5rem; border-top:1px solid #F1F5F9;">
+                        <button id="vr-modal-confirm" onclick="confirmVariantModal()"
+                            style="width:100%; padding:0.9rem; background:var(--accent,#1B6FE8); color:#fff; font-size:0.95rem; font-weight:800; border:none; border-radius:14px; cursor:pointer; opacity:0.5; transition:all .2s; box-shadow:0 4px 16px rgba(27,111,232,0.3);" disabled
+                            onmouseover="if(!this.disabled){this.style.background='#1254C0'}" onmouseout="this.style.background='var(--accent,#1B6FE8)'">
+                            Tambah ke Keranjang
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <style>
+            #variant-modal-overlay[style*="flex"] { display:flex !important; }
+            </style>
+            @endif
         @else
             {{-- Non-ecommerce / Custom Service --}}
             <div class="pd-price-box" style="background: linear-gradient(135deg, #EFF6FF, #ffffff); border-color: #BFDBFE;">

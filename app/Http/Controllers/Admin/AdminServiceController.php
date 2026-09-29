@@ -70,7 +70,7 @@ class AdminServiceController extends Controller
             'stock'         => 'required|integer|min:0',
             'min_order'     => 'nullable|integer|min:1',
             'weight'        => 'nullable|integer|min:0',
-            'sku'           => 'nullable|string|max:100',
+            'sku'           => 'nullable|string|max:100|unique:services,sku',
             'rating'        => 'required|numeric|min:0|max:5',
             'sold_count'    => 'required|integer|min:0',
             'product_category_id' => 'required|integer|exists:category_items,id',
@@ -179,6 +179,9 @@ class AdminServiceController extends Controller
         $v['sold_count']    = $v['sold_count'] ?? 0;
         $v['rating']        = $v['rating'] ?? 0;
 
+        // Kosongkan SKU jika tidak diisi agar tidak clash unique
+        if (empty($v['sku'])) $v['sku'] = null;
+
         $svc = Service::create($v);
         // Simpan varian produk
         $this->syncVariants($svc, $request->input('variant_options', []));
@@ -227,7 +230,7 @@ class AdminServiceController extends Controller
             'stock'         => 'required|integer|min:0',
             'min_order'     => 'nullable|integer|min:1',
             'weight'        => 'nullable|integer|min:0',
-            'sku'           => 'nullable|string|max:100',
+            'sku'           => 'nullable|string|max:100|unique:services,sku,'.$service->id,
             'rating'        => 'required|numeric|min:0|max:5',
             'sold_count'    => 'required|integer|min:0',
             'product_category_id' => 'required|integer|exists:category_items,id',
