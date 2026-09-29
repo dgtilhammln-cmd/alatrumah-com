@@ -102,51 +102,51 @@
       <div style="grid-column: span 2;">
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Kategori</label>
         <select name="product_category_id" required style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
-          <option value="">- Tanpa Kategori -</option>
+          <option value="">-- Pilih Kategori Produk (Contoh: Elektronik Rumah) --</option>
           @foreach($categories as $cat)
             <option value="{{ $cat->id }}" {{ old('product_category_id', $s->product_category_id ?? '') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
           @endforeach
         </select>
       </div>
       <div>
-        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Harga (Rp)</label>
-        <input type="number" name="price" value="{{ old('price',$s->price) }}" min="0" placeholder="0"
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Harga Utama (Rp)</label>
+        <input type="number" name="price" value="{{ old('price',$s->price) }}" min="0" placeholder="Contoh: 1500000"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
-        <p style="font-size:.7rem;color:#94A3B8;margin-top:.25rem;">Kosongkan/0 jika ini layanan jasa (Tanya via WA)</p>
+        <p style="font-size:.7rem;color:#94A3B8;margin-top:.25rem;">Kosongkan/0 jika variasi punya harga berbeda atau layanan konsultasi</p>
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Harga Diskon (Rp)</label>
-        <input type="number" name="sale_price" value="{{ old('sale_price',$s->sale_price) }}" min="0" placeholder="Opsional"
+        <input type="number" name="sale_price" value="{{ old('sale_price',$s->sale_price) }}" min="0" placeholder="Contoh: 1250000 (Opsional)"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Stok <span style="color:#EF4444;">*</span></label>
-        <input type="number" name="stock" value="{{ old('stock',$s?->stock ?? 0) }}" min="0" required
+        <input type="number" name="stock" value="{{ old('stock',$s?->stock ?? 0) }}" min="0" placeholder="Contoh: 100" required
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Minimum Order</label>
-        <input type="number" name="min_order" value="{{ old('min_order',$s?->min_order ?? 1) }}" min="1"
+        <input type="number" name="min_order" value="{{ old('min_order',$s?->min_order ?? 1) }}" min="1" placeholder="Contoh: 1"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Berat (Gram)</label>
-        <input type="number" name="weight" value="{{ old('weight',$s?->weight ?? 0) }}" min="0"
+        <input type="number" name="weight" value="{{ old('weight',$s?->weight ?? 0) }}" min="0" placeholder="Contoh: 1500 (untuk 1.5 kg)"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Rating Bintang <span style="color:#EF4444;">*</span></label>
-        <input type="number" step="0.1" name="rating" value="{{ old('rating', $s?->rating ?? 0) }}" min="0" max="5" placeholder="Cth: 4.8" required
+        <input type="number" step="0.1" name="rating" value="{{ old('rating', $s?->rating ?? 0) }}" min="0" max="5" placeholder="Contoh: 4.9" required
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
       <div>
         <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Jumlah Terjual <span style="color:#EF4444;">*</span></label>
-        <input type="number" name="sold_count" value="{{ old('sold_count', $s?->sold_count ?? 0) }}" min="0" placeholder="Cth: 1200" required
+        <input type="number" name="sold_count" value="{{ old('sold_count', $s?->sold_count ?? 0) }}" min="0" placeholder="Contoh: 1250" required
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
       <div style="grid-column:1 / -1;">
-        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">SKU (Opsional)</label>
-        <input type="text" name="sku" value="{{ old('sku',$service->sku) }}" placeholder="Contoh: SKU-001"
+        <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">SKU Produk (Opsional)</label>
+        <input type="text" name="sku" value="{{ old('sku',$s->sku ?? '') }}" placeholder="Contoh: SKU-CV60-MAIN"
           style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
       </div>
     </div>
@@ -181,18 +181,35 @@
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem;">
         <div style="font-size:.8rem;font-weight:800;color:#1E293B;letter-spacing:.03em;">DAFTAR VARIASI</div>
         <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
-          <span style="font-size:.72rem;color:#64748B;">Terapkan ke semua:</span>
-          <input type="number" id="bulk-price" placeholder="Harga" min="0" step="1000"
+          <span style="font-size:.72rem;color:#64748B;flex-shrink:0;">Terapkan ke semua:</span>
+          <div style="display:flex;align-items:center;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;overflow:hidden;width:120px;">
+            <span style="font-size:.7rem;color:#64748B;padding:0 .4rem;background:#F1F5F9;height:32px;display:flex;align-items:center;border-right:1px solid #E4E7F0;font-weight:600;">Rp</span>
+            <input type="number" id="bulk-price" placeholder="Harga" min="0" step="1000"
+              style="width:100%;padding:.3rem .5rem;border:none;font-size:.78rem;font-family:inherit;outline:none;height:32px;"
+              onfocus="this.parentElement.style.borderColor='#1B6FE8'" onblur="this.parentElement.style.borderColor='#E4E7F0'">
+          </div>
+          <input type="number" id="bulk-stock" placeholder="Stok" min="0"
+            style="width:75px;padding:.35rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.78rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+          <div style="display:flex;align-items:center;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;overflow:hidden;width:100px;">
+            <input type="number" id="bulk-ship" placeholder="Kirim" min="1" value="2"
+              style="width:100%;padding:.3rem .4rem;border:none;font-size:.78rem;font-family:inherit;outline:none;height:32px;"
+              onfocus="this.parentElement.style.borderColor='#1B6FE8'" onblur="this.parentElement.style.borderColor='#E4E7F0'">
+            <span style="font-size:.68rem;color:#64748B;padding:0 .35rem;background:#F1F5F9;height:32px;display:flex;align-items:center;border-left:1px solid #E4E7F0;white-space:nowrap;">hari</span>
+          </div>
+          <input type="text" id="bulk-sku" placeholder="Kode Variasi"
             style="width:110px;padding:.35rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.78rem;font-family:inherit;outline:none;"
             onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
-          <input type="number" id="bulk-stock" placeholder="Stok" min="0"
-            style="width:80px;padding:.35rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.78rem;font-family:inherit;outline:none;"
-            onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
           <button type="button" onclick="applyBulk()"
-            style="padding:.35rem .8rem;background:#1B6FE8;color:#fff;border:none;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">
+            style="padding:.35rem .8rem;background:#1B6FE8;color:#fff;border:none;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">
             Terapkan
           </button>
         </div>
+      </div>
+
+      {{-- Info box --}}
+      <div style="background:#FFFBEB;border:1px solid #FCD34D;border-radius:10px;padding:.7rem 1rem;margin-bottom:.875rem;font-size:.76rem;color:#92400E;line-height:1.5;">
+        <strong>Dikirim Dalam</strong> default 2 hari kerja. Kolom wajib <span style="color:#EF4444;">*</span> harus diisi — jika kosong akan ditandai merah saat simpan.
       </div>
 
       <div style="overflow-x:auto;border-radius:12px;border:1.5px solid #E4E7F0;">
@@ -201,9 +218,11 @@
             <tr style="background:#F8FAFC;">
               <th id="th-v1" style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;"></th>
               <th id="th-v2" style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;display:none;"></th>
-              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;">Harga (Rp) *</th>
-              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;">Stok *</th>
-              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:100px;">Kode SKU</th>
+              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:110px;">Harga (Rp) <span style="color:#EF4444;">*</span></th>
+              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:75px;">Stok <span style="color:#EF4444;">*</span></th>
+              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:95px;">Dikirim Dalam <span style="color:#EF4444;">*</span></th>
+              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:100px;">Kode Variasi</th>
+              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:100px;">GTIN</th>
             </tr>
           </thead>
           <tbody id="combo-tbody"></tbody>
@@ -357,10 +376,6 @@
 
   {{-- Gallery --}}
   <div style="background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);">
-    <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.125rem;">
-      <div style="width:28px;height:28px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-        <svg width="14" height="14" fill="none" stroke="#3B82F6" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      </div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.125rem;">
       <div style="display:flex;align-items:center;gap:.625rem;">
         <div style="width:28px;height:28px;background:rgba(59,130,246,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
@@ -730,7 +745,7 @@ function initEditVariants() {
   if (rawCombos && rawCombos.length > 0) {
     rawCombos.forEach(c => {
       const key1 = `${c.option1_value_id}_${c.option2_value_id || 'x'}`;
-      window._savedCombos[key1] = { price: c.price, stock: c.stock, sku: c.sku || '', id: c.id };
+      window._savedCombos[key1] = { price: c.price, stock: c.stock, ship: c.ship_days || 2, sku: c.sku || '', gtin: c.gtin || '', id: c.id };
     });
   }
 
@@ -836,7 +851,7 @@ function renderVGContent(g, placeholders, groupNum) {
     </span>
   `).join('');
 
-  const hiddenInputs = g.values.map((v, i) => `
+  const hiddenInputs = g.values.map((v) => `
     <input type="hidden" name="variant_options[g${g.gid}][values][v${v.vid}][value]" value="${escHtml(v.label)}">
     ${v.existingId ? `<input type="hidden" name="variant_options[g${g.gid}][values][v${v.vid}][existing_id]" value="${v.existingId}">` : ''}
   `).join('');
@@ -871,9 +886,7 @@ function renderVGContent(g, placeholders, groupNum) {
         </button>
       </div>
     </div>
-    <div id="tags-${g.gid}" style="display:flex;flex-wrap:wrap;gap:.35rem;min-height:20px;">
-      ${tagsHTML}
-    </div>
+    <div id="tags-${g.gid}" style="display:flex;flex-wrap:wrap;gap:.35rem;min-height:20px;">${tagsHTML}</div>
     ${hiddenInputs}
     ${g.existingId ? `<input type="hidden" name="variant_options[g${g.gid}][existing_id]" value="${g.existingId}">` : ''}
   `;
@@ -914,12 +927,14 @@ function renderMatrix() {
     v2list.forEach(v2 => {
       const savedKey = `${v1.vid}_${v2 ? v2.vid : 'x'}`;
       const saved = window._savedCombos && window._savedCombos[savedKey];
-      const price = saved ? saved.price : '';
-      const stock = saved ? saved.stock : '';
-      const sku   = saved ? saved.sku : '';
-      const combId = saved ? saved.id : '';
-
+      const price  = saved ? saved.price  : '';
+      const stock  = saved ? saved.stock  : '';
+      const ship   = saved ? (saved.ship || 2) : 2;
+      const sku    = saved ? (saved.sku || '') : '';
+      const gtin   = saved ? (saved.gtin || '') : '';
+      const combId = saved ? saved.id     : '';
       const isEven = rowIndex % 2 === 0;
+
       html += `<tr style="background:${isEven ? '#fff' : '#FAFBFF'};" data-row="${rowIndex}">
         <td style="padding:.55rem .75rem;color:#1E293B;font-weight:600;font-size:.8rem;white-space:nowrap;border-bottom:1px solid #F1F5F9;">
           <span style="display:inline-block;background:#EFF6FF;color:#1D4ED8;padding:.2rem .55rem;border-radius:20px;font-size:.73rem;">${escHtml(v1.label)}</span>
@@ -927,22 +942,37 @@ function renderMatrix() {
         ${v2 ? `<td style="padding:.55rem .75rem;color:#1E293B;font-weight:600;font-size:.8rem;white-space:nowrap;border-bottom:1px solid #F1F5F9;">
           <span style="display:inline-block;background:#F0F9FF;color:#0369A1;padding:.2rem .55rem;border-radius:20px;font-size:.73rem;">${escHtml(v2.label)}</span>
         </td>` : ''}
-        <td style="padding:.4rem .75rem;border-bottom:1px solid #F1F5F9;">
+        <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
           <input type="number" name="variant_options[combinations][${rowIndex}][price]"
             value="${escHtml(price)}" placeholder="0" min="0" step="500"
-            style="width:100%;min-width:110px;padding:.4rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
-            onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'" required>
+            style="width:100%;min-width:100px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#1B6FE8'" onblur="validateRequired(this)" required>
         </td>
-        <td style="padding:.4rem .75rem;border-bottom:1px solid #F1F5F9;">
+        <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
           <input type="number" name="variant_options[combinations][${rowIndex}][stock]"
             value="${escHtml(stock)}" placeholder="0" min="0"
-            style="width:100%;min-width:75px;padding:.4rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
-            onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'" required>
+            style="width:100%;min-width:70px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#1B6FE8'" onblur="validateRequired(this)" required>
         </td>
-        <td style="padding:.4rem .75rem;border-bottom:1px solid #F1F5F9;">
+        <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+          <div style="display:flex;align-items:center;border:1.5px solid #E4E7F0;border-radius:8px;overflow:hidden;min-width:85px;">
+            <input type="number" name="variant_options[combinations][${rowIndex}][ship_days]"
+              value="${escHtml(ship)}" placeholder="2" min="1" max="30"
+              style="width:100%;padding:.4rem .4rem;border:none;font-size:.8rem;font-family:inherit;outline:none;"
+              onfocus="this.parentElement.style.borderColor='#1B6FE8'" onblur="this.parentElement.style.borderColor='#E4E7F0';validateRequired(this)" required>
+            <span style="font-size:.7rem;color:#64748B;padding:0 .35rem;background:#F1F5F9;height:34px;display:flex;align-items:center;border-left:1px solid #E4E7F0;white-space:nowrap;">hari</span>
+          </div>
+        </td>
+        <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
           <input type="text" name="variant_options[combinations][${rowIndex}][sku]"
-            value="${escHtml(sku)}" placeholder="Opsional"
-            style="width:100%;min-width:90px;padding:.4rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+            value="${escHtml(sku)}" placeholder="SKU (opsional)"
+            style="width:100%;min-width:90px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+        </td>
+        <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+          <input type="text" name="variant_options[combinations][${rowIndex}][gtin]"
+            value="${escHtml(gtin)}" placeholder="GTIN (opsional)"
+            style="width:100%;min-width:95px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
             onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
         </td>
         <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_value_id]" value="${escHtml(v1.vid)}">
@@ -958,14 +988,30 @@ function renderMatrix() {
   tbody.innerHTML = html;
 }
 
+function validateRequired(inp) {
+  if (inp.hasAttribute('required') && !inp.value.trim()) {
+    inp.style.borderColor = '#EF4444';
+    inp.style.background  = '#FFF5F5';
+  } else {
+    inp.style.borderColor = '#E4E7F0';
+    inp.style.background  = '';
+  }
+}
+
 function applyBulk() {
-  const price = document.getElementById('bulk-price').value;
-  const stock = document.getElementById('bulk-stock').value;
+  const price = document.getElementById('bulk-price')?.value;
+  const stock = document.getElementById('bulk-stock')?.value;
+  const ship  = document.getElementById('bulk-ship')?.value;
+  const sku   = document.getElementById('bulk-sku')?.value;
   const tbody = document.getElementById('combo-tbody');
+  if (!tbody) return;
   if (price) tbody.querySelectorAll('input[name*="[price]"]').forEach(i => i.value = price);
   if (stock) tbody.querySelectorAll('input[name*="[stock]"]').forEach(i => i.value = stock);
+  if (ship)  tbody.querySelectorAll('input[name*="[ship_days]"]').forEach(i => i.value = ship);
+  if (sku)   tbody.querySelectorAll('input[name*="[sku]"]').forEach(i => i.value = sku);
 }
 
 document.addEventListener('DOMContentLoaded', initEditVariants);
 </script>
 @endsection
+

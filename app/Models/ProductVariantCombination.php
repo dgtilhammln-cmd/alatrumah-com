@@ -13,7 +13,9 @@ class ProductVariantCombination extends Model
         'option2_value_id',
         'price',
         'stock',
+        'ship_days',
         'sku',
+        'gtin',
         'image',
         'is_active',
     ];
@@ -23,6 +25,7 @@ class ProductVariantCombination extends Model
         return [
             'price'     => 'decimal:2',
             'stock'     => 'integer',
+            'ship_days' => 'integer',
             'is_active' => 'boolean',
         ];
     }

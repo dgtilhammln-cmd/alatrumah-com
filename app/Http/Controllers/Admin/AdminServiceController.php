@@ -531,6 +531,9 @@ class AdminServiceController extends Controller
             $stock       = is_numeric($comboData['stock'] ?? null) ? (int) $comboData['stock'] : 0;
             $sku         = !empty($comboData['sku']) ? trim($comboData['sku']) : null;
 
+            $shipDays    = is_numeric($comboData['ship_days'] ?? null) ? (int) $comboData['ship_days'] : 2;
+            $gtin        = !empty($comboData['gtin']) ? trim($comboData['gtin']) : null;
+
             if ($opt1ValueId <= 0) continue;
 
             // Pastikan value ini milik produk ini
@@ -548,7 +551,9 @@ class AdminServiceController extends Controller
                 $existing->update([
                     'price'     => $price,
                     'stock'     => $stock,
+                    'ship_days' => $shipDays,
                     'sku'       => $sku,
+                    'gtin'      => $gtin,
                     'is_active' => true,
                 ]);
                 $submittedCombinationIds[] = $existing->id;
@@ -559,7 +564,9 @@ class AdminServiceController extends Controller
                     'option2_value_id' => $opt2ValueId,
                     'price'            => $price,
                     'stock'            => $stock,
+                    'ship_days'        => $shipDays,
                     'sku'              => $sku,
+                    'gtin'             => $gtin,
                     'is_active'        => true,
                 ]);
                 $submittedCombinationIds[] = $combo->id;
