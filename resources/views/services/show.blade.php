@@ -364,35 +364,64 @@
         margin-top: 4.75rem;
         padding: 0.5rem 1rem 0;
         font-size: 0.775rem;
-    }
-    .pd-layout { padding: 0.75rem 1rem 1.5rem; gap: 1.25rem; }
-    .pd-bottom-layout { padding: 0 1rem 2.5rem; }
-    .pd-gallery-main {
-        max-width: 260px !important;
         width: 100%;
-        aspect-ratio: 1/1;
-        border-radius: 14px;
-        margin: 0 auto 0.75rem !important;
+        box-sizing: border-box;
     }
-    .pd-thumbs { max-width: 260px !important; width: 100%; margin: 0 auto; }
-    .pd-thumb-item { width: 50px; height: 50px; border-radius: 10px; }
-    .pd-title { font-size: 1.25rem; margin-bottom: 0.4rem; line-height: 1.3; }
+    .pd-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0.75rem 1rem 1.5rem !important;
+        gap: 1.25rem !important;
+        box-sizing: border-box !important;
+    }
+    .pd-layout > div {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .pd-bottom-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 1rem 2.5rem !important;
+        gap: 1.25rem !important;
+        box-sizing: border-box !important;
+    }
+    .pd-bottom-layout > div {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .pd-gallery-main {
+        max-width: 100% !important;
+        width: 100% !important;
+        aspect-ratio: 1/1;
+        border-radius: 16px;
+        margin: 0 0 0.75rem !important;
+        box-sizing: border-box !important;
+    }
+    .pd-thumbs { max-width: 100% !important; width: 100% !important; }
+    .pd-thumb-item { width: 48px; height: 48px; border-radius: 10px; }
+    .pd-title { font-size: 1.2rem; margin-bottom: 0.4rem; line-height: 1.3; }
     .pd-desc-short { font-size: 0.85rem; margin-bottom: 0.85rem; }
-    .pd-price-current { font-size: 1.45rem; }
-    .pd-card { padding: 1.125rem; border-radius: 16px; }
-    .pd-price-box { padding: 0.85rem 1rem; border-radius: 14px; margin-bottom: 0.85rem; }
+    .pd-price-current { font-size: 1.4rem; }
+    .pd-card { padding: 1.125rem; border-radius: 16px; width: 100%; box-sizing: border-box; }
+    .pd-price-box { padding: 0.85rem 1rem; border-radius: 14px; margin-bottom: 0.85rem; width: 100%; box-sizing: border-box; }
     .pd-specs-table td:first-child { width: 110px; font-size: 0.825rem; }
     .pd-specs-table td:last-child { font-size: 0.825rem; }
-    .pd-actions { gap: 0.625rem; width: 100%; }
-    .pd-btn { padding: 0.85rem 1rem; font-size: 0.875rem; border-radius: 12px; flex: 1; }
+    .pd-actions { gap: 0.625rem; width: 100%; display: flex; }
+    .pd-btn { padding: 0.85rem 1rem; font-size: 0.875rem; border-radius: 12px; flex: 1; text-align: center; }
     
     .pd-related-grid {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 0.75rem !important;
+        width: 100% !important;
     }
     .pd-related-card {
         padding: 0.85rem !important;
         border-radius: 14px !important;
+        box-sizing: border-box !important;
     }
     .pd-related-title {
         font-size: 0.875rem !important;

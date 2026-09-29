@@ -76,15 +76,28 @@ class Cart extends Model
     // =========================================================================
 
     /**
-     * Harga satuan item (mempertimbangkan varian).
+     * Harga satuan item (mempertimbangkan varian & kombinasi varian).
      */
     public function getUnitPriceAttribute(): float
     {
-        if ($this->variantValue) {
-            return $this->variantValue->finalPrice();
+        if ($this->variant_value_id) {
+            // Cek apakah ada kombinasi varian spesifik (ProductVariantCombination)
+            $combo = ProductVariantCombination::where('product_id', $this->product_id)
+                ->where(function ($q) {
+                    $q->where('option1_value_id', $this->variant_value_id)
+                      ->orWhere('option2_value_id', $this->variant_value_id);
+                })->first();
+
+            if ($combo && $combo->price > 0) {
+                return (float) $combo->price;
+            }
+
+            if ($this->variantValue) {
+                return $this->variantValue->finalPrice();
+            }
         }
 
-        return (float) ($this->product?->sale_price ?? $this->product?->price ?? 0);
+        return (float) (($this->product?->sale_price > 0 && $this->product?->sale_price < $this->product?->price) ? $this->product?->sale_price : ($this->product?->price ?? 0));
     }
 
     /**
