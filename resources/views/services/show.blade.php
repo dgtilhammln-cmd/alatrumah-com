@@ -489,36 +489,37 @@
                 @endif
             </div>
 
-            {{-- Vouchers --}}
+            {{-- Realtime Vouchers --}}
+            @if(isset($coupons) && $coupons->count() > 0)
             <div class="pd-voucher-scroll">
+                @foreach($coupons as $coupon)
                 <div class="pd-voucher-card">
-                    <div class="pd-v-icon">%</div>
+                    <div class="pd-v-icon">
+                        @if($coupon->category === 'ongkir')
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                        @elseif(is_object($coupon->type) && property_exists($coupon->type, 'value') && $coupon->type->value === 'percentage')
+                            %
+                        @elseif(is_string($coupon->type) && $coupon->type === 'percentage')
+                            %
+                        @else
+                            Rp
+                        @endif
+                    </div>
                     <div>
-                        <div class="pd-v-title">Diskon 50RB</div>
-                        <div class="pd-v-desc">Min. belanja 300RB</div>
+                        <div class="pd-v-title">{{ $coupon->badge ?: ( (is_object($coupon->type) && property_exists($coupon->type, 'value') && $coupon->type->value === 'percentage') || (is_string($coupon->type) && $coupon->type === 'percentage') ? 'Diskon ' . (int)$coupon->value . '%' : 'Diskon Rp' . number_format($coupon->value, 0, ',', '.')) }}</div>
+                        <div class="pd-v-desc">{{ $coupon->description ?: ($coupon->min_purchase > 0 ? 'Min. belanja Rp' . number_format($coupon->min_purchase,0,',','.') : 'Kode: ' . $coupon->code) }}</div>
                     </div>
                 </div>
-                <div class="pd-voucher-card">
-                    <div class="pd-v-icon">%</div>
-                    <div>
-                        <div class="pd-v-title">Diskon 10%</div>
-                        <div class="pd-v-desc">S/d 100RB</div>
-                    </div>
-                </div>
-                <div class="pd-voucher-card">
-                    <div class="pd-v-icon">Rp</div>
-                    <div>
-                        <div class="pd-v-title">Gratis Ongkir</div>
-                        <div class="pd-v-desc">S/d 20RB</div>
-                    </div>
-                </div>
+                @endforeach
             </div>
+            @endif
 
             <form action="{{ route('cart.add') }}" method="POST" id="form-add-to-cart">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $service->id }}">
-                <input type="hidden" name="selected_variant_id" id="selected_variant_id" value="">
+                <input type="hidden" name="variant_value_id" id="selected_variant_id" value="">
                 <input type="hidden" name="selected_combo_id" id="selected_combo_id" value="">
+                <input type="hidden" name="action" id="form_action_input" value="cart">
 
                 @php
                     $vGroups = $service->variantOptions()->with('values')->get();
@@ -526,12 +527,12 @@
                 @endphp
 
                 @if($vGroups->count() > 0)
-                <div class="pd-variants-box" style="margin: 1.25rem 0; padding: 1rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px;">
+                <div class="pd-variants-box" style="margin: 1.25rem 0; padding: 1rem; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; transition: all .3s;">
                     @foreach($vGroups as $gIdx => $vGroup)
                     <div style="margin-bottom: 0.85rem;" class="variant-group-selector" data-group-id="{{ $vGroup->id }}" data-group-index="{{ $gIdx }}">
                         <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main, #1E293B); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
                             <svg width="14" height="14" fill="none" stroke="var(--accent, #1B6FE8)" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3h-8l-2 4h12l-2-4z"/></svg>
-                            Pilih {{ $vGroup->name }}:
+                            Pilih {{ $vGroup->name }}: <span style="color:#EF4444;font-weight:700;">*</span>
                         </div>
                         <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
                             @foreach($vGroup->values as $vVal)
@@ -553,6 +554,7 @@
                 (function() {
                     const combos = @json($vCombos);
                     const basePrice = {{ $service->sale_price > 0 && $service->sale_price < $service->price ? $service->sale_price : $service->price }};
+                    const totalGroups = {{ $vGroups->count() }};
                     let selectedVals = {};
 
                     window.selectVariantChip = function(btn, groupIdx, valId) {
@@ -569,10 +571,22 @@
                         btn.style.color = 'var(--accent, #1B6FE8)';
                         btn.classList.add('active');
 
+                        parent.style.background = '';
+                        parent.style.padding = '';
+
                         selectedVals[groupIdx] = valId;
                         document.getElementById('selected_variant_id').value = valId;
 
-                        // Check combination or adjustment
+                        const alertBox = document.getElementById('variant-warning-alert');
+                        if (alertBox && Object.keys(selectedVals).filter(k => selectedVals[k]).length >= totalGroups) {
+                            alertBox.style.display = 'none';
+                            const vBox = document.querySelector('.pd-variants-box');
+                            if (vBox) {
+                                vBox.style.border = '1.5px solid #E2E8F0';
+                                vBox.style.background = '#F8FAFC';
+                            }
+                        }
+
                         updateVariantPriceAndStock(basePrice, combos, selectedVals);
                     };
 
@@ -599,7 +613,6 @@
                             }
                         }
 
-                        // Single adjustment calculation
                         let activeChip = document.querySelector('.variant-chip-btn.active');
                         if (activeChip) {
                             let adj = parseFloat(activeChip.getAttribute('data-price-adj') || 0);
@@ -613,10 +626,52 @@
                             }
                         }
                     }
+
+                    window.submitProductForm = function(actionType) {
+                        if (totalGroups > 0) {
+                            const selectedCount = Object.keys(selectedVals).filter(k => selectedVals[k]).length;
+                            if (selectedCount < totalGroups) {
+                                const variantBox = document.querySelector('.pd-variants-box');
+                                if (variantBox) {
+                                    variantBox.style.border = '2px solid #EF4444';
+                                    variantBox.style.background = '#FFF5F5';
+                                    variantBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }
+
+                                const selectors = document.querySelectorAll('.variant-group-selector');
+                                selectors.forEach((sel, idx) => {
+                                    if (!selectedVals[idx]) {
+                                        sel.style.background = '#FEE2E2';
+                                        sel.style.borderRadius = '8px';
+                                        sel.style.padding = '0.5rem';
+                                    } else {
+                                        sel.style.background = '';
+                                        sel.style.padding = '';
+                                    }
+                                });
+
+                                let alertBox = document.getElementById('variant-warning-alert');
+                                if (!alertBox && variantBox) {
+                                    alertBox = document.createElement('div');
+                                    alertBox.id = 'variant-warning-alert';
+                                    alertBox.style.cssText = 'background:#EF4444;color:#fff;padding:.6rem 1rem;border-radius:10px;font-size:.82rem;font-weight:700;margin-top:.75rem;display:flex;align-items:center;gap:.5rem;';
+                                    variantBox.appendChild(alertBox);
+                                }
+                                if (alertBox) {
+                                    alertBox.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Silakan pilih variasi produk terlebih dahulu!';
+                                    alertBox.style.display = 'flex';
+                                }
+                                return false;
+                            }
+                        }
+
+                        document.getElementById('form_action_input').value = actionType;
+                        document.getElementById('form-add-to-cart').submit();
+                    };
                 })();
                 </script>
                 @endif
-                
+
                 <div class="pd-qty-wrap">
                     <span style="font-size:0.875rem; font-weight:700; color:var(--text-main);">Kuantitas:</span>
                     <div class="pd-qty-ctrl">

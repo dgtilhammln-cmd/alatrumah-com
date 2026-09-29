@@ -6,6 +6,7 @@ use App\Models\Service;
 use App\Models\Setting;
 use App\Models\WaSetting;
 use App\Models\Testimonial;
+use App\Models\Coupon;
 
 class ServiceController extends Controller
 {
@@ -234,6 +235,8 @@ class ServiceController extends Controller
             ['name' => $service->name,     'url' => route('products.show', ['slug' => $slug])],
         ];
 
-        return view('services.show', compact('service', 'settings', 'related', 'wa', 'seo', 'schema', 'faq', 'breadcrumbs', 'testimonials'));
+        $coupons = Coupon::active()->latest()->take(3)->get();
+
+        return view('services.show', compact('service', 'settings', 'related', 'wa', 'seo', 'schema', 'faq', 'breadcrumbs', 'testimonials', 'coupons'));
     }
 }
