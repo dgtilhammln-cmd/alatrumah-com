@@ -353,6 +353,7 @@
 }
 
 @media (max-width: 1024px) {
+    .pd-breadcrumb { margin-top: 5rem; }
     .pd-layout { grid-template-columns: 1fr; gap: 1.25rem; }
     .pd-bottom-layout { grid-template-columns: 1fr; gap: 1.5rem; }
     .pd-related-grid { grid-template-columns: repeat(3, 1fr); }
@@ -360,42 +361,44 @@
 
 @media (max-width: 768px) {
     .pd-breadcrumb {
-        margin-top: 0;
+        margin-top: 4.75rem;
         padding: 0.5rem 1rem 0;
-        font-size: 0.725rem;
+        font-size: 0.775rem;
     }
-    .pd-layout { padding: 0.75rem 1rem 1.5rem; gap: 1rem; }
+    .pd-layout { padding: 0.75rem 1rem 1.5rem; gap: 1.25rem; }
     .pd-bottom-layout { padding: 0 1rem 2.5rem; }
     .pd-gallery-main {
-        max-width: 280px;
-        border-radius: 14px;
-        margin-bottom: 0.5rem;
+        max-width: 100%;
+        width: 100%;
+        aspect-ratio: 1/1;
+        border-radius: 16px;
+        margin-bottom: 0.75rem;
     }
-    .pd-thumbs { max-width: 280px; }
-    .pd-thumb-item { width: 44px; height: 44px; border-radius: 8px; }
-    .pd-title { font-size: 1.15rem; margin-bottom: 0.35rem; }
-    .pd-desc-short { font-size: 0.825rem; margin-bottom: 0.75rem; }
-    .pd-price-current { font-size: 1.35rem; }
-    .pd-card { padding: 1rem; border-radius: 14px; }
-    .pd-price-box { padding: 0.75rem 0.875rem; border-radius: 12px; margin-bottom: 0.75rem; }
-    .pd-specs-table td:first-child { width: 100px; font-size: 0.8rem; }
-    .pd-specs-table td:last-child { font-size: 0.8rem; }
-    .pd-actions { gap: 0.5rem; }
-    .pd-btn { padding: 0.75rem 0.875rem; font-size: 0.85rem; border-radius: 10px; }
+    .pd-thumbs { max-width: 100%; width: 100%; }
+    .pd-thumb-item { width: 50px; height: 50px; border-radius: 10px; }
+    .pd-title { font-size: 1.25rem; margin-bottom: 0.4rem; line-height: 1.3; }
+    .pd-desc-short { font-size: 0.85rem; margin-bottom: 0.85rem; }
+    .pd-price-current { font-size: 1.45rem; }
+    .pd-card { padding: 1.125rem; border-radius: 16px; }
+    .pd-price-box { padding: 0.85rem 1rem; border-radius: 14px; margin-bottom: 0.85rem; }
+    .pd-specs-table td:first-child { width: 110px; font-size: 0.825rem; }
+    .pd-specs-table td:last-child { font-size: 0.825rem; }
+    .pd-actions { gap: 0.625rem; width: 100%; }
+    .pd-btn { padding: 0.85rem 1rem; font-size: 0.875rem; border-radius: 12px; flex: 1; }
     
     .pd-related-grid {
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 0.625rem !important;
+        gap: 0.75rem !important;
     }
     .pd-related-card {
-        padding: 0.75rem !important;
-        border-radius: 12px !important;
+        padding: 0.85rem !important;
+        border-radius: 14px !important;
     }
     .pd-related-title {
-        font-size: 0.85rem !important;
+        font-size: 0.875rem !important;
     }
     .pd-related-desc {
-        font-size: 0.75rem !important;
+        font-size: 0.775rem !important;
     }
 }
 </style>
@@ -787,7 +790,8 @@
             {{-- ══ VARIANT BOTTOM SHEET MODAL (Shopee-style) ══ --}}
             @if($vGroups->count() > 0)
             <div id="variant-modal-overlay"
-                 style="display:none; pointer-events:none; position:fixed; inset:0; background:rgba(15,23,42,0.55); z-index:9990; align-items:flex-end; justify-content:center; opacity:0; transition:opacity .28s; -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);">
+                 onclick="if(event.target === this) closeVariantModal()"
+                 style="display:none; pointer-events:none; position:fixed; inset:0; background:rgba(15,23,42,0.55); z-index:9999; align-items:flex-end; justify-content:center; opacity:0; transition:opacity .28s; -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);">
                 <div id="variant-modal-sheet"
                      style="background:#fff; width:100%; max-width:520px; border-radius:24px 24px 0 0; padding:0; box-shadow:0 -8px 40px rgba(0,0,0,0.18); transform:translateY(100%); transition:transform .32s cubic-bezier(.32,1,.32,1); overflow:hidden;">
 
@@ -1005,30 +1009,6 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 <script>
-function submitProductForm(action) {
-    var form = document.getElementById('form-add-to-cart');
-    if (!form) return;
-    var input = document.getElementById('form-action-input');
-    if (!input) {
-        input = document.createElement('input');
-        input.type = 'hidden';
-        input.id = 'form-action-input';
-        input.name = 'action';
-        form.appendChild(input);
-    }
-    input.value = action;
-    form.submit();
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    if (window.GLightbox) {
-        GLightbox({
-            selector: '.glightbox',
-            touchNavigation: true,
-            loop: true,
-        });
-    }
-
     var thumbsEl = document.getElementById('pd-swiper-thumbs');
     if (thumbsEl && window.Swiper) {
         var swiperThumbs = new Swiper('#pd-swiper-thumbs', {
