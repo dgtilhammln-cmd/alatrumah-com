@@ -152,6 +152,67 @@
     </div>
   </div>
 
+  {{-- ═══ VARIAN PRODUK (SHOPEE-STYLE THEME BLUE) ═══ --}}
+  <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);" id="variants-section">
+
+    <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.25rem;">
+      <div style="width:32px;height:32px;background:rgba(27,111,232,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" fill="none" stroke="#1B6FE8" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3h-8l-2 4h12l-2-4z"/></svg>
+      </div>
+      <div>
+        <h3 style="font-size:.9rem;font-weight:800;color:#1E293B;margin:0;line-height:1.2;">Varian Produk <span style="font-size:.75rem;font-weight:500;color:#94A3B8;">(Opsional)</span></h3>
+        <p style="font-size:.72rem;color:#94A3B8;margin:.1rem 0 0;">Maks. 2 variasi. Setiap kombinasi punya harga & stok tersendiri.</p>
+      </div>
+    </div>
+
+    {{-- Variant Groups --}}
+    <div id="vg-list" style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:1rem;"></div>
+
+    {{-- Add variant group button (max 2) --}}
+    <button type="button" id="btn-add-vg" onclick="addVarGroup()"
+      style="display:inline-flex;align-items:center;gap:.35rem;background:#F8FAFC;color:#1B6FE8;border:1.5px dashed rgba(27,111,232,0.45);padding:.5rem 1.1rem;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;"
+      onmouseover="this.style.background='rgba(27,111,232,0.06)'" onmouseout="this.style.background='#F8FAFC'">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      + Tambah Variasi
+    </button>
+
+    {{-- Combination Matrix Table --}}
+    <div id="combo-section" style="display:none;margin-top:1.5rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem;">
+        <div style="font-size:.8rem;font-weight:800;color:#1E293B;letter-spacing:.03em;">DAFTAR VARIASI</div>
+        <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
+          <span style="font-size:.72rem;color:#64748B;">Terapkan ke semua:</span>
+          <input type="number" id="bulk-price" placeholder="Harga" min="0" step="1000"
+            style="width:110px;padding:.35rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.78rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+          <input type="number" id="bulk-stock" placeholder="Stok" min="0"
+            style="width:80px;padding:.35rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.78rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+          <button type="button" onclick="applyBulk()"
+            style="padding:.35rem .8rem;background:#1B6FE8;color:#fff;border:none;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">
+            Terapkan
+          </button>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;border-radius:12px;border:1.5px solid #E4E7F0;">
+        <table style="width:100%;border-collapse:collapse;font-size:.8rem;" id="combo-table">
+          <thead>
+            <tr style="background:#F8FAFC;">
+              <th id="th-v1" style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;"></th>
+              <th id="th-v2" style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;display:none;"></th>
+              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;">Harga (Rp) *</th>
+              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;">Stok *</th>
+              <th style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:100px;">Kode SKU</th>
+            </tr>
+          </thead>
+          <tbody id="combo-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
   {{-- Spesifikasi Produk --}}
   @php
     $specs    = old('spec_keys',    is_array($s->specifications) ? array_column($s->specifications, 'key')   : []);
@@ -354,86 +415,7 @@
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         Atau Pilih Banyak Foto Sekaligus
       </button>
-    </div>
-    <p style="font-size:.68rem;color:#94A3B8;margin:.5  {{-- ═══ VARIAN PRODUK (THEME BLUE) ═══ --}}
-  <div style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);" id="variants-section">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
-      <div style="display:flex;align-items:center;gap:.625rem;">
-        <div style="width:32px;height:32px;background:rgba(27,111,232,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-          <svg width="16" height="16" fill="none" stroke="#1B6FE8" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3h-8l-2 4h12l-2-4z"/></svg>
-        </div>
-        <h3 style="font-size:.875rem;font-weight:800;color:#1E293B;margin:0;">Varian Produk <span style="font-size:.75rem;font-weight:500;color:#94A3B8;">(Opsional)</span></h3>
-      </div>
-      <button type="button" onclick="addVariantGroup()" style="display:inline-flex;align-items:center;gap:.375rem;background:rgba(27,111,232,0.08);color:#1B6FE8;border:none;padding:.5rem 1rem;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(27,111,232,0.15)'" onmouseout="this.style.background='rgba(27,111,232,0.08)'">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Tambah Grup Varian
-      </button>
-    </div>
-
-    <div style="background:#F8FAFC;border:1.5px dashed #E2E8F0;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;font-size:.8rem;color:#64748B;line-height:1.6;display:flex;align-items:flex-start;gap:.6rem;">
-      <svg width="18" height="18" fill="none" stroke="#1B6FE8" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-      <div>
-        <strong>Panduan Varian:</strong> Contoh untuk produk alat rumah:<br>
-        • <strong>Ukuran/Tipe:</strong> nilai: CV-45, CV-60, 12 Inch, 14 Inch<br>
-        • <strong>Merek:</strong> nilai: Bosch, Makita, Hitachi<br>
-        • <strong>Kapasitas:</strong> nilai: 1L, 2L, 5L — bisa diatur selisih harga per nilai
-      </div>
-    </div>
-
-    {{-- Existing saved variants (pre-loaded) --}}
-    @php $existingVariants = $s->variantOptions()->with('values')->get(); @endphp
-    <div id="variant-groups-container">
-      @foreach($existingVariants as $vo)
-      @php $gid = 'saved_' . $vo->id; @endphp
-      <div class="variant-group" id="vg-{{ $gid }}" style="border:1.5px solid #CBD5E1;border-radius:14px;padding:1.25rem;margin-bottom:1rem;background:#F8FAFC;">
-        <input type="hidden" name="variant_options[{{ $gid }}][existing_id]" value="{{ $vo->id }}">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;">
-          <div style="flex:1;">
-            <label style="display:block;font-size:.75rem;font-weight:700;color:#475569;margin-bottom:.35rem;">Nama Grup Varian *</label>
-            <input type="text" name="variant_options[{{ $gid }}][name]" value="{{ $vo->name }}"
-              style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E2E8F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;"
-              onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E2E8F0'" required>
-          </div>
-          <button type="button" onclick="document.getElementById('vg-{{ $gid }}').remove(); checkVariantEmpty()" style="flex-shrink:0;margin-top:1.3rem;width:34px;height:34px;background:rgba(239,68,68,0.08);border:none;border-radius:8px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Hapus grup varian ini">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>
-
-        <div style="font-size:.75rem;font-weight:700;color:#1B6FE8;margin-bottom:.5rem;letter-spacing:.03em;">NILAI VARIAN</div>
-        <div class="variant-values-{{ $gid }}" style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.75rem;">
-          @foreach($vo->values as $vval)
-          <div class="variant-value-row" style="display:grid;grid-template-columns:1fr 160px 100px auto;gap:.5rem;align-items:center;">
-            <input type="hidden" name="variant_options[{{ $gid }}][values][existing_{{ $vval->id }}][existing_id]" value="{{ $vval->id }}">
-            <input type="text" name="variant_options[{{ $gid }}][values][existing_{{ $vval->id }}][value]" value="{{ $vval->value }}"
-              style="padding:.5rem .75rem;background:#fff;border:1.5px solid #E2E8F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
-              onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E2E8F0'" required>
-            <div style="position:relative;">
-              <span style="position:absolute;left:.6rem;top:50%;transform:translateY(-50%);font-size:.75rem;color:#94A3B8;font-weight:600;">Rp</span>
-              <input type="number" name="variant_options[{{ $gid }}][values][existing_{{ $vval->id }}][price_adjustment]" value="{{ $vval->price_adjustment }}" step="1000"
-                style="width:100%;padding:.5rem .5rem .5rem 2.1rem;background:#fff;border:1.5px solid #E2E8F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
-                onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E2E8F0'">
-            </div>
-            <input type="number" name="variant_options[{{ $gid }}][values][existing_{{ $vval->id }}][stock]" value="{{ $vval->stock }}" min="0"
-              style="width:100%;padding:.5rem .75rem;background:#fff;border:1.5px solid #E2E8F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
-              onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E2E8F0'">
-            <button type="button" onclick="this.closest('.variant-value-row').remove()" style="flex-shrink:0;width:30px;height:30px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-          </div>
-          @endforeach
-        </div>
-
-        <button type="button" onclick="addVariantValue('{{ $gid }}')" style="width:100%;padding:.5rem;background:rgba(27,111,232,0.06);color:#1B6FE8;border:1.5px dashed rgba(27,111,232,0.4);border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:all .2s;">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          + Tambah Nilai
-        </button>
-      </div>
-      @endforeach
-    </div>
-
-    <div id="variant-empty" style="text-align:center;padding:1.5rem;color:#94A3B8;font-size:.85rem;{{ $existingVariants->count() > 0 ? 'display:none;' : '' }}">
-      Belum ada varian. Klik <strong>Tambah Grup Varian</strong> untuk mulai.
-    </div>
+    <p style="font-size:.68rem;color:#94A3B8;margin:.5rem 0 0;text-align:center;">Foto baru yang ditambah 1 per 1 akan terakumulasi &amp; tersimpan saat simpan produk.</p>
   </div>
 
 </div>
@@ -734,80 +716,256 @@ function addFaq() {
     </div>`);
 }
 
-/* ─── Varian Produk ─────────────────────────────────── */
-var variantGroupCounter = 0;
+/* ─── Shopee-Style Varian Produk Engine (Theme Blue) ─────────────────── */
+let VGS = [];
+let nextGid = 1;
+let nextVid = 1;
 
-function addVariantGroup() {
-  const empty = document.getElementById('variant-empty');
-  if(empty) empty.style.display = 'none';
+window._savedCombos = {};
 
-  variantGroupCounter++;
-  const gid = variantGroupCounter;
-  const container = document.getElementById('variant-groups-container');
+function initEditVariants() {
+  const rawOptions = @json($s->variantOptions()->with('values')->get());
+  const rawCombos  = @json($s->variantCombinations);
 
-  const html = `
-  <div class="variant-group" id="vg-${gid}" style="border:1.5px solid #E4E7F0;border-radius:14px;padding:1.25rem;margin-bottom:1rem;background:#FAFBFF;">
-    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;">
-      <div style="flex:1;">
-        <label style="display:block;font-size:.75rem;font-weight:700;color:#475569;margin-bottom:.35rem;">Nama Grup Varian *</label>
-        <input type="text" name="variant_options[${gid}][name]" placeholder="Contoh: Ukuran, Merek, Kapasitas, Tipe"
-          style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;"
-          onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'" required>
-      </div>
-      <button type="button" onclick="document.getElementById('vg-${gid}').remove(); checkVariantEmpty()" style="flex-shrink:0;margin-top:1.3rem;width:34px;height:34px;background:rgba(239,68,68,0.08);border:none;border-radius:8px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Hapus grup varian ini">
-        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
+  if (rawCombos && rawCombos.length > 0) {
+    rawCombos.forEach(c => {
+      const key1 = `${c.option1_value_id}_${c.option2_value_id || 'x'}`;
+      window._savedCombos[key1] = { price: c.price, stock: c.stock, sku: c.sku || '', id: c.id };
+    });
+  }
 
-    <div style="font-size:.75rem;font-weight:700;color:#7C3AED;margin-bottom:.5rem;letter-spacing:.03em;">NILAI VARIAN</div>
-    <div class="variant-values-${gid}" style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.75rem;"></div>
+  if (rawOptions && rawOptions.length > 0) {
+    rawOptions.forEach(group => {
+      const gid = nextGid++;
+      const valList = [];
+      if (group.values) {
+        group.values.forEach(v => {
+          valList.push({ vid: v.id, label: v.value, existingId: v.id });
+          if (v.id >= nextVid) nextVid = v.id + 1;
+        });
+      }
+      VGS.push({ gid, name: group.name, values: valList, existingId: group.id });
+    });
+  }
 
-    <button type="button" onclick="addVariantValue(${gid})" style="width:100%;padding:.5rem;background:rgba(139,92,246,0.06);color:#7C3AED;border:1.5px dashed rgba(139,92,246,0.4);border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:all .2s;" onmouseover="this.style.background='rgba(139,92,246,0.12)'" onmouseout="this.style.background='rgba(139,92,246,0.06)'">
-      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      + Tambah Nilai
-    </button>
-  </div>`;
-
-  container.insertAdjacentHTML('beforeend', html);
-  addVariantValue(gid);
+  renderVGS();
 }
 
-var variantValueCounters = {};
-function addVariantValue(gid) {
-  variantValueCounters[gid] = (variantValueCounters[gid] || 0) + 1;
-  const vid = variantValueCounters[gid];
-  const container = document.querySelector('.variant-values-' + gid);
-
-  const html = `
-  <div class="variant-value-row" style="display:grid;grid-template-columns:1fr 160px 100px auto;gap:.5rem;align-items:center;">
-    <input type="text" name="variant_options[${gid}][values][${vid}][value]" placeholder="Nilai (contoh: CV-45, Bosch, 1 Liter)"
-      style="padding:.5rem .75rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
-      onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'" required>
-    <div style="position:relative;">
-      <span style="position:absolute;left:.6rem;top:50%;transform:translateY(-50%);font-size:.75rem;color:#94A3B8;font-weight:600;">Rp</span>
-      <input type="number" name="variant_options[${gid}][values][${vid}][price_adjustment]" placeholder="0" value="0" min="-999999999" step="1000"
-        style="width:100%;padding:.5rem .5rem .5rem 2.1rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
-        onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'"
-        title="Selisih harga dari harga dasar. Bisa negatif (diskon) atau positif (tambah).">
-    </div>
-    <input type="number" name="variant_options[${gid}][values][${vid}][stock]" placeholder="Stok" min="0"
-      style="width:100%;padding:.5rem .75rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
-      onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='#E4E7F0'"
-      title="Stok khusus varian ini. Kosongkan untuk pakai stok produk utama.">
-    <button type="button" onclick="this.closest('.variant-value-row').remove()" style="flex-shrink:0;width:30px;height:30px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>`;
-
-  container.insertAdjacentHTML('beforeend', html);
+function addVarGroup(initialName = '', existingId = null) {
+  if (VGS.length >= 2) return;
+  const gid = nextGid++;
+  VGS.push({ gid, name: initialName, values: [], existingId });
+  renderVGS();
 }
 
-function checkVariantEmpty() {
-  const container = document.getElementById('variant-groups-container');
-  const empty = document.getElementById('variant-empty');
-  if (container.querySelectorAll('.variant-group').length === 0) {
-    if(empty) empty.style.display = 'block';
+function removeVarGroup(gid) {
+  VGS = VGS.filter(g => g.gid !== gid);
+  renderVGS();
+}
+
+function onGroupNameChange(gid, val) {
+  const g = VGS.find(x => x.gid === gid);
+  if (g) g.name = val.trim();
+  renderMatrix();
+}
+
+function addTagValue(gid) {
+  const inp = document.getElementById(`tag-inp-${gid}`);
+  if (!inp) return;
+  const raw = inp.value.trim();
+  if (!raw) return;
+
+  const labels = raw.split(',').map(s => s.trim()).filter(Boolean);
+  const g = VGS.find(x => x.gid === gid);
+  if (!g) return;
+
+  labels.forEach(lbl => {
+    if (!g.values.some(v => v.label.toLowerCase() === lbl.toLowerCase())) {
+      g.values.push({ vid: nextVid++, label: lbl, existingId: null });
+    }
+  });
+
+  inp.value = '';
+  renderVGS();
+}
+
+function removeTagValue(gid, vid) {
+  const g = VGS.find(x => x.gid === gid);
+  if (g) {
+    g.values = g.values.filter(v => v.vid !== vid);
+    renderVGS();
   }
 }
+
+function renderVGS() {
+  const list = document.getElementById('vg-list');
+  const btnAdd = document.getElementById('btn-add-vg');
+  if (!list || !btnAdd) return;
+
+  btnAdd.style.display = VGS.length >= 2 ? 'none' : 'inline-flex';
+
+  if (VGS.length === 0) {
+    list.innerHTML = `<div style="font-size:.78rem;color:#94A3B8;padding:.5rem 0;">Belum ada variasi. Klik <strong>+ Tambah Variasi</strong> untuk membuat varian seperti Warna, Ukuran, dll.</div>`;
+    renderMatrix();
+    return;
+  }
+
+  const placeholders = [
+    ['Warna', 'Merah, Biru, Hijau (Tekan Enter atau klik + Tambah)'],
+    ['Ukuran', 'S, M, L, XL (Pisahkan dengan koma)']
+  ];
+
+  list.innerHTML = VGS.map((g, idx) => {
+    const ph = placeholders[idx] || ['Variasi', 'Nilai variasi...'];
+    return `
+      <div style="border:1.5px solid #E2E8F0;border-radius:14px;padding:1.1rem;background:#F8FAFC;">
+        ${renderVGContent(g, ph, idx + 1)}
+      </div>
+    `;
+  }).join('');
+
+  renderMatrix();
+}
+
+function renderVGContent(g, placeholders, groupNum) {
+  const groupLabel = `VARIASI ${groupNum}`;
+  const tagsHTML = g.values.map(v => `
+    <span style="display:inline-flex;align-items:center;gap:.35rem;background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;padding:.3rem .65rem;border-radius:20px;font-size:.78rem;font-weight:600;">
+      ${escHtml(v.label)}
+      <button type="button" onclick="removeTagValue(${g.gid}, ${v.vid})" style="background:none;border:none;color:#1D4ED8;cursor:pointer;padding:0;font-size:.85rem;line-height:1;font-weight:700;">×</button>
+    </span>
+  `).join('');
+
+  const hiddenInputs = g.values.map((v, i) => `
+    <input type="hidden" name="variant_options[g${g.gid}][values][v${v.vid}][value]" value="${escHtml(v.label)}">
+    ${v.existingId ? `<input type="hidden" name="variant_options[g${g.gid}][values][v${v.vid}][existing_id]" value="${v.existingId}">` : ''}
+  `).join('');
+
+  return `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;">
+      <span style="font-size:.72rem;font-weight:800;color:#1B6FE8;letter-spacing:.06em;text-transform:uppercase;">${groupLabel}</span>
+      <button type="button" onclick="removeVarGroup(${g.gid})"
+        style="width:26px;height:26px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div style="margin-bottom:.75rem;">
+      <label style="font-size:.72rem;font-weight:700;color:#64748B;display:block;margin-bottom:.35rem;">Nama Variasi *</label>
+      <input type="text" name="variant_options[g${g.gid}][name]"
+        ${g.existingId ? `data-existing="${g.existingId}"` : ''}
+        placeholder="${placeholders[0]}" value="${escHtml(g.name)}"
+        oninput="onGroupNameChange(${g.gid}, this.value)"
+        style="width:100%;padding:.5rem .75rem;border:1.5px solid #E4E7F0;border-radius:9px;font-size:.85rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;"
+        onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+    </div>
+    <div style="margin-bottom:.6rem;">
+      <label style="font-size:.72rem;font-weight:700;color:#64748B;display:block;margin-bottom:.35rem;">Opsi Nilai *</label>
+      <div style="display:flex;gap:.4rem;align-items:center;">
+        <input id="tag-inp-${g.gid}" type="text" placeholder="${placeholders[1]}"
+          style="flex:1;padding:.5rem .75rem;border:1.5px solid #E4E7F0;border-radius:9px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();addTagValue(${g.gid});}"
+          onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+        <button type="button" onclick="addTagValue(${g.gid})"
+          style="padding:.5rem .85rem;background:#1B6FE8;color:#fff;border:none;border-radius:9px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;">
+          + Tambah
+        </button>
+      </div>
+    </div>
+    <div id="tags-${g.gid}" style="display:flex;flex-wrap:wrap;gap:.35rem;min-height:20px;">
+      ${tagsHTML}
+    </div>
+    ${hiddenInputs}
+    ${g.existingId ? `<input type="hidden" name="variant_options[g${g.gid}][existing_id]" value="${g.existingId}">` : ''}
+  `;
+}
+
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderMatrix() {
+  const sec   = document.getElementById('combo-section');
+  const tbody = document.getElementById('combo-tbody');
+  const thV1  = document.getElementById('th-v1');
+  const thV2  = document.getElementById('th-v2');
+
+  if (!sec || !tbody) return;
+
+  const g1 = VGS[0];
+  const g2 = VGS[1] || null;
+
+  const hasData = g1 && g1.values.length > 0;
+  sec.style.display = hasData ? '' : 'none';
+  if (!hasData) return;
+
+  thV1.textContent = g1.name || 'Variasi 1';
+  if (g2 && g2.values.length > 0) {
+    thV2.style.display = '';
+    thV2.textContent = g2.name || 'Variasi 2';
+  } else {
+    thV2.style.display = 'none';
+  }
+
+  const v2list = (g2 && g2.values.length > 0) ? g2.values : [null];
+  let rowIndex = 0;
+  let html = '';
+
+  g1.values.forEach(v1 => {
+    v2list.forEach(v2 => {
+      const savedKey = `${v1.vid}_${v2 ? v2.vid : 'x'}`;
+      const saved = window._savedCombos && window._savedCombos[savedKey];
+      const price = saved ? saved.price : '';
+      const stock = saved ? saved.stock : '';
+      const sku   = saved ? saved.sku : '';
+      const combId = saved ? saved.id : '';
+
+      const isEven = rowIndex % 2 === 0;
+      html += `<tr style="background:${isEven ? '#fff' : '#FAFBFF'};" data-row="${rowIndex}">
+        <td style="padding:.55rem .75rem;color:#1E293B;font-weight:600;font-size:.8rem;white-space:nowrap;border-bottom:1px solid #F1F5F9;">
+          <span style="display:inline-block;background:#EFF6FF;color:#1D4ED8;padding:.2rem .55rem;border-radius:20px;font-size:.73rem;">${escHtml(v1.label)}</span>
+        </td>
+        ${v2 ? `<td style="padding:.55rem .75rem;color:#1E293B;font-weight:600;font-size:.8rem;white-space:nowrap;border-bottom:1px solid #F1F5F9;">
+          <span style="display:inline-block;background:#F0F9FF;color:#0369A1;padding:.2rem .55rem;border-radius:20px;font-size:.73rem;">${escHtml(v2.label)}</span>
+        </td>` : ''}
+        <td style="padding:.4rem .75rem;border-bottom:1px solid #F1F5F9;">
+          <input type="number" name="variant_options[combinations][${rowIndex}][price]"
+            value="${escHtml(price)}" placeholder="0" min="0" step="500"
+            style="width:100%;min-width:110px;padding:.4rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'" required>
+        </td>
+        <td style="padding:.4rem .75rem;border-bottom:1px solid #F1F5F9;">
+          <input type="number" name="variant_options[combinations][${rowIndex}][stock]"
+            value="${escHtml(stock)}" placeholder="0" min="0"
+            style="width:100%;min-width:75px;padding:.4rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'" required>
+        </td>
+        <td style="padding:.4rem .75rem;border-bottom:1px solid #F1F5F9;">
+          <input type="text" name="variant_options[combinations][${rowIndex}][sku]"
+            value="${escHtml(sku)}" placeholder="Opsional"
+            style="width:100%;min-width:90px;padding:.4rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+            onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+        </td>
+        <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_value_id]" value="${escHtml(v1.vid)}">
+        <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_label]" value="${escHtml(v1.label)}">
+        ${v2 ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][option2_value_id]" value="${escHtml(v2.vid)}">
+        <input type="hidden" name="variant_options[combinations][${rowIndex}][option2_label]" value="${escHtml(v2.label)}">` : ''}
+        ${combId ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][existing_combo_id]" value="${combId}">` : ''}
+      </tr>`;
+      rowIndex++;
+    });
+  });
+
+  tbody.innerHTML = html;
+}
+
+function applyBulk() {
+  const price = document.getElementById('bulk-price').value;
+  const stock = document.getElementById('bulk-stock').value;
+  const tbody = document.getElementById('combo-tbody');
+  if (price) tbody.querySelectorAll('input[name*="[price]"]').forEach(i => i.value = price);
+  if (stock) tbody.querySelectorAll('input[name*="[stock]"]').forEach(i => i.value = stock);
+}
+
+document.addEventListener('DOMContentLoaded', initEditVariants);
 </script>
 @endsection
