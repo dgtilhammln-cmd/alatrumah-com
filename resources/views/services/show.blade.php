@@ -696,6 +696,15 @@
                                 priceEl.textContent = 'Rp' + new Intl.NumberFormat('id-ID').format(matched.price);
                                 document.getElementById('selected_combo_id').value = matched.id;
                                 if (stockEl && matched.stock != null) stockEl.textContent = matched.stock;
+                                if (matched.image) {
+                                    var vImgUrl = '/storage/' + matched.image;
+                                    var activeSlideImg = document.querySelector('.pd-gallery-main .swiper-slide-active img') || document.querySelector('.pd-gallery-main img');
+                                    if (activeSlideImg) {
+                                        activeSlideImg.src = vImgUrl;
+                                        var parentLink = activeSlideImg.closest('a');
+                                        if (parentLink) parentLink.href = vImgUrl;
+                                    }
+                                }
                                 return;
                             }
                         }

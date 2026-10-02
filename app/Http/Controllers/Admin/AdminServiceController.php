@@ -527,7 +527,7 @@ class AdminServiceController extends Controller
 
         $submittedCombinationIds = [];
 
-        foreach ($combinations as $comboData) {
+        foreach ($combinations as $rowIndex => $comboData) {
             $opt1ValueId = (int) ($comboData['option1_value_id'] ?? 0);
             $opt2ValueId = !empty($comboData['option2_value_id']) ? (int) $comboData['option2_value_id'] : null;
             $price       = is_numeric($comboData['price'] ?? null) ? (float) $comboData['price'] : 0;
@@ -550,6 +550,23 @@ class AdminServiceController extends Controller
                 ->where('option2_value_id', $opt2ValueId)
                 ->first();
 
+            // Handle Variant Image Upload (WebP conversion)
+            $imagePath = $existing?->image ?? ($comboData['existing_image'] ?? null);
+            if (request()->hasFile("variant_options.combinations.{$rowIndex}.image")) {
+                $file = request()->file("variant_options.combinations.{$rowIndex}.image");
+                if ($file && $file->isValid()) {
+                    if ($existing?->image) {
+                        $this->deleteStorageFile($existing->image);
+                    }
+                    $imagePath = $this->storeWebP($file, 'services/variants', 800, 800);
+                }
+            } elseif (!empty($comboData['remove_image'])) {
+                if ($existing?->image) {
+                    $this->deleteStorageFile($existing->image);
+                }
+                $imagePath = null;
+            }
+
             if ($existing) {
                 $existing->update([
                     'price'     => $price,
@@ -557,6 +574,7 @@ class AdminServiceController extends Controller
                     'ship_days' => $shipDays,
                     'sku'       => $sku,
                     'gtin'      => $gtin,
+                    'image'     => $imagePath,
                     'is_active' => true,
                 ]);
                 $submittedCombinationIds[] = $existing->id;
@@ -570,15 +588,22 @@ class AdminServiceController extends Controller
                     'ship_days'        => $shipDays,
                     'sku'              => $sku,
                     'gtin'             => $gtin,
+                    'image'            => $imagePath,
                     'is_active'        => true,
                 ]);
                 $submittedCombinationIds[] = $combo->id;
             }
         }
 
-        // Hapus kombinasi yang sudah tidak ada
+        // Hapus kombinasi yang sudah tidak ada beserta gambarnya
         $service->variantCombinations()
             ->whereNotIn('id', $submittedCombinationIds)
-            ->delete();
+            ->get()
+            ->each(function ($combo) {
+                if (!empty($combo->image)) {
+                    $this->deleteStorageFile($combo->image);
+                }
+                $combo->delete();
+            });
     }
 }

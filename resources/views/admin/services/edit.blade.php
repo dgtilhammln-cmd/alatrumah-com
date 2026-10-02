@@ -326,6 +326,9 @@
                     <th
                       style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:100px;">
                       GTIN</th>
+                    <th
+                      style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:140px;">
+                      Foto Variasi</th>
                   </tr>
                 </thead>
                 <tbody id="combo-tbody"></tbody>
@@ -975,7 +978,7 @@
       if (rawCombos && rawCombos.length > 0) {
         rawCombos.forEach(c => {
           const key1 = `${c.option1_value_id}_${c.option2_value_id || 'x'}`;
-          window._savedCombos[key1] = { price: c.price, stock: c.stock, ship: c.ship_days || 2, sku: c.sku || '', gtin: c.gtin || '', id: c.id };
+          window._savedCombos[key1] = { price: c.price, stock: c.stock, ship: c.ship_days || 2, sku: c.sku || '', gtin: c.gtin || '', image: c.image || '', id: c.id };
         });
       }
 
@@ -1162,6 +1165,7 @@
           const ship = saved ? (saved.ship || 2) : 2;
           const sku = saved ? (saved.sku || '') : '';
           const gtin = saved ? (saved.gtin || '') : '';
+          const img = saved ? (saved.image || '') : '';
           const combId = saved ? saved.id : '';
           const isEven = rowIndex % 2 === 0;
 
@@ -1204,6 +1208,17 @@
                 value="${escHtml(gtin)}" placeholder="GTIN (opsional)"
                 style="width:100%;min-width:95px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
                 onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+            </td>
+            <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+              <div style="display:flex;align-items:center;gap:.4rem;">
+                ${img ? `
+                  <div style="position:relative;width:34px;height:34px;border-radius:6px;overflow:hidden;border:1px solid #CBD5E1;flex-shrink:0;">
+                    <img src="/storage/${img}" style="width:100%;height:100%;object-fit:cover;">
+                  </div>
+                  <input type="hidden" name="variant_options[combinations][${rowIndex}][existing_image]" value="${escHtml(img)}">
+                ` : ''}
+                <input type="file" name="variant_options[combinations][${rowIndex}][image]" accept="image/*" style="font-size:.7rem;width:130px;">
+              </div>
             </td>
             <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_value_id]" value="${escHtml(v1.vid)}">
             <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_label]" value="${escHtml(v1.label)}">

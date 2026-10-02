@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', isset($service) ? 'Edit Layanan' : 'Tambah Layanan')
 @section('page-title', isset($service) ? 'Edit Layanan' : 'Tambah Layanan')
 @section('content')
@@ -315,6 +315,9 @@
                     <th
                       style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:110px;">
                       GTIN</th>
+                    <th
+                      style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:140px;">
+                      Foto Variasi</th>
                   </tr>
                 </thead>
                 <tbody id="combo-tbody"></tbody>
@@ -659,20 +662,92 @@
     /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        GALLERY HELPERS
     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-    function addGalleryFileSlot(single) {
-      const c = document.getElementById('new-gallery-slots');
-      const input = document.createElement('input');
-      input.type = 'file'; input.name = 'gallery_images[]'; input.accept = 'image/*';
-      if (!single) input.multiple = true;
-      input.style.cssText = 'display:block;width:100%;font-size:.78rem;color:#475569;margin-bottom:.35rem;';
-      const wrap = document.createElement('div');
-      wrap.style.cssText = 'display:flex;align-items:center;gap:.5rem;';
-      const btn = document.createElement('button');
-      btn.type = 'button'; btn.textContent = 'Ã—';
-      btn.style.cssText = 'background:rgba(239,68,68,0.1);border:none;border-radius:6px;color:#EF4444;width:24px;height:24px;cursor:pointer;font-size:1rem;line-height:1;flex-shrink:0;';
-      btn.onclick = function () { wrap.remove(); };
-      wrap.appendChild(input); wrap.appendChild(btn);
-      c.appendChild(wrap);
+    var galleryFileCounter = 0;
+
+    function addGalleryFileSlot(isSingle) {
+      var container = document.getElementById('gallery-file-inputs');
+      galleryFileCounter++;
+      var inputId = 'g-file-input-' + galleryFileCounter;
+
+      var newInput = document.createElement('input');
+      newInput.type = 'file';
+      newInput.name = 'gallery_images[]';
+      newInput.id = inputId;
+      newInput.accept = 'image/*';
+      if (!isSingle) {
+        newInput.multiple = true;
+      }
+      newInput.style.display = 'none';
+
+      newInput.onchange = function () {
+        if (!this.files || this.files.length === 0) {
+          newInput.remove();
+          return;
+        }
+        renderGalleryPreviews();
+      };
+
+      container.appendChild(newInput);
+      newInput.click();
+    }
+
+    function renderGalleryPreviews() {
+      var previewsContainer = document.getElementById('gallery-new-previews');
+      previewsContainer.innerHTML = '';
+
+      var inputsContainer = document.getElementById('gallery-file-inputs');
+      var inputs = inputsContainer.querySelectorAll('input[type="file"]');
+      var totalFiles = 0;
+
+      inputs.forEach(function (input) {
+        if (input.files && input.files.length > 0) {
+          Array.from(input.files).forEach(function (file, fileIdx) {
+            totalFiles++;
+            var url = URL.createObjectURL(file);
+            var div = document.createElement('div');
+            div.style.cssText = 'position:relative;border-radius:10px;overflow:hidden;border:1.5px solid #3B82F6;aspect-ratio:1/1;background:#F8FAFC;box-shadow:0 2px 8px rgba(0,0,0,0.06);';
+            div.innerHTML = '<img src="' + url + '" style="width:100%;height:100%;object-fit:cover;display:block;">'
+              + '<button type="button" onclick="removeSingleGalleryFile(\'' + input.id + '\', ' + fileIdx + ')" title="Hapus foto ini" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(239,68,68,0.95);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.3);padding:0;">'
+              + '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+              + '</button>'
+              + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(15,23,42,0.75);padding:.2rem .3rem;font-size:.65rem;color:#fff;font-weight:700;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Foto #' + totalFiles + '</div>';
+            previewsContainer.appendChild(div);
+          });
+        }
+      });
+
+      var counterBadge = document.getElementById('gallery-count-badge');
+      if (counterBadge) {
+        if (totalFiles > 0) {
+          counterBadge.style.display = 'inline-block';
+          counterBadge.innerText = totalFiles + ' foto baru siap';
+        } else {
+          counterBadge.style.display = 'none';
+        }
+      }
+    }
+
+    function removeSingleGalleryFile(inputId, fileIndex) {
+      var input = document.getElementById(inputId);
+      if (!input) return;
+
+      if (input.files.length === 1) {
+        input.remove();
+      } else {
+        try {
+          var dt = new DataTransfer();
+          Array.from(input.files).forEach(function (file, idx) {
+            if (idx !== fileIndex) dt.items.add(file);
+          });
+          input.files = dt.files;
+        } catch (e) {
+          input.remove();
+        }
+        if (input.files.length === 0) {
+          input.remove();
+        }
+      }
+      renderGalleryPreviews();
     }
 
     /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -897,6 +972,11 @@
               value="${escHtml(gtin)}" placeholder="GTIN (opsional)"
               style="width:100%;min-width:100px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
               onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+          </td>
+          <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+            <div style="display:flex;align-items:center;gap:.4rem;">
+              <input type="file" name="variant_options[combinations][${rowIndex}][image]" accept="image/*" style="font-size:.7rem;width:130px;">
+            </div>
           </td>
           <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_value_id]" value="${escHtml(v1.vid)}">
           <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_label]" value="${escHtml(v1.label)}">
