@@ -148,8 +148,8 @@
             <div>
               <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Harga Utama
                 (Rp)</label>
-              <input type="number" name="price" value="{{ old('price', $s?->price) }}" min="0"
-                placeholder="Contoh: 1500000"
+              <input type="text" inputmode="numeric" class="format-rupiah" name="price" value="{{ old('price', isset($s) && $s->price > 0 ? number_format((float)$s->price, 0, '', '.') : '') }}"
+                placeholder="Contoh: 1.500.000"
                 style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;"
                 onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
               <p style="font-size:.7rem;color:#94A3B8;margin-top:.25rem;">Kosongkan/0 jika variasi punya harga berbeda
@@ -158,8 +158,8 @@
             <div>
               <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Harga Diskon
                 (Rp)</label>
-              <input type="number" name="sale_price" value="{{ old('sale_price', $s?->sale_price) }}" min="0"
-                placeholder="Contoh: 1250000 (Opsional)"
+              <input type="text" inputmode="numeric" class="format-rupiah" name="sale_price" value="{{ old('sale_price', isset($s) && $s->sale_price > 0 ? number_format((float)$s->sale_price, 0, '', '.') : '') }}"
+                placeholder="Contoh: 1.250.000 (Opsional)"
                 style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;"
                 onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
             </div>
@@ -263,7 +263,7 @@
                 style="display:flex;align-items:center;background:#fff;border:1.5px solid #CBD5E1;border-radius:8px;overflow:hidden;width:130px;">
                 <span
                   style="font-size:.72rem;color:#64748B;padding:0 .45rem;background:#F1F5F9;height:34px;display:flex;align-items:center;border-right:1px solid #CBD5E1;font-weight:600;">Rp</span>
-                <input type="number" id="bulk-price" placeholder="Harga" min="0" step="1000"
+                <input type="text" class="format-rupiah" inputmode="numeric" id="bulk-price" placeholder="Harga (Rp)"
                   style="width:100%;border:none;padding:0 .45rem;font-size:.78rem;outline:none;height:34px;">
               </div>
               <input type="number" id="bulk-stock" placeholder="Stok" min="0"
@@ -926,6 +926,7 @@
           const savedKey = `${v1.vid}_${v2 ? v2.vid : 'x'}`;
           const saved = window._savedCombos && window._savedCombos[savedKey];
           const price = saved ? saved.price : '';
+          const displayPrice = price !== '' ? formatRupiahStr(price) : '';
           const stock = saved ? saved.stock : '';
           const ship = saved ? (saved.ship || 2) : 2;
           const sku = saved ? (saved.sku || '') : '';
@@ -941,8 +942,8 @@
             <span style="display:inline-block;background:#F0F9FF;color:#0369A1;padding:.2rem .55rem;border-radius:20px;font-size:.73rem;font-weight:600;">${escHtml(v2.label)}</span>
           </td>` : ''}
           <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
-            <input type="number" name="variant_options[combinations][${rowIndex}][price]"
-              value="${escHtml(price)}" placeholder="0" min="0" step="500"
+            <input type="text" class="format-rupiah" inputmode="numeric" name="variant_options[combinations][${rowIndex}][price]"
+              value="${escHtml(displayPrice)}" placeholder="0"
               style="width:100%;min-width:100px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
               onfocus="this.style.borderColor='#1B6FE8'" onblur="validateRequired(this)" required>
           </td>

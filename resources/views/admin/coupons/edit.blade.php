@@ -98,14 +98,14 @@
 
         <div>
           <label id="value-label" style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Nilai Diskon <span style="color:#EF4444;">*</span></label>
-          <input type="number" step="0.01" name="value" value="{{ old('value', (float)$coupon->value) }}" required
+          <input type="text" id="discount-value-input" name="value" value="{{ old('value', (float)$coupon->value) }}" required
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
             onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
         </div>
 
         <div>
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Minimal Pembelian (Rp) <span style="color:#EF4444;">*</span></label>
-          <input type="number" name="min_purchase" value="{{ old('min_purchase', (float)$coupon->min_purchase) }}" required
+          <input type="text" class="format-rupiah" inputmode="numeric" name="min_purchase" value="{{ old('min_purchase', $coupon->min_purchase > 0 ? number_format((int)$coupon->min_purchase, 0, '', '.') : '0') }}" required
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
             onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
           <div style="font-size:0.7rem;color:#94A3B8;margin-top:4px;">Isi 0 jika tanpa batas minimal.</div>
@@ -113,7 +113,7 @@
 
         <div>
           <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Maksimal Potongan Harga (Rp)</label>
-          <input type="number" name="max_discount" value="{{ old('max_discount', (float)$coupon->max_discount) }}"
+          <input type="text" class="format-rupiah" inputmode="numeric" name="max_discount" value="{{ old('max_discount', $coupon->max_discount > 0 ? number_format((int)$coupon->max_discount, 0, '', '.') : '') }}"
             style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;box-sizing:border-box;transition:border-color .2s;"
             onfocus="this.style.borderColor='#3B82F6';this.style.background='#fff'" onblur="this.style.borderColor='#E4E7F0';this.style.background='#F8FAFC'">
           <div style="font-size:0.7rem;color:#94A3B8;margin-top:4px;">Batas nilai potongan tertinggi jika pakai persentase.</div>
@@ -191,12 +191,23 @@
 document.addEventListener('DOMContentLoaded', function() {
     const typeSel = document.getElementById('discount-type');
     const valLbl = document.getElementById('value-label');
+    const valInp = document.getElementById('discount-value-input');
     
     function updateLabel() {
         if (typeSel.value === 'percentage') {
             valLbl.innerHTML = 'Nilai Diskon (%) <span style="color:#EF4444;">*</span>';
+            valInp.classList.remove('format-rupiah');
+            valInp.removeAttribute('inputmode');
+            valInp.placeholder = 'Contoh: 20 (untuk 20%)';
         } else {
             valLbl.innerHTML = 'Nominal Potongan (Rp) <span style="color:#EF4444;">*</span>';
+            valInp.classList.add('format-rupiah');
+            valInp.setAttribute('inputmode', 'numeric');
+            valInp.placeholder = 'Contoh: 50.000';
+            // Format existing value if it looks like a raw number
+            if (valInp.value && !valInp.value.includes('.')) {
+                valInp.value = formatRupiahStr(valInp.value);
+            }
         }
     }
     

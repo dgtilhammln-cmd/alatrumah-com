@@ -767,5 +767,51 @@ function handleLogoutClick() {
 }
 </script>
 
+<script>
+/* ─── GLOBAL RUPIAH / NOMINAL FORMATTER ENGINE ─── */
+function formatRupiahStr(val) {
+    if (val === null || val === undefined) return '';
+    var str = String(val).replace(/[^0-9]/g, '');
+    if (!str) return '';
+    return str.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+function unformatRupiahStr(val) {
+    if (val === null || val === undefined) return '';
+    return String(val).replace(/\./g, '');
+}
+
+// Live typing listener for all .format-rupiah inputs across admin panel
+document.addEventListener('input', function(e) {
+    if (e.target && e.target.classList.contains('format-rupiah')) {
+        var el = e.target;
+        var cursor = el.selectionStart;
+        var oldLen = el.value.length;
+        var formatted = formatRupiahStr(el.value);
+        el.value = formatted;
+        var newLen = formatted.length;
+        cursor += (newLen - oldLen);
+        try { el.setSelectionRange(cursor, cursor); } catch(err) {}
+    }
+});
+
+// Format all .format-rupiah inputs on page load
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.format-rupiah').forEach(function(inp) {
+        if (inp.value) {
+            inp.value = formatRupiahStr(inp.value);
+        }
+    });
+});
+
+// Strip dots automatically right before any form submission so backend receives raw numeric values
+document.addEventListener('submit', function(e) {
+    var form = e.target;
+    form.querySelectorAll('.format-rupiah').forEach(function(inp) {
+        inp.value = unformatRupiahStr(inp.value);
+    });
+}, true);
+</script>
+
 </body>
 </html>

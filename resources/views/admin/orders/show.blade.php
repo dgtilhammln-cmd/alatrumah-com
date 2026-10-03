@@ -228,7 +228,7 @@
                     @csrf
                     <div class="od-form-group">
                         <label class="od-label">Nominal Ongkos Kirim (Rp)</label>
-                        <input type="number" name="shipping_cost" class="od-input" placeholder="Contoh: 15000" value="{{ $order->shipping_cost > 0 ? $order->shipping_cost : '' }}" required min="0">
+                        <input type="text" class="od-input format-rupiah" inputmode="numeric" name="shipping_cost" placeholder="Contoh: 15.000" value="{{ $order->shipping_cost > 0 ? number_format((int)$order->shipping_cost, 0, '', '.') : '' }}" required>
                     </div>
                     <button type="submit" class="od-btn" style="background:#0EA5E9;box-shadow:0 4px 12px rgba(14,165,233,0.2);">Simpan Ongkir Baru</button>
                 </form>
