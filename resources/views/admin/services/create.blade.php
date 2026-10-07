@@ -637,26 +637,27 @@
       const n = document.getElementById('name_input'), s = document.getElementById('slug_input');
       if (s && !s.dataset.manual && n) s.value = generateSlug(n.value);
     }
-    function addSpecRow() {
-      const c = document.getElementById('specs-container');
-      const d = document.createElement('div');
-      d.className = 'spec-row'; d.style.cssText = 'display:grid;grid-template-columns:1fr 2fr auto;gap:.5rem;align-items:center;';
-      d.innerHTML = `<input type="text" name="spec_keys[]" placeholder="Spesifikasi" style="padding:.5rem .75rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
-    <input type="text" name="spec_values[]" placeholder="Nilai" style="padding:.5rem .75rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
-    <button type="button" onclick="this.closest('.spec-row').remove()" style="width:30px;height:30px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>`;
-      c.appendChild(d);
+    function addSpec() {
+      const empty = document.getElementById('specs-empty');
+      if (empty) empty.remove();
+      document.getElementById('specs-container').insertAdjacentHTML('beforeend', `
+        <div class="spec-row" style="display:flex;gap:.625rem;align-items:center;">
+          <input type="text" name="spec_keys[]" placeholder="Label (misal: Dimensi)" style="flex:1;padding:.625rem .875rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+          <input type="text" name="spec_values[]" placeholder="Nilai (misal: 24 inch)" style="flex:2;padding:.625rem .875rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+          <button type="button" onclick="this.parentElement.remove()" style="flex-shrink:0;width:32px;height:32px;background:rgba(239,68,68,0.08);border:none;border-radius:8px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='rgba(239,68,68,0.16)'" onmouseout="this.style.background='rgba(239,68,68,0.08)'">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>`);
     }
-    function addFaqRow() {
-      const c = document.getElementById('faqs-container');
-      c.insertAdjacentHTML('beforeend', `<div style="background:#F8FAFC;border-radius:10px;padding:.875rem;border:1px solid #E4E7F0;position:relative;">
-      <button type="button" onclick="this.closest('div').remove()" style="position:absolute;top:.5rem;right:.5rem;width:26px;height:26px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-      <div style="margin-bottom:.5rem;"><input type="text" name="faq_qs[]" placeholder="Pertanyaan?" style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;padding-right:2.5rem;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'"></div>
-      <textarea name="faq_as[]" rows="2" placeholder="Jawaban lengkap..." style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'"></textarea>
-    </div>`);
+    function addFaq() {
+      document.getElementById('faq-container').insertAdjacentHTML('beforeend', `
+        <div class="faq-row" style="display:flex;flex-direction:column;gap:.5rem;padding:1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:12px;position:relative;">
+          <button type="button" onclick="this.parentElement.remove()" style="position:absolute;top:.625rem;right:.625rem;width:24px;height:24px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='rgba(239,68,68,0.16)'" onmouseout="this.style.background='rgba(239,68,68,0.08)'">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <input type="text" name="faq_qs[]" placeholder="Pertanyaan?" style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;padding-right:2.5rem;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+          <textarea name="faq_as[]" rows="2" placeholder="Jawaban lengkap..." style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'"></textarea>
+        </div>`);
     }
 
     /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
