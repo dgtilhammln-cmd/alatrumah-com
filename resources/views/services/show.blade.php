@@ -1047,7 +1047,10 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    var mainSwiper = null;
     var thumbsEl = document.getElementById('pd-swiper-thumbs');
+    
     if (thumbsEl && window.Swiper) {
         var swiperThumbs = new Swiper('#pd-swiper-thumbs', {
             spaceBetween: 8,
@@ -1055,17 +1058,40 @@
             freeMode: true,
             watchSlidesProgress: true,
         });
-        new Swiper('#pd-swiper-main', {
+        mainSwiper = new Swiper('#pd-swiper-main', {
             spaceBetween: 0,
             navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
+                nextEl: '#pd-swiper-main .swiper-button-next',
+                prevEl: '#pd-swiper-main .swiper-button-prev',
             },
             thumbs: { swiper: swiperThumbs },
         });
     } else if (window.Swiper) {
         var mainEl = document.getElementById('pd-swiper-main');
-        if (mainEl) new Swiper('#pd-swiper-main', { spaceBetween: 0 });
+        if (mainEl) {
+            mainSwiper = new Swiper('#pd-swiper-main', {
+                spaceBetween: 0,
+                navigation: {
+                    nextEl: '#pd-swiper-main .swiper-button-next',
+                    prevEl: '#pd-swiper-main .swiper-button-prev',
+                },
+            });
+        }
+    }
+
+    var thumbItems = document.querySelectorAll('.pd-thumb-item');
+    thumbItems.forEach(function(item, idx) {
+        item.addEventListener('click', function() {
+            if (mainSwiper) {
+                mainSwiper.slideTo(idx);
+            }
+            thumbItems.forEach(function(t) { t.classList.remove('swiper-slide-thumb-active'); });
+            item.classList.add('swiper-slide-thumb-active');
+        });
+    });
+
+    if (window.GLightbox) {
+        GLightbox({ selector: '.glightbox' });
     }
 });
 </script>
