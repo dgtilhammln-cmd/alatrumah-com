@@ -34,13 +34,18 @@
 .pd-breadcrumb span { color: var(--text-main); font-weight: 600; }
 
 .pd-layout {
-    max-width: 1200px;
+    max-width: 1160px;
     margin: 0 auto;
     padding: 1rem 1.5rem 2.5rem;
     display: grid;
-    grid-template-columns: 400px 1fr;
-    gap: 2rem;
+    grid-template-columns: 420px 1fr;
+    gap: 2.25rem;
     align-items: start;
+}
+
+.pd-info-col {
+    max-width: 580px;
+    width: 100%;
 }
 
 .pd-card {
@@ -61,7 +66,7 @@
 /* ── GALLERY (COMPACT & PROPORTIONAL) ── */
 .pd-gallery-main {
     width: 100%;
-    max-width: 400px;
+    max-width: 420px;
     aspect-ratio: 1/1;
     border-radius: 16px;
     overflow: hidden;
@@ -98,7 +103,7 @@
 .pd-gallery-main .swiper-button-prev::after { font-size: 12px; font-weight: 800; }
 
 .pd-thumbs {
-    display: flex; gap: 0.5rem; width: 100%; max-width: 400px; margin: 0 auto; overflow: hidden;
+    display: flex; gap: 0.5rem; width: 100%; max-width: 420px; margin: 0 auto; overflow: hidden;
 }
 .pd-thumb-item {
     width: 54px; height: 54px;
@@ -114,10 +119,10 @@
     width: 100%; height: 100%; object-fit: cover; display: block;
 }
 
-/* ── INFO ── */
+/* ── INFO COMPACT ── */
 .pd-title {
-    font-size: 1.4rem;
-    font-weight: 600;
+    font-size: 1.35rem;
+    font-weight: 700;
     color: var(--text-main);
     line-height: 1.35;
     margin-bottom: 0.5rem;
@@ -125,10 +130,11 @@
     font-family: 'Montserrat', sans-serif;
 }
 .pd-desc-short {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     color: var(--text-muted);
     line-height: 1.5;
     margin-bottom: 1rem;
+    max-width: 560px;
 }
 
 /* Rating / Stats */
@@ -139,14 +145,15 @@
 .pd-stars { color: #F59E0B; display: flex; align-items: center; gap: 4px; font-weight: 700; }
 .pd-stat-divider { width: 1px; height: 14px; background: var(--border-1); }
 
-/* Price Box */
+/* Price Box (Compact) */
 .pd-price-box {
     background: linear-gradient(135deg, #F0F9FF, #ffffff);
     border: 1px solid rgba(14,165,233,0.18);
-    border-radius: 14px;
-    padding: 1rem 1.125rem;
+    border-radius: 12px;
+    padding: 0.85rem 1.125rem;
     margin-bottom: 1rem;
     display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    max-width: 560px;
 }
 .pd-price-current {
     font-size: 1.5rem; font-weight: 700; color: var(--accent-dark); line-height: 1;
@@ -168,6 +175,7 @@
     padding-bottom: 0.35rem;
     margin-bottom: 1rem;
     scrollbar-width: none;
+    max-width: 560px;
 }
 .pd-voucher-scroll::-webkit-scrollbar { display: none; }
 .pd-voucher-card {
@@ -201,10 +209,13 @@
     font-size: 0.675rem; color: var(--text-muted);
 }
 
-/* Options / QTY */
+/* Options / QTY (Compact) */
 .pd-qty-wrap {
-    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;
-    background: var(--bg-surface); padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--border-1);
+    display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1.25rem;
+    padding: 0.25rem 0;
+    max-width: 560px;
+    background: transparent;
+    border: none;
     flex-wrap: wrap;
 }
 .pd-qty-ctrl {
@@ -214,26 +225,29 @@
     background: var(--bg-base);
 }
 .pd-qty-btn {
-    width: 34px; height: 34px;
+    width: 32px; height: 32px;
     border: none; background: transparent; cursor: pointer;
-    font-size: 1.1rem; color: var(--text-muted);
+    font-size: 1rem; color: var(--text-muted);
     display: flex; align-items: center; justify-content: center;
     transition: 0.2s;
 }
 .pd-qty-btn:hover { background: #F1F5F9; color: var(--text-main); }
 .pd-qty-input {
-    width: 42px; height: 34px; border: none; text-align: center;
-    font-size: 0.95rem; font-weight: 700; color: var(--text-main);
+    width: 40px; height: 32px; border: none; text-align: center;
+    font-size: 0.9rem; font-weight: 700; color: var(--text-main);
     border-left: 1px solid var(--border-1); border-right: 1px solid var(--border-1);
 }
 
-/* Action Buttons */
+/* Action Buttons (Compact & Proportional) */
 .pd-actions {
     display: flex; gap: 0.75rem;
+    max-width: 440px;
+    width: 100%;
 }
 .pd-btn {
     flex: 1;
-    padding: 0.85rem 1rem; border-radius: 12px; font-weight: 700; font-size: 0.9rem;
+    max-width: 215px;
+    padding: 0.75rem 1rem; border-radius: 12px; font-weight: 700; font-size: 0.875rem;
     cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem;
     transition: all 0.2s ease; text-decoration: none; border: none;
     font-family: 'Montserrat', sans-serif;
@@ -447,10 +461,26 @@
     <div>
         @php
             $imgs = [];
-            if ($service->image) $imgs[] = asset('storage/'.$service->image);
-            else $imgs[] = asset('images/service-default.jpg');
-            if (is_array($service->gallery)) {
-                foreach ($service->gallery as $g) $imgs[] = asset('storage/'.$g);
+            if ($service->image) {
+                $imgs[] = str_starts_with($service->image, 'http') ? $service->image : asset('storage/'.$service->image);
+            } else {
+                $imgs[] = asset('images/service-default.jpg');
+            }
+            
+            $rawG = $service->gallery;
+            if (is_string($rawG)) {
+                $dec = json_decode($rawG, true);
+                if (is_array($dec)) $rawG = $dec;
+            }
+            if (is_array($rawG)) {
+                foreach ($rawG as $g) {
+                    if ($g && is_string($g)) {
+                        $url = str_starts_with($g, 'http') ? $g : asset('storage/'.$g);
+                        if (!in_array($url, $imgs)) {
+                            $imgs[] = $url;
+                        }
+                    }
+                }
             }
         @endphp
 
@@ -484,7 +514,7 @@
     </div>
 
     {{-- Right: Product Info --}}
-    <div>
+    <div class="pd-info-col">
         <h1 class="pd-title">{{ $service->name }}</h1>
         
         @if($service->rating > 0 || $service->sold_count > 0)
