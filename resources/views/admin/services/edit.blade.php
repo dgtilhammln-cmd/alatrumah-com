@@ -1002,7 +1002,13 @@
     function addVarGroup(initialName = '', existingId = null) {
       if (VGS.length >= 2) return;
       const gid = nextGid++;
-      VGS.push({ gid, name: initialName, values: [], existingId });
+      const defaultVal = VGS.length === 0 ? 'Varian 1' : 'Opsi 1';
+      VGS.push({
+        gid,
+        name: initialName || (VGS.length === 0 ? 'Varian' : 'Sub Varian'),
+        values: [{ vid: nextVid++, label: defaultVal, existingId: null }],
+        existingId
+      });
       renderVGS();
     }
 

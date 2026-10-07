@@ -444,8 +444,9 @@ class AdminServiceController extends Controller
         }
 
         // ─── 1. Sync option groups & values ──────────────────────────────
-        $submittedOptionIds = [];
-        $optionObjects      = []; // indeks 0 & 1 → ProductVariantOption
+        $submittedOptionIds   = [];
+        $optionObjects        = []; // indeks 0 & 1 → ProductVariantOption
+        $tempToRealValueIdMap = [];
 
         $groups = array_values(array_filter($variantData, fn($g) => !empty(trim($g['name'] ?? ''))));
 
@@ -470,7 +471,7 @@ class AdminServiceController extends Controller
 
             // Sync values per option
             $submittedValueIds = [];
-            foreach ($optionData['values'] ?? [] as $valData) {
+            foreach ($optionData['values'] ?? [] as $valKey => $valData) {
                 $val = trim($valData['value'] ?? '');
                 if (empty($val)) continue;
 
@@ -481,7 +482,6 @@ class AdminServiceController extends Controller
                         ->where('variant_option_id', $option->id)->first();
                     if ($vv) {
                         $vv->update(['value' => $val, 'sku' => $sku]);
-                        $submittedValueIds[] = $vv->id;
                     } else {
                         $vv = ProductVariantValue::create([
                             'variant_option_id' => $option->id,
@@ -489,7 +489,6 @@ class AdminServiceController extends Controller
                             'sku'   => $sku,
                             'price_adjustment' => 0,
                         ]);
-                        $submittedValueIds[] = $vv->id;
                     }
                 } else {
                     $vv = ProductVariantValue::create([
@@ -498,8 +497,15 @@ class AdminServiceController extends Controller
                         'sku'   => $sku,
                         'price_adjustment' => 0,
                     ]);
-                    $submittedValueIds[] = $vv->id;
                 }
+
+                $submittedValueIds[] = $vv->id;
+                $tempToRealValueIdMap[(string) $valKey] = $vv->id;
+                $tempToRealValueIdMap[ltrim((string) $valKey, 'v')] = $vv->id;
+                if (!empty($valData['existing_id'])) {
+                    $tempToRealValueIdMap[(string) $valData['existing_id']] = $vv->id;
+                }
+                $tempToRealValueIdMap[(string) $vv->id] = $vv->id;
             }
 
             // Hapus nilai yang sudah dihapus dari form
@@ -528,8 +534,12 @@ class AdminServiceController extends Controller
         $submittedCombinationIds = [];
 
         foreach ($combinations as $rowIndex => $comboData) {
-            $opt1ValueId = (int) ($comboData['option1_value_id'] ?? 0);
-            $opt2ValueId = !empty($comboData['option2_value_id']) ? (int) $comboData['option2_value_id'] : null;
+            $rawOpt1 = (string) ($comboData['option1_value_id'] ?? '');
+            $rawOpt2 = isset($comboData['option2_value_id']) && $comboData['option2_value_id'] !== '' ? (string) $comboData['option2_value_id'] : null;
+
+            $opt1ValueId = $tempToRealValueIdMap[$rawOpt1] ?? (is_numeric($rawOpt1) ? (int) $rawOpt1 : 0);
+            $opt2ValueId = $rawOpt2 !== null ? ($tempToRealValueIdMap[$rawOpt2] ?? (is_numeric($rawOpt2) ? (int) $rawOpt2 : null)) : null;
+
             $price       = is_numeric($comboData['price'] ?? null) ? (float) $comboData['price'] : 0;
             $stock       = is_numeric($comboData['stock'] ?? null) ? (int) $comboData['stock'] : 0;
             $sku         = !empty($comboData['sku']) ? trim($comboData['sku']) : null;

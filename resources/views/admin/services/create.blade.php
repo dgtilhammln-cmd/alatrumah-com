@@ -793,10 +793,16 @@
     let nextVid = 1;
     window._savedCombos = {};
 
-    function addVarGroup() {
+    function addVarGroup(initialName = '', existingId = null) {
       if (VGS.length >= 2) { alert('Maksimal 2 variasi.'); return; }
       const gid = nextGid++;
-      VGS.push({ gid, name: '', values: [], existingId: null });
+      const defaultVal = VGS.length === 0 ? 'Varian 1' : 'Opsi 1';
+      VGS.push({
+        gid,
+        name: initialName || (VGS.length === 0 ? 'Varian' : 'Sub Varian'),
+        values: [{ vid: nextVid++, label: defaultVal, existingId: null }],
+        existingId
+      });
       renderVGS();
     }
 
