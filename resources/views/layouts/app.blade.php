@@ -55,17 +55,21 @@
     <link rel="dns-prefetch" href="https://unpkg.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
-    {{-- App CSS (Inlined for 99+ Lighthouse Score) --}}
-    @if(file_exists(public_path('build/assets')) && count(glob(public_path('build/assets/*.css'))) > 0)
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- App CSS (Inlined for 99+ Lighthouse Score & zero render-blocking delay) --}}
+    @php
+        $buildCssFiles = glob(public_path('build/assets/*.css'));
+    @endphp
+    @if(!empty($buildCssFiles) && file_exists($buildCssFiles[0]))
+        <style>
+            {!! file_get_contents($buildCssFiles[0]) !!}
+        </style>
+        @vite(['resources/js/app.js'])
+    @elseif(file_exists(public_path('css/app.css')))
+        <style>
+            {!! file_get_contents(public_path('css/app.css')) !!}
+        </style>
     @else
-        @if(file_exists(public_path('css/app.css')))
-            <style>
-                {!! file_get_contents(public_path('css/app.css')) !!}
-            </style>
-        @else
-            <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-        @endif
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 
     {{-- Dynamic Theme Colors & Global Font Override --}}

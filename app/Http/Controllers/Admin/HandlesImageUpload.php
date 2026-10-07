@@ -113,7 +113,7 @@ trait HandlesImageUpload
     /**
      * Store uploaded image as WebP (scaled down, or exact crop if both maxW & maxH given strictly)
      */
-    protected function storeWebP(UploadedFile $file, string $folder, int $maxW = 1200, int $maxH = 800, int $quality = 88): string
+    protected function storeWebP(UploadedFile $file, string $folder, int $maxW = 1200, int $maxH = 800, int $quality = 80): string
     {
         $img      = $this->gdLoad($file);
         $img      = $this->gdCenterCrop($img, $maxW, $maxH);
@@ -126,7 +126,7 @@ trait HandlesImageUpload
     /**
      * Store uploaded image as WebP preserving original aspect ratio (NO cropping - for logos, icons, banners)
      */
-    protected function storeWebPNoCrop(UploadedFile $file, string $folder, int $maxW = 1600, int $maxH = 800, int $quality = 95): string
+    protected function storeWebPNoCrop(UploadedFile $file, string $folder, int $maxW = 1200, int $maxH = 800, int $quality = 80): string
     {
         $img      = $this->gdLoad($file);
         $img      = $this->gdScaleDown($img, $maxW, $maxH);
@@ -139,7 +139,7 @@ trait HandlesImageUpload
     /**
      * Store uploaded image as square WebP (for avatars)
      */
-    protected function storeWebPSquare(UploadedFile $file, string $folder, int $size = 200, int $quality = 88): string
+    protected function storeWebPSquare(UploadedFile $file, string $folder, int $size = 200, int $quality = 80): string
     {
         $img      = $this->gdLoad($file);
         $img      = $this->gdSquareCrop($img, $size);
