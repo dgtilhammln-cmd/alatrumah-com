@@ -91,6 +91,13 @@ class AdminSettingsController extends Controller
                 continue;
             }
 
+            if (in_array($key, ['payment_logos', 'expedition_logos'])) {
+                // NO AUTO-CROP: jangan pernah potong logo pembayaran & ekspedisi! Jaga rasio & ketajaman 100%
+                $path = $this->storeWebPNoCrop($file, 'settings', 3000, 1000, 95);
+                Setting::set($key, $path, 'image');
+                continue;
+            }
+
             if ($key === 'coverage_map') {
                 $path = $this->storeWebP($file, 'settings', 2400, 1200, 90);
                 Setting::set($key, $path, 'image');

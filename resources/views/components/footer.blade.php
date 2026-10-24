@@ -282,21 +282,20 @@ www.alatrumah.com
     .cv-footer-v2-pay-wrap {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
-        gap: 1.5rem;
+        align-items: flex-start;
+        gap: 1.25rem 2.5rem;
         padding: 1.5rem clamp(1.25rem, 5vw, 2.5rem);
         max-width: 1200px;
         margin: 0 auto;
         border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-        justify-content: space-between;
     }
 
     .cv-footer-v2-pay-section {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        flex: 1;
-        min-width: 0; /* fix flex overflow */
+        min-width: 0;
+        flex: 1 1 220px; /* grow, shrink, min 220px before wrap */
     }
 
     .cv-footer-v2-pay-title {
@@ -309,13 +308,16 @@ www.alatrumah.com
 
     .cv-footer-v2-pay-logos {
         display: block;
+        line-height: 0;
     }
 
+    /* ─── KUNCI FIX: max-width:100% cegah overflow, height:auto jaga rasio ─── */
     .cv-footer-v2-pay-logos img {
         display: block;
-        width: 100%;
-        height: auto;
-        max-height: 50px;
+        max-width: 100%;   /* tidak boleh lebih lebar dari container */
+        width: auto;       /* lebar ikut rasio asli */
+        height: auto;      /* tinggi ikut rasio asli */
+        max-height: 48px;  /* batas tinggi maksimal */
         object-fit: contain;
         object-position: left center;
         border-radius: 4px;
@@ -365,6 +367,22 @@ www.alatrumah.com
 
         .cv-footer-v2-tagline {
             max-width: 100%;
+        }
+
+        /* Mobile: stack logo sections vertically, full width each */
+        .cv-footer-v2-pay-wrap {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .cv-footer-v2-pay-section {
+            width: 100%;
+            flex: none;
+        }
+
+        /* Beri ruang lebih besar untuk gambar di mobile */
+        .cv-footer-v2-pay-logos img {
+            max-height: 40px;
         }
     }
 </style>
