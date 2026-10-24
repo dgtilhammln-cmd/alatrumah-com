@@ -295,6 +295,8 @@ www.alatrumah.com
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
+        flex: 1;
+        min-width: 0; /* fix flex overflow */
     }
 
     .cv-footer-v2-pay-title {
@@ -306,22 +308,17 @@ www.alatrumah.com
     }
 
     .cv-footer-v2-pay-logos {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 0.5rem;
-        align-items: center;
-        overflow: visible;
+        display: block;
     }
 
     .cv-footer-v2-pay-logos img {
-        height: 32px;
-        width: auto;
-        max-width: none;
+        display: block;
+        width: 100%;
+        height: auto;
+        max-height: 50px;
         object-fit: contain;
         object-position: left center;
         border-radius: 4px;
-        flex-shrink: 0;
-        display: block;
     }
 
     .cv-footer-v2-dev {
