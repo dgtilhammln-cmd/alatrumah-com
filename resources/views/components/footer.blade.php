@@ -307,16 +307,21 @@ www.alatrumah.com
 
     .cv-footer-v2-pay-logos {
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         gap: 0.5rem;
         align-items: center;
+        overflow: visible;
     }
 
     .cv-footer-v2-pay-logos img {
-        height: 28px;
+        height: 32px;
         width: auto;
+        max-width: none;
         object-fit: contain;
+        object-position: left center;
         border-radius: 4px;
+        flex-shrink: 0;
+        display: block;
     }
 
     .cv-footer-v2-dev {
