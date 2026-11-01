@@ -142,9 +142,6 @@
     {{-- Footer --}}
     @include('components.footer')
 
-    {{-- Floating WA Button --}}
-    @include('components.wa-button')
-
     {{-- Request Order Modal (global) --}}
     @include('components.order-modal')
 
