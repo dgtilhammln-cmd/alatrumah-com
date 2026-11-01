@@ -29,7 +29,7 @@
     @if($errors->any())
       <div
         style="background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;color:#991B1B;font-size:.875rem;line-height:1.6;">
-        <strong style="display:block;margin-bottom:.5rem;">âš ï¸ DOUBLE CEK DIBUTUHKAN:</strong>
+        <strong style="display:block;margin-bottom:.5rem;">⚠️ DOUBLE CEK DIBUTUHKAN:</strong>
         <ul style="margin:0;padding-left:1.25rem;">
           @foreach($errors->all() as $error)
             <li style="margin-bottom:.25rem;">{{ $error }}</li>
@@ -43,7 +43,7 @@
 
     <div style="display:grid;grid-template-columns:1fr 340px;gap:1.75rem;align-items:start;">
 
-      {{-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• LEFT COLUMN â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• --}}
+      {{-- ═══════════════ LEFT COLUMN ═══════════════ --}}
       <div style="display:flex;flex-direction:column;gap:1.5rem;">
 
         {{-- Informasi Layanan --}}
@@ -71,7 +71,7 @@
             </div>
             <div>
               <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">
-                Slug (URL) <span style="font-weight:500;color:#94A3B8;font-size:.75rem;">â€” Kosongkan untuk
+                Slug (URL) <span style="font-weight:500;color:#94A3B8;font-size:.75rem;">— Kosongkan untuk
                   otomatis</span>
               </label>
               <div
@@ -118,7 +118,7 @@
           </div>
         </div>
 
-        {{-- Spesifikasi Produk --}}
+        {{-- Data E-Commerce / Harga --}}
         <div
           style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04); margin-bottom:1.5rem;">
           <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1.5rem;">
@@ -213,7 +213,7 @@
           </div>
         </div>
 
-        {{-- â•â•â• VARIAN PRODUK (SHOPEE-STYLE) â•â•â• --}}
+        {{-- ═══ VARIAN PRODUK (SHOPEE-STYLE) ═══ --}}
         <div
           style="background:#fff;border-radius:20px;padding:1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);margin-bottom:1.5rem;"
           id="variants-section">
@@ -269,6 +269,13 @@
               <input type="number" id="bulk-stock" placeholder="Stok" min="0"
                 style="width:80px;height:34px;border:1.5px solid #CBD5E1;border-radius:8px;padding:0 .5rem;font-size:.78rem;outline:none;">
               <div
+                style="display:flex;align-items:center;background:#fff;border:1.5px solid #CBD5E1;border-radius:8px;overflow:hidden;width:110px;">
+                <input type="number" id="bulk-weight" placeholder="Berat" min="0"
+                  style="width:100%;border:none;padding:0 .45rem;font-size:.78rem;outline:none;height:34px;">
+                <span
+                  style="font-size:.7rem;color:#64748B;padding:0 .4rem;background:#F1F5F9;height:34px;display:flex;align-items:center;border-left:1px solid #CBD5E1;white-space:nowrap;font-weight:600;">gr</span>
+              </div>
+              <div
                 style="display:flex;align-items:center;background:#fff;border:1.5px solid #CBD5E1;border-radius:8px;overflow:hidden;width:120px;">
                 <input type="number" id="bulk-ship" placeholder="Dikirim" min="1" value="2"
                   style="width:100%;border:none;padding:0 .45rem;font-size:.78rem;outline:none;height:34px;">
@@ -287,7 +294,7 @@
             <div
               style="background:#FFFBEB;border:1px solid #FCD34D;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;font-size:.76rem;color:#92400E;line-height:1.5;">
               <strong>Dikirim Dalam</strong> default 2 hari kerja. Untuk pre-order atur 3-30 hari. Kolom wajib <span
-                style="color:#EF4444;">*</span> harus diisi â€” jika kosong akan ditandai merah saat simpan.
+                style="color:#EF4444;">*</span> harus diisi — jika kosong akan ditandai merah saat simpan.
             </div>
 
             <div style="overflow-x:auto;border-radius:12px;border:1.5px solid #E4E7F0;">
@@ -306,6 +313,9 @@
                     <th
                       style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:80px;">
                       Stok <span style="color:#EF4444;">*</span></th>
+                    <th
+                      style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:100px;">
+                      Berat (Gram) <span style="color:#EF4444;">*</span></th>
                     <th
                       style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:100px;">
                       Dikirim Dalam <span style="color:#EF4444;">*</span></th>
@@ -455,7 +465,7 @@
 
       </div>
 
-      {{-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• RIGHT COLUMN â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• --}}
+      {{-- ═══════════════ RIGHT COLUMN ═══════════════ --}}
       <div style="display:flex;flex-direction:column;gap:1.5rem;position:sticky;top:1.5rem;">
 
         {{-- Tombol Simpan --}}
@@ -549,7 +559,7 @@
               <line x1="12" y1="3" x2="12" y2="15" />
             </svg>
             <span style="font-size:.8rem;color:#64748B;font-weight:600;">Klik untuk upload</span>
-            <span style="font-size:.72rem;color:#94A3B8;">PDF, JPG, PNG â€” Maks 10MB</span>
+            <span style="font-size:.72rem;color:#94A3B8;">PDF, JPG, PNG — Maks 10MB</span>
             <input type="file" name="brochure" accept=".pdf,image/*" style="display:none;">
           </label>
         </div>
@@ -616,7 +626,7 @@
     style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);z-index:9999;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;">
     <div
       style="background:#fff;border-radius:20px;padding:2rem;max-width:420px;width:90%;box-shadow:0 25px 60px rgba(0,0,0,0.2);">
-      <div style="font-size:1.5rem;margin-bottom:.75rem;">âš ï¸</div>
+      <div style="font-size:1.5rem;margin-bottom:.75rem;">⚠️</div>
       <h3 style="font-size:1rem;font-weight:800;color:#1E293B;margin:0 0 .5rem;">Konfirmasi Simpan</h3>
       <p id="confirmMsg" style="font-size:.875rem;color:#475569;margin:0 0 1.5rem;line-height:1.6;"></p>
       <div style="display:flex;gap:.75rem;justify-content:flex-end;">
@@ -629,9 +639,9 @@
   </div>
 
   <script>
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ════════════════════════════════════════════════════════════
        HELPER FUNCTIONS (Slug, Specs, FAQs)
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ════════════════════════════════════════════════════════════ */
     function generateSlug(v) { return v.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-'); }
     function syncSlug() {
       const n = document.getElementById('name_input'), s = document.getElementById('slug_input');
@@ -660,9 +670,9 @@
         </div>`);
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ════════════════════════════════════════════════════════════
        GALLERY HELPERS
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ════════════════════════════════════════════════════════════ */
     var galleryFileCounter = 0;
 
     function addGalleryFileSlot(isSingle) {
@@ -751,9 +761,9 @@
       renderGalleryPreviews();
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ════════════════════════════════════════════════════════════
        CONFIRM MODAL
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ════════════════════════════════════════════════════════════ */
     let confirmCallback = null;
     function showConfirm(msg, cb) {
       document.getElementById('confirmMsg').textContent = msg;
@@ -785,9 +795,9 @@
       form.submit();
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ════════════════════════════════════════════════════════════
        VARIAN SHOPEE-STYLE (UNIFIED - BLUE THEME)
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ════════════════════════════════════════════════════════════ */
     let VGS = [];
     let nextGid = 1;
     let nextVid = 1;
@@ -935,6 +945,7 @@
           const price = saved ? saved.price : '';
           const displayPrice = price !== '' ? formatRupiahStr(price) : '';
           const stock = saved ? saved.stock : '';
+          const weight = saved ? (saved.weight ?? '') : '';
           const ship = saved ? (saved.ship || 2) : 2;
           const sku = saved ? (saved.sku || '') : '';
           const gtin = saved ? (saved.gtin || '') : '';
@@ -962,6 +973,15 @@
           </td>
           <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
             <div style="display:flex;align-items:center;border:1.5px solid #E4E7F0;border-radius:8px;overflow:hidden;min-width:90px;">
+              <input type="number" name="variant_options[combinations][${rowIndex}][weight]"
+                value="${escHtml(weight)}" placeholder="Berat" min="0"
+                style="width:100%;padding:.4rem .45rem;border:none;font-size:.8rem;font-family:inherit;outline:none;"
+                onfocus="this.parentElement.style.borderColor='#1B6FE8'" onblur="this.parentElement.style.borderColor='#E4E7F0';validateRequired(this)" required>
+              <span style="font-size:.7rem;color:#64748B;padding:0 .35rem;background:#F1F5F9;height:34px;display:flex;align-items:center;border-left:1px solid #E4E7F0;white-space:nowrap;">gr</span>
+            </div>
+          </td>
+          <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+            <div style="display:flex;align-items:center;border:1.5px solid #E4E7F0;border-radius:8px;overflow:hidden;min-width:85px;">
               <input type="number" name="variant_options[combinations][${rowIndex}][ship_days]"
                 value="${escHtml(ship)}" placeholder="2" min="1" max="30"
                 style="width:100%;padding:.4rem .45rem;border:none;font-size:.8rem;font-family:inherit;outline:none;"
@@ -982,8 +1002,11 @@
               onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
           </td>
           <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
-            <div style="display:flex;align-items:center;gap:.4rem;">
-              <input type="file" name="variant_options[combinations][${rowIndex}][image]" accept="image/*" style="font-size:.7rem;width:130px;">
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <div id="v-preview-${rowIndex}" style="display:none;width:34px;height:34px;border-radius:6px;overflow:hidden;border:1.5px solid #3B82F6;flex-shrink:0;background:#F8FAFC;">
+                <img src="" style="width:100%;height:100%;object-fit:cover;">
+              </div>
+              <input type="file" name="variant_options[combinations][${rowIndex}][image]" accept="image/*" style="font-size:.7rem;width:125px;" onchange="previewVariantRowImg(this, ${rowIndex})">
             </div>
           </td>
           <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_value_id]" value="${escHtml(v1.vid)}">
@@ -1008,15 +1031,29 @@
       }
     }
 
+    function previewVariantRowImg(inp, rIndex) {
+      const box = document.getElementById(`v-preview-${rIndex}`);
+      if (!box) return;
+      if (inp.files && inp.files[0]) {
+        const url = URL.createObjectURL(inp.files[0]);
+        box.querySelector('img').src = url;
+        box.style.display = 'block';
+      } else {
+        box.style.display = 'none';
+      }
+    }
+
     function applyBulk() {
       const price = document.getElementById('bulk-price')?.value;
       const stock = document.getElementById('bulk-stock')?.value;
+      const weight = document.getElementById('bulk-weight')?.value;
       const ship = document.getElementById('bulk-ship')?.value;
       const sku = document.getElementById('bulk-sku')?.value;
       const tbody = document.getElementById('combo-tbody');
       if (!tbody) return;
       if (price) tbody.querySelectorAll('input[name*="[price]"]').forEach(i => i.value = price);
       if (stock) tbody.querySelectorAll('input[name*="[stock]"]').forEach(i => i.value = stock);
+      if (weight) tbody.querySelectorAll('input[name*="[weight]"]').forEach(i => i.value = weight);
       if (ship) tbody.querySelectorAll('input[name*="[ship_days]"]').forEach(i => i.value = ship);
       if (sku) tbody.querySelectorAll('input[name*="[sku]"]').forEach(i => i.value = sku);
     }

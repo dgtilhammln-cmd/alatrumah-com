@@ -159,11 +159,11 @@ class Service extends Model
     public function scopeSort(Builder $query, string $sort): Builder
     {
         return match($sort) {
-            'latest'  => $query->latest(),
-            'price_asc' => $query->orderBy('price', 'asc'),
+            'latest'     => $query->latest(),
+            'price_asc'  => $query->orderBy('price', 'asc'),
             'price_desc' => $query->orderBy('price', 'desc'),
-            'popular' => $query->orderBy('sold_count', 'desc')->orderBy('views_count', 'desc'),
-            default   => $query->orderBy('order')->orderBy('id'),
+            'popular'    => $query->orderBy('sold_count', 'desc')->orderBy('views_count', 'desc'),
+            default      => $query->orderBy('order')->orderBy('id'),
         };
     }
 
@@ -232,11 +232,83 @@ class Service extends Model
     // =========================================================================
 
     /**
-     * Harga yang ditampilkan (sale_price jika ada, jika tidak price).
+     * Rentang harga varian jika ada kombinasi varian dengan harga > 0.
+     */
+    public function getVariantPriceRangeAttribute(): array
+    {
+        $combos = $this->relationLoaded('variantCombinations')
+            ? $this->variantCombinations
+            : $this->variantCombinations()->get();
+
+        $activePrices = $combos->where('is_active', true)
+                               ->pluck('price')
+                               ->map(fn($p) => (float)$p)
+                               ->filter(fn($p) => $p > 0);
+
+        if ($activePrices->isNotEmpty()) {
+            $min = (float) $activePrices->min();
+            $max = (float) $activePrices->max();
+            return [
+                'has_variants' => true,
+                'min'          => $min,
+                'max'          => $max,
+                'is_range'     => $min !== $max,
+            ];
+        }
+
+        $base = (float) ($this->sale_price > 0 && $this->sale_price < $this->price ? $this->sale_price : ($this->price ?? 0));
+        return [
+            'has_variants' => false,
+            'min'          => $base,
+            'max'          => $base,
+            'is_range'     => false,
+        ];
+    }
+
+    /**
+     * Teks format tampilan harga (bisa berupa rentang harga jika varian berbeda harga).
+     */
+    public function getFormattedPriceRangeAttribute(): string
+    {
+        $vr = $this->variant_price_range;
+        if ($vr['has_variants']) {
+            if ($vr['is_range']) {
+                return 'Rp' . number_format($vr['min'], 0, ',', '.') . ' - Rp' . number_format($vr['max'], 0, ',', '.');
+            }
+            return 'Rp' . number_format($vr['min'], 0, ',', '.');
+        }
+
+        if ($this->price > 0) {
+            $eff = $this->effective_price;
+            return 'Rp' . number_format($eff, 0, ',', '.');
+        }
+
+        return 'Layanan Jasa';
+    }
+
+    /**
+     * Cek apakah produk ini memiliki harga terdefinisi (induk atau varian).
+     */
+    public function getHasPricedProductAttribute(): bool
+    {
+        if ($this->price > 0) return true;
+        $vr = $this->variant_price_range;
+        return $vr['has_variants'] && $vr['min'] > 0;
+    }
+
+    /**
+     * Harga yang ditampilkan (sale_price jika ada, jika tidak price, atau min varian).
      */
     public function getEffectivePriceAttribute(): float
     {
-        return (float) ($this->sale_price ?? $this->price ?? 0);
+        $base = (float) ($this->sale_price ?? $this->price ?? 0);
+        if ($base <= 0) {
+            $vr = $this->variant_price_range;
+            if ($vr['has_variants'] && $vr['min'] > 0) {
+                return $vr['min'];
+            }
+        }
+        return $base;
     }
 
     /**

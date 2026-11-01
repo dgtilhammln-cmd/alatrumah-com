@@ -176,7 +176,8 @@ class CartService
 
         foreach ($items as $item) {
             $subtotal += $item->subtotal;
-            $totalWeight += ($item->product->weight ?? 0) * $item->qty;
+            // Gunakan unit_weight yang sudah memperhitungkan berat per varian jika ada
+            $totalWeight += $item->unit_weight * $item->qty;
 
             if ($item->product) {
                 if ($item->product->type !== 'service') {

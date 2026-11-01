@@ -540,9 +540,11 @@
         <p class="pd-desc-short">{{ $service->short_desc }}</p>
         @endif
 
-        @if($service->price > 0)
+        @if($service->has_priced_product)
             <div class="pd-price-box">
-                @if($service->sale_price > 0 && $service->sale_price < $service->price)
+                @if($service->variant_price_range['has_variants'] && $service->variant_price_range['min'] > 0)
+                    <div class="pd-price-current">{{ $service->formatted_price_range }}</div>
+                @elseif($service->sale_price > 0 && $service->sale_price < $service->price)
                     <div class="pd-price-current">Rp{{ number_format($service->sale_price, 0, ',', '.') }}</div>
                     <div class="pd-price-old">Rp{{ number_format($service->price, 0, ',', '.') }}</div>
                     <div class="pd-badge-discount">Hemat {{ round((($service->price - $service->sale_price)/$service->price)*100) }}%</div>

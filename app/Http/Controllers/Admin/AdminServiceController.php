@@ -542,6 +542,7 @@ class AdminServiceController extends Controller
 
             $price       = is_numeric($comboData['price'] ?? null) ? (float) $comboData['price'] : 0;
             $stock       = is_numeric($comboData['stock'] ?? null) ? (int) $comboData['stock'] : 0;
+            $weight      = is_numeric($comboData['weight'] ?? null) ? (int) $comboData['weight'] : 0;
             $sku         = !empty($comboData['sku']) ? trim($comboData['sku']) : null;
 
             $shipDays    = is_numeric($comboData['ship_days'] ?? null) ? (int) $comboData['ship_days'] : 2;
@@ -581,6 +582,7 @@ class AdminServiceController extends Controller
                 $existing->update([
                     'price'     => $price,
                     'stock'     => $stock,
+                    'weight'    => $weight,
                     'ship_days' => $shipDays,
                     'sku'       => $sku,
                     'gtin'      => $gtin,
@@ -595,6 +597,7 @@ class AdminServiceController extends Controller
                     'option2_value_id' => $opt2ValueId,
                     'price'            => $price,
                     'stock'            => $stock,
+                    'weight'           => $weight,
                     'ship_days'        => $shipDays,
                     'sku'              => $sku,
                     'gtin'             => $gtin,

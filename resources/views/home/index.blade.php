@@ -1652,31 +1652,34 @@
                 </div>
                 @endif
             </div>
-            @if($promo->view_all_url)
-                <a href="{{ $promo->view_all_url }}" class="cv-promo-view-all">Lihat semua →</a>
+
+            @if($promo->button_url)
+            <a href="{{ $promo->button_url }}" class="cv-promo-view-all">
+                {{ $promo->button_text ?? 'Lihat Semua' }} &rarr;
+            </a>
             @endif
         </div>
 
         {{-- Grid --}}
         <div class="cv-promo-grid">
-            {{-- Banner Left (Desktop Only) --}}
-            <div class="cv-promo-banner-wrap desktop-only">
-                @if($promo->banner)
-                                <img src="{{ asset('storage/'.$promo->banner) }}" alt="{{ $promo->title }}" loading="lazy" class="cv-promo-banner-img">
-                @else
-                    <div class="cv-promo-banner-placeholder">
-                        <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                        <span>{{ $promo->title }}</span>
-                    </div>
-                @endif
-            </div>
-
-            {{-- Products Swiper --}}
-            <div class="cv-promo-swiper-container" style="position:relative;">
+            {{-- Swiper Right --}}
+            <div class="cv-promo-swiper-container">
                 <div class="swiper cv-promo-swiper" id="promoSwiper{{ $promo->id }}">
                     <div class="swiper-wrapper">
-                        {{-- Banner Mobile (Inside Swiper) --}}
-                        <div class="swiper-slide cv-promo-banner-wrap mobile-only">
+                        {{-- Mobile Only Banner Slide (Appears as slide 1) --}}
+                        <div class="swiper-slide cv-promo-banner-wrap mobile-only" style="background: {{ $promo->bg_color_1 ?? '#0EA5E9' }}; flex-shrink: 0; min-height: 0;">
+                            @if($promo->banner)
+                                <img src="{{ asset('storage/'.$promo->banner) }}" alt="{{ $promo->title }}" loading="lazy" class="cv-promo-banner-img">
+                            @elseif($isFlashSale)
+                                <div class="cv-promo-banner-placeholder" style="background: linear-gradient(135deg, #ef4444, #f97316); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; width:100%; height:100%;">
+                                    <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                    <span style="font-size:1rem; font-weight:800; font-style:italic; margin-top:0.5rem; text-align:center;">FLASH<br>SALE</span>
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- Desktop Only Banner --}}
+                        <div class="cv-promo-banner-wrap desktop-only" style="background: {{ $promo->bg_color_1 ?? '#0EA5E9' }};">
                             @if($promo->banner)
                                             <img src="{{ asset('storage/'.$promo->banner) }}" alt="{{ $promo->title }}" loading="lazy" class="cv-promo-banner-img">
                             @elseif($isFlashSale)
@@ -1703,21 +1706,25 @@
                                     </div>
                                 @endif
                                 <div class="cv-promo-card-body">
-                                    <span class="cv-promo-card-badge {{ $svc->type === 'service' ? 'service' : '' }}">
-                                        {{ $svc->type === 'service' ? 'Jasa' : 'Produk' }}
+                                    <span class="cv-promo-card-badge {{ $svc->has_priced_product ? '' : 'service' }}">
+                                        {{ $svc->has_priced_product ? 'Produk' : 'Jasa' }}
                                     </span>
                                     <div class="cv-promo-card-name">{{ $svc->name }}</div>
-                                    @if($svc->price > 0)
+                                    @if($svc->has_priced_product)
                                     <div>
-                                        @if($discount > 0)
-                                        <div class="cv-promo-card-price-old">Rp{{ number_format($svc->price,0,',','.') }}</div>
-                                        @endif
-                                        <div style="display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;">
-                                            <span class="cv-promo-card-price">Rp{{ number_format($effPrice,0,',','.') }}</span>
+                                        @if($svc->variant_price_range['has_variants'] && $svc->variant_price_range['min'] > 0)
+                                            <span class="cv-promo-card-price">{{ $svc->formatted_price_range }}</span>
+                                        @else
                                             @if($discount > 0)
-                                                <span class="cv-promo-card-discount">{{ $discount }}%</span>
+                                            <div class="cv-promo-card-price-old">Rp{{ number_format($svc->price,0,',','.') }}</div>
                                             @endif
-                                        </div>
+                                            <div style="display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;">
+                                                <span class="cv-promo-card-price">Rp{{ number_format($effPrice,0,',','.') }}</span>
+                                                @if($discount > 0)
+                                                    <span class="cv-promo-card-discount">{{ $discount }}%</span>
+                                                @endif
+                                            </div>
+                                        @endif
                                     </div>
                                     @endif
                                     @if($svc->rating > 0 || $svc->sold_count > 0)
@@ -1758,22 +1765,24 @@
     <div style="background: #fff; padding: 2rem 0 3rem; border-top: none; box-shadow: none;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;" class="cv-rekomendasi-container">
         <style>
-            @media (max-width: 768px) {
-                .cv-rekomendasi-container { padding: 0 1rem !important; }
-                .cv-rekomendasi-title { font-size: 1rem !important; }
-                .cv-rekomendasi-subtitle { display: none; }
-            }
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
         </style>
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; border-top: none;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 0.5rem;">
             <div>
-                <h2 class="cv-rekomendasi-title" style="font-family:'Montserrat',sans-serif; font-size:1.15rem; font-weight:700; color:#1E293B; margin:0 0 0.2rem;">Rekomendasi Untukmu</h2>
-                <div class="cv-rekomendasi-subtitle" style="font-size:0.8rem; color:#64748B;">Temukan berbagai produk pilihan terbaik dari AlatRumah</div>
+                <h2 style="font-family:'Montserrat',sans-serif; font-size:1.15rem; font-weight:700; color:#1E293B; margin:0 0 0.2rem 0;">
+                    Rekomendasi Pilihan
+                </h2>
+                <div style="font-size:0.8rem; color:#64748B;">Temukan produk terbaik untuk melengkapi kebutuhan rumah Anda</div>
             </div>
             <a href="{{ route('products') }}" style="font-size:0.75rem; font-weight:600; color:#0EA5E9; text-decoration:none; white-space:nowrap;">Lihat Semua &rarr;</a>
         </div>
-        
-        <div class="catalog-grid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.875rem;">
-            @foreach($allProducts->take(30) as $svc)
+        <div class="catalog-grid">
+            @foreach($allProducts as $svc)
             @php
                 $effPrice = ($svc->sale_price > 0 && $svc->sale_price < $svc->price) ? $svc->sale_price : $svc->price;
                 $discount = ($svc->sale_price > 0 && $svc->sale_price < $svc->price)
@@ -1797,12 +1806,16 @@
                 @endif
                 <div class="catalog-card-body">
                     <div class="catalog-card-name">{{ $svc->name }}</div>
-                    @if($svc->price > 0)
+                    @if($svc->has_priced_product)
                     <div class="catalog-card-price-wrap">
-                        @if($discount > 0)
-                        <div class="catalog-card-price-old">Rp{{ number_format($svc->price,0,',','.') }}</div>
+                        @if($svc->variant_price_range['has_variants'] && $svc->variant_price_range['min'] > 0)
+                            <div class="catalog-card-price">{{ $svc->formatted_price_range }}</div>
+                        @else
+                            @if($discount > 0)
+                            <div class="catalog-card-price-old">Rp{{ number_format($svc->price,0,',','.') }}</div>
+                            @endif
+                            <div class="catalog-card-price">Rp{{ number_format($effPrice,0,',','.') }}</div>
                         @endif
-                        <div class="catalog-card-price">Rp{{ number_format($effPrice,0,',','.') }}</div>
                     </div>
                     @endif
                     @if($svc->rating > 0 || $svc->sold_count > 0)
@@ -2221,4 +2234,3 @@
 </script>
 
 @endsection
-

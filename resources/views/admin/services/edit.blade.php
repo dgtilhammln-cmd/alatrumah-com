@@ -287,6 +287,15 @@
                 <input type="text" id="bulk-sku" placeholder="Kode Variasi"
                   style="width:110px;padding:.35rem .6rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.78rem;font-family:inherit;outline:none;"
                   onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+                <div
+                  style="display:flex;align-items:center;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;overflow:hidden;width:100px;">
+                  <input type="number" id="bulk-weight" placeholder="Berat" min="0"
+                    style="width:100%;padding:.3rem .4rem;border:none;font-size:.78rem;font-family:inherit;outline:none;height:32px;"
+                    onfocus="this.parentElement.style.borderColor='#1B6FE8'"
+                    onblur="this.parentElement.style.borderColor='#E4E7F0'">
+                  <span
+                    style="font-size:.68rem;color:#64748B;padding:0 .35rem;background:#F1F5F9;height:32px;display:flex;align-items:center;border-left:1px solid #E4E7F0;white-space:nowrap;">gr</span>
+                </div>
                 <button type="button" onclick="applyBulk()"
                   style="padding:.35rem .8rem;background:#1B6FE8;color:#fff;border:none;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">
                   Terapkan
@@ -317,6 +326,9 @@
                     <th
                       style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:75px;">
                       Stok <span style="color:#EF4444;">*</span></th>
+                    <th
+                      style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:90px;">
+                      Berat (Gram) <span style="color:#EF4444;">*</span></th>
                     <th
                       style="padding:.6rem .75rem;text-align:left;font-weight:700;color:#475569;white-space:nowrap;border-bottom:1.5px solid #E4E7F0;min-width:95px;">
                       Dikirim Dalam <span style="color:#EF4444;">*</span></th>
@@ -978,7 +990,7 @@
       if (rawCombos && rawCombos.length > 0) {
         rawCombos.forEach(c => {
           const key1 = `${c.option1_value_id}_${c.option2_value_id || 'x'}`;
-          window._savedCombos[key1] = { price: c.price, stock: c.stock, ship: c.ship_days || 2, sku: c.sku || '', gtin: c.gtin || '', image: c.image || '', id: c.id };
+          window._savedCombos[key1] = { price: c.price, stock: c.stock, weight: parseInt(c.weight) || 0, ship: c.ship_days || 2, sku: c.sku || '', gtin: c.gtin || '', image: c.image || '', id: c.id };
         });
       }
 
@@ -1168,6 +1180,7 @@
           const saved = window._savedCombos && window._savedCombos[savedKey];
           const price = saved ? saved.price : '';
           const stock = saved ? saved.stock : '';
+          const weight = saved ? (saved.weight ?? '') : '';
           const ship = saved ? (saved.ship || 2) : 2;
           const sku = saved ? (saved.sku || '') : '';
           const gtin = saved ? (saved.gtin || '') : '';
@@ -1196,6 +1209,15 @@
                 onfocus="this.style.borderColor='#1B6FE8'" onblur="validateRequired(this)" required>
             </td>
             <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+              <div style="display:flex;align-items:center;border:1.5px solid #E4E7F0;border-radius:8px;overflow:hidden;min-width:90px;">
+                <input type="number" name="variant_options[combinations][${rowIndex}][weight]"
+                  value="${escHtml(weight)}" placeholder="Berat" min="0"
+                  style="width:100%;padding:.4rem .45rem;border:none;font-size:.8rem;font-family:inherit;outline:none;"
+                  onfocus="this.parentElement.style.borderColor='#1B6FE8'" onblur="this.parentElement.style.borderColor='#E4E7F0';validateRequired(this)" required>
+                <span style="font-size:.7rem;color:#64748B;padding:0 .35rem;background:#F1F5F9;height:34px;display:flex;align-items:center;border-left:1px solid #E4E7F0;white-space:nowrap;">gr</span>
+              </div>
+            </td>
+            <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
               <div style="display:flex;align-items:center;border:1.5px solid #E4E7F0;border-radius:8px;overflow:hidden;min-width:85px;">
                 <input type="number" name="variant_options[combinations][${rowIndex}][ship_days]"
                   value="${escHtml(ship)}" placeholder="2" min="1" max="30"
@@ -1217,14 +1239,12 @@
                 onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
             </td>
             <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
-              <div style="display:flex;align-items:center;gap:.4rem;">
-                ${img ? `
-                  <div style="position:relative;width:34px;height:34px;border-radius:6px;overflow:hidden;border:1px solid #CBD5E1;flex-shrink:0;">
-                    <img src="/storage/${img}" style="width:100%;height:100%;object-fit:cover;">
-                  </div>
-                  <input type="hidden" name="variant_options[combinations][${rowIndex}][existing_image]" value="${escHtml(img)}">
-                ` : ''}
-                <input type="file" name="variant_options[combinations][${rowIndex}][image]" accept="image/*" style="font-size:.7rem;width:130px;">
+              <div style="display:flex;align-items:center;gap:.5rem;">
+                <div id="v-preview-${rowIndex}" style="${img ? '' : 'display:none;'}width:34px;height:34px;border-radius:6px;overflow:hidden;border:1.5px solid #3B82F6;flex-shrink:0;background:#F8FAFC;">
+                  <img src="${img ? '/storage/' + escHtml(img) : ''}" style="width:100%;height:100%;object-fit:cover;">
+                </div>
+                ${img ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][existing_image]" value="${escHtml(img)}">` : ''}
+                <input type="file" name="variant_options[combinations][${rowIndex}][image]" accept="image/*" style="font-size:.7rem;width:125px;" onchange="previewVariantRowImg(this, ${rowIndex})">
               </div>
             </td>
             <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_value_id]" value="${escHtml(v1.vid)}">
@@ -1250,15 +1270,29 @@
       }
     }
 
+    function previewVariantRowImg(inp, rIndex) {
+      const box = document.getElementById(`v-preview-${rIndex}`);
+      if (!box) return;
+      if (inp.files && inp.files[0]) {
+        const url = URL.createObjectURL(inp.files[0]);
+        box.querySelector('img').src = url;
+        box.style.display = 'block';
+      } else {
+        box.style.display = 'none';
+      }
+    }
+
     function applyBulk() {
       const price = document.getElementById('bulk-price')?.value;
       const stock = document.getElementById('bulk-stock')?.value;
+      const weight = document.getElementById('bulk-weight')?.value;
       const ship = document.getElementById('bulk-ship')?.value;
       const sku = document.getElementById('bulk-sku')?.value;
       const tbody = document.getElementById('combo-tbody');
       if (!tbody) return;
       if (price) tbody.querySelectorAll('input[name*="[price]"]').forEach(i => i.value = price);
       if (stock) tbody.querySelectorAll('input[name*="[stock]"]').forEach(i => i.value = stock);
+      if (weight) tbody.querySelectorAll('input[name*="[weight]"]').forEach(i => i.value = weight);
       if (ship) tbody.querySelectorAll('input[name*="[ship_days]"]').forEach(i => i.value = ship);
       if (sku) tbody.querySelectorAll('input[name*="[sku]"]').forEach(i => i.value = sku);
     }

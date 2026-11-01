@@ -19,3 +19,5 @@ yarn-error.log
 *.sqlite
 deploy_patch.tar.gz
 /u664715641
+patch_*.php
+test_*.php

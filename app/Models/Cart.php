@@ -76,17 +76,47 @@ class Cart extends Model
     // =========================================================================
 
     /**
+     * Mendapatkan kombinasi variasi jika ada.
+     */
+    public function getVariantCombinationAttribute(): ?ProductVariantCombination
+    {
+        if (!$this->variant_value_id) return null;
+
+        return ProductVariantCombination::where('product_id', $this->product_id)
+            ->where(function ($q) {
+                $q->where('option1_value_id', $this->variant_value_id)
+                  ->orWhere('option2_value_id', $this->variant_value_id);
+            })->first();
+    }
+
+    /**
+     * Berat satuan item (mempertimbangkan berat varian jika ada).
+     */
+    public function getUnitWeightAttribute(): int
+    {
+        $combo = $this->variant_combination;
+        if ($combo && $combo->weight > 0) {
+            return (int) $combo->weight;
+        }
+
+        return (int) ($this->product?->weight ?? 0);
+    }
+
+    /**
+     * Total berat item (unit weight × qty).
+     */
+    public function getTotalWeightAttribute(): int
+    {
+        return $this->unit_weight * $this->qty;
+    }
+
+    /**
      * Harga satuan item (mempertimbangkan varian & kombinasi varian).
      */
     public function getUnitPriceAttribute(): float
     {
         if ($this->variant_value_id) {
-            // Cek apakah ada kombinasi varian spesifik (ProductVariantCombination)
-            $combo = ProductVariantCombination::where('product_id', $this->product_id)
-                ->where(function ($q) {
-                    $q->where('option1_value_id', $this->variant_value_id)
-                      ->orWhere('option2_value_id', $this->variant_value_id);
-                })->first();
+            $combo = $this->variant_combination;
 
             if ($combo && $combo->price > 0) {
                 return (float) $combo->price;
