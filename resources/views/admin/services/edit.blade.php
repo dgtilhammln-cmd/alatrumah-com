@@ -1147,6 +1147,14 @@
       return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
+    function getVariantImgUrl(img) {
+      if (!img) return '';
+      if (img.startsWith('http://') || img.startsWith('https://') || img.startsWith('data:')) return img;
+      if (img.startsWith('/')) return img;
+      if (img.startsWith('storage/')) return '/' + img;
+      return '/storage/' + img;
+    }
+
     function renderMatrix() {
       const sec = document.getElementById('combo-section');
       const tbody = document.getElementById('combo-tbody');
@@ -1184,7 +1192,7 @@
           const ship = saved ? (saved.ship || 2) : 2;
           const sku = saved ? (saved.sku || '') : '';
           const gtin = saved ? (saved.gtin || '') : '';
-          const img = saved ? (saved.image || '') : '';
+          const imgUrl = getVariantImgUrl(img);
           const combId = saved ? saved.id : '';
           const isEven = rowIndex % 2 === 0;
           const displayPrice = price !== '' ? formatRupiahStr(price) : '';
@@ -1240,10 +1248,10 @@
             </td>
             <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
               <div style="display:flex;align-items:center;gap:.5rem;">
-                <div id="v-preview-${rowIndex}" style="${img ? '' : 'display:none;'}width:34px;height:34px;border-radius:6px;overflow:hidden;border:1.5px solid #3B82F6;flex-shrink:0;background:#F8FAFC;">
-                  <img src="${img ? '/storage/' + escHtml(img) : ''}" style="width:100%;height:100%;object-fit:cover;">
+                <div id="v-preview-${rowIndex}" style="${imgUrl ? '' : 'display:none;'}width:38px;height:38px;border-radius:8px;overflow:hidden;border:1.5px solid #3B82F6;flex-shrink:0;background:#F8FAFC;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+                  <img src="${escHtml(imgUrl)}" style="width:100%;height:100%;object-fit:cover;">
                 </div>
-                ${img ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][existing_image]" value="${escHtml(img)}">` : ''}
+                ${imgUrl ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][existing_image]" value="${escHtml(imgUrl)}">` : ''}
                 <input type="file" name="variant_options[combinations][${rowIndex}][image]" accept="image/*" style="font-size:.7rem;width:125px;" onchange="previewVariantRowImg(this, ${rowIndex})">
               </div>
             </td>
@@ -1275,10 +1283,19 @@
       if (!box) return;
       if (inp.files && inp.files[0]) {
         const url = URL.createObjectURL(inp.files[0]);
-        box.querySelector('img').src = url;
+        const imgTag = box.querySelector('img');
+        if (imgTag) imgTag.src = url;
         box.style.display = 'block';
       } else {
-        box.style.display = 'none';
+        const hiddenInp = inp.closest('td')?.querySelector('input[name*="[existing_image]"]');
+        if (hiddenInp && hiddenInp.value) {
+          const orig = getVariantImgUrl(hiddenInp.value);
+          const imgTag = box.querySelector('img');
+          if (imgTag) imgTag.src = orig;
+          box.style.display = 'block';
+        } else {
+          box.style.display = 'none';
+        }
       }
     }
 

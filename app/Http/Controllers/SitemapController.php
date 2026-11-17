@@ -69,6 +69,22 @@ class SitemapController extends Controller
                 ];
             })->toArray();
 
+            $categories = \App\Models\CategoryItem::where('is_active', true)->get();
+
+            $categoryUrls = $categories->filter(function($c) {
+                $nameLower = strtolower(trim($c->name));
+                return !in_array($nameLower, ['lihat semua', 'semua', 'semua promo', 'promo']) && $c->url !== '/produk';
+            })->map(function ($c) use ($appUrl) {
+                $catSlug = $c->slug ?: \Illuminate\Support\Str::slug($c->name);
+                return [
+                    'url'        => $appUrl . '/kategori/' . $catSlug,
+                    'priority'   => '0.9',
+                    'changefreq' => 'weekly',
+                    'lastmod'    => optional($c->updated_at)->toDateString() ?? now()->toDateString(),
+                    'images'     => [],
+                ];
+            })->values()->toArray();
+
             $authorUrls = $authors->map(fn($a) => [
                 'url'        => $appUrl . '/penulis/' . $a->slug,
                 'priority'   => '0.6',
@@ -77,7 +93,7 @@ class SitemapController extends Controller
                 'images'     => [],
             ])->toArray();
 
-            $urls    = array_merge($staticPages, $serviceUrls, $articleUrls, $authorUrls);
+            $urls    = array_merge($staticPages, $categoryUrls, $serviceUrls, $articleUrls, $authorUrls);
             $content = view('sitemap', compact('urls'))->render();
 
             return response($content, 200)->header('Content-Type', 'application/xml');

@@ -69,6 +69,7 @@ Route::middleware(['track.pageview'])->group(function () {
     Route::get('/galeri',         [GalleryController::class,'index'])->name('gallery');
     Route::get('/galeri/{slug}',  [GalleryController::class,'show'])->name('gallery.show');
     Route::get('/produk',         [ServiceController::class,'index'])->name('products');
+    Route::get('/kategori/{slug}',[ServiceController::class,'category'])->name('products.category');
     Route::get('/produk/{slug}',  [ServiceController::class,'show'])->name('products.show');
     Route::get('/artikel',        [ArticleController::class,'index'])->name('articles');
     Route::get('/artikel/{slug}', [ArticleController::class,'show'])->name('articles.show');
@@ -176,13 +177,11 @@ Route::get('/robots.txt', function () {
         'Disallow: /cek-resi',
         'Disallow: /deploy-hostinger',
         '',
-        '# Parameter filter/sort menciptakan URL duplikat — biarkan canonical yang handle',
+        '# Parameter search internal (biarkan pagination & category diindex)',
         'Disallow: /*?q=',
         'Disallow: /*?sort=',
-        'Disallow: /*?page=',
         '',
         '# Disallow common bot traps',
-        'Disallow: /storage/',
         'Disallow: /*.php$',
         '',
         "Sitemap: {$sitemap}",

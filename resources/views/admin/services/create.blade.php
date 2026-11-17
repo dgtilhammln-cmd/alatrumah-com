@@ -1002,12 +1002,12 @@
               onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
           </td>
           <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
-            <div style="display:flex;align-items:center;gap:.5rem;">
-              <div id="v-preview-${rowIndex}" style="display:none;width:34px;height:34px;border-radius:6px;overflow:hidden;border:1.5px solid #3B82F6;flex-shrink:0;background:#F8FAFC;">
-                <img src="" style="width:100%;height:100%;object-fit:cover;">
+              <div style="display:flex;align-items:center;gap:.5rem;">
+                <div id="v-preview-${rowIndex}" style="display:none;width:38px;height:38px;border-radius:8px;overflow:hidden;border:1.5px solid #3B82F6;flex-shrink:0;background:#F8FAFC;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+                  <img src="" style="width:100%;height:100%;object-fit:cover;">
+                </div>
+                <input type="file" name="variant_options[combinations][${rowIndex}][image]" accept="image/*" style="font-size:.7rem;width:125px;" onchange="previewVariantRowImg(this, ${rowIndex})">
               </div>
-              <input type="file" name="variant_options[combinations][${rowIndex}][image]" accept="image/*" style="font-size:.7rem;width:125px;" onchange="previewVariantRowImg(this, ${rowIndex})">
-            </div>
           </td>
           <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_value_id]" value="${escHtml(v1.vid)}">
           <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_label]" value="${escHtml(v1.label)}">

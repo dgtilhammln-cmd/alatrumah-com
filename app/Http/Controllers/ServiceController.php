@@ -7,10 +7,34 @@ use App\Models\Setting;
 use App\Models\WaSetting;
 use App\Models\Testimonial;
 use App\Models\Coupon;
+use App\Models\CategoryItem;
+use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
-    public function index()
+    /**
+     * Dedicated SEO category landing page: /kategori/{slug}
+     */
+    public function category(string $slug)
+    {
+        $allCats = CategoryItem::all();
+        $slugClean = strtolower(trim($slug));
+        $category = $allCats->first(function($item) use ($slugClean) {
+            return strtolower($item->slug) === $slugClean
+                || (string)$item->id === $slugClean
+                || Str::slug($item->name) === $slugClean
+                || strtolower($item->name) === strtolower(str_replace('-', ' ', $slugClean));
+        });
+
+        if (!$category) {
+            abort(404);
+        }
+
+        request()->merge(['kategori' => $category->slug ?: $category->id]);
+        return $this->index($category);
+    }
+
+    public function index($categoryModel = null)
     {
         $query = Service::active()->ordered();
         
@@ -34,7 +58,7 @@ class ServiceController extends Controller
 
             if (!empty($cats)) {
                 // Find matching category IDs flexibly
-                $allCats = \App\Models\CategoryItem::all();
+                $allCats = CategoryItem::all();
                 $matchedCatIds = [];
                 foreach ($allCats as $catItem) {
                     $catSlug = strtolower($catItem->slug);
@@ -44,7 +68,7 @@ class ServiceController extends Controller
 
                     foreach ($cats as $searchCat) {
                         $s = strtolower($searchCat);
-                        $slugS = \Illuminate\Support\Str::slug($s);
+                        $slugS = Str::slug($s);
                         if ($catId === $s || 
                             $catSlug === $s || 
                             $catSlug === $slugS ||
@@ -130,7 +154,7 @@ class ServiceController extends Controller
         $totalPromoProducts  = Service::active()->where('sale_price', '>', 0)->whereColumn('sale_price', '<', 'price')->count();
 
         // Categories with counts & shortcut flags
-        $categories = \App\Models\CategoryItem::where('is_active', true)
+        $categories = CategoryItem::where('is_active', true)
             ->orderBy('sort_order')
             ->withCount(['products' => function($q) { $q->where('is_active', true); }])
             ->get()
@@ -155,21 +179,45 @@ class ServiceController extends Controller
         // Price range for slider
         $maxPrice = Service::active()->where('price', '>', 0)->max('price') ?? 5000000;
 
-        $hasFilters = request()->hasAny(['q', 'category', 'kategori', 'promo', 'price_min', 'price_max', 'type', 'sort']);
-        $seo = [
-            'title'       => $settings['meta_title_services'] ?? 'Produk & Layanan | ' . $siteName,
-            'description' => $settings['meta_desc_services']  ?? 'Temukan berbagai produk alat rumah tangga berkualitas dan layanan jasa profesional di ' . $siteName . '.',
-            'keywords'    => $settings['meta_keywords_services'] ?? 'alat rumah tangga, produk, layanan jasa, pemasangan',
-            'og_image'    => !empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : (!empty($settings['logo']) ? asset('storage/'.$settings['logo']) : asset('images/og-default.jpg')),
-            'canonical'   => route('products'),
-            'robots'      => $hasFilters ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
-        ];
+        $hasFilters = request()->hasAny(['q', 'price_min', 'price_max', 'type', 'sort']);
+
+        if ($categoryModel) {
+            $catSlug = $categoryModel->slug ?: Str::slug($categoryModel->name);
+            $catCanonical = url('/kategori/' . $catSlug);
+            $seo = [
+                'title'       => "Jual {$categoryModel->name} Terlengkap & Harga Murah | {$siteName}",
+                'description' => "Beli aneka produk {$categoryModel->name} terlengkap dengan promo harga terbaik di {$siteName}. 100% original, berkualitas, dan pengiriman cepat ke seluruh Indonesia.",
+                'keywords'    => $categoryModel->name . ', beli ' . strtolower($categoryModel->name) . ', alat rumah tangga',
+                'og_image'    => !empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : (!empty($settings['logo']) ? asset('storage/'.$settings['logo']) : asset('images/og-default.jpg')),
+                'canonical'   => $catCanonical,
+                'robots'      => $hasFilters ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+            ];
+            $breadcrumbs = [
+                ['name' => 'Beranda',  'url' => route('home')],
+                ['name' => 'Produk',   'url' => route('products')],
+                ['name' => $categoryModel->name, 'url' => $catCanonical],
+            ];
+        } else {
+            $hasQueryFilters = request()->hasAny(['q', 'category', 'kategori', 'promo', 'price_min', 'price_max', 'type', 'sort']);
+            $seo = [
+                'title'       => $settings['meta_title_services'] ?? 'Produk & Layanan | ' . $siteName,
+                'description' => $settings['meta_desc_services']  ?? 'Temukan berbagai produk alat rumah tangga berkualitas dan perkakas terbaik di ' . $siteName . '. Belanja mudah, aman, dan hemat.',
+                'keywords'    => $settings['meta_keywords_services'] ?? 'alat rumah tangga, produk, perkakas, alat kebersihan, dapur',
+                'og_image'    => !empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : (!empty($settings['logo']) ? asset('storage/'.$settings['logo']) : asset('images/og-default.jpg')),
+                'canonical'   => route('products'),
+                'robots'      => $hasQueryFilters ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+            ];
+            $breadcrumbs = [
+                ['name' => 'Beranda',          'url' => route('home')],
+                ['name' => 'Produk & Layanan', 'url' => route('products')],
+            ];
+        }
 
         $schema = json_encode([
             '@context' => 'https://schema.org',
             '@type'    => 'ItemList',
-            'name'     => 'Produk & Layanan ' . $siteName,
-            'url'      => route('products'),
+            'name'     => ($categoryModel ? $categoryModel->name . ' - ' : '') . 'Produk & Layanan ' . $siteName,
+            'url'      => $categoryModel ? url('/kategori/' . ($categoryModel->slug ?: Str::slug($categoryModel->name))) : route('products'),
             'itemListElement' => $services->map(function($s, $i) {
                 return [
                     '@type'    => 'ListItem',
@@ -180,7 +228,9 @@ class ServiceController extends Controller
             })->toArray(),
         ]);
 
-        return view('services.index', compact('services', 'settings', 'seo', 'schema', 'categories', 'wa', 'maxPrice'));
+        $currentCategory = $categoryModel;
+
+        return view('services.index', compact('services', 'settings', 'seo', 'schema', 'categories', 'wa', 'maxPrice', 'breadcrumbs', 'currentCategory'));
     }
 
     public function show(string $slug)
@@ -193,10 +243,26 @@ class ServiceController extends Controller
         $testimonials = Testimonial::active()->ordered()->get()->unique('name');
         $siteName     = $settings['site_name'] ?? 'Alat Rumah';
 
+        // Dynamic Rich Meta Description (Google Quality Guidelines: 140-160 chars)
+        $rawDesc = trim($service->meta_desc ?: $service->short_desc ?: '');
+        if (empty($rawDesc) || mb_strlen($rawDesc) < 60) {
+            $snippet = !empty($rawDesc) ? rtrim($rawDesc, '.') . '. ' : '';
+            $catText = $service->category ? 'kategori ' . $service->category->name . ' ' : '';
+            $metaDescription = "Beli {$service->name} {$catText}terbaik & original di {$siteName}. {$snippet}Kualitas terjamin, harga murah, dan pengiriman aman ke seluruh Indonesia.";
+        } else {
+            $metaDescription = $rawDesc;
+        }
+
+        // Standardized Brand Title
+        $metaTitle = $service->meta_title ?: $service->name;
+        if (!str_contains(strtolower($metaTitle), strtolower($siteName))) {
+            $metaTitle = $metaTitle . ' | ' . $siteName;
+        }
+
         $seo = [
-            'title'       => $service->meta_title ?: ($service->name . ' | ' . $siteName),
-            'description' => $service->meta_desc  ?: $service->short_desc,
-            'keywords'    => $service->meta_keywords,
+            'title'       => $metaTitle,
+            'description' => $metaDescription,
+            'keywords'    => $service->meta_keywords ?: ($service->name . ', beli ' . $service->name . ', alat rumah tangga'),
             'og_image'    => !empty($service->og_image) ? asset('storage/'.$service->og_image) : (!empty($settings['og_image_default']) ? asset('storage/'.$settings['og_image_default']) : asset('images/og-default.jpg')),
             'canonical'   => route('products.show', ['slug' => $slug]),
             'og_type'     => 'product',
@@ -219,9 +285,9 @@ class ServiceController extends Controller
                 ? rtrim(config('app.url'), '/') . '/storage/' . $service->og_image
                 : rtrim(config('app.url'), '/') . '/images/og-default.jpg');
 
-        $schemaDesc = strip_tags($service->short_desc ?: $service->name);
+        $schemaDesc = strip_tags($service->short_desc ?: $service->description ?: $service->name);
         if (strlen($schemaDesc) < 50) {
-            $schemaDesc = $schemaDesc . ' - Dapatkan produk ini dengan penawaran harga terbaik, jaminan 100% original, dan garansi resmi hanya di ' . $siteName . '. Beli sekarang juga.';
+            $schemaDesc = $schemaDesc . ' - Dapatkan produk original ini dengan penawaran harga terbaik hanya di ' . $siteName . '. Beli sekarang juga dengan jaminan pengiriman cepat dan aman.';
         }
 
         $finalPrice = $service->sale_price > 0 && $service->sale_price < $service->price ? $service->sale_price : $service->price;
@@ -291,9 +357,19 @@ class ServiceController extends Controller
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         $breadcrumbs = [
-            ['name' => 'Beranda',          'url' => route('home')],
-            ['name' => 'Produk & Layanan', 'url' => route('products')],
-            ['name' => $service->name,     'url' => route('products.show', ['slug' => $slug])],
+            ['name' => 'Beranda',  'url' => route('home')],
+            ['name' => 'Produk',   'url' => route('products')],
+        ];
+        if ($service->category) {
+            $catSlug = $service->category->slug ?: Str::slug($service->category->name);
+            $breadcrumbs[] = [
+                'name' => $service->category->name,
+                'url'  => url('/kategori/' . $catSlug),
+            ];
+        }
+        $breadcrumbs[] = [
+            'name' => $service->name,
+            'url'  => route('products.show', ['slug' => $slug]),
         ];
 
         $coupons = Coupon::active()->latest()->take(3)->get();

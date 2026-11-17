@@ -51,12 +51,15 @@ body{background:var(--c-bg);}
 .sp-apply-btn{width:100%;padding:0.625rem;background:var(--c-accent);color:#fff;border:none;border-radius:8px;font-family:var(--font);font-weight:700;font-size:0.8125rem;cursor:pointer;transition:background 0.2s;}
 .sp-apply-btn:hover{background:var(--c-accent-h);}
 .sp-cat-list{display:flex;flex-direction:column;}
-.sp-cat-item{display:flex;align-items:center;gap:0.75rem;padding:0.625rem 0;border-bottom:1px solid var(--c-border);cursor:pointer;text-decoration:none;transition:all 0.2s;}
+.sp-cat-item{display:flex;align-items:center;gap:0.75rem;padding:0.625rem 0.5rem;border-bottom:1px solid var(--c-border);cursor:pointer;text-decoration:none;transition:all 0.2s cubic-bezier(0.22,1,0.36,1);border-radius:10px;}
 .sp-cat-item:last-child{border-bottom:none;}
-.sp-cat-check{width:18px;height:18px;border:2px solid var(--c-border);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;background:#fff;}
-.sp-cat-item.active .sp-cat-check,.sp-cat-item:hover .sp-cat-check{border-color:var(--c-accent);background:var(--c-accent);}
-.sp-cat-check svg{opacity:0;transition:opacity 0.2s;}
-.sp-cat-item.active .sp-cat-check svg,.sp-cat-item:hover .sp-cat-check svg{opacity:1;}
+.sp-cat-item:hover{background:rgba(14,165,233,0.03);}
+.sp-cat-item.active{background:rgba(14,165,233,0.07);}
+.sp-cat-radio{width:18px;height:18px;border:2px solid var(--c-border);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s cubic-bezier(0.22,1,0.36,1);background:#fff;}
+.sp-cat-dot{width:8px;height:8px;border-radius:50%;background:var(--c-accent);transform:scale(0);transition:transform 0.2s cubic-bezier(0.22,1,0.36,1);}
+.sp-cat-item.active .sp-cat-radio{border-color:var(--c-accent);background:#fff;}
+.sp-cat-item.active .sp-cat-dot{transform:scale(1);}
+.sp-cat-item:hover .sp-cat-radio{border-color:var(--c-accent);}
 .sp-cat-name{font-size:0.8125rem;font-family:var(--font);color:var(--c-text);flex:1;font-weight:500;transition:color 0.2s;}
 .sp-cat-item.active .sp-cat-name,.sp-cat-item:hover .sp-cat-name{color:var(--c-accent);font-weight:600;}
 .sp-cat-badge{font-size:0.7rem;font-weight:700;background:var(--c-surface);border:1px solid var(--c-border);color:var(--c-muted);padding:0.125rem 0.5rem;border-radius:20px;font-family:var(--font);transition:all 0.2s;}
@@ -184,11 +187,15 @@ body{background:var(--c-bg);}
 <div class="sp-topbar">
     <div class="sp-topbar-inner">
         <div class="sp-topbar-left">
-            <h1>Cari Produk</h1>
+            <h1>{{ !empty($currentCategory) ? $currentCategory->name : 'Katalog Produk' }}</h1>
             <nav class="sp-breadcrumb" aria-label="breadcrumb">
                 <a href="{{ route_locale('home') }}">Beranda</a>
                 <span class="sp-breadcrumb-sep">/</span>
-                @if(request()->filled('q'))
+                @if(!empty($currentCategory))
+                    <a href="{{ route_locale('products') }}">Produk</a>
+                    <span class="sp-breadcrumb-sep">/</span>
+                    <span class="sp-breadcrumb-cur">{{ $currentCategory->name }}</span>
+                @elseif(request()->filled('q'))
                     <span class="sp-breadcrumb-cur">Hasil: "{{ request('q') }}"</span>
                 @elseif(request('type') === 'jasa')
                     <span class="sp-breadcrumb-cur">Layanan Jasa</span>
@@ -238,14 +245,15 @@ body{background:var(--c-bg);}
 </div>
 
 @php
-    $activeCats = [];
     $rawCatsInput = request()->filled('category') ? request('category') : request('kategori');
+    $activeCat = '';
     if($rawCatsInput){
         $rawArr = is_array($rawCatsInput) ? $rawCatsInput : explode(',', $rawCatsInput);
-        $activeCats = array_values(array_filter(array_map('trim', $rawArr), fn($c) => !in_array(strtolower($c), ['all', 'semua', 'lihat-semua', ''])));
+        $cleanArr = array_values(array_filter(array_map('trim', $rawArr), fn($c) => !in_array(strtolower($c), ['all', 'semua', 'lihat-semua', ''])));
+        $activeCat = $cleanArr[0] ?? '';
     }
     $isPromoFilter = request()->boolean('promo') || request('promo') === '1' || request('promo') === 'true';
-    $isAllFilter   = empty($activeCats) && !$isPromoFilter;
+    $isAllFilter   = ($activeCat === '') && !$isPromoFilter;
 @endphp
 
 {{-- MAIN LAYOUT --}}
@@ -337,26 +345,31 @@ body{background:var(--c-bg);}
                         
                         if ($isViewAll) {
                             $isCatA = $isAllFilter;
+                            // Clicking "Lihat Semua" resets category and promo
                             $catQ   = request()->except(['category', 'kategori', 'promo']);
                         } elseif ($isPromo) {
                             $isCatA = $isPromoFilter;
+                            // Clicking "Semua Promo" toggles promo and resets category
                             $catQ   = $isCatA 
-                                ? request()->except('promo') 
+                                ? request()->except(['promo', 'category', 'kategori']) 
                                 : array_merge(request()->except(['category', 'kategori']), ['promo' => '1']);
                         } else {
-                            $catSlug = $cat->slug;
-                            $isCatA  = in_array($catSlug, $activeCats) || in_array((string)$cat->id, $activeCats);
-                            $newList = $isCatA 
-                                ? array_values(array_filter($activeCats, fn($c) => $c !== $catSlug && $c !== (string)$cat->id)) 
-                                : array_merge($activeCats, [$catSlug]);
-                            $baseExcept = request()->except(['category', 'kategori', 'promo']);
-                            $catQ = array_merge($baseExcept, $newList ? ['kategori' => implode(',', $newList)] : []);
+                            $catSlug = $cat->slug ?: \Illuminate\Support\Str::slug($cat->name);
+                            $isCatA  = ($activeCat !== '' && (strtolower($catSlug) === strtolower($activeCat) || (string)$cat->id === (string)$activeCat || strtolower($cat->name) === strtolower($activeCat)));
+                            
+                            $otherParams = request()->except(['category', 'kategori', 'promo']);
+                            if ($isCatA) {
+                                $targetUrl = route_locale('products') . ($otherParams ? '?' . http_build_query($otherParams) : '');
+                            } else {
+                                $targetUrl = empty($otherParams) 
+                                    ? url('/kategori/' . $catSlug) 
+                                    : url('/kategori/' . $catSlug) . '?' . http_build_query($otherParams);
+                            }
                         }
-                        $targetUrl = route_locale('products') . ($catQ ? '?' . http_build_query($catQ) : '');
                     @endphp
                     <a href="{{ $targetUrl }}" class="sp-cat-item {{ $isCatA ? 'active' : '' }}">
-                        <div class="sp-cat-check">
-                            <svg width="10" height="10" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        <div class="sp-cat-radio">
+                            <span class="sp-cat-dot"></span>
                         </div>
                         <span class="sp-cat-name">{{ $cat->name }}</span>
                         <span class="sp-cat-badge">{{ $cat->services_count }}</span>
@@ -398,22 +411,20 @@ body{background:var(--c-bg);}
                 {{ request('type') === 'jasa' ? 'Layanan Jasa' : 'Produk' }} <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </a>
             @endif
-            @foreach($activeCats as $cs)
+            @if($activeCat !== '')
                 @php 
-                    $cObj = $categories->first(function($item) use ($cs) {
-                        return $item->slug === $cs || (string)$item->id === (string)$cs || strtolower($item->name) === strtolower($cs);
+                    $cObj = $categories->first(function($item) use ($activeCat) {
+                        return strtolower($item->slug) === strtolower($activeCat) 
+                            || (string)$item->id === (string)$activeCat 
+                            || strtolower($item->name) === strtolower($activeCat);
                     });
                 @endphp
                 @if($cObj)
-                @php 
-                    $rem = array_values(array_diff($activeCats, [$cs, $cObj->slug, (string)$cObj->id]));
-                    $remQ = array_merge(request()->except(['category', 'kategori']), $rem ? ['kategori' => implode(',', $rem)] : []);
-                @endphp
-                <a href="{{ route_locale('products') }}?{{ http_build_query($remQ) }}" class="sp-filter-chip">
+                <a href="{{ route_locale('products') }}?{{ http_build_query(request()->except(['category', 'kategori'])) }}" class="sp-filter-chip">
                     {{ $cObj->name }} <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </a>
                 @endif
-            @endforeach
+            @endif
             @if(request()->filled('price_min') || request()->filled('price_max'))
             <a href="{{ route_locale('products') }}?{{ http_build_query(request()->except('price_min','price_max')) }}" class="sp-filter-chip">
                 Rp {{ number_format(request('price_min',0),0,',','.') }} – Rp {{ number_format(request('price_max',$maxPrice),0,',','.') }}
