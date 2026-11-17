@@ -239,11 +239,13 @@ body{background:var(--c-bg);}
 
 @php
     $activeCats = [];
-    if(request()->filled('category')){
-        $raw = request('category');
-        $activeCats = is_array($raw) ? $raw : explode(',', $raw);
-        $activeCats = array_filter($activeCats);
+    $rawCatsInput = request()->filled('category') ? request('category') : request('kategori');
+    if($rawCatsInput){
+        $rawArr = is_array($rawCatsInput) ? $rawCatsInput : explode(',', $rawCatsInput);
+        $activeCats = array_values(array_filter(array_map('trim', $rawArr), fn($c) => !in_array(strtolower($c), ['all', 'semua', 'lihat-semua', ''])));
     }
+    $isPromoFilter = request()->boolean('promo') || request('promo') === '1' || request('promo') === 'true';
+    $isAllFilter   = empty($activeCats) && !$isPromoFilter;
 @endphp
 
 {{-- MAIN LAYOUT --}}
@@ -330,11 +332,29 @@ body{background:var(--c-bg);}
                 <div class="sp-cat-list">
                     @foreach($categories as $cat)
                     @php
-                        $isCatA = in_array($cat->slug, $activeCats);
-                        $newList = $isCatA ? array_values(array_filter($activeCats, fn($c) => $c !== $cat->slug)) : array_merge($activeCats, [$cat->slug]);
-                        $catQ    = array_merge(request()->except('category'), $newList ? ['category' => implode(',', $newList)] : []);
+                        $isViewAll = !empty($cat->is_view_all);
+                        $isPromo   = !empty($cat->is_promo_shortcut);
+                        
+                        if ($isViewAll) {
+                            $isCatA = $isAllFilter;
+                            $catQ   = request()->except(['category', 'kategori', 'promo']);
+                        } elseif ($isPromo) {
+                            $isCatA = $isPromoFilter;
+                            $catQ   = $isCatA 
+                                ? request()->except('promo') 
+                                : array_merge(request()->except(['category', 'kategori']), ['promo' => '1']);
+                        } else {
+                            $catSlug = $cat->slug;
+                            $isCatA  = in_array($catSlug, $activeCats) || in_array((string)$cat->id, $activeCats);
+                            $newList = $isCatA 
+                                ? array_values(array_filter($activeCats, fn($c) => $c !== $catSlug && $c !== (string)$cat->id)) 
+                                : array_merge($activeCats, [$catSlug]);
+                            $baseExcept = request()->except(['category', 'kategori', 'promo']);
+                            $catQ = array_merge($baseExcept, $newList ? ['kategori' => implode(',', $newList)] : []);
+                        }
+                        $targetUrl = route_locale('products') . ($catQ ? '?' . http_build_query($catQ) : '');
                     @endphp
-                    <a href="{{ route_locale('products') }}?{{ http_build_query($catQ) }}" class="sp-cat-item {{ $isCatA ? 'active' : '' }}">
+                    <a href="{{ $targetUrl }}" class="sp-cat-item {{ $isCatA ? 'active' : '' }}">
                         <div class="sp-cat-check">
                             <svg width="10" height="10" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                         </div>
@@ -347,7 +367,7 @@ body{background:var(--c-bg);}
         </div>
         @endif
 
-        @if(request()->hasAny(['q','category','type','price_min','price_max','sort']))
+        @if(request()->hasAny(['q','category','kategori','promo','type','price_min','price_max','sort']))
         <a href="{{ route_locale('products') }}" class="sp-reset-link">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
             Reset semua filter
@@ -359,7 +379,7 @@ body{background:var(--c-bg);}
     <div class="sp-content">
 
         {{-- Active Filter Chips --}}
-        @php $hasF = request()->hasAny(['q','category','type','price_min','price_max']); @endphp
+        @php $hasF = request()->hasAny(['q','category','kategori','promo','type','price_min','price_max']); @endphp
         @if($hasF)
         <div class="sp-active-filters">
             <span style="font-size:0.8rem;color:var(--c-muted);font-family:var(--font);font-weight:600;">Filter:</span>
@@ -368,16 +388,28 @@ body{background:var(--c-bg);}
                 "{{ request('q') }}" <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </a>
             @endif
+            @if($isPromoFilter)
+            <a href="{{ route_locale('products') }}?{{ http_build_query(request()->except('promo')) }}" class="sp-filter-chip">
+                Semua Promo <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </a>
+            @endif
             @if(request('type'))
             <a href="{{ route_locale('products') }}?{{ http_build_query(request()->except('type')) }}" class="sp-filter-chip">
                 {{ request('type') === 'jasa' ? 'Layanan Jasa' : 'Produk' }} <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </a>
             @endif
             @foreach($activeCats as $cs)
-                @php $cObj = $categories->firstWhere('slug', $cs); @endphp
+                @php 
+                    $cObj = $categories->first(function($item) use ($cs) {
+                        return $item->slug === $cs || (string)$item->id === (string)$cs || strtolower($item->name) === strtolower($cs);
+                    });
+                @endphp
                 @if($cObj)
-                @php $rem = array_values(array_diff($activeCats, [$cs])); @endphp
-                <a href="{{ route_locale('products') }}?{{ http_build_query(array_merge(request()->except('category'), $rem ? ['category' => implode(',', $rem)] : [])) }}" class="sp-filter-chip">
+                @php 
+                    $rem = array_values(array_diff($activeCats, [$cs, $cObj->slug, (string)$cObj->id]));
+                    $remQ = array_merge(request()->except(['category', 'kategori']), $rem ? ['kategori' => implode(',', $rem)] : []);
+                @endphp
+                <a href="{{ route_locale('products') }}?{{ http_build_query($remQ) }}" class="sp-filter-chip">
                     {{ $cObj->name }} <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </a>
                 @endif

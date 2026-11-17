@@ -32,9 +32,13 @@ class ChatController extends Controller
             'page_url' => url()->previous(),
         ]);
 
-        // Redirect to WA Admin (assuming admin WA is configured or hardcoded to a default)
-        $adminWa = \App\Models\WaSetting::first()->phone_number ?? '6281216621307'; // Use first wa setting or fallback
+        // Redirect to WA Admin (ambil nomor primary dari database, fallback ke nomor baru)
+        $wa = \App\Models\WaSetting::primary();
+        $adminWa = $wa ? ($wa->nomor_wa ?: '6285735180390') : '6285735180390';
         $waNumber = preg_replace('/[^0-9]/', '', $adminWa);
+        if (str_starts_with($waNumber, '0')) {
+            $waNumber = '62' . substr($waNumber, 1);
+        }
         
         $text = "Halo CS, saya {$name} ingin bertanya:\n\n{$request->message}";
         

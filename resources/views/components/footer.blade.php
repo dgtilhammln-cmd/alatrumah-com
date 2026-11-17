@@ -575,7 +575,7 @@ www.alatrumah.com
                         <a href="javascript:void(0)" onclick="openOrderModal('Footer WA')"
                             data-track="Footer WA">{{ $waDisplay }}</a>
                     @else
-                        <a href="javascript:void(0)" onclick="openOrderModal('Footer WA')">+62 812-1662-1307</a>
+                        <a href="javascript:void(0)" onclick="openOrderModal('Footer WA')">+62 857-3518-0390</a>
                     @endif
                 </div>
             </div>

@@ -34,7 +34,8 @@ class LeadController extends Controller
         $msg .= "\nTerima kasih.";
 
         // Build WA URL
-        $nomor = $wa ? preg_replace('/[^0-9]/', '', $wa->nomor_wa) : '6281216621307';
+        $nomor = $wa ? preg_replace('/[^0-9]/', '', $wa->nomor_wa) : '6285735180390';
+        if (empty($nomor)) $nomor = '6285735180390';
         if (str_starts_with($nomor, '0')) $nomor = '62' . substr($nomor, 1);
         $waUrl = 'https://wa.me/' . $nomor . '?text=' . urlencode($msg);
 

@@ -27,13 +27,58 @@ class ServiceController extends Controller
         // Category filter (multiple) - support both 'category' and 'kategori' params
         $categoryParam = request()->filled('category') ? request('category') : request('kategori');
         if ($categoryParam) {
-            $cats = is_array($categoryParam) ? $categoryParam : explode(',', $categoryParam);
-            $cats = array_filter(array_map('trim', $cats));
+            $rawCats = is_array($categoryParam) ? $categoryParam : explode(',', $categoryParam);
+            $cats = array_values(array_filter(array_map('trim', $rawCats), function($c) {
+                return $c !== '' && !in_array(strtolower($c), ['all', 'semua', 'lihat-semua']);
+            }));
+
             if (!empty($cats)) {
-                $query->whereHas('category', function($q) use ($cats) {
-                    $q->whereIn('url', $cats);
-                });
+                // Find matching category IDs flexibly
+                $allCats = \App\Models\CategoryItem::all();
+                $matchedCatIds = [];
+                foreach ($allCats as $catItem) {
+                    $catSlug = strtolower($catItem->slug);
+                    $catName = strtolower($catItem->name);
+                    $catUrl  = strtolower($catItem->url ?? '');
+                    $catId   = (string)$catItem->id;
+
+                    foreach ($cats as $searchCat) {
+                        $s = strtolower($searchCat);
+                        $slugS = \Illuminate\Support\Str::slug($s);
+                        if ($catId === $s || 
+                            $catSlug === $s || 
+                            $catSlug === $slugS ||
+                            $catName === $s ||
+                            str_contains($catUrl, $s) || 
+                            str_contains($catUrl, $slugS) ||
+                            str_contains($catName, $s)) {
+                            $matchedCatIds[] = $catItem->id;
+                            break;
+                        }
+                    }
+                }
+
+                if (!empty($matchedCatIds)) {
+                    $query->whereIn('product_category_id', array_unique($matchedCatIds));
+                } else {
+                    $query->whereHas('category', function($q) use ($cats) {
+                        $q->where(function($sub) use ($cats) {
+                            foreach ($cats as $c) {
+                                $sub->orWhere('name', 'like', '%' . $c . '%')
+                                    ->orWhere('url', 'like', '%' . $c . '%');
+                            }
+                        });
+                    });
+                }
             }
+        }
+
+        // Promo filter (support ?promo=1 or ?promo=true)
+        if (request()->boolean('promo') || request('promo') === '1' || request('promo') === 'true') {
+            $query->where(function($q) {
+                $q->where('sale_price', '>', 0)
+                  ->whereColumn('sale_price', '<', 'price');
+            });
         }
 
         // Price range filter
@@ -81,20 +126,36 @@ class ServiceController extends Controller
         $siteName   = $settings['site_name'] ?? 'Alat Rumah';
         $wa         = WaSetting::primary();
 
-        // Categories with counts
+        $totalActiveProducts = Service::active()->count();
+        $totalPromoProducts  = Service::active()->where('sale_price', '>', 0)->whereColumn('sale_price', '<', 'price')->count();
+
+        // Categories with counts & shortcut flags
         $categories = \App\Models\CategoryItem::where('is_active', true)
             ->orderBy('sort_order')
             ->withCount(['products' => function($q) { $q->where('is_active', true); }])
             ->get()
-            ->map(function($cat) {
-                $cat->services_count = $cat->products_count;
+            ->map(function($cat) use ($totalActiveProducts, $totalPromoProducts) {
+                $nameLower = strtolower(trim($cat->name));
+                if (in_array($nameLower, ['lihat semua', 'semua']) || $cat->url === '/produk') {
+                    $cat->services_count    = $totalActiveProducts;
+                    $cat->is_view_all       = true;
+                    $cat->is_promo_shortcut = false;
+                } elseif (in_array($nameLower, ['semua promo', 'promo']) || str_contains($cat->url ?? '', 'promo=1')) {
+                    $cat->services_count    = $totalPromoProducts;
+                    $cat->is_view_all       = false;
+                    $cat->is_promo_shortcut = true;
+                } else {
+                    $cat->services_count    = $cat->products_count;
+                    $cat->is_view_all       = false;
+                    $cat->is_promo_shortcut = false;
+                }
                 return $cat;
             });
 
         // Price range for slider
         $maxPrice = Service::active()->where('price', '>', 0)->max('price') ?? 5000000;
 
-        $hasFilters = request()->hasAny(['q', 'category', 'kategori', 'price_min', 'price_max', 'type', 'sort']);
+        $hasFilters = request()->hasAny(['q', 'category', 'kategori', 'promo', 'price_min', 'price_max', 'type', 'sort']);
         $seo = [
             'title'       => $settings['meta_title_services'] ?? 'Produk & Layanan | ' . $siteName,
             'description' => $settings['meta_desc_services']  ?? 'Temukan berbagai produk alat rumah tangga berkualitas dan layanan jasa profesional di ' . $siteName . '.',

@@ -65,7 +65,7 @@
             $waNumber = '62' . substr($waNumber, 1);
         }
         if (empty($waNumber)) {
-            $waNumber = '6281216621307';
+            $waNumber = '6285735180390';
         }
     @endphp
 
@@ -109,7 +109,7 @@ function sendResetWhatsApp(waNumber) {
         return;
     }
     
-    const targetNumber = waNumber || '6281216621307';
+    const targetNumber = waNumber || '6285735180390';
     
     const text = `Halo Admin Alat Rumah,%0A%0ASaya ingin mereset kata sandi akun saya.%0A%0A*Email:* ${email}%0A*Alasan:* ${reason}%0A%0AMohon bantuannya untuk mereset kata sandi saya. Terima kasih.`;
     const waUrl = `https://wa.me/${targetNumber}?text=${text}`;

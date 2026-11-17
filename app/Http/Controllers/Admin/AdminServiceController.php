@@ -31,7 +31,7 @@ class AdminServiceController extends Controller
     }
 
     public function create() { 
-        $categories = CategoryItem::active()->get();
+        $categories = CategoryItem::realCategories()->get();
         return view('admin.services.create', compact('categories')); 
     }
 
@@ -191,7 +191,7 @@ class AdminServiceController extends Controller
     }
 
     public function edit(Service $service) { 
-        $categories = CategoryItem::active()->get();
+        $categories = CategoryItem::realCategories()->get();
         return view('admin.services.edit', compact('service', 'categories')); 
     }
 
