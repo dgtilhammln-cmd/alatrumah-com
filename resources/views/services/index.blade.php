@@ -347,12 +347,14 @@ body{background:var(--c-bg);}
                             $isCatA = $isAllFilter;
                             // Clicking "Lihat Semua" resets category and promo
                             $catQ   = request()->except(['category', 'kategori', 'promo']);
+                            $targetUrl = route_locale('products') . ($catQ ? '?' . http_build_query($catQ) : '');
                         } elseif ($isPromo) {
                             $isCatA = $isPromoFilter;
                             // Clicking "Semua Promo" toggles promo and resets category
                             $catQ   = $isCatA 
                                 ? request()->except(['promo', 'category', 'kategori']) 
                                 : array_merge(request()->except(['category', 'kategori']), ['promo' => '1']);
+                            $targetUrl = route_locale('products') . ($catQ ? '?' . http_build_query($catQ) : '');
                         } else {
                             $catSlug = $cat->slug ?: \Illuminate\Support\Str::slug($cat->name);
                             $isCatA  = ($activeCat !== '' && (strtolower($catSlug) === strtolower($activeCat) || (string)$cat->id === (string)$activeCat || strtolower($cat->name) === strtolower($activeCat)));

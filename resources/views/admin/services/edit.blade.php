@@ -157,7 +157,8 @@
             <div>
               <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Harga Utama
                 (Rp)</label>
-              <input type="text" class="format-rupiah" inputmode="numeric" name="price" value="{{ old('price', $s->price ? number_format((float)$s->price, 0, '', '.') : '') }}"
+              <input type="text" class="format-rupiah" inputmode="numeric" name="price"
+                value="{{ old('price', $s->price ? number_format((float) $s->price, 0, '', '.') : '') }}"
                 placeholder="Contoh: 1.500.000"
                 style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;"
                 onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
@@ -167,7 +168,8 @@
             <div>
               <label style="display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.5rem;">Harga Diskon
                 (Rp)</label>
-              <input type="text" class="format-rupiah" inputmode="numeric" name="sale_price" value="{{ old('sale_price', $s->sale_price ? number_format((float)$s->sale_price, 0, '', '.') : '') }}"
+              <input type="text" class="format-rupiah" inputmode="numeric" name="sale_price"
+                value="{{ old('sale_price', $s->sale_price ? number_format((float) $s->sale_price, 0, '', '.') : '') }}"
                 placeholder="Contoh: 1.250.000 (Opsional)"
                 style="width:100%;padding:.75rem 1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:10px;font-size:.9rem;color:#1E293B;outline:none;"
                 onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
@@ -957,23 +959,23 @@
       const empty = document.getElementById('specs-empty');
       if (empty) empty.remove();
       document.getElementById('specs-container').insertAdjacentHTML('beforeend', `
-        <div class="spec-row" style="display:flex;gap:.625rem;align-items:center;">
-          <input type="text" name="spec_keys[]" placeholder="Label (misal: Dimensi)" style="flex:1;padding:.625rem .875rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
-          <input type="text" name="spec_values[]" placeholder="Nilai (misal: 24 inch)" style="flex:2;padding:.625rem .875rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
-          <button type="button" onclick="this.parentElement.remove()" style="flex-shrink:0;width:32px;height:32px;background:rgba(239,68,68,0.08);border:none;border-radius:8px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='rgba(239,68,68,0.16)'" onmouseout="this.style.background='rgba(239,68,68,0.08)'">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>`);
+          <div class="spec-row" style="display:flex;gap:.625rem;align-items:center;">
+            <input type="text" name="spec_keys[]" placeholder="Label (misal: Dimensi)" style="flex:1;padding:.625rem .875rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+            <input type="text" name="spec_values[]" placeholder="Nilai (misal: 24 inch)" style="flex:2;padding:.625rem .875rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+            <button type="button" onclick="this.parentElement.remove()" style="flex-shrink:0;width:32px;height:32px;background:rgba(239,68,68,0.08);border:none;border-radius:8px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='rgba(239,68,68,0.16)'" onmouseout="this.style.background='rgba(239,68,68,0.08)'">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>`);
     }
     function addFaq() {
       document.getElementById('faq-container').insertAdjacentHTML('beforeend', `
-        <div class="faq-row" style="display:flex;flex-direction:column;gap:.5rem;padding:1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:12px;position:relative;">
-          <button type="button" onclick="this.parentElement.remove()" style="position:absolute;top:.625rem;right:.625rem;width:24px;height:24px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-          <input type="text" name="faq_qs[]" placeholder="Pertanyaan?" style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;padding-right:2.5rem;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
-          <textarea name="faq_as[]" rows="2" placeholder="Jawaban lengkap..." style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'"></textarea>
-        </div>`);
+          <div class="faq-row" style="display:flex;flex-direction:column;gap:.5rem;padding:1rem;background:#F8FAFC;border:1.5px solid #E4E7F0;border-radius:12px;position:relative;">
+            <button type="button" onclick="this.parentElement.remove()" style="position:absolute;top:.625rem;right:.625rem;width:24px;height:24px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <input type="text" name="faq_qs[]" placeholder="Pertanyaan?" style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;padding-right:2.5rem;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'">
+            <textarea name="faq_as[]" rows="2" placeholder="Jawaban lengkap..." style="width:100%;padding:.625rem .875rem;background:#fff;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.875rem;color:#1E293B;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#E4E7F0'"></textarea>
+          </div>`);
     }
 
     /* ─── Shopee-Style Varian Produk Engine (Theme Blue) ─────────────────── */
@@ -1084,10 +1086,10 @@
       list.innerHTML = VGS.map((g, idx) => {
         const ph = placeholders[idx] || ['Variasi', 'Nilai variasi...'];
         return `
-          <div style="border:1.5px solid #E2E8F0;border-radius:14px;padding:1.1rem;background:#F8FAFC;">
-            ${renderVGContent(g, ph, idx + 1)}
-          </div>
-        `;
+            <div style="border:1.5px solid #E2E8F0;border-radius:14px;padding:1.1rem;background:#F8FAFC;">
+              ${renderVGContent(g, ph, idx + 1)}
+            </div>
+          `;
       }).join('');
 
       renderMatrix();
@@ -1096,51 +1098,51 @@
     function renderVGContent(g, placeholders, groupNum) {
       const groupLabel = `VARIASI ${groupNum}`;
       const tagsHTML = g.values.map(v => `
-        <span style="display:inline-flex;align-items:center;gap:.35rem;background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;padding:.3rem .65rem;border-radius:20px;font-size:.78rem;font-weight:600;">
-          ${escHtml(v.label)}
-          <button type="button" onclick="removeTagValue(${g.gid}, ${v.vid})" style="background:none;border:none;color:#1D4ED8;cursor:pointer;padding:0;font-size:.85rem;line-height:1;font-weight:700;">×</button>
-        </span>
-      `).join('');
+          <span style="display:inline-flex;align-items:center;gap:.35rem;background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;padding:.3rem .65rem;border-radius:20px;font-size:.78rem;font-weight:600;">
+            ${escHtml(v.label)}
+            <button type="button" onclick="removeTagValue(${g.gid}, ${v.vid})" style="background:none;border:none;color:#1D4ED8;cursor:pointer;padding:0;font-size:.85rem;line-height:1;font-weight:700;">×</button>
+          </span>
+        `).join('');
 
       const hiddenInputs = g.values.map((v) => `
-        <input type="hidden" name="variant_options[g${g.gid}][values][v${v.vid}][value]" value="${escHtml(v.label)}">
-        ${v.existingId ? `<input type="hidden" name="variant_options[g${g.gid}][values][v${v.vid}][existing_id]" value="${v.existingId}">` : ''}
-      `).join('');
+          <input type="hidden" name="variant_options[g${g.gid}][values][v${v.vid}][value]" value="${escHtml(v.label)}">
+          ${v.existingId ? `<input type="hidden" name="variant_options[g${g.gid}][values][v${v.vid}][existing_id]" value="${v.existingId}">` : ''}
+        `).join('');
 
       return `
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;">
-          <span style="font-size:.72rem;font-weight:800;color:#1B6FE8;letter-spacing:.06em;text-transform:uppercase;">${groupLabel}</span>
-          <button type="button" onclick="removeVarGroup(${g.gid})"
-            style="width:26px;height:26px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>
-        <div style="margin-bottom:.75rem;">
-          <label style="font-size:.72rem;font-weight:700;color:#64748B;display:block;margin-bottom:.35rem;">Nama Variasi *</label>
-          <input type="text" name="variant_options[g${g.gid}][name]"
-            ${g.existingId ? `data-existing="${g.existingId}"` : ''}
-            placeholder="${placeholders[0]}" value="${escHtml(g.name)}"
-            oninput="onGroupNameChange(${g.gid}, this.value)"
-            style="width:100%;padding:.5rem .75rem;border:1.5px solid #E4E7F0;border-radius:9px;font-size:.85rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;"
-            onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
-        </div>
-        <div style="margin-bottom:.6rem;">
-          <label style="font-size:.72rem;font-weight:700;color:#64748B;display:block;margin-bottom:.35rem;">Opsi Nilai *</label>
-          <div style="display:flex;gap:.4rem;align-items:center;">
-            <input id="tag-inp-${g.gid}" type="text" placeholder="${placeholders[1]}"
-              style="flex:1;padding:.5rem .75rem;border:1.5px solid #E4E7F0;border-radius:9px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
-              onkeydown="if(event.key==='Enter'){event.preventDefault();addTagValue(${g.gid});}"
-              onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
-            <button type="button" onclick="addTagValue(${g.gid})"
-              style="padding:.5rem .85rem;background:#1B6FE8;color:#fff;border:none;border-radius:9px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;">
-              + Tambah
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;">
+            <span style="font-size:.72rem;font-weight:800;color:#1B6FE8;letter-spacing:.06em;text-transform:uppercase;">${groupLabel}</span>
+            <button type="button" onclick="removeVarGroup(${g.gid})"
+              style="width:26px;height:26px;background:rgba(239,68,68,0.08);border:none;border-radius:6px;color:#EF4444;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
-        </div>
-        <div id="tags-${g.gid}" style="display:flex;flex-wrap:wrap;gap:.35rem;min-height:20px;">${tagsHTML}</div>
-        ${hiddenInputs}
-        ${g.existingId ? `<input type="hidden" name="variant_options[g${g.gid}][existing_id]" value="${g.existingId}">` : ''}
-      `;
+          <div style="margin-bottom:.75rem;">
+            <label style="font-size:.72rem;font-weight:700;color:#64748B;display:block;margin-bottom:.35rem;">Nama Variasi *</label>
+            <input type="text" name="variant_options[g${g.gid}][name]"
+              ${g.existingId ? `data-existing="${g.existingId}"` : ''}
+              placeholder="${placeholders[0]}" value="${escHtml(g.name)}"
+              oninput="onGroupNameChange(${g.gid}, this.value)"
+              style="width:100%;padding:.5rem .75rem;border:1.5px solid #E4E7F0;border-radius:9px;font-size:.85rem;color:#1E293B;font-family:inherit;outline:none;box-sizing:border-box;"
+              onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+          </div>
+          <div style="margin-bottom:.6rem;">
+            <label style="font-size:.72rem;font-weight:700;color:#64748B;display:block;margin-bottom:.35rem;">Opsi Nilai *</label>
+            <div style="display:flex;gap:.4rem;align-items:center;">
+              <input id="tag-inp-${g.gid}" type="text" placeholder="${placeholders[1]}"
+                style="flex:1;padding:.5rem .75rem;border:1.5px solid #E4E7F0;border-radius:9px;font-size:.82rem;color:#1E293B;font-family:inherit;outline:none;"
+                onkeydown="if(event.key==='Enter'){event.preventDefault();addTagValue(${g.gid});}"
+                onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+              <button type="button" onclick="addTagValue(${g.gid})"
+                style="padding:.5rem .85rem;background:#1B6FE8;color:#fff;border:none;border-radius:9px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;">
+                + Tambah
+              </button>
+            </div>
+          </div>
+          <div id="tags-${g.gid}" style="display:flex;flex-wrap:wrap;gap:.35rem;min-height:20px;">${tagsHTML}</div>
+          ${hiddenInputs}
+          ${g.existingId ? `<input type="hidden" name="variant_options[g${g.gid}][existing_id]" value="${g.existingId}">` : ''}
+        `;
     }
 
     function escHtml(str) {
@@ -1198,69 +1200,69 @@
           const displayPrice = price !== '' ? formatRupiahStr(price) : '';
 
           html += `<tr style="background:${isEven ? '#fff' : '#FAFBFF'};" data-row="${rowIndex}">
-            <td style="padding:.55rem .75rem;color:#1E293B;font-weight:600;font-size:.8rem;white-space:nowrap;border-bottom:1px solid #F1F5F9;">
-              <span style="display:inline-block;background:#EFF6FF;color:#1D4ED8;padding:.2rem .55rem;border-radius:20px;font-size:.73rem;">${escHtml(v1.label)}</span>
-            </td>
-            ${v2 ? `<td style="padding:.55rem .75rem;color:#1E293B;font-weight:600;font-size:.8rem;white-space:nowrap;border-bottom:1px solid #F1F5F9;">
-              <span style="display:inline-block;background:#F0F9FF;color:#0369A1;padding:.2rem .55rem;border-radius:20px;font-size:.73rem;">${escHtml(v2.label)}</span>
-            </td>` : ''}
-            <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
-              <input type="text" class="format-rupiah" inputmode="numeric" name="variant_options[combinations][${rowIndex}][price]"
-                value="${escHtml(displayPrice)}" placeholder="0"
-                style="width:100%;min-width:100px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
-                onfocus="this.style.borderColor='#1B6FE8'" onblur="validateRequired(this)" required>
-            </td>
-            <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
-              <input type="number" name="variant_options[combinations][${rowIndex}][stock]"
-                value="${escHtml(stock)}" placeholder="0" min="0"
-                style="width:100%;min-width:70px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
-                onfocus="this.style.borderColor='#1B6FE8'" onblur="validateRequired(this)" required>
-            </td>
-            <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
-              <div style="display:flex;align-items:center;border:1.5px solid #E4E7F0;border-radius:8px;overflow:hidden;min-width:90px;">
-                <input type="number" name="variant_options[combinations][${rowIndex}][weight]"
-                  value="${escHtml(weight)}" placeholder="Berat" min="0"
-                  style="width:100%;padding:.4rem .45rem;border:none;font-size:.8rem;font-family:inherit;outline:none;"
-                  onfocus="this.parentElement.style.borderColor='#1B6FE8'" onblur="this.parentElement.style.borderColor='#E4E7F0';validateRequired(this)" required>
-                <span style="font-size:.7rem;color:#64748B;padding:0 .35rem;background:#F1F5F9;height:34px;display:flex;align-items:center;border-left:1px solid #E4E7F0;white-space:nowrap;">gr</span>
-              </div>
-            </td>
-            <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
-              <div style="display:flex;align-items:center;border:1.5px solid #E4E7F0;border-radius:8px;overflow:hidden;min-width:85px;">
-                <input type="number" name="variant_options[combinations][${rowIndex}][ship_days]"
-                  value="${escHtml(ship)}" placeholder="2" min="1" max="30"
-                  style="width:100%;padding:.4rem .4rem;border:none;font-size:.8rem;font-family:inherit;outline:none;"
-                  onfocus="this.parentElement.style.borderColor='#1B6FE8'" onblur="this.parentElement.style.borderColor='#E4E7F0';validateRequired(this)" required>
-                <span style="font-size:.7rem;color:#64748B;padding:0 .35rem;background:#F1F5F9;height:34px;display:flex;align-items:center;border-left:1px solid #E4E7F0;white-space:nowrap;">hari</span>
-              </div>
-            </td>
-            <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
-              <input type="text" name="variant_options[combinations][${rowIndex}][sku]"
-                value="${escHtml(sku)}" placeholder="SKU (opsional)"
-                style="width:100%;min-width:90px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
-                onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
-            </td>
-            <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
-              <input type="text" name="variant_options[combinations][${rowIndex}][gtin]"
-                value="${escHtml(gtin)}" placeholder="GTIN (opsional)"
-                style="width:100%;min-width:95px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
-                onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
-            </td>
-            <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
-              <div style="display:flex;align-items:center;gap:.5rem;">
-                <div id="v-preview-${rowIndex}" style="${imgUrl ? '' : 'display:none;'}width:38px;height:38px;border-radius:8px;overflow:hidden;border:1.5px solid #3B82F6;flex-shrink:0;background:#F8FAFC;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
-                  <img src="${escHtml(imgUrl)}" style="width:100%;height:100%;object-fit:cover;">
+              <td style="padding:.55rem .75rem;color:#1E293B;font-weight:600;font-size:.8rem;white-space:nowrap;border-bottom:1px solid #F1F5F9;">
+                <span style="display:inline-block;background:#EFF6FF;color:#1D4ED8;padding:.2rem .55rem;border-radius:20px;font-size:.73rem;">${escHtml(v1.label)}</span>
+              </td>
+              ${v2 ? `<td style="padding:.55rem .75rem;color:#1E293B;font-weight:600;font-size:.8rem;white-space:nowrap;border-bottom:1px solid #F1F5F9;">
+                <span style="display:inline-block;background:#F0F9FF;color:#0369A1;padding:.2rem .55rem;border-radius:20px;font-size:.73rem;">${escHtml(v2.label)}</span>
+              </td>` : ''}
+              <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+                <input type="text" class="format-rupiah" inputmode="numeric" name="variant_options[combinations][${rowIndex}][price]"
+                  value="${escHtml(displayPrice)}" placeholder="0"
+                  style="width:100%;min-width:100px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+                  onfocus="this.style.borderColor='#1B6FE8'" onblur="validateRequired(this)" required>
+              </td>
+              <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+                <input type="number" name="variant_options[combinations][${rowIndex}][stock]"
+                  value="${escHtml(stock)}" placeholder="0" min="0"
+                  style="width:100%;min-width:70px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+                  onfocus="this.style.borderColor='#1B6FE8'" onblur="validateRequired(this)" required>
+              </td>
+              <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+                <div style="display:flex;align-items:center;border:1.5px solid #E4E7F0;border-radius:8px;overflow:hidden;min-width:90px;">
+                  <input type="number" name="variant_options[combinations][${rowIndex}][weight]"
+                    value="${escHtml(weight)}" placeholder="Berat" min="0"
+                    style="width:100%;padding:.4rem .45rem;border:none;font-size:.8rem;font-family:inherit;outline:none;"
+                    onfocus="this.parentElement.style.borderColor='#1B6FE8'" onblur="this.parentElement.style.borderColor='#E4E7F0';validateRequired(this)" required>
+                  <span style="font-size:.7rem;color:#64748B;padding:0 .35rem;background:#F1F5F9;height:34px;display:flex;align-items:center;border-left:1px solid #E4E7F0;white-space:nowrap;">gr</span>
                 </div>
-                ${imgUrl ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][existing_image]" value="${escHtml(imgUrl)}">` : ''}
-                <input type="file" name="variant_options[combinations][${rowIndex}][image]" accept="image/*" style="font-size:.7rem;width:125px;" onchange="previewVariantRowImg(this, ${rowIndex})">
-              </div>
-            </td>
-            <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_value_id]" value="${escHtml(v1.vid)}">
-            <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_label]" value="${escHtml(v1.label)}">
-            ${v2 ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][option2_value_id]" value="${escHtml(v2.vid)}">
-            <input type="hidden" name="variant_options[combinations][${rowIndex}][option2_label]" value="${escHtml(v2.label)}">` : ''}
-            ${combId ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][existing_combo_id]" value="${combId}">` : ''}
-          </tr>`;
+              </td>
+              <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+                <div style="display:flex;align-items:center;border:1.5px solid #E4E7F0;border-radius:8px;overflow:hidden;min-width:85px;">
+                  <input type="number" name="variant_options[combinations][${rowIndex}][ship_days]"
+                    value="${escHtml(ship)}" placeholder="2" min="1" max="30"
+                    style="width:100%;padding:.4rem .4rem;border:none;font-size:.8rem;font-family:inherit;outline:none;"
+                    onfocus="this.parentElement.style.borderColor='#1B6FE8'" onblur="this.parentElement.style.borderColor='#E4E7F0';validateRequired(this)" required>
+                  <span style="font-size:.7rem;color:#64748B;padding:0 .35rem;background:#F1F5F9;height:34px;display:flex;align-items:center;border-left:1px solid #E4E7F0;white-space:nowrap;">hari</span>
+                </div>
+              </td>
+              <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+                <input type="text" name="variant_options[combinations][${rowIndex}][sku]"
+                  value="${escHtml(sku)}" placeholder="SKU (opsional)"
+                  style="width:100%;min-width:90px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+                  onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+              </td>
+              <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+                <input type="text" name="variant_options[combinations][${rowIndex}][gtin]"
+                  value="${escHtml(gtin)}" placeholder="GTIN (opsional)"
+                  style="width:100%;min-width:95px;padding:.4rem .55rem;border:1.5px solid #E4E7F0;border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;"
+                  onfocus="this.style.borderColor='#1B6FE8'" onblur="this.style.borderColor='#E4E7F0'">
+              </td>
+              <td style="padding:.4rem .6rem;border-bottom:1px solid #F1F5F9;">
+                <div style="display:flex;align-items:center;gap:.5rem;">
+                  <div id="v-preview-${rowIndex}" style="${imgUrl ? '' : 'display:none;'}width:38px;height:38px;border-radius:8px;overflow:hidden;border:1.5px solid #3B82F6;flex-shrink:0;background:#F8FAFC;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+                    <img src="${escHtml(imgUrl)}" style="width:100%;height:100%;object-fit:cover;">
+                  </div>
+                  ${imgUrl ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][existing_image]" value="${escHtml(imgUrl)}">` : ''}
+                  <input type="file" name="variant_options[combinations][${rowIndex}][image]" accept="image/*" style="font-size:.7rem;width:125px;" onchange="previewVariantRowImg(this, ${rowIndex})">
+                </div>
+              </td>
+              <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_value_id]" value="${escHtml(v1.vid)}">
+              <input type="hidden" name="variant_options[combinations][${rowIndex}][option1_label]" value="${escHtml(v1.label)}">
+              ${v2 ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][option2_value_id]" value="${escHtml(v2.vid)}">
+              <input type="hidden" name="variant_options[combinations][${rowIndex}][option2_label]" value="${escHtml(v2.label)}">` : ''}
+              ${combId ? `<input type="hidden" name="variant_options[combinations][${rowIndex}][existing_combo_id]" value="${combId}">` : ''}
+            </tr>`;
           rowIndex++;
         });
       });
